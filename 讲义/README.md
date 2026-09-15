@@ -54,7 +54,8 @@ xelatex -output-directory=build 高等概率论.tex   # 两遍
 \appendixstatements   % 附录 \section 之后：改排“定理 A.1”，从 1 重新计数
 
 % ---- 不编号的段落（楷体）----
-\begin{example}[可选标题] 例子 \end{example}   % 排作“例子.”，与于品一致
+\begin{example}[可选标题]\label{ex:slug:xxx} 例子 \end{example}   % 排作“例子.”，与于品一致
+\egref{ex:slug:xxx}                             % 引用不编号的例子：“第 N 页的例子”
 \begin{remark} 注记 \end{remark}
 \begin{practice} 练习 \end{practice}
 \begin{question} 问题 \end{question}

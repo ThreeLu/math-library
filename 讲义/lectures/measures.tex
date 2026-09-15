@@ -1,0 +1,405 @@
+% !TEX root = ../高等概率论.tex
+% =====================================================================
+%  测度：定义与例子、基本性质、连续性、唯一性定理、C[0,1] 上的测度
+% =====================================================================
+\lecture{测度与概率空间，测度的基本性质与连续性，零测集，测度的唯一性定理，\texorpdfstring{$C[0,1]$}{C[0,1]} 上的概率测度由有限维分布决定}
+\label{lec:measures}
+
+有了可测空间 $(\Omega,\cF)$，下一步是在 $\cF$ 上给每个集合指定一个“大小”。长度、面积、个数、概率都是这样的“大小”，它们共同的性质是可数可加性。本讲先从定义推出测度的全部基本性质，然后回答一个问题：两个测度在什么条件下相等。答案是上一讲 $\pi$-$\lambda$ 定理最重要的应用。
+
+\topic{测度与概率空间}
+
+\begin{summary}
+测度是定义在 $\sigma$-代数上、取值于 $[0,\infty]$ 的可数可加函数。概率测度是总质量为 $1$ 的测度。
+\end{summary}
+
+我们约定 $[0,\infty]$ 中的运算：$a+\infty=\infty+a=\infty$（$a\in[0,\infty]$），$a\leqslant\infty$ 对一切 $a$ 成立。非负项级数 $\sum_na_n$（$a_n\in[0,\infty]$）总有意义：它是部分和的（可能为 $\infty$ 的）上确界。数学分析中已知，非负项级数的和与求和次序无关，非负项二重级数可以按任意方式交换求和次序：$\sum_m\sum_na_{mn}=\sum_n\sum_ma_{mn}$。下文反复使用这一事实。
+
+\begin{definition}[测度]\label{def:measures:measure}
+设 $(\Omega,\cF)$ 是可测空间。函数 $\mu:\cF\to[0,\infty]$ 若满足
+\begin{enumerate}
+\item $\mu(\varnothing)=0$；
+\item \term{可数可加性}（countable additivity）：若 $A_1,A_2,\dots\in\cF$ 两两不交，则
+\[
+\mu\Bigl(\bigcup_{n=1}^\infty A_n\Bigr)=\sum_{n=1}^\infty\mu(A_n),
+\]
+\end{enumerate}
+则称 $\mu$ 为 $(\Omega,\cF)$ 上的\term{测度}（measure），三元组 $(\Omega,\cF,\mu)$ 称为\term{测度空间}（measure space）。
+\end{definition}
+
+\begin{definition}[有限测度，$\sigma$-有限测度，概率测度]\label{def:measures:finite}
+设 $\mu$ 是 $(\Omega,\cF)$ 上的测度。
+\begin{enumerate}
+\item 若 $\mu(\Omega)<\infty$，称 $\mu$ 为\term{有限测度}（finite measure）。
+\item 若存在 $A_1,A_2,\dots\in\cF$ 使 $\bigcup_nA_n=\Omega$ 且 $\mu(A_n)<\infty$ 对一切 $n$ 成立，称 $\mu$ 为 \term{$\sigma$-有限测度}（$\sigma$-finite measure）。
+\item 若 $\mu(\Omega)=1$，称 $\mu$ 为\term{概率测度}（probability measure），通常记作 $P$；此时 $(\Omega,\cF,P)$ 称为\term{概率空间}（probability space），$P(A)$ 称为事件 $A$ 的\term{概率}（probability）。
+\end{enumerate}
+\end{definition}
+
+在 $\sigma$-有限的定义中，可以不妨设 $A_n$ 递增，也可以不妨设 $A_n$ 两两不交：令 $A_n'=A_1\cup\cdots\cup A_n$，则 $A_n'\uparrow\Omega$ 且 $\mu(A_n')\leqslant\sum_{k\leqslant n}\mu(A_k)<\infty$（这里用了下面定理~\ref{thm:measures:basic} 中的次可加性）；令 $A_1''=A_1$，$A_n''=A_n\setminus(A_1\cup\cdots\cup A_{n-1})$，则 $A_n''$ 两两不交，并为 $\Omega$，且 $\mu(A_n'')\leqslant\mu(A_n)<\infty$。
+
+\begin{example}[Dirac 测度]\label{ex:measures:dirac}
+设 $(\Omega,\cF)$ 是可测空间，$x\in\Omega$。令 $\delta_x(A)=\one_A(x)$，即 $x\in A$ 时为 $1$，否则为 $0$。则 $\delta_x$ 是概率测度，称为 $x$ 处的 \term{Dirac 测度}（Dirac measure）或\term{单点质量}（point mass）。事实上 $\delta_x(\varnothing)=0$；若 $A_n$ 两两不交，则 $x$ 至多属于其中一个。若 $x$ 属于某个 $A_{n_0}$，则两边都等于 $1$；否则两边都等于 $0$。
+\end{example}
+
+\begin{example}[计数测度]\label{ex:measures:counting}
+设 $\Omega$ 是任意集合，$\cF=2^\Omega$。令 $\#(A)$ 为 $A$ 的元素个数（$A$ 为无限集时为 $\infty$）。则 $\#$ 是测度，称为\term{计数测度}（counting measure）。可数可加性：若 $A_n$ 两两不交，当所有 $A_n$ 都有限且只有有限个非空时，这是有限集合的计数加法原理；当某个 $A_n$ 无限，或有无穷多个 $A_n$ 非空时，$\bigcup_nA_n$ 是无限集，右边的级数也等于 $\infty$（后一种情形中无穷多项不小于 $1$）。$\N$ 上的计数测度是 $\sigma$-有限的（$\N=\bigcup_n\{n\}$），$\R$ 上的计数测度不是（可数个有限集的并是可数集）。
+\end{example}
+
+\begin{example}[离散概率空间]\label{ex:measures:discrete}
+设 $\Omega$ 是可数集，$\cF=2^\Omega$，$p:\Omega\to[0,1]$ 满足 $\sum_{\omega\in\Omega}p(\omega)=1$。令
+\[
+P(A)=\sum_{\omega\in A}p(\omega),\qquad A\subseteq\Omega.
+\]
+则 $P$ 是概率测度。$P(\Omega)=1$，$P(\varnothing)=0$；若 $A_n$ 两两不交，则 $\bigcup_nA_n$ 中每个 $\omega$ 恰好属于一个 $A_n$，于是按 $n$ 分组求和，由非负项级数可以任意重排与分组，$P(\bigcup_nA_n)=\sum_n\sum_{\omega\in A_n}p(\omega)=\sum_nP(A_n)$。
+
+反之，$(\Omega,2^\Omega)$ 上的任何概率测度 $P$ 都是这种形式：令 $p(\omega)=P(\{\omega\})$，由可数可加性，$P(A)=\sum_{\omega\in A}P(\{\omega\})$，因为 $A$ 是可数个单点集的不交并。这包括了初等概率论中的全部离散模型：掷硬币、掷骰子、二项分布、Poisson 分布等等。
+\end{example}
+
+\begin{example}[测度的非负线性组合与限制]\label{ex:measures:combination}
+\begin{enumerate}
+\item 设 $\mu_1,\mu_2,\dots$ 是 $(\Omega,\cF)$ 上的测度，$a_1,a_2,\dots\in[0,\infty)$。则 $\mu=\sum_na_n\mu_n$（即 $\mu(A)=\sum_na_n\mu_n(A)$）是测度：若 $A_k$ 两两不交，则 $\mu(\bigcup_kA_k)=\sum_na_n\sum_k\mu_n(A_k)=\sum_k\sum_na_n\mu_n(A_k)=\sum_k\mu(A_k)$，中间一步是非负二重级数交换次序。例如 $\sum_np_n\delta_{x_n}$（$p_n\geqslant0$，$\sum p_n=1$）是 $\R$ 上集中在 $\{x_1,x_2,\dots\}$ 上的离散概率测度。
+\item 设 $B\in\cF$。则 $\mu_B(A)=\mu(A\cap B)$ 是测度，称为 $\mu$ 在 $B$ 上的\term{限制}（restriction）。若 $P$ 是概率测度且 $P(B)>0$，则 $P(A\mid B)=P(A\cap B)/P(B)$ 是概率测度，称为给定 $B$ 时的\term{条件概率}（conditional probability）。
+\end{enumerate}
+\end{example}
+
+\begin{example}[$0$-$1$ 测度]\label{ex:measures:zero-one}
+设 $\Omega$ 不可数，$\cF$ 为可数－余可数 $\sigma$-代数（\egref{ex:set-systems:countable-cocountable}）。令 $P(A)=0$（$A$ 可数），$P(A)=1$（$A^c$ 可数）。由于 $\Omega$ 不可数，$A$ 与 $A^c$ 不能同时可数，所以 $P$ 定义合理。它是概率测度，证明留作习题~\exref{ex:measures:A1}。
+\end{example}
+
+下面两个“反例”说明可数可加性是一个实质性的要求。
+
+\begin{example}[有限可加但不可数可加]\label{ex:measures:finitely-additive}
+设 $\Omega=\N$，$\cA$ 为有限集与余有限集组成的代数（\egref{ex:set-systems:finite-cofinite}）。令 $\mu(A)=0$（$A$ 有限），$\mu(A)=1$（$A^c$ 有限）。$\mu$ 是\term{有限可加的}（finitely additive）：若 $A,B\in\cA$ 不交，它们不能都是余有限集（否则 $A\cap B$ 是余有限集，非空），若都有限则 $A\cup B$ 有限，两边都是 $0$；若一个余有限一个有限，则 $A\cup B$ 余有限，两边都是 $1$。但 $\N=\bigcup_n\{n\}$ 是可数个 $\mu$ 值为 $0$ 的集合的不交并，而 $\mu(\N)=1$。
+\end{example}
+
+\begin{example}[$\N$ 上不存在“均匀”的概率测度]
+设 $P$ 是 $(\N,2^\N)$ 上的概率测度。若 $P(\{n\})=c$ 对一切 $n$ 成立，则 $1=P(\N)=\sum_nc$，而右边在 $c=0$ 时为 $0$，在 $c>0$ 时为 $\infty$，矛盾。所以“随机取一个正整数，每个数机会均等”在可数可加的框架里不是一个概率模型。
+\end{example}
+
+\topic{测度的基本性质}
+
+\begin{summary}
+从可数可加性出发，本节推出单调性、次可加性和两种连续性。连续性是可数可加性的“极限形式”，以后几乎每个极限定理都要用到它。
+\end{summary}
+
+\begin{theorem}[测度的基本性质]\label{thm:measures:basic}
+设 $(\Omega,\cF,\mu)$ 是测度空间，下面出现的集合都属于 $\cF$。
+\begin{enumerate}
+\item \term{有限可加性}：若 $A_1,\dots,A_n$ 两两不交，则 $\mu(A_1\cup\cdots\cup A_n)=\mu(A_1)+\cdots+\mu(A_n)$。
+\item \term{单调性}（monotonicity）：若 $A\subseteq B$，则 $\mu(A)\leqslant\mu(B)$。
+\item 若 $A\subseteq B$ 且 $\mu(A)<\infty$，则 $\mu(B\setminus A)=\mu(B)-\mu(A)$。
+\item $\mu(A\cup B)+\mu(A\cap B)=\mu(A)+\mu(B)$。
+\item \term{次可加性}（subadditivity）：若 $A\subseteq\bigcup_{n=1}^\infty A_n$，则 $\mu(A)\leqslant\sum_{n=1}^\infty\mu(A_n)$。
+\item \term{从下连续}（continuity from below）：若 $A_n\uparrow A$，则 $\mu(A_n)\uparrow\mu(A)$。
+\item \term{从上连续}（continuity from above）：若 $A_n\downarrow A$ 且 $\mu(A_1)<\infty$，则 $\mu(A_n)\downarrow\mu(A)$。
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+(1) 令 $A_k=\varnothing$（$k>n$），则 $A_1,A_2,\dots$ 两两不交，由可数可加性与 $\mu(\varnothing)=0$ 得结论。
+
+(2) $B=A\cup(B\setminus A)$ 是不交并，由 (1)，$\mu(B)=\mu(A)+\mu(B\setminus A)\geqslant\mu(A)$，因为 $\mu(B\setminus A)\geqslant0$。
+
+(3) 由 (2) 的证明，$\mu(B)=\mu(A)+\mu(B\setminus A)$。$\mu(A)<\infty$ 时两边可以减去 $\mu(A)$。（若 $\mu(A)=\infty$，则 $\infty-\infty$ 无意义，这就是需要这个条件的原因。）
+
+(4) $A\cup B=A\cup(B\setminus A)$，$B=(A\cap B)\cup(B\setminus A)$ 都是不交并。由 (1)，
+\[
+\mu(A\cup B)+\mu(A\cap B)=\mu(A)+\mu(B\setminus A)+\mu(A\cap B)=\mu(A)+\mu(B).
+\]
+
+(5) 令 $B_1=A_1$，$B_n=A_n\setminus(A_1\cup\cdots\cup A_{n-1})$（$n\geqslant2$）。则 $B_n\subseteq A_n$，$B_n$ 两两不交（若 $m<n$，则 $B_m\subseteq A_m$，而 $B_n\cap A_m=\varnothing$），并且 $\bigcup_{k\leqslant n}B_k=\bigcup_{k\leqslant n}A_k$（对 $n$ 归纳：$\bigcup_{k\leqslant n}B_k=\bigcup_{k<n}A_k\cup(A_n\setminus\bigcup_{k<n}A_k)=\bigcup_{k\leqslant n}A_k$），从而 $\bigcup_nB_n=\bigcup_nA_n$。于是 $A=\bigcup_n(A\cap B_n)$ 是不交并，由可数可加性和单调性，
+\[
+\mu(A)=\sum_n\mu(A\cap B_n)\leqslant\sum_n\mu(B_n)\leqslant\sum_n\mu(A_n).
+\]
+
+(6) 令 $A_0=\varnothing$，$D_n=A_n\setminus A_{n-1}$（$n\geqslant1$）。由于 $A_n$ 递增，$D_n$ 两两不交，$\bigcup_{k\leqslant n}D_k=A_n$，$\bigcup_nD_n=A$。由可数可加性与有限可加性，
+\[
+\mu(A)=\sum_{k=1}^\infty\mu(D_k)=\lim_{n\to\infty}\sum_{k=1}^n\mu(D_k)=\lim_{n\to\infty}\mu(A_n).
+\]
+由 (2)，$\mu(A_n)$ 单调不减，所以是 $\mu(A_n)\uparrow\mu(A)$。
+
+(7) 令 $C_n=A_1\setminus A_n$。则 $C_n\uparrow A_1\setminus A$：$C_n$ 递增，因为 $A_n$ 递减；$\omega\in\bigcup_nC_n$ 当且仅当 $\omega\in A_1$ 且存在 $n$ 使 $\omega\notin A_n$，即 $\omega\in A_1\setminus\bigcap_nA_n=A_1\setminus A$。由 (6)，$\mu(A_1\setminus A_n)\to\mu(A_1\setminus A)$。由于 $\mu(A_n)\leqslant\mu(A_1)<\infty$，$\mu(A)\leqslant\mu(A_1)<\infty$，可以用 (3)：$\mu(A_1)-\mu(A_n)\to\mu(A_1)-\mu(A)$，即 $\mu(A_n)\to\mu(A)$，再由单调性知是递减收敛。
+\end{proof}
+
+\begin{example}[从上连续需要有限性]
+取 $\N$ 上的计数测度，$A_n=\{n,n+1,n+2,\dots\}$。则 $A_n\downarrow\varnothing$，但 $\#(A_n)=\infty$ 对一切 $n$ 成立，不收敛到 $\#(\varnothing)=0$。同样，$\R$ 上的 Lebesgue 测度（第~\ref{lec:extension-of-measures} 讲构造）满足 $\lambda([n,\infty))=\infty$，而 $[n,\infty)\downarrow\varnothing$。
+\end{example}
+
+对概率测度，(3) 和 (7) 中的有限性条件自动成立，特别地 $P(A^c)=1-P(A)$。
+
+\begin{proposition}[集合列上、下极限的测度]\label{prop:measures:fatou-sets}
+设 $(\Omega,\cF,\mu)$ 是测度空间，$A_n\in\cF$。则
+\begin{enumerate}
+\item $\mu(\liminf_nA_n)\leqslant\liminf_n\mu(A_n)$；
+\item 若 $\mu(\bigcup_nA_n)<\infty$（例如 $\mu$ 是有限测度），则 $\mu(\limsup_nA_n)\geqslant\limsup_n\mu(A_n)$。
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+(1) 令 $B_n=\bigcap_{m\geqslant n}A_m$，则 $B_n\uparrow\liminf_nA_n$，并且 $B_n\subseteq A_m$ 对一切 $m\geqslant n$ 成立，故 $\mu(B_n)\leqslant\inf_{m\geqslant n}\mu(A_m)$。由从下连续，
+\[
+\mu(\liminf_nA_n)=\lim_n\mu(B_n)\leqslant\lim_n\inf_{m\geqslant n}\mu(A_m)=\liminf_n\mu(A_n).
+\]
+(2) 令 $C_n=\bigcup_{m\geqslant n}A_m$，则 $C_n\downarrow\limsup_nA_n$，$\mu(C_1)=\mu(\bigcup_nA_n)<\infty$，并且 $\mu(C_n)\geqslant\sup_{m\geqslant n}\mu(A_m)$。由从上连续，$\mu(\limsup_nA_n)=\lim_n\mu(C_n)\geqslant\limsup_n\mu(A_n)$。
+\end{proof}
+
+下面的命题说明，在有限可加的前提下，可数可加性恰好等价于连续性。这在构造测度时很有用：往往先得到有限可加性，再单独验证连续性。
+
+\begin{proposition}[可数可加性与连续性]\label{prop:measures:additivity-continuity}
+设 $\cA$ 是 $\Omega$ 上的代数，$\mu:\cA\to[0,\infty]$ 满足 $\mu(\varnothing)=0$ 且有限可加。考虑下列条件：
+\begin{enumerate}
+\item[(a)] $\mu$ 在 $\cA$ 上可数可加：若 $A_n\in\cA$ 两两不交且 $\bigcup_nA_n\in\cA$，则 $\mu(\bigcup_nA_n)=\sum_n\mu(A_n)$；
+\item[(b)] 若 $A_n,A\in\cA$，$A_n\uparrow A$，则 $\mu(A_n)\to\mu(A)$；
+\item[(c)] 若 $A_n\in\cA$，$A_n\downarrow\varnothing$，且 $\mu(A_1)<\infty$，则 $\mu(A_n)\to0$。
+\end{enumerate}
+则 (a) 与 (b) 等价，且都蕴含 (c)。若 $\mu(\Omega)<\infty$，则三者等价。
+\end{proposition}
+\begin{proof}
+先说明有限可加性蕴含单调性：若 $A\subseteq B$ 都在 $\cA$ 中，则 $B\setminus A\in\cA$，$\mu(B)=\mu(A)+\mu(B\setminus A)\geqslant\mu(A)$。
+
+(a)$\Rightarrow$(b)：与定理~\ref{thm:measures:basic}(6) 的证明相同，所用的 $D_n=A_n\setminus A_{n-1}$ 都属于 $\cA$，而 $\bigcup_nD_n=A\in\cA$。
+
+(b)$\Rightarrow$(a)：设 $A_n\in\cA$ 两两不交，$A=\bigcup_nA_n\in\cA$。令 $B_n=A_1\cup\cdots\cup A_n\in\cA$，则 $B_n\uparrow A$，由 (b) 与有限可加性，$\mu(A)=\lim_n\mu(B_n)=\lim_n\sum_{k\leqslant n}\mu(A_k)=\sum_k\mu(A_k)$。
+
+(a)$\Rightarrow$(c)：与定理~\ref{thm:measures:basic}(7) 的证明相同，这里 $A=\varnothing\in\cA$。
+
+(c)$\Rightarrow$(b)，设 $\mu(\Omega)<\infty$：若 $A_n\uparrow A$，则 $A\setminus A_n\in\cA$ 且 $A\setminus A_n\downarrow\varnothing$，$\mu(A\setminus A_1)\leqslant\mu(\Omega)<\infty$。由 (c)，$\mu(A)-\mu(A_n)=\mu(A\setminus A_n)\to0$，这里用了有限可加性与有限性。
+\end{proof}
+
+\begin{definition}[零测集与几乎处处]\label{def:measures:null}
+设 $(\Omega,\cF,\mu)$ 是测度空间。若 $N\in\cF$ 且 $\mu(N)=0$，称 $N$ 为\term{零测集}（null set）。若某个关于 $\omega$ 的性质在一个零测集之外成立，即存在零测集 $N$，使该性质对一切 $\omega\notin N$ 成立，则称该性质\term{几乎处处}（almost everywhere，a.e.）成立；当 $\mu=P$ 是概率测度时，称它\term{几乎必然}（almost surely，a.s.）成立，也说以概率 $1$ 成立。
+\end{definition}
+
+由次可加性，可数个零测集的并仍是零测集。注意定义中不要求“性质成立的点的集合”本身属于 $\cF$，只要求它包含一个可测集的补集。若 $\cF$ 包含一切零测集的子集，称测度空间是\term{完备的}（complete）；任何测度空间都可以完备化，见作业 B。
+
+\topic{测度的唯一性定理}
+
+\begin{summary}
+两个测度若在一个 $\pi$-类上相等，并且满足适当的有限性条件，则它们在该 $\pi$-类生成的 $\sigma$-代数上相等。证明就是把上一讲“为什么需要 $\lambda$-类”一段中的观察严格化。
+\end{summary}
+
+先看有限测度的情形。
+
+\begin{theorem}[有限测度的唯一性]\label{thm:measures:uniqueness-finite}
+设 $\cP$ 是 $\Omega$ 上的 $\pi$-类，$\mu,\nu$ 是可测空间 $(\Omega,\cF)$ 上的有限测度，$\sigma(\cP)\subseteq\cF$。若 $\mu(\Omega)=\nu(\Omega)$，且 $\mu(A)=\nu(A)$ 对一切 $A\in\cP$ 成立，则 $\mu(A)=\nu(A)$ 对一切 $A\in\sigma(\cP)$ 成立。
+\end{theorem}
+\begin{proof}
+令 $\cD=\{A\in\sigma(\cP):\mu(A)=\nu(A)\}$。由假设 $\cP\subseteq\cD$。验证 $\cD$ 是 $\lambda$-类：
+\begin{itemize}
+\item $\Omega\in\sigma(\cP)$ 且 $\mu(\Omega)=\nu(\Omega)$，故 $\Omega\in\cD$。
+\item 设 $A,B\in\cD$，$A\subseteq B$。则 $B\setminus A\in\sigma(\cP)$。由于 $\mu,\nu$ 有限，由定理~\ref{thm:measures:basic}(3)，$\mu(B\setminus A)=\mu(B)-\mu(A)=\nu(B)-\nu(A)=\nu(B\setminus A)$，故 $B\setminus A\in\cD$。
+\item 设 $A_n\in\cD$，$A_n\uparrow A$。则 $A\in\sigma(\cP)$，由定理~\ref{thm:measures:basic}(6)，$\mu(A)=\lim_n\mu(A_n)=\lim_n\nu(A_n)=\nu(A)$，故 $A\in\cD$。
+\end{itemize}
+由 $\pi$-$\lambda$ 定理（定理~\ref{thm:set-systems:pi-lambda}），$\sigma(\cP)\subseteq\cD$。
+\end{proof}
+
+注意条件 $\mu(\Omega)=\nu(\Omega)$ 不能省略：若 $\cP=\{\varnothing\}$，任何两个有限测度都在 $\cP$ 上相等。当然，若 $\Omega\in\cP$，这个条件就包含在“在 $\cP$ 上相等”之中。
+
+\begin{theorem}[$\sigma$-有限测度的唯一性]\label{thm:measures:uniqueness}
+设 $\cP$ 是 $\Omega$ 上的 $\pi$-类，$\mu,\nu$ 是 $(\Omega,\cF)$ 上的测度，$\sigma(\cP)\subseteq\cF$，且 $\mu(A)=\nu(A)$ 对一切 $A\in\cP$ 成立。若存在 $E_n\in\cP$ 使 $E_n\uparrow\Omega$ 且 $\mu(E_n)<\infty$ 对一切 $n$ 成立，则 $\mu(A)=\nu(A)$ 对一切 $A\in\sigma(\cP)$ 成立。
+\end{theorem}
+\begin{proof}
+固定 $E\in\cP$，$\mu(E)=\nu(E)<\infty$。令
+\[
+\cD_E=\{B\in\sigma(\cP):\ \mu(E\cap B)=\nu(E\cap B)\}.
+\]
+\emph{$\cP\subseteq\cD_E$：}若 $B\in\cP$，由于 $\cP$ 是 $\pi$-类，$E\cap B\in\cP$，故 $\mu(E\cap B)=\nu(E\cap B)$。
+
+\emph{$\cD_E$ 是 $\lambda$-类：}$E\cap\Omega=E$，故 $\Omega\in\cD_E$。设 $B,C\in\cD_E$，$C\subseteq B$，则 $E\cap C\subseteq E\cap B$，二者的 $\mu$ 值不超过 $\mu(E)<\infty$，$\nu$ 值同理，由定理~\ref{thm:measures:basic}(3)，
+\[
+\mu(E\cap(B\setminus C))=\mu(E\cap B)-\mu(E\cap C)=\nu(E\cap B)-\nu(E\cap C)=\nu(E\cap(B\setminus C)),
+\]
+这里用了 $E\cap(B\setminus C)=(E\cap B)\setminus(E\cap C)$。设 $B_n\in\cD_E$，$B_n\uparrow B$，则 $E\cap B_n\uparrow E\cap B$，由从下连续，$\mu(E\cap B)=\lim\mu(E\cap B_n)=\lim\nu(E\cap B_n)=\nu(E\cap B)$。
+
+由 $\pi$-$\lambda$ 定理，$\sigma(\cP)\subseteq\cD_E$。即：对每个 $E\in\cP$ 及每个 $A\in\sigma(\cP)$，只要 $\mu(E)<\infty$，就有 $\mu(E\cap A)=\nu(E\cap A)$。
+
+现取 $E=E_n$。对 $A\in\sigma(\cP)$，$E_n\cap A\uparrow A$，由从下连续，$\mu(A)=\lim_n\mu(E_n\cap A)=\lim_n\nu(E_n\cap A)=\nu(A)$。
+\end{proof}
+
+\begin{example}[有限性条件不能去掉]
+在 $(\R,\cR)$ 上令 $\mu(A)=\#(A\cap\Q)$，$\nu(A)=2\#(A\cap\Q)$，它们都是测度（\egref{ex:measures:combination}）。令 $\cP=\{(a,b]:a<b\}\cup\{\varnothing\}$，这是生成 $\cR$ 的 $\pi$-类（命题~\ref{prop:set-systems:borel-generators} 与\egref{ex:set-systems:pi-examples}）。每个 $(a,b]$ 都含有无穷多个有理数，所以 $\mu((a,b])=\nu((a,b])=\infty$，二者在 $\cP$ 上相等。但 $\mu(\{0\})=1\neq2=\nu(\{0\})$。这里定理~\ref{thm:measures:uniqueness} 的条件不满足：$\cP$ 中除空集外没有测度有限的集合。
+\end{example}
+
+\begin{example}[$\pi$-类条件不能去掉]
+在 $\Omega=\{1,2,3,4\}$ 上，取 $\mu$ 为均匀分布，$\nu(\{1\})=\nu(\{4\})=1/2$，$\nu(\{2\})=\nu(\{3\})=0$。令 $\cC=\{\{1,2\},\{1,3\}\}$，则 $\mu,\nu$ 在 $\cC$ 上相等（都是 $1/2$），$\mu(\Omega)=\nu(\Omega)$，而 $\sigma(\cC)=2^\Omega$（见上一讲定理~\ref{thm:set-systems:pi-lambda} 后的注记），但 $\mu\neq\nu$。这里 $\cC$ 不是 $\pi$-类。
+\end{example}
+
+\begin{corollary}[分布函数决定 $\R$ 上的概率测度]\label{cor:measures:distribution-function}
+设 $\mu,\nu$ 是 $(\R,\cR)$ 上的概率测度。若 $\mu((-\infty,x])=\nu((-\infty,x])$ 对一切 $x\in\R$ 成立，则 $\mu=\nu$。同样，若 $(\R^d,\cR^d)$ 上的两个概率测度在一切 $(-\infty,x_1]\times\cdots\times(-\infty,x_d]$ 上相等，则它们相等。
+\end{corollary}
+\begin{proof}
+$\cP=\{(-\infty,x]:x\in\R\}$ 是 $\pi$-类（\egref{ex:set-systems:pi-examples}），$\sigma(\cP)=\cR$（命题~\ref{prop:set-systems:borel-generators}），且 $\mu(\R)=\nu(\R)=1$。由定理~\ref{thm:measures:uniqueness-finite} 即得。$d$ 维情形：$\{(-\infty,x_1]\times\cdots\times(-\infty,x_d]\}$ 对交集封闭（交集是把各坐标取最小值），它生成 $\cR^d$（习题~\exref{ex:set-systems:A5}），同样由定理~\ref{thm:measures:uniqueness-finite} 得到。
+\end{proof}
+
+这个推论是后面“分布函数”一讲的基础：一个随机变量的分布完全由函数 $x\mapsto P(X\leqslant x)$ 决定。
+
+\topic{例子：\texorpdfstring{$C[0,1]$}{C[0,1]} 上的概率测度}
+
+\begin{summary}
+在连续函数空间上，我们能直接描述的只是“有限个时刻的取值”的概率，这样的事件组成 $\pi$-类。唯一性定理保证：这些有限维的信息已经决定了整个 Borel $\sigma$-代数上的概率测度。这正是引入 $\pi$-类的动机。
+\end{summary}
+
+设 $C=C[0,1]$ 是 $[0,1]$ 上全体实值连续函数的集合，赋予\term{一致度量}（uniform metric）
+\[
+d(f,g)=\sup_{t\in[0,1]}\abs{f(t)-g(t)}.
+\]
+由于 $[0,1]$ 上的连续函数有界，$d(f,g)<\infty$；$d$ 满足度量的三条公理，这是熟知的。记 $B(g,r)=\{f\in C:d(f,g)<r\}$ 为开球，$\overline B(g,r)=\{f\in C:d(f,g)\leqslant r\}$ 为闭球，$\cB(C)$ 为由 $d$ 诱导的拓扑的 Borel $\sigma$-代数。
+
+设想我们要描述一个“随机连续函数”，比如花粉颗粒在 $[0,1]$ 时间段内的位置（Brown 运动）。物理上可以测量、可以写出概率的，是有限个时刻的位置：比如 $P(f(t_1)\leqslant x_1,\dots,f(t_k)\leqslant x_k)$。可是我们关心的事件往往涉及无穷多个时刻，例如“整个时间段内位置不超过 $1$”，即 $\{f:\sup_tf(t)\leqslant1\}$。问题是：有限维的信息是否足以决定这类事件的概率？令
+\[
+\cP=\bigl\{\{f\in C: f(t_1)\leqslant x_1,\dots,f(t_k)\leqslant x_k\}:\ k\geqslant1,\ t_1,\dots,t_k\in[0,1],\ x_1,\dots,x_k\in\R\bigr\},
+\]
+其中的集合称为（有限维）\term{柱集}（cylinder set）。两个柱集的交还是柱集：把两组时刻合并成一组，同一时刻出现两次时取两个上界中较小的一个。所以 $\cP$ 是 $\pi$-类。
+
+\begin{lemma}\label{lem:measures:C-separable}
+$C[0,1]$ 中存在可数稠密子集：令 $\cQ$ 为这样的函数 $g$ 的全体：存在正整数 $n$ 和有理数 $q_0,\dots,q_n$，使 $g(k/n)=q_k$，且 $g$ 在每个区间 $[k/n,(k+1)/n]$ 上是线性函数。则 $\cQ$ 可数，并且对任意 $f\in C$ 与 $\varepsilon>0$，存在 $g\in\cQ$ 使 $d(f,g)<\varepsilon$。
+\end{lemma}
+\begin{proof}
+对固定的 $n$，这样的 $g$ 由 $(q_0,\dots,q_n)\in\Q^{n+1}$ 唯一决定，故至多可数个；对 $n$ 取可数并，$\cQ$ 可数。
+
+任取 $f\in C$，$\varepsilon>0$。$f$ 在紧集 $[0,1]$ 上一致连续，故存在 $\delta>0$，使 $\abs{s-t}\leqslant\delta$ 时 $\abs{f(s)-f(t)}<\varepsilon/2$。取正整数 $n>1/\delta$，再对 $k=0,\dots,n$ 取有理数 $q_k$ 使 $\abs{q_k-f(k/n)}<\varepsilon/2$，令 $g\in\cQ$ 为以 $(k/n,q_k)$ 为顶点的折线。任取 $t\in[0,1]$，设 $t\in[k/n,(k+1)/n]$，写 $t=(1-\theta)k/n+\theta(k+1)/n$，$\theta\in[0,1]$，则 $g(t)=(1-\theta)q_k+\theta q_{k+1}$，于是
+\[
+\abs{g(t)-f(t)}\leqslant(1-\theta)\abs{q_k-f(t)}+\theta\abs{q_{k+1}-f(t)}.
+\]
+对 $j=k,k+1$，$\abs{j/n-t}\leqslant1/n<\delta$，故 $\abs{q_j-f(t)}\leqslant\abs{q_j-f(j/n)}+\abs{f(j/n)-f(t)}<\varepsilon/2+\varepsilon/2=\varepsilon$。所以 $\abs{g(t)-f(t)}<\varepsilon$。这对一切 $t$ 成立；又 $\abs{g-f}$ 在 $[0,1]$ 上连续，上确界可以取到，故 $d(f,g)<\varepsilon$。
+\end{proof}
+
+\begin{theorem}\label{thm:measures:C-borel}
+$\cB(C)=\sigma(\cP)$。
+\end{theorem}
+\begin{proof}
+\emph{第一步：$\sigma(\cP)\subseteq\cB(C)$。}对固定的 $t$，映射 $f\mapsto f(t)$ 满足 $\abs{f(t)-g(t)}\leqslant d(f,g)$，所以是连续的。于是 $\{f:f(t)\leqslant x\}$ 是闭集 $(-\infty,x]$ 在连续映射下的原像，是闭集。$\cP$ 中的集合是有限个这样的闭集的交，是闭集，从而属于 $\cB(C)$。由最小性得 $\sigma(\cP)\subseteq\cB(C)$。
+
+\emph{第二步：闭球属于 $\sigma(\cP)$。}设 $g\in C$，$r>0$。我们断言
+\[
+\overline B(g,r)=\bigcap_{t\in\Q\cap[0,1]}\{f:\ g(t)-r\leqslant f(t)\leqslant g(t)+r\}.
+\]
+“$\subseteq$”是显然的。反之，若 $f$ 属于右边，则连续函数 $f-g$ 在 $[0,1]$ 的稠密子集 $\Q\cap[0,1]$ 上满足 $\abs{f-g}\leqslant r$；对任意 $t\in[0,1]$，取有理数 $t_m\to t$，由连续性 $\abs{f(t)-g(t)}=\lim_m\abs{f(t_m)-g(t_m)}\leqslant r$，故 $d(f,g)\leqslant r$。右边是可数交，每一项
+\[
+\{f: g(t)-r\leqslant f(t)\leqslant g(t)+r\}=\{f: f(t)\leqslant g(t)+r\}\setminus\bigcup_{m=1}^\infty\Bigl\{f: f(t)\leqslant g(t)-r-\frac1m\Bigr\}
+\]
+都属于 $\sigma(\cP)$（这里用了 $f(t)<a\iff$ 存在 $m$ 使 $f(t)\leqslant a-1/m$）。所以 $\overline B(g,r)\in\sigma(\cP)$。
+
+\emph{第三步：开球属于 $\sigma(\cP)$。}$B(g,r)=\bigcup_{m>1/r}\overline B(g,r-1/m)$：若 $d(f,g)<r$，取 $m$ 使 $1/m\leqslant r-d(f,g)$ 即可；反之 $d(f,g)\leqslant r-1/m<r$。由第二步，$B(g,r)\in\sigma(\cP)$。
+
+\emph{第四步：开集属于 $\sigma(\cP)$。}设 $U\subseteq C$ 是开集。令 $\cU$ 为满足 $h\in\cQ$，$r\in\Q$，$r>0$，$B(h,r)\subseteq U$ 的开球 $B(h,r)$ 的全体，其中 $\cQ$ 是引理~\ref{lem:measures:C-separable} 中的可数稠密集。$\cU$ 可数，且 $\bigcup\cU\subseteq U$。任取 $f\in U$，存在 $\varepsilon>0$ 使 $B(f,\varepsilon)\subseteq U$。取有理数 $r\in(0,\varepsilon/2)$，由引理~\ref{lem:measures:C-separable} 取 $h\in\cQ$ 使 $d(f,h)<r$。则 $f\in B(h,r)$，并且对 $f'\in B(h,r)$，$d(f',f)\leqslant d(f',h)+d(h,f)<2r<\varepsilon$，即 $B(h,r)\subseteq B(f,\varepsilon)\subseteq U$，所以 $B(h,r)\in\cU$。于是 $U=\bigcup\cU$ 是可数个开球的并，由第三步属于 $\sigma(\cP)$。
+
+由第四步和最小性，$\cB(C)\subseteq\sigma(\cP)$。结合第一步即得结论。
+\end{proof}
+
+\begin{corollary}[有限维分布决定 $C{[0,1]}$ 上的概率测度]\label{cor:measures:C-uniqueness}
+设 $\mu,\nu$ 是 $(C,\cB(C))$ 上的概率测度。若对任意 $k\geqslant1$，$t_1,\dots,t_k\in[0,1]$，$x_1,\dots,x_k\in\R$，都有
+\[
+\mu(f(t_1)\leqslant x_1,\dots,f(t_k)\leqslant x_k)=\nu(f(t_1)\leqslant x_1,\dots,f(t_k)\leqslant x_k),
+\]
+则 $\mu=\nu$。
+\end{corollary}
+\begin{proof}
+这是定理~\ref{thm:measures:uniqueness-finite} 与定理~\ref{thm:measures:C-borel} 的直接推论。
+\end{proof}
+
+\begin{example}
+事件 $\{f\in C:\sup_{t\in[0,1]}f(t)\leqslant1\}$ 不是柱集，但由连续性，
+\[
+\{f:\sup_tf(t)\leqslant1\}=\bigcap_{t\in\Q\cap[0,1]}\{f:f(t)\leqslant1\}\in\sigma(\cP).
+\]
+所以若两个随机连续函数模型给出相同的有限维分布，那么“最大值不超过 $1$”在两个模型中的概率也相同。
+
+与上一讲作业 D 对比：在一切函数组成的空间 $\R^{[0,1]}$ 上，“$\sup_tf(t)\leqslant1$”甚至不是由柱集生成的 $\sigma$-代数中的事件。区别在于，连续性让“不可数个时刻”可以用“可数个有理时刻”代替。
+\end{example}
+
+\begin{remark}
+这个例子也说明了测度论中的一个基本分工。唯一性定理只回答“有限维分布是否\emph{至多}决定一个测度”，并不回答“给定一族相容的有限维分布，是否\emph{存在}一个测度”。存在性要难得多：对于 $C[0,1]$ 上的 Brown 运动，需要专门的构造。$\R$ 和 $\R^d$ 上的存在性问题由下一讲的测度延拓定理解决。
+\end{remark}
+
+% =====================================================================
+\homework{测度的完备化，度量空间上概率测度的正则性}
+\label{hw:measures}
+
+\exercisepart{基本习题}
+
+\begin{exercises}{A}{课堂内容的补充}
+\item\label{ex:measures:A1} 证明\egref{ex:measures:zero-one} 中的 $P$ 是概率测度。
+\item 设 $P$ 是概率测度，$A_1,\dots,A_n\in\cF$。
+\begin{questions}
+\item 用归纳法证明\term{容斥原理}（inclusion–exclusion principle）：
+\[
+P\Bigl(\bigcup_{i=1}^nA_i\Bigr)=\sum_{k=1}^n(-1)^{k-1}\sum_{1\leqslant i_1<\cdots<i_k\leqslant n}P(A_{i_1}\cap\cdots\cap A_{i_k}).
+\]
+\item 证明 \term{Bonferroni 不等式}：$\sum_iP(A_i)-\sum_{i<j}P(A_i\cap A_j)\leqslant P(\bigcup_iA_i)\leqslant\sum_iP(A_i)$。
+\end{questions}
+\item 设 $(\Omega,\cF,\mu)$ 是测度空间，$A_n\in\cF$，$\sum_n\mu(A_n)<\infty$。证明 $\mu(\limsup_nA_n)=0$。（这是后面 Borel–Cantelli 引理的测度论形式。）
+\item 举例说明命题~\ref{prop:measures:fatou-sets} 中的两个不等式可以是严格的，并说明 (2) 中的有限性条件不能去掉。
+\item 设 $\mu$ 是 $(\Omega,\cF)$ 上的有限测度，$\{A_i\}_{i\in I}\subseteq\cF$ 是一族两两不交的集合，$I$ 可以不可数。证明至多有可数个 $i$ 使 $\mu(A_i)>0$。（提示：考虑 $\{i:\mu(A_i)>1/n\}$。）
+\item 设 $\mu$ 是 $(\Omega,\cF)$ 上的测度，令 $\cF_0=\{A\in\cF:\mu(A)<\infty\ \text{或}\ \mu(A^c)<\infty\}$。$\cF_0$ 是否一定是 $\sigma$-代数？是否一定是代数？
+\item 设 $\mu,\nu$ 是 $(\N,2^\N)$ 上的测度，并且 $\mu(\{n\})=\nu(\{n\})$ 对一切 $n$ 成立。证明 $\mu=\nu$。能否由本讲的唯一性定理直接得到？
+\item\label{ex:measures:A8} 证明下列 $C[0,1]$ 的子集都属于 $\cB(C)$：
+\begin{questions}
+\item $\{f: f\ \text{单调不减}\}$；
+\item $\{f: \text{存在}\ t\in[0,1]\ \text{使}\ f(t)=0\}$；
+\item $\{f: f(0)=0,\ \abs{f(t)}\leqslant\sqrt t\ \text{对一切}\ t\ \text{成立}\}$。
+\end{questions}
+\item 设 $\mu,\nu$ 是 $(\R^2,\cR^2)$ 上的概率测度，并且对一切 $a<b$，$c<d$ 有 $\mu((a,b]\times(c,d])=\nu((a,b]\times(c,d])$。证明 $\mu=\nu$。若只知道对一切 $x,y$ 有 $\mu((-\infty,x]\times\R)=\nu((-\infty,x]\times\R)$ 与 $\mu(\R\times(-\infty,y])=\nu(\R\times(-\infty,y])$，能否推出 $\mu=\nu$？
+\end{exercises}
+
+\begin{probleme}{B}{测度的完备化}
+设 $(\Omega,\cF,\mu)$ 是测度空间，令 $\cN=\{B\subseteq\Omega:\ \text{存在}\ N\in\cF,\ \mu(N)=0,\ B\subseteq N\}$，它的元素称为 $\mu$-\term{可略集}（negligible set）。令
+\[
+\overline\cF=\{A\cup B:\ A\in\cF,\ B\in\cN\}.
+\]
+\begin{questions}
+\item 证明 $\cN$ 对可数并封闭，且 $\cF\subseteq\overline\cF$，$\cN\subseteq\overline\cF$。
+\item 证明 $\overline\cF$ 对可数并封闭。
+\item 设 $E=A\cup B$，$A\in\cF$，$B\subseteq N$，$\mu(N)=0$。验证 $E^c=(A^c\cap N^c)\cup(A^c\cap B^c\cap N)$，并由此证明 $\overline\cF$ 对补集封闭。于是 $\overline\cF$ 是 $\sigma$-代数。
+\item 对 $E=A\cup B\in\overline\cF$ 定义 $\bar\mu(E)=\mu(A)$。设 $E=A_1\cup B_1=A_2\cup B_2$ 是两种表示，$B_i\subseteq N_i$。令 $A_0=A_1\cap A_2$，证明 $A_i\setminus A_0\subseteq N_1\cup N_2$，从而 $\mu(A_1)=\mu(A_0)=\mu(A_2)$。所以 $\bar\mu$ 定义合理。
+\item 证明 $\bar\mu$ 是 $(\Omega,\overline\cF)$ 上的测度，在 $\cF$ 上与 $\mu$ 相等。
+\item 证明 $(\Omega,\overline\cF,\bar\mu)$ 是完备的：若 $E\in\overline\cF$，$\bar\mu(E)=0$，$D\subseteq E$，则 $D\in\overline\cF$。
+\item 证明 $\overline\cF$ 是包含 $\cF\cup\cN$ 的最小 $\sigma$-代数，并且 $\bar\mu$ 是 $\mu$ 在 $\overline\cF$ 上的唯一延拓。
+\item 证明 $E\in\overline\cF$ 当且仅当存在 $A,A'\in\cF$ 使 $A\subseteq E\subseteq A'$ 且 $\mu(A'\setminus A)=0$。
+\end{questions}
+\end{probleme}
+
+\begin{probleme}{C}{度量空间上概率测度的正则性}
+设 $(S,\rho)$ 是度量空间，$\mu$ 是 $(S,\cB(S))$ 上的概率测度。本题证明：\emph{对每个 $A\in\cB(S)$，}
+\[
+\mu(A)=\sup\{\mu(F): F\subseteq A,\ F\ \text{闭}\}=\inf\{\mu(U): U\supseteq A,\ U\ \text{开}\}.
+\]
+这说明 Borel 概率测度完全由它在闭集（或开集）上的值决定。令
+\[
+\cG=\{A\in\cB(S):\ \text{对任意}\ \varepsilon>0,\ \text{存在闭集}\ F\ \text{与开集}\ U,\ F\subseteq A\subseteq U,\ \mu(U\setminus F)<\varepsilon\}.
+\]
+\begin{questions}
+\item 对非空闭集 $F$，令 $\rho(x,F)=\inf_{y\in F}\rho(x,y)$。证明 $\abs{\rho(x,F)-\rho(x',F)}\leqslant\rho(x,x')$，从而 $x\mapsto\rho(x,F)$ 连续；并证明 $\rho(x,F)=0\iff x\in F$。
+\item 令 $U_n=\{x:\rho(x,F)<1/n\}$。证明 $U_n$ 是开集，且 $U_n\downarrow F$。
+\item 由 C2) 和测度的从上连续证明：每个闭集都属于 $\cG$。
+\item 证明 $\cG$ 对补集封闭。
+\item 设 $A_n\in\cG$，$A=\bigcup_nA_n$。给定 $\varepsilon>0$，取闭集 $F_n\subseteq A_n\subseteq U_n$ 使 $\mu(U_n\setminus F_n)<\varepsilon2^{-n-1}$。令 $U=\bigcup_nU_n$，并取 $N$ 使 $\mu(\bigcup_nF_n\setminus\bigcup_{n\leqslant N}F_n)<\varepsilon/2$。证明 $F=\bigcup_{n\leqslant N}F_n$ 是闭集，$F\subseteq A\subseteq U$，且 $\mu(U\setminus F)<\varepsilon$。
+\item 由 C3)–C5) 与 $\sigma(\text{闭集})=\cB(S)$ 得到 $\cG=\cB(S)$，从而完成证明。
+\item 推论：若 $(S,\cB(S))$ 上的两个概率测度在一切闭集上相等，则它们相等。能否不用 C6)，直接用唯一性定理得到这个推论？
+\end{questions}
+\end{probleme}
+
+\thinkingpart
+
+\begin{probleme}*[问题]{D}{Ulam 定理：$C[0,1]$ 上的概率测度是胎紧的}
+设 $(S,\rho)$ 是\term{可分}（有可数稠密子集）且\term{完备}的度量空间（这样的空间称为 Polish 空间，$\R^d$ 和 $C[0,1]$ 都是），$\mu$ 是 $(S,\cB(S))$ 上的概率测度。本题证明：\emph{对任意 $\varepsilon>0$，存在紧集 $K$ 使 $\mu(K)>1-\varepsilon$。}这一性质称为\term{胎紧}（tightness），在弱收敛理论中至关重要。
+\begin{questions}
+\item 设 $\{s_1,s_2,\dots\}$ 是稠密子集。证明对每个 $k$，$\bigcup_{i=1}^\infty\overline B(s_i,1/k)=S$。
+\item 由测度的从下连续，对每个 $k$ 取 $n_k$ 使 $\mu\bigl(\bigcup_{i\leqslant n_k}\overline B(s_i,1/k)\bigr)>1-\varepsilon2^{-k}$。令 $K=\bigcap_k\bigcup_{i\leqslant n_k}\overline B(s_i,1/k)$。证明 $\mu(K)>1-\varepsilon$。
+\item 证明 $K$ 是闭集，并且是\term{全有界}的：对任意 $\delta>0$，$K$ 可以被有限个半径为 $\delta$ 的球覆盖。
+\item 回忆：完备度量空间中闭且全有界的集合是紧集。完成证明。
+\item 结合作业 C 证明：对每个 $A\in\cB(S)$，$\mu(A)=\sup\{\mu(K):K\subseteq A,\ K\ \text{紧}\}$。
+\end{questions}
+\end{probleme}
+
+\exercisepart{课外知识：有限可加的“概率”与超滤子}
+
+\begin{probleme}{E}{$\N$ 上的有限可加 $0$-$1$ 测度}
+\egref{ex:measures:finitely-additive} 中的有限可加函数只定义在一个代数上。本题说明，借助选择公理，可以在 $\N$ 的\emph{全部}子集上定义一个有限可加、只取 $0,1$、在一切有限集上为 $0$ 的函数，它当然不是可数可加的。称 $\cU\subseteq2^\N$ 为\term{滤子}（filter），若 $\varnothing\notin\cU$，$\N\in\cU$，$A,B\in\cU\Rightarrow A\cap B\in\cU$，$A\in\cU$ 且 $A\subseteq B\Rightarrow B\in\cU$。极大的滤子称为\term{超滤子}（ultrafilter）。
+\begin{questions}
+\item 证明余有限集的全体 $\cU_0$ 是滤子。
+\item 用 Zorn 引理证明存在包含 $\cU_0$ 的超滤子 $\cU$。
+\item 设 $\cU$ 是超滤子，$A\subseteq\N$。证明 $A\in\cU$ 与 $A^c\in\cU$ 恰有一个成立。（提示：若 $A\notin\cU$，考虑 $\{B: B\supseteq A\cap C\ \text{对某个}\ C\in\cU\}$ 何时是滤子。）
+\item 令 $\mu(A)=1$（$A\in\cU$），$\mu(A)=0$（$A\notin\cU$）。证明 $\mu$ 在 $2^\N$ 上有限可加，并且在有限集上为 $0$。
+\item 说明 $\mu$ 不是可数可加的，并解释这与命题~\ref{prop:measures:additivity-continuity} 的关系：找一列 $A_n\downarrow\varnothing$ 使 $\mu(A_n)=1$。
+\end{questions}
+\end{probleme}

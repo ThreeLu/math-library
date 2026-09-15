@@ -1,0 +1,443 @@
+% !TEX root = ../高等概率论.tex
+% =====================================================================
+%  测度延拓：半代数、代数上的测度、外测度、Carathéodory 定理、延拓定理、Lebesgue–Stieltjes 测度
+% =====================================================================
+\lecture{半代数与代数，代数上的测度，外测度与 Carathéodory 可测集，测度延拓定理的存在性与唯一性，Lebesgue--Stieltjes 测度与 Lebesgue 测度}
+\label{lec:extension-of-measures}
+
+上一讲解决了唯一性：测度由它在一个（适当有限的）$\pi$-类上的值决定。本讲解决存在性。以 $\R$ 上的长度为例，我们只知道区间的长度应当是 $b-a$，问题是：能否在 $\cR$ 上定义一个测度，使它在区间上取值 $b-a$？
+
+直接在 $\cR$ 上写出定义是做不到的，因为我们根本写不出一般 Borel 集的样子。延拓的思路分三步：
+\begin{enumerate}
+\item 在一个结构简单的集合族（半代数，例如左开右闭区间）上给出集函数，并验证它满足可加性与可数次可加性；
+\item 把集函数延拓到由它生成的代数（有限个区间的不交并）上，得到代数上的测度；
+\item 用外测度把代数上的测度延拓到生成的 $\sigma$-代数上。
+\end{enumerate}
+第三步是本讲的核心，称为 Carathéodory 延拓定理。
+
+\topic{半代数与代数}
+
+\begin{summary}
+区间的全体不是代数（两个区间的并未必是区间），但它具有一个较弱的结构：交集仍是区间，补集是有限个区间的不交并。这种结构称为半代数。
+\end{summary}
+
+\begin{definition}[半代数]\label{def:extension:semialgebra}
+设 $\cS\subseteq2^\Omega$ 非空。若
+\begin{enumerate}
+\item $S,T\in\cS$ 蕴含 $S\cap T\in\cS$；
+\item 若 $S\in\cS$，则 $S^c$ 是 $\cS$ 中有限个两两不交的集合的并，
+\end{enumerate}
+则称 $\cS$ 为\term{半代数}（semialgebra）。
+\end{definition}
+
+由 (2)，取 $S\in\cS$，$S^c=T_1+\cdots+T_n$，$T_i\in\cS$，则 $\varnothing=S\cap T_1\in\cS$。所以半代数总含有空集。
+
+\begin{example}[左开右闭区间]\label{ex:extension:S1}
+约定 $(a,\infty]$ 表示 $(a,\infty)$。令
+\[
+\cS_1=\{(a,b]:\ -\infty\leqslant a<b\leqslant\infty\}\cup\{\varnothing\}.
+\]
+则 $\cS_1$ 是 $\R$ 上的半代数。两个区间 $(a,b]$ 与 $(a',b']$ 的交是 $(\max\{a,a'\},\min\{b,b'\}]$ 或空集，属于 $\cS_1$。$(a,b]$ 的补集是 $(-\infty,a]\cup(b,\infty]$，这是两个不交的 $\cS_1$ 中的集合的并（$a=-\infty$ 时第一项为空集，$b=\infty$ 时第二项为空集）；$\varnothing^c=(-\infty,\infty]$。
+\end{example}
+
+\begin{example}[矩形]\label{ex:extension:Sd}
+令 $\cS_d$ 为空集连同一切形如 $(a_1,b_1]\times\cdots\times(a_d,b_d]$（$-\infty\leqslant a_i<b_i\leqslant\infty$）的矩形组成的集合族。$\cS_d$ 是 $\R^d$ 上的半代数。
+
+两个矩形的交是各坐标区间之交的乘积：$\prod_i I_i\cap\prod_i J_i=\prod_i(I_i\cap J_i)$，若某个 $I_i\cap J_i=\varnothing$ 则为空集，否则每个 $I_i\cap J_i\in\cS_1$ 非空，乘积是矩形。
+
+设 $A=I_1\times\cdots\times I_d$，$I_i\in\cS_1$ 非空。由\egref{ex:extension:S1} 的证明，$\R=I_i+J_i^{(1)}+J_i^{(2)}$，其中 $J_i^{(1)},J_i^{(2)}\in\cS_1$。记 $J_i^{(0)}=I_i$。对每个 $\varepsilon=(\varepsilon_1,\dots,\varepsilon_d)\in\{0,1,2\}^d$，令 $R_\varepsilon=J_1^{(\varepsilon_1)}\times\cdots\times J_d^{(\varepsilon_d)}$。每个 $x\in\R^d$ 的第 $i$ 个坐标恰好属于 $J_i^{(0)},J_i^{(1)},J_i^{(2)}$ 中的一个，所以 $\R^d$ 是 $3^d$ 个集合 $R_\varepsilon$ 的不交并。$A=R_{(0,\dots,0)}$，于是 $A^c$ 是其余 $3^d-1$ 个 $R_\varepsilon$ 的不交并；其中是空集的项可以去掉，非空的项都是矩形。
+\end{example}
+
+\begin{lemma}[半代数生成的代数]\label{lem:extension:algebra-from-semialgebra}
+设 $\cS$ 是半代数。令 $\overline\cS$ 为 $\cS$ 中有限个两两不交的集合的并的全体。则 $\overline\cS$ 是代数，并且 $\overline\cS=\alpha(\cS)$ 是包含 $\cS$ 的最小代数。
+\end{lemma}
+\begin{proof}
+\emph{$\overline\cS$ 对交集封闭。}设 $A=S_1+\cdots+S_m$，$B=T_1+\cdots+T_n$，$S_i,T_j\in\cS$。则
+\[
+A\cap B=\bigcup_{i,j}(S_i\cap T_j),
+\]
+其中 $S_i\cap T_j\in\cS$，并且它们两两不交：若 $(i,j)\neq(i',j')$，则 $i\neq i'$ 或 $j\neq j'$，前者时 $S_i\cap S_{i'}=\varnothing$，后者时 $T_j\cap T_{j'}=\varnothing$。所以 $A\cap B\in\overline\cS$。归纳可知 $\overline\cS$ 对有限交封闭。
+
+\emph{$\overline\cS$ 对补集封闭。}设 $A=S_1+\cdots+S_m$。由半代数定义，每个 $S_i^c\in\overline\cS$。由 De Morgan 律，$A^c=S_1^c\cap\cdots\cap S_m^c$，由上一段属于 $\overline\cS$。
+
+\emph{$\Omega\in\overline\cS$，并对并集封闭。}任取 $S\in\cS$，$\Omega=S\cup S^c$，而 $S^c$ 是 $\cS$ 中有限个不交集合的并，它们都与 $S$ 不交，所以 $\Omega\in\overline\cS$。$A\cup B=(A^c\cap B^c)^c\in\overline\cS$。
+
+所以 $\overline\cS$ 是代数。它包含 $\cS$；任何包含 $\cS$ 的代数都对有限并封闭，从而包含 $\overline\cS$。
+\end{proof}
+
+例如，$\overline{\cS_1}$ 就是 $\R$ 中有限个左开右闭区间（允许无界）的不交并的全体。
+
+\topic{代数上的测度}
+
+\begin{definition}[代数上的测度]\label{def:extension:premeasure}
+设 $\cA$ 是 $\Omega$ 上的代数。函数 $\mu:\cA\to[0,\infty]$ 若满足 $\mu(\varnothing)=0$，并且对任意两两不交的 $A_1,A_2,\dots\in\cA$，只要 $\bigcup_nA_n\in\cA$，就有 $\mu(\bigcup_nA_n)=\sum_n\mu(A_n)$，则称 $\mu$ 为代数 $\cA$ 上的\term{测度}（measure on an algebra），也称\term{预测度}（premeasure）。若存在 $A_n\in\cA$ 使 $\bigcup_nA_n=\Omega$ 且 $\mu(A_n)<\infty$，称 $\mu$ 在 $\cA$ 上是 $\sigma$-有限的。
+\end{definition}
+
+与 $\sigma$-代数上的测度相比，唯一的区别是：可数可加性只对“并集恰好还在 $\cA$ 中”的情形提出要求。取 $A_n=\varnothing$（$n>k$）可知预测度是有限可加的，于是和命题~\ref{prop:measures:additivity-continuity} 的证明一样，它是单调的。
+
+下面的定理把半代数上的集函数延拓为代数上的测度。先证明一个只用有限可加性的引理。
+
+\begin{lemma}\label{lem:extension:finite-additive}
+设 $\cS$ 是半代数，$\mu:\cS\to[0,\infty]$，$\mu(\varnothing)=0$，并且满足
+\begin{enumerate}
+\item[(i)] 若 $S\in\cS$ 是 $\cS$ 中有限个两两不交集合 $S_1,\dots,S_n$ 的并，则 $\mu(S)=\sum_{i=1}^n\mu(S_i)$。
+\end{enumerate}
+对 $A=S_1+\cdots+S_n\in\overline\cS$（$S_i\in\cS$）定义 $\bar\mu(A)=\sum_{i=1}^n\mu(S_i)$。则
+\begin{enumerate}
+\item $\bar\mu$ 定义合理，即与 $A$ 的表示方法无关，并且在 $\cS$ 上等于 $\mu$；
+\item $\bar\mu$ 在 $\overline\cS$ 上有限可加；
+\item 若 $A,B_1,\dots,B_n\in\overline\cS$ 且 $A\subseteq B_1\cup\cdots\cup B_n$，则 $\bar\mu(A)\leqslant\sum_{i=1}^n\bar\mu(B_i)$。特别地，$\bar\mu$ 单调。
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(1) 设 $A=S_1+\cdots+S_m=T_1+\cdots+T_n$ 是两种表示，$S_i,T_j\in\cS$。对每个 $i$，$S_i=S_i\cap A=\sum_j(S_i\cap T_j)$，这是 $\cS$ 中有限个不交集合的并，由 (i)，$\mu(S_i)=\sum_j\mu(S_i\cap T_j)$。同理 $\mu(T_j)=\sum_i\mu(S_i\cap T_j)$。于是
+\[
+\sum_i\mu(S_i)=\sum_i\sum_j\mu(S_i\cap T_j)=\sum_j\sum_i\mu(S_i\cap T_j)=\sum_j\mu(T_j).
+\]
+若 $A=S\in\cS$，取表示 $A=S$ 即得 $\bar\mu(S)=\mu(S)$。
+
+(2) 设 $A=B_1+\cdots+B_n$，$A,B_k\in\overline\cS$，$B_k=\sum_jS_{kj}$，$S_{kj}\in\cS$。则 $A=\sum_{k,j}S_{kj}$ 是 $A$ 的一个表示，由 (1)，$\bar\mu(A)=\sum_{k,j}\mu(S_{kj})=\sum_k\bar\mu(B_k)$。
+
+(3) 先看 $n=1$：若 $A\subseteq B$，则 $B=A+(B\cap A^c)$，而 $B\cap A^c\in\overline\cS$（$\overline\cS$ 是代数），由 (2)，$\bar\mu(B)=\bar\mu(A)+\bar\mu(B\cap A^c)\geqslant\bar\mu(A)$。一般情形，令 $F_1=B_1$，$F_k=B_k\cap B_1^c\cap\cdots\cap B_{k-1}^c$，则 $F_k\in\overline\cS$ 两两不交，$F_k\subseteq B_k$，$\bigcup_kF_k=\bigcup_kB_k$。于是 $A=\sum_k(A\cap F_k)$，由 (2) 与单调性，
+\[
+\bar\mu(A)=\sum_k\bar\mu(A\cap F_k)\leqslant\sum_k\bar\mu(F_k)\leqslant\sum_k\bar\mu(B_k).\qedhere
+\]
+\end{proof}
+
+\begin{theorem}[从半代数到代数]\label{thm:extension:semialgebra}
+设 $\cS$ 是半代数，$\mu:\cS\to[0,\infty]$，$\mu(\varnothing)=0$，满足引理~\ref{lem:extension:finite-additive} 中的条件 (i)，以及
+\begin{enumerate}
+\item[(ii)] 若 $S\in\cS$ 是 $\cS$ 中可数个两两不交集合 $S_1,S_2,\dots$ 的并，则 $\mu(S)\leqslant\sum_{i=1}^\infty\mu(S_i)$。
+\end{enumerate}
+则引理~\ref{lem:extension:finite-additive} 中的 $\bar\mu$ 是代数 $\overline\cS$ 上的测度，并且是 $\mu$ 在 $\overline\cS$ 上唯一的有限可加延拓。
+\end{theorem}
+\begin{proof}
+唯一性：任何有限可加的延拓在 $A=S_1+\cdots+S_n$ 上都必须取值 $\sum_i\mu(S_i)$。
+
+可数可加性：设 $A,B_1,B_2,\dots\in\overline\cS$，$A=\sum_{i\geqslant1}B_i$。
+
+\emph{“$\geqslant$”。}对每个 $n$，$A\supseteq B_1+\cdots+B_n$，由引理~\ref{lem:extension:finite-additive} 的单调性与有限可加性，$\bar\mu(A)\geqslant\sum_{i\leqslant n}\bar\mu(B_i)$。令 $n\to\infty$ 得 $\bar\mu(A)\geqslant\sum_i\bar\mu(B_i)$。
+
+\emph{“$\leqslant$”。}写 $B_i=\sum_jS_{ij}$（有限和），$A=\sum_{k=1}^mT_k$，$S_{ij},T_k\in\cS$。对每个 $k$，$T_k=T_k\cap A=\sum_{i,j}(T_k\cap S_{ij})$ 是 $\cS$ 中可数个不交集合的并，由 (ii)，
+\[
+\mu(T_k)\leqslant\sum_{i,j}\mu(T_k\cap S_{ij}).
+\]
+另一方面，由于 $S_{ij}\subseteq A$，$S_{ij}=\sum_k(T_k\cap S_{ij})$ 是有限不交并，由 (i)，$\mu(S_{ij})=\sum_k\mu(T_k\cap S_{ij})$。对 $k$ 求和并交换非负级数的求和次序，
+\[
+\bar\mu(A)=\sum_k\mu(T_k)\leqslant\sum_k\sum_{i,j}\mu(T_k\cap S_{ij})=\sum_{i,j}\sum_k\mu(T_k\cap S_{ij})=\sum_{i,j}\mu(S_{ij})=\sum_i\bar\mu(B_i).\qedhere
+\]
+\end{proof}
+
+\topic{外测度与 Carathéodory 定理}
+
+\begin{summary}
+给定代数上的测度 $\mu$，对任意集合 $E$，用 $\cA$ 中集合的可数覆盖从外面逼近它，得到外测度 $\mu^*(E)$。外测度对一切集合都有定义，但一般不可加。Carathéodory 找到了一个巧妙的条件，挑出使 $\mu^*$ 可加的那些集合，它们组成一个 $\sigma$-代数。
+\end{summary}
+
+\begin{definition}[外测度]\label{def:extension:outer}
+函数 $\mu^*:2^\Omega\to[0,\infty]$ 若满足
+\begin{enumerate}
+\item $\mu^*(\varnothing)=0$；
+\item 单调性：$E\subseteq F$ 蕴含 $\mu^*(E)\leqslant\mu^*(F)$；
+\item 可数次可加性：$E\subseteq\bigcup_nE_n$ 蕴含 $\mu^*(E)\leqslant\sum_n\mu^*(E_n)$，
+\end{enumerate}
+则称 $\mu^*$ 为 $\Omega$ 上的\term{外测度}（outer measure）。
+\end{definition}
+
+\begin{proposition}[由代数上的测度诱导的外测度]\label{prop:extension:induced-outer}
+设 $\mu$ 是代数 $\cA$ 上的测度。对 $E\subseteq\Omega$ 令
+\[
+\mu^*(E)=\inf\Bigl\{\sum_{n=1}^\infty\mu(A_n):\ A_n\in\cA,\ E\subseteq\bigcup_{n=1}^\infty A_n\Bigr\}.
+\]
+则 $\mu^*$ 是外测度，并且对 $A\in\cA$ 有 $\mu^*(A)=\mu(A)$。
+\end{proposition}
+\begin{proof}
+由于 $\Omega\in\cA$，每个 $E$ 至少有覆盖 $A_1=\Omega$，$A_n=\varnothing$（$n\geqslant2$），所以下确界是对非空集合取的。
+
+(1) 取 $A_n=\varnothing$ 得 $\mu^*(\varnothing)=0$。
+
+(2) 若 $E\subseteq F$，则 $F$ 的每个覆盖都是 $E$ 的覆盖，$E$ 的下确界是对更大的集合取的，所以 $\mu^*(E)\leqslant\mu^*(F)$。
+
+(3) 设 $E\subseteq\bigcup_nE_n$。若某个 $\mu^*(E_n)=\infty$，结论显然。否则任取 $\varepsilon>0$，对每个 $n$，由下确界的定义取 $A_{n,k}\in\cA$ 使 $E_n\subseteq\bigcup_kA_{n,k}$ 且 $\sum_k\mu(A_{n,k})\leqslant\mu^*(E_n)+\varepsilon2^{-n}$。则 $\{A_{n,k}\}_{n,k}$ 是 $E$ 的可数覆盖，于是
+\[
+\mu^*(E)\leqslant\sum_n\sum_k\mu(A_{n,k})\leqslant\sum_n\bigl(\mu^*(E_n)+\varepsilon2^{-n}\bigr)=\sum_n\mu^*(E_n)+\varepsilon.
+\]
+由 $\varepsilon$ 的任意性得结论。
+
+最后设 $A\in\cA$。取覆盖 $A_1=A$，其余为空集，得 $\mu^*(A)\leqslant\mu(A)$。反之，设 $A\subseteq\bigcup_nA_n$，$A_n\in\cA$。令 $B_1=A\cap A_1$，$B_n=A\cap A_n\cap A_1^c\cap\cdots\cap A_{n-1}^c$，则 $B_n\in\cA$ 两两不交，$B_n\subseteq A_n$，$\bigcup_nB_n=A\in\cA$。由 $\mu$ 在代数上的可数可加性与单调性，$\mu(A)=\sum_n\mu(B_n)\leqslant\sum_n\mu(A_n)$。对一切覆盖取下确界得 $\mu(A)\leqslant\mu^*(A)$。
+\end{proof}
+
+外测度的直观意义是：若 $\nu$ 是 $\sigma(\cA)$ 上与 $\mu$ 在 $\cA$ 上相等的测度，那么对 $E\in\sigma(\cA)$ 和任何覆盖，由次可加性，$\nu(E)\leqslant\sum_n\nu(A_n)=\sum_n\mu(A_n)$，故 $\nu(E)\leqslant\mu^*(E)$。外测度是一切可能的延拓所能取到的上界。“好”的集合应当是使这个上界与“从内部的逼近”吻合的集合，Carathéodory 把这个想法表述成下面的定义。
+
+\begin{definition}[Carathéodory 可测]\label{def:extension:caratheodory}
+设 $\mu^*$ 是 $\Omega$ 上的外测度。若 $E\subseteq\Omega$ 满足
+\[
+\mu^*(F)=\mu^*(F\cap E)+\mu^*(F\cap E^c)\qquad\text{对一切}\ F\subseteq\Omega,
+\]
+则称 $E$ 是 \term{$\mu^*$-可测的}（$\mu^*$-measurable）。$\mu^*$-可测集的全体记作 $\cM(\mu^*)$。
+\end{definition}
+
+定义中的 $F$ 称为“试验集”：$E$ 可测，意味着 $E$ 把任何集合都“干净地”切成两半，外测度可加。由次可加性，$\mu^*(F)\leqslant\mu^*(F\cap E)+\mu^*(F\cap E^c)$ 总成立，所以要验证 $E$ 可测，只需验证
+\begin{equation}\label{eq:extension:caratheodory-half}
+\mu^*(F)\geqslant\mu^*(F\cap E)+\mu^*(F\cap E^c)\qquad\text{对一切}\ F\ \text{满足}\ \mu^*(F)<\infty
+\end{equation}
+（$\mu^*(F)=\infty$ 时不等式自动成立）。
+
+\begin{theorem}[Carathéodory 定理]\label{thm:extension:caratheodory}
+设 $\mu^*$ 是 $\Omega$ 上的外测度。则 $\cM=\cM(\mu^*)$ 是 $\sigma$-代数，$\mu^*$ 在 $\cM$ 上的限制是测度。此外，若 $\mu^*(N)=0$，则 $N\in\cM$。
+\end{theorem}
+\begin{proof}
+分五步。
+
+\emph{(a) $\Omega\in\cM$，$\cM$ 对补集封闭。}定义中 $E$ 与 $E^c$ 的地位对称，所以 $E\in\cM$ 蕴含 $E^c\in\cM$。$\mu^*(F\cap\Omega)+\mu^*(F\cap\varnothing)=\mu^*(F)$，故 $\Omega\in\cM$。
+
+\emph{(b) $\cM$ 对有限并封闭。}设 $E_1,E_2\in\cM$，$G\subseteq\Omega$。用 $E_1$ 可测（试验集 $G$）、$E_2$ 可测（试验集 $G\cap E_1^c$），
+\[
+\mu^*(G)=\mu^*(G\cap E_1)+\mu^*(G\cap E_1^c)=\mu^*(G\cap E_1)+\mu^*(G\cap E_1^c\cap E_2)+\mu^*(G\cap E_1^c\cap E_2^c).
+\]
+由于 $G\cap(E_1\cup E_2)=(G\cap E_1)\cup(G\cap E_1^c\cap E_2)$，由次可加性，前两项之和不小于 $\mu^*(G\cap(E_1\cup E_2))$；而第三项是 $\mu^*(G\cap(E_1\cup E_2)^c)$。所以
+\[
+\mu^*(G)\geqslant\mu^*(G\cap(E_1\cup E_2))+\mu^*(G\cap(E_1\cup E_2)^c),
+\]
+即 $E_1\cup E_2\in\cM$。归纳得有限并封闭。结合 (a)，$\cM$ 是代数，从而对有限交与差集也封闭。
+
+\emph{(c) 若 $E_1,\dots,E_n\in\cM$ 两两不交，则对任意 $G$，$\mu^*(G\cap\bigcup_{i\leqslant n}E_i)=\sum_{i\leqslant n}\mu^*(G\cap E_i)$。}对 $n$ 归纳，$n=1$ 显然。令 $H_n=E_1\cup\cdots\cup E_n$。用 $E_n$ 可测，试验集取 $G\cap H_n$：由于 $H_n\cap E_n=E_n$，$H_n\cap E_n^c=H_{n-1}$（不交性），
+\[
+\mu^*(G\cap H_n)=\mu^*(G\cap H_n\cap E_n)+\mu^*(G\cap H_n\cap E_n^c)=\mu^*(G\cap E_n)+\mu^*(G\cap H_{n-1}),
+\]
+由归纳假设即得。
+
+\emph{(d) $\cM$ 对可数并封闭。}设 $E_i\in\cM$，$E=\bigcup_iE_i$。令 $E_1'=E_1$，$E_i'=E_i\setminus(E_1\cup\cdots\cup E_{i-1})$，由 (b) 知 $E_i'\in\cM$，它们两两不交且并为 $E$。所以不妨设 $E_i$ 两两不交。令 $H_n=E_1\cup\cdots\cup E_n\in\cM$。对任意 $G$，由 $H_n$ 可测、$H_n^c\supseteq E^c$ 与单调性、以及 (c)，
+\[
+\mu^*(G)=\mu^*(G\cap H_n)+\mu^*(G\cap H_n^c)\geqslant\sum_{i=1}^n\mu^*(G\cap E_i)+\mu^*(G\cap E^c).
+\]
+令 $n\to\infty$，再用次可加性（$G\cap E=\bigcup_i(G\cap E_i)$），
+\begin{equation}\label{eq:extension:countable}
+\mu^*(G)\geqslant\sum_{i=1}^\infty\mu^*(G\cap E_i)+\mu^*(G\cap E^c)\geqslant\mu^*(G\cap E)+\mu^*(G\cap E^c).
+\end{equation}
+所以 $E\in\cM$。
+
+\emph{(e) $\mu^*$ 在 $\cM$ 上可数可加。}设 $E_i\in\cM$ 两两不交，$E=\bigcup_iE_i$。在 \eqref{eq:extension:countable} 中取 $G=E$，得 $\mu^*(E)\geqslant\sum_i\mu^*(E_i)$；反向不等式是次可加性。又 $\mu^*(\varnothing)=0$，故 $\mu^*|_\cM$ 是测度。
+
+最后，设 $\mu^*(N)=0$。对任意 $F$，由单调性 $\mu^*(F\cap N)\leqslant\mu^*(N)=0$，$\mu^*(F\cap N^c)\leqslant\mu^*(F)$，所以 \eqref{eq:extension:caratheodory-half} 成立，$N\in\cM$。
+\end{proof}
+
+\begin{lemma}\label{lem:extension:algebra-measurable}
+设 $\mu$ 是代数 $\cA$ 上的测度，$\mu^*$ 是它诱导的外测度。则 $\cA\subseteq\cM(\mu^*)$。
+\end{lemma}
+\begin{proof}
+设 $A\in\cA$，要对 $\mu^*(F)<\infty$ 的 $F$ 验证 \eqref{eq:extension:caratheodory-half}。任取 $\varepsilon>0$，取 $B_n\in\cA$ 使 $F\subseteq\bigcup_nB_n$ 且 $\sum_n\mu(B_n)\leqslant\mu^*(F)+\varepsilon$。对每个 $n$，$B_n=(B_n\cap A)+(B_n\cap A^c)$ 是 $\cA$ 中两个不交集合的并，由 $\mu$ 的有限可加性以及 $\mu=\mu^*$ 在 $\cA$ 上成立（命题~\ref{prop:extension:induced-outer}），
+\[
+\mu(B_n)=\mu^*(B_n\cap A)+\mu^*(B_n\cap A^c).
+\]
+对 $n$ 求和，并由 $F\cap A\subseteq\bigcup_n(B_n\cap A)$，$F\cap A^c\subseteq\bigcup_n(B_n\cap A^c)$ 与次可加性，
+\[
+\mu^*(F)+\varepsilon\geqslant\sum_n\mu^*(B_n\cap A)+\sum_n\mu^*(B_n\cap A^c)\geqslant\mu^*(F\cap A)+\mu^*(F\cap A^c).
+\]
+由 $\varepsilon$ 的任意性得 \eqref{eq:extension:caratheodory-half}。
+\end{proof}
+
+\topic{测度延拓定理}
+
+\begin{theorem}[Carathéodory 测度延拓定理]\label{thm:extension:main}
+设 $\mu$ 是代数 $\cA$ 上的测度。
+\begin{enumerate}
+\item \emph{存在性}：存在 $\sigma(\cA)$ 上的测度 $\nu$，使 $\nu(A)=\mu(A)$ 对一切 $A\in\cA$ 成立。可以取 $\nu=\mu^*|_{\sigma(\cA)}$，其中 $\mu^*$ 是 $\mu$ 诱导的外测度。
+\item \emph{唯一性}：若 $\mu$ 在 $\cA$ 上 $\sigma$-有限，则这样的 $\nu$ 是唯一的。
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+(1) 由引理~\ref{lem:extension:algebra-measurable}，$\cA\subseteq\cM(\mu^*)$；由定理~\ref{thm:extension:caratheodory}，$\cM(\mu^*)$ 是 $\sigma$-代数，故 $\sigma(\cA)\subseteq\cM(\mu^*)$。$\mu^*$ 在 $\cM(\mu^*)$ 上是测度，限制到子 $\sigma$-代数 $\sigma(\cA)$ 上仍是测度（可数可加性对更少的集合列成立）。由命题~\ref{prop:extension:induced-outer}，它在 $\cA$ 上等于 $\mu$。
+
+(2) 设 $\nu_1,\nu_2$ 是两个延拓。$\cA$ 是代数，从而是 $\pi$-类。由 $\sigma$-有限性，存在 $A_n\in\cA$，$\bigcup_nA_n=\Omega$，$\mu(A_n)<\infty$；令 $E_n=A_1\cup\cdots\cup A_n\in\cA$，则 $E_n\uparrow\Omega$ 且 $\mu(E_n)\leqslant\sum_{k\leqslant n}\mu(A_k)<\infty$。由唯一性定理（定理~\ref{thm:measures:uniqueness}），$\nu_1=\nu_2$ 在 $\sigma(\cA)$ 上成立。
+\end{proof}
+
+把定理~\ref{thm:extension:semialgebra} 与定理~\ref{thm:extension:main} 合起来，就得到构造测度时实际使用的形式。
+
+\begin{corollary}[从半代数延拓]\label{cor:extension:semialgebra}
+设 $\cS$ 是半代数，$\mu:\cS\to[0,\infty]$ 满足 $\mu(\varnothing)=0$ 以及定理~\ref{thm:extension:semialgebra} 的条件 (i)(ii)。则存在 $\sigma(\cS)$ 上的测度 $\nu$，使 $\nu=\mu$ 在 $\cS$ 上成立。若存在 $S_n\in\cS$ 使 $\bigcup_nS_n=\Omega$ 且 $\mu(S_n)<\infty$，则 $\nu$ 唯一。
+\end{corollary}
+\begin{proof}
+由定理~\ref{thm:extension:semialgebra}，$\mu$ 延拓为代数 $\overline\cS$ 上的测度 $\bar\mu$。由引理~\ref{lem:extension:algebra-from-semialgebra}，$\sigma(\overline\cS)=\sigma(\cS)$（$\cS\subseteq\overline\cS\subseteq\sigma(\cS)$）。由定理~\ref{thm:extension:main}，$\bar\mu$ 延拓为 $\sigma(\cS)$ 上的测度。唯一性：任何在 $\cS$ 上等于 $\mu$ 的测度在 $\overline\cS$ 上都等于 $\bar\mu$（有限可加性），而 $\bar\mu$ 在 $\overline\cS$ 上 $\sigma$-有限，由定理~\ref{thm:extension:main}(2) 即得。
+\end{proof}
+
+\begin{example}[没有 $\sigma$-有限性时延拓可以不唯一]
+在 $\R$ 上取代数 $\overline{\cS_1}$，令 $\mu(\varnothing)=0$，$\mu(A)=\infty$（$A\neq\varnothing$）。$\mu$ 是 $\overline{\cS_1}$ 上的测度：一列不交集合的并非空，当且仅当其中某一项非空。以下三个 $\cR$ 上的测度都是它的延拓：$\nu_1(B)=\#(B\cap\Q)$，$\nu_2(B)=2\#(B\cap\Q)$，以及 $\nu_3(B)=\infty\cdot\one_{\{B\neq\varnothing\}}$（$\nu_3$ 是测度：可数个不交集合的并非空当且仅当某一项非空）。事实上，非空的 $\overline{\cS_1}$ 中的集合含有非退化区间，从而含有无穷多个有理数。
+\end{example}
+
+\begin{remark}
+定理~\ref{thm:extension:main} 的证明给出的其实是一个比 $\sigma(\cA)$ 更大的 $\sigma$-代数 $\cM(\mu^*)$ 上的测度。当 $\mu$ 是 $\sigma$-有限时，$(\Omega,\cM(\mu^*),\mu^*)$ 恰好是 $(\Omega,\sigma(\cA),\mu^*)$ 的完备化（上一讲作业 B），证明见本讲作业 C。对 $\R$ 上的长度，$\cM(\lambda^*)$ 称为 \term{Lebesgue 可测集}（Lebesgue measurable sets）的全体，它严格大于 $\cR$（思考题 E），但仍不是 $2^\R$（作业 D）。在概率论中，我们几乎总是在 $\sigma(\cA)$ 上工作。
+\end{remark}
+
+\topic{Lebesgue--Stieltjes 测度与 Lebesgue 测度}
+
+\begin{summary}
+把延拓定理用在 $\R$ 的半代数 $\cS_1$ 上。唯一需要真正动脑筋的是验证可数次可加性 (ii)，关键工具是闭区间的紧性和函数的右连续性。
+\end{summary}
+
+\begin{definition}[Stieltjes 测度函数]\label{def:extension:stieltjes}
+函数 $F:\R\to\R$ 若满足
+\begin{enumerate}
+\item $F$ 单调不减；
+\item $F$ 右连续：对一切 $x$，$\lim_{y\downarrow x}F(y)=F(x)$，
+\end{enumerate}
+则称 $F$ 为 \term{Stieltjes 测度函数}（Stieltjes measure function）。
+\end{definition}
+
+由单调性，极限 $F(\infty)=\lim_{x\to\infty}F(x)\in(-\infty,\infty]$ 与 $F(-\infty)=\lim_{x\to-\infty}F(x)\in[-\infty,\infty)$ 存在。对 $-\infty\leqslant a<b\leqslant\infty$，$F(b)-F(a)$ 总有意义（不会出现 $\infty-\infty$），取值于 $[0,\infty]$。
+
+\begin{theorem}[Lebesgue--Stieltjes 测度]\label{thm:extension:lebesgue-stieltjes}
+设 $F$ 是 Stieltjes 测度函数。则 $(\R,\cR)$ 上存在唯一的测度 $\mu_F$，使
+\[
+\mu_F((a,b])=F(b)-F(a)\qquad\text{对一切}\ -\infty<a<b<\infty
+\]
+成立。$\mu_F$ 称为 $F$ 对应的 \term{Lebesgue--Stieltjes 测度}（Lebesgue--Stieltjes measure）。$F(x)=x$ 对应的测度记作 $\lambda$，称为 \term{Lebesgue 测度}（Lebesgue measure）。
+\end{theorem}
+\begin{proof}
+在半代数 $\cS_1$ 上令 $\mu(\varnothing)=0$，$\mu((a,b])=F(b)-F(a)$（$-\infty\leqslant a<b\leqslant\infty$）。我们验证推论~\ref{cor:extension:semialgebra} 的条件。
+
+\emph{条件 (i)：有限可加性。}设 $(a,b]=\sum_{i=1}^n(a_i,b_i]$，各项非空（空集的项贡献 $0$，可以去掉）。由于这些区间两两不交，它们的左端点互不相同（若 $a_i=a_j$，则两个区间都含有 $a_i$ 右侧附近的点）。按左端点从小到大重新编号，使 $a_1<a_2<\cdots<a_n$。
+\begin{itemize}
+\item $b_i\leqslant a_{i+1}$：否则 $a_{i+1}<b_i$，而 $a_i<a_{i+1}$，于是 $(a_{i+1},\min\{b_i,b_{i+1}\}]$ 非空，且同时含于第 $i$ 个和第 $i+1$ 个区间，与不交矛盾。于是 $b_1\leqslant a_2<b_2\leqslant a_3<\cdots$，特别地 $b_n=\max_ib_i$。
+\item $a_1=a$，$b_n=b$：并集中的点都大于 $a_1$，并且 $a_1$ 右侧附近的点属于并集，所以并集的下确界是 $a_1$；$(a,b]$ 的下确界是 $a$，故 $a_1=a$。同理比较上确界（并集的上确界是 $b_n$）得 $b_n=b$。
+\item $b_i=a_{i+1}$：若 $b_i<a_{i+1}$，则 $(b_i,a_{i+1}]\subseteq(a_1,b_n]=(a,b]$，但其中的点大于 $b_j$（$j\leqslant i$）且不超过 $a_j$（$j\geqslant i+1$），不属于任何一个区间，矛盾。
+\end{itemize}
+于是 $\sum_i(F(b_i)-F(a_i))=F(b_n)-F(a_1)=F(b)-F(a)$（逐项相消）。
+
+条件 (i) 成立后，引理~\ref{lem:extension:finite-additive} 的结论可用，特别是有限次可加性：若 $(c,d]\subseteq\bigcup_{j=1}^J(c_j,d_j]$，则 $F(d)-F(c)\leqslant\sum_j(F(d_j)-F(c_j))$。
+
+\emph{条件 (ii)：可数次可加性。}我们证明更强的结论：若 $(a,b]\subseteq\bigcup_{i\geqslant1}(a_i,b_i]$（不要求不交），则
+\begin{equation}\label{eq:extension:countable-subadd}
+F(b)-F(a)\leqslant\sum_{i\geqslant1}\bigl(F(b_i)-F(a_i)\bigr).
+\end{equation}
+
+\emph{情形一：$a,b$ 有限。}把 $(a_i,b_i]$ 换成 $(a_i,b_i]\cap(a,b]=(a_i',b_i']$（为空集时去掉），覆盖关系不变，并且由 $F$ 单调，$F(b_i')-F(a_i')\leqslant F(b_i)-F(a_i)$。所以不妨设 $a\leqslant a_i<b_i\leqslant b$，全部有限。任取 $\varepsilon>0$。由右连续性，取 $\delta\in(0,b-a)$ 使 $F(a+\delta)<F(a)+\varepsilon$，对每个 $i$ 取 $\eta_i>0$ 使 $F(b_i+\eta_i)<F(b_i)+\varepsilon2^{-i}$。开区间族 $\{(a_i,b_i+\eta_i)\}_i$ 覆盖闭区间 $[a+\delta,b]$（因为 $[a+\delta,b]\subseteq(a,b]\subseteq\bigcup_i(a_i,b_i]$）。由 Heine--Borel 定理，存在有限个 $i_1,\dots,i_J$ 使 $[a+\delta,b]\subseteq\bigcup_{j\leqslant J}(a_{i_j},b_{i_j}+\eta_{i_j})$，从而 $(a+\delta,b]\subseteq\bigcup_{j\leqslant J}(a_{i_j},b_{i_j}+\eta_{i_j}]$。由有限次可加性，
+\[
+F(b)-F(a+\delta)\leqslant\sum_{j=1}^J\bigl(F(b_{i_j}+\eta_{i_j})-F(a_{i_j})\bigr)\leqslant\sum_{i=1}^\infty\bigl(F(b_i)-F(a_i)+\varepsilon2^{-i}\bigr).
+\]
+于是 $F(b)-F(a)<F(b)-F(a+\delta)+\varepsilon\leqslant\sum_i(F(b_i)-F(a_i))+2\varepsilon$。由 $\varepsilon$ 的任意性得 \eqref{eq:extension:countable-subadd}。
+
+\emph{情形二：$a=-\infty$ 或 $b=\infty$。}任取有限的 $A<B$ 使 $(A,B]\subseteq(a,b]$，由情形一，$F(B)-F(A)\leqslant\sum_i(F(b_i)-F(a_i))$。令 $A\downarrow a$，$B\uparrow b$（$a$ 有限时取 $A=a$，$b$ 有限时取 $B=b$），由 $F(\pm\infty)$ 的定义，左边趋于 $F(b)-F(a)$。
+
+\emph{$\sigma$-有限与结论。}$\R=\bigcup_n(-n,n]$，$\mu((-n,n])=F(n)-F(-n)<\infty$。由推论~\ref{cor:extension:semialgebra}，存在 $\sigma(\cS_1)=\cR$（命题~\ref{prop:set-systems:borel-generators}）上的测度 $\mu_F$，它在 $\cS_1$ 上等于 $\mu$，从而满足定理的等式。
+
+\emph{唯一性。}设 $\nu$ 是 $\cR$ 上满足 $\nu((a,b])=F(b)-F(a)$（$a,b$ 有限）的测度。$\cP=\{(a,b]:-\infty<a<b<\infty\}\cup\{\varnothing\}$ 是生成 $\cR$ 的 $\pi$-类，$(-n,n]\in\cP$，$(-n,n]\uparrow\R$，$\nu((-n,n])<\infty$。由唯一性定理（定理~\ref{thm:measures:uniqueness}），$\nu=\mu_F$。
+\end{proof}
+
+\begin{proposition}[Lebesgue 测度的基本性质]\label{prop:extension:lebesgue}
+\begin{enumerate}
+\item 对任意 $x\in\R$，$\lambda(\{x\})=0$；从而对 $a<b$，$\lambda([a,b])=\lambda((a,b))=\lambda([a,b))=b-a$，并且每个可数集都是 $\lambda$-零测集。
+\item \term{平移不变性}（translation invariance）：对 $A\in\cR$ 与 $x\in\R$，$A+x=\{a+x:a\in A\}\in\cR$，且 $\lambda(A+x)=\lambda(A)$。
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+(1) $(x-1/n,x]\downarrow\{x\}$，$\lambda((x-1,x])=1<\infty$，由从上连续，$\lambda(\{x\})=\lim_n1/n=0$。于是 $\lambda([a,b])=\lambda(\{a\})+\lambda((a,b])=b-a$，其余同理。可数集是可数个单点集的并，由可数可加性测度为 $0$。
+
+(2) 令 $\cG=\{A\in\cR: A+x\in\cR\}$。$\cG$ 是 $\sigma$-代数：$\R+x=\R$；$(A+x)^c=A^c+x$；$(\bigcup_nA_n)+x=\bigcup_n(A_n+x)$。$\cG$ 包含一切 $(a,b]$，因为 $(a,b]+x=(a+x,b+x]$。所以 $\cG\supseteq\sigma(\cS_1)=\cR$。现在令 $\nu(A)=\lambda(A+x)$，由刚才的两个集合等式，$\nu$ 是 $\cR$ 上的测度，且 $\nu((a,b])=(b+x)-(a+x)=b-a$。由定理~\ref{thm:extension:lebesgue-stieltjes} 的唯一性，$\nu=\lambda$。
+\end{proof}
+
+\begin{example}[几个 Lebesgue--Stieltjes 测度]\label{ex:extension:LS-examples}
+\begin{enumerate}
+\item $F=\one_{[0,\infty)}$：单调不减，右连续。对 $a<b$，$F(b)-F(a)=1$ 当且仅当 $a<0\leqslant b$，即 $0\in(a,b]$。所以 $\mu_F((a,b])=\delta_0((a,b])$，由唯一性，$\mu_F=\delta_0$。注意若取左连续的 $\one_{(0,\infty)}$，它不是 Stieltjes 测度函数，这就是为什么我们约定使用左开右闭区间与右连续函数：$(a,b_n]\downarrow(a,b]$ 与 $F(b_n)\downarrow F(b)$ 正好对应。
+\item $F(x)=\lfloor x\rfloor$（不超过 $x$ 的最大整数）：右连续，单调不减，$F(b)-F(a)=\#(\Z\cap(a,b])$。由唯一性，$\mu_F$ 是 $\Z$ 上的计数测度 $B\mapsto\#(B\cap\Z)$。
+\item $F(x)=0$（$x<0$），$F(x)=x$（$0\leqslant x\leqslant1$），$F(x)=1$（$x>1$）：$\mu_F$ 是概率测度，$\mu_F(B)=\lambda(B\cap[0,1])$，称为 $[0,1]$ 上的\term{均匀分布}（uniform distribution）。验证：$B\mapsto\lambda(B\cap[0,1])$ 是测度，在 $(a,b]$ 上的值是 $\lambda((a,b]\cap[0,1])=F(b)-F(a)$（分情况讨论 $a,b$ 与 $0,1$ 的位置，用 (1) 中端点测度为零），再用唯一性。
+\item $F(x)=\sum_np_n\one_{[x_n,\infty)}(x)$，$p_n\geqslant0$，$\sum_np_n<\infty$：$F$ 单调不减；右连续性由一致收敛得到（每一项右连续，余项之和 $\sum_{n>N}p_n$ 可以任意小）。$\mu_F=\sum_np_n\delta_{x_n}$，理由同 (1)。
+\end{enumerate}
+\end{example}
+
+反过来，$\cR$ 上的每个在有界区间上取有限值的测度 $\mu$ 都是 Lebesgue--Stieltjes 测度：令 $F(x)=\mu((0,x])$（$x\geqslant0$），$F(x)=-\mu((x,0])$（$x<0$）。则对 $a<b$，$F(b)-F(a)=\mu((a,b])$（分 $0\leqslant a$、$a<0\leqslant b$、$b<0$ 三种情形验证），于是 $F$ 单调不减；若 $y\downarrow x$，则 $(x,y]\downarrow\varnothing$，且 $\mu((x,x+1])<\infty$，由从上连续，$F(y)-F(x)=\mu((x,y])\to0$，即 $F$ 右连续。由唯一性，$\mu=\mu_F$。两个 Stieltjes 测度函数给出同一个测度，当且仅当它们相差一个常数。
+
+最后，$\R^d$ 上有平行的结论。
+
+\begin{theorem}[$\R^d$ 上的乘积型 Lebesgue--Stieltjes 测度]\label{thm:extension:Rd}
+设 $F_1,\dots,F_d$ 是 Stieltjes 测度函数。则 $(\R^d,\cR^d)$ 上存在唯一的测度 $\mu$，使
+\[
+\mu\bigl((a_1,b_1]\times\cdots\times(a_d,b_d]\bigr)=\prod_{i=1}^d\bigl(F_i(b_i)-F_i(a_i)\bigr)\qquad\text{对一切有限的}\ a_i<b_i
+\]
+成立。$F_i(x)=x$ 时得到的测度称为 $d$ 维 Lebesgue 测度，记作 $\lambda_d$。
+\end{theorem}
+
+证明与定理~\ref{thm:extension:lebesgue-stieltjes} 的证明完全平行，只是有限可加性的验证需要把矩形的有限划分加细为“网格”划分。详细的步骤见作业 B。唯一性部分与一维情形相同：有限矩形连同空集组成生成 $\cR^d$ 的 $\pi$-类（习题~\exref{ex:set-systems:A5}），而 $(-n,n]^d\uparrow\R^d$ 的测度有限。
+
+% =====================================================================
+\homework{$d$ 维 Lebesgue 测度，可测集的逼近，不可测集}
+\label{hw:extension}
+
+\exercisepart{基本习题}
+
+\begin{exercises}{A}{课堂内容的补充}
+\item 设 $\cS$ 是 $\Omega_1$ 上的半代数，$\cT$ 是 $\Omega_2$ 上的半代数。证明 $\{S\times T: S\in\cS,\ T\in\cT\}$ 是 $\Omega_1\times\Omega_2$ 上的半代数。由此重新证明 $\cS_d$ 是半代数。
+\item 设 $\mu^*$ 是外测度，$E\subseteq\Omega$。证明：若对一切 $\mu^*(F)<\infty$ 的 $F$ 都有 $\mu^*(F)\geqslant\mu^*(F\cap E)+\mu^*(F\cap E^c)$，则 $E$ 是 $\mu^*$-可测的。又证明：若 $E_1\subseteq E_2\subseteq\cdots$ 都是 $\mu^*$-可测的，则 $\mu^*(G\cap\bigcup_nE_n)=\lim_n\mu^*(G\cap E_n)$ 对一切 $G$ 成立。
+\item 证明 Lebesgue 测度的\term{伸缩性}：对 $A\in\cR$ 与 $c\neq0$，$cA=\{ca:a\in A\}\in\cR$，且 $\lambda(cA)=\abs c\lambda(A)$。（提示：分 $c>0$ 与 $c=-1$ 两种情形，注意 $-(a,b]=[-b,-a)$。）
+\item\label{ex:extension:A4} \term{Cantor 集}（Cantor set）：令 $C_0=[0,1]$，$C_{n+1}$ 由 $C_n$ 的每个闭区间去掉中间的开三分之一得到，$C=\bigcap_nC_n$。
+\begin{questions}
+\item 证明 $C$ 是闭集，$C\in\cR$，且 $\lambda(C)=0$。
+\item 证明 $x\in C$ 当且仅当 $x$ 有一个只用数字 $0,2$ 的三进制展开 $x=\sum_{n\geqslant1}\varepsilon_n3^{-n}$，$\varepsilon_n\in\{0,2\}$。
+\item 由 (2) 证明 $C$ 与 $[0,1]$ 等势，从而是不可数的零测集。
+\end{questions}
+\item\label{ex:extension:A5} 用外测度的定义直接证明：$\lambda^*(\Q\cap[0,1])=0$。并证明对任意 $E\subseteq\R$，$\lambda^*(E)=\inf\{\lambda(U): U\supseteq E,\ U\ \text{开}\}$。
+\item 证明\egref{ex:extension:LS-examples} 中的 (3)：分情况验证 $\lambda((a,b]\cap[0,1])=F(b)-F(a)$。
+\item 设 $F,G$ 是 Stieltjes 测度函数。证明 $\mu_F(B)\leqslant\mu_G(B)$ 对一切 $B\in\cR$ 成立，当且仅当 $G-F$ 单调不减。
+\item 设 $\cA$ 是 $\N$ 上有限集与余有限集组成的代数，$\mu$ 如\egref{ex:measures:finitely-additive}（有限集上为 $0$，余有限集上为 $1$）。证明 $\mu$ 不能延拓为 $2^\N$（甚至 $\sigma(\cA)$）上的测度。它违反了定理~\ref{thm:extension:main} 的哪个条件？
+\item 设 $\mu$ 是 $(\R,\cR)$ 上的测度，对一切 $x$ 有 $\mu(\{x\})=0$，且 $\mu$ 在有界区间上有限。证明对应的 Stieltjes 测度函数 $F$ 是连续的。
+\end{exercises}
+
+\begin{probleme}{B}{$d$ 维 Lebesgue--Stieltjes 测度的构造}
+本题证明定理~\ref{thm:extension:Rd}。设 $F_1,\dots,F_d$ 是 Stieltjes 测度函数，对矩形 $R=\prod_i(a_i,b_i]$（$-\infty\leqslant a_i<b_i\leqslant\infty$）令 $\mu(R)=\prod_i(F_i(b_i)-F_i(a_i))$，约定 $0\cdot\infty=0$，并令 $\mu(\varnothing)=0$。
+\begin{questions}
+\item 称 $R=\sum_kR_k$ 是\term{网格划分}（regular subdivision），若对每个 $i$ 存在 $a_i=\alpha_{i,0}<\alpha_{i,1}<\cdots<\alpha_{i,n_i}=b_i$，使 $\{R_k\}$ 恰好是全体 $\prod_i(\alpha_{i,j_i-1},\alpha_{i,j_i}]$（$1\leqslant j_i\leqslant n_i$）。证明对网格划分有 $\mu(R)=\sum_k\mu(R_k)$。（提示：把乘积 $\prod_i\sum_{j}(F_i(\alpha_{i,j})-F_i(\alpha_{i,j-1}))$ 展开。）
+\item 设 $R=\sum_{k=1}^mR_k$ 是任意有限划分。取每个坐标上所有 $R_k$ 的端点，得到 $R$ 的一个网格划分 $\{Q_l\}$。证明每个 $R_k$ 是某些 $Q_l$ 的不交并，并且这些 $Q_l$ 构成 $R_k$ 的网格划分。由 B1) 推出条件 (i)。
+\item 设 $a_i,b_i$ 都有限，$R=(a,b]$ 被可数个矩形 $(a^{(k)},b^{(k)}]$ 覆盖（这里 $(x,y]$ 表示 $\prod_i(x_i,y_i]$）。仿照定理~\ref{thm:extension:lebesgue-stieltjes} 的证明，取 $\delta>0$ 与 $\eta_k>0$，使 $\mu((a+\delta\mathbf 1,b])>\mu((a,b])-\varepsilon$，$\mu((a^{(k)},b^{(k)}+\eta_k\mathbf 1])<\mu((a^{(k)},b^{(k)}])+\varepsilon2^{-k}$，其中 $\mathbf 1=(1,\dots,1)$。说明这样的 $\delta,\eta_k$ 存在。
+\item 用 $[a+\delta\mathbf 1,b]$ 的紧性与引理~\ref{lem:extension:finite-additive}(3) 完成条件 (ii) 在有限矩形情形的证明；再像一维那样处理无界矩形。
+\item 由推论~\ref{cor:extension:semialgebra} 与习题~\exref{ex:set-systems:A5} 完成定理的证明。
+\item 证明 $\lambda_d$ 是平移不变的，并且 $\lambda_d(\{x\})=0$，$\lambda_d(\text{超平面}\ \{x: x_1=c\})=0$。
+\end{questions}
+\end{probleme}
+
+\begin{probleme}{C}{可测集的逼近与完备化}
+设 $\mu$ 是代数 $\cA$ 上的 $\sigma$-有限测度，$\mu^*$ 是诱导的外测度，$\cM=\cM(\mu^*)$。记 $\cA_\sigma$ 为 $\cA$ 中集合的可数并的全体，$\cA_{\sigma\delta}$ 为 $\cA_\sigma$ 中集合的可数交的全体。
+\begin{questions}
+\item 设 $\mu^*(E)<\infty$，$\varepsilon>0$。证明存在 $A\in\cA_\sigma$，$A\supseteq E$，$\mu^*(A)\leqslant\mu^*(E)+\varepsilon$。
+\item 在 C1) 中进一步设 $E\in\cM$。证明存在 $B\in\cA$ 使 $\mu^*(E\triangle B)\leqslant2\varepsilon$。（提示：$A=\bigcup_iA_i$，取有限并 $B=\bigcup_{i\leqslant n}A_i$。）
+\item 设 $\mu^*(E)<\infty$。证明存在 $G\in\cA_{\sigma\delta}$，$G\supseteq E$，$\mu^*(G)=\mu^*(E)$。
+\item 设 $E\in\cM$，$\mu^*(E)<\infty$，$G$ 如 C3)。证明 $\mu^*(G\setminus E)=0$。
+\item 利用 $\sigma$-有限性去掉 C4) 中 $\mu^*(E)<\infty$ 的假设：证明 $E\in\cM$ 当且仅当存在 $G\in\cA_{\sigma\delta}\subseteq\sigma(\cA)$ 与 $\mu^*(N)=0$ 的集合 $N$，使 $E=G\setminus N$。
+\item 由 C5) 与上一讲作业 B 证明：$(\Omega,\cM,\mu^*)$ 是 $(\Omega,\sigma(\cA),\mu^*|_{\sigma(\cA)})$ 的完备化。
+\item 应用：设 $E\subseteq\R$ 是 Lebesgue 可测集，$\lambda(E)<\infty$。证明对任意 $\varepsilon>0$，存在有限个区间的并 $B$，使 $\lambda(E\triangle B)<\varepsilon$。
+\end{questions}
+\end{probleme}
+
+\begin{probleme}{D}{不可测集}
+本题证明：\emph{不存在定义在 $[0,1)$ 的全体子集上、可数可加、平移不变（按模 $1$ 平移）、且 $[0,1)$ 的测度为 $1$ 的函数。}特别地，Lebesgue 测度不能延拓到 $2^{[0,1)}$ 上并保持平移不变性。对 $x\in[0,1)$ 与 $E\subseteq[0,1)$，令 $x\oplus E=\{(x+y)\bmod1: y\in E\}$。
+\begin{questions}
+\item 设 $E\subseteq[0,1)$ 是 Borel 集，$x\in(0,1)$。令 $A=E\cap[0,1-x)$，$B=E\cap[1-x,1)$。证明 $x\oplus E=(A+x)\cup(B+x-1)$ 是不交并，并由平移不变性证明 $\lambda(x\oplus E)=\lambda(E)$。
+\item 在 $[0,1)$ 上定义 $x\sim y$ 当且仅当 $x-y\in\Q$。证明这是等价关系。由选择公理，取集合 $V$，使它恰好含有每个等价类中的一个元素。
+\item 证明 $\{q\oplus V: q\in\Q\cap[0,1)\}$ 两两不交，并且它们的并是 $[0,1)$。
+\item 假设 $\nu$ 是 $2^{[0,1)}$ 上可数可加、满足 $\nu(x\oplus E)=\nu(E)$、$\nu([0,1))=1$ 的函数。由 D3) 推出矛盾。
+\item 由 D1)、D4) 的论证说明 $V$ 不是 Lebesgue 可测的。（需要把 D1) 推广到 Lebesgue 可测集：利用作业 C。）
+\end{questions}
+\end{probleme}
+
+\thinkingpart
+
+\begin{probleme}*[问题]{E}{Lebesgue 可测集比 Borel 集多}
+\begin{questions}
+\item 利用 Cantor 集 $C$（习题~\exref{ex:extension:A4}）和 Carathéodory 定理中“零外测度集可测”的结论，证明 $C$ 的每个子集都是 Lebesgue 可测的，从而 Lebesgue 可测集的全体的基数为 $\abs{2^\R}$。
+\item 结合第~\ref{lec:set-systems} 讲作业 F（$\abs{\cR}=\abs\R$），证明存在不是 Borel 集的 Lebesgue 可测集。
+\item 这个证明是非构造性的。你能否想象一个具体的例子？（第~\ref{lec:random-variables} 讲的思考题会给出一个。）
+\end{questions}
+\end{probleme}
+
+\exercisepart{课外知识：Steinhaus 定理}
+
+\begin{probleme}{F}{正测度集的差集含有区间}
+本题证明：\emph{若 $A\in\cR$，$\lambda(A)>0$，则 $A-A=\{x-y:x,y\in A\}$ 含有一个以 $0$ 为中心的开区间。}
+\begin{questions}
+\item 说明不妨设 $0<\lambda(A)<\infty$。（提示：$A\cap[-n,n]$。）
+\item 利用习题~\exref{ex:extension:A5} 的第二部分，证明存在开集 $U\supseteq A$ 使 $\lambda(U)<\frac43\lambda(A)$。
+\item 由引理~\ref{lem:set-systems:open-sets-R}，$U$ 是可数个不交开区间 $I_k$ 的并（先证明开集是可数个\emph{不交}开区间的并：考虑包含一点的最大开区间）。证明存在某个 $k$ 使 $\lambda(A\cap I_k)>\frac34\lambda(I_k)$。
+\item 记 $I=I_k$，$\ell=\lambda(I)$，$B=A\cap I$。设 $\abs x<\ell/2$。证明 $B\cup(B+x)\subseteq I\cup(I+x)$，后者是长度小于 $\frac32\ell$ 的区间。
+\item 若 $B\cap(B+x)=\varnothing$，由平移不变性推出 $\lambda(B\cup(B+x))=2\lambda(B)>\frac32\ell$，与 F4) 矛盾。所以 $B\cap(B+x)\neq\varnothing$，即 $x\in B-B\subseteq A-A$。
+\item 推论：若 $f:\R\to\R$ 满足 $f(x+y)=f(x)+f(y)$，并且 $f$ 是 Borel 可测的（即 $\{f\leqslant c\}\in\cR$ 对一切 $c$ 成立），则 $f(x)=f(1)x$。（提示：某个 $\{\abs f\leqslant n\}$ 有正测度，由 Steinhaus 定理 $f$ 在 $0$ 附近有界。）
+\end{questions}
+\end{probleme}

@@ -1,0 +1,337 @@
+% !TEX root = ../高等概率论.tex
+% =====================================================================
+%  随机变量：可测映射、生成的 σ-代数、简单函数逼近、函数形式的单调类定理、Doob–Dynkin 引理
+% =====================================================================
+\lecture{可测映射与随机变量，可测性的判别与运算，广义实值随机变量，由随机变量生成的 \texorpdfstring{$\sigma$}{σ}-代数，简单函数逼近，函数形式的单调类定理，Doob--Dynkin 引理}
+\label{lec:random-variables}
+
+初等概率论把随机变量说成“取值随机的量”。在测度论的框架中，它是从样本空间到实数的一个函数，唯一的要求是：对每个 Borel 集 $B$，“$X$ 落在 $B$ 中”是一个事件。这个要求只涉及 $\sigma$-代数 $\cF$，与概率测度 $P$ 无关。本讲的全部内容都不涉及 $P$。
+
+\topic{可测映射与随机变量}
+
+\begin{summary}
+随机变量是可测映射的特例。本节给出可测性的判别方法：只需在生成元上验证。由此得到，随机变量经过连续函数、四则运算、上下确界与极限运算后仍是随机变量。
+\end{summary}
+
+对映射 $X:\Omega\to S$ 与 $B\subseteq S$，记 $X^{-1}(B)=\{\omega\in\Omega: X(\omega)\in B\}$，简写为 $\{X\in B\}$。原像与集合运算可交换：
+\[
+X^{-1}(B^c)=(X^{-1}(B))^c,\qquad X^{-1}\Bigl(\bigcup_iB_i\Bigr)=\bigcup_iX^{-1}(B_i),\qquad X^{-1}\Bigl(\bigcap_iB_i\Bigr)=\bigcap_iX^{-1}(B_i),
+\]
+对任意指标集成立。例如第一式：$\omega\in X^{-1}(B^c)\iff X(\omega)\notin B\iff\omega\notin X^{-1}(B)$。
+
+\begin{definition}[可测映射，随机变量]\label{def:random-variables:measurable}
+设 $(\Omega,\cF)$ 与 $(S,\cS)$ 是可测空间。映射 $X:\Omega\to S$ 若满足
+\[
+X^{-1}(B)\in\cF\qquad\text{对一切}\ B\in\cS,
+\]
+则称 $X$ 是从 $(\Omega,\cF)$ 到 $(S,\cS)$ 的\term{可测映射}（measurable map），也说 $X$ 是 $\cF/\cS$-可测的，或者在不致混淆时说 $X$ 是 \term{$\cF$-可测的}，记作 $X\in\cF$。当 $(\Omega,\cF,P)$ 是概率空间时，可测映射也称为\term{随机元}（random element）。特别地：
+\begin{enumerate}
+\item $(S,\cS)=(\R,\cR)$ 时，$X$ 称为\term{随机变量}（random variable）；
+\item $(S,\cS)=(\R^d,\cR^d)$ 时，$X$ 称为 $d$ 维\term{随机向量}（random vector）；
+\item $(\Omega,\cF)=(\R^m,\cR^m)$，$(S,\cS)=(\R^d,\cR^d)$ 时，$X$ 称为 \term{Borel 可测函数}（Borel measurable function），简称 Borel 函数。
+\end{enumerate}
+\end{definition}
+
+\begin{remark}[随机变量的概念与概率测度无关]
+定义中根本没有出现 $P$。同一个函数 $X$，在同一个可测空间上配以不同的概率测度，就有不同的“随机规律”。例如在 $([0,1],\cR\cap[0,1])$ 上令 $X(\omega)=\omega$。若 $P$ 是 $[0,1]$ 上的 Lebesgue 测度，则 $P(X\leqslant x)=x$（$0\leqslant x\leqslant1$），$X$ 是“均匀分布的”；若 $P=\delta_{1/2}$，则 $X=1/2$ 几乎必然成立，$X$ 是“常数”。反过来，可测性依赖于 $\sigma$-代数：一个函数可以对 $\cF$ 可测，而对更小的 $\cG\subseteq\cF$ 不可测。以后讨论条件期望与鞅时，我们会在同一个 $\Omega$ 上同时使用多个 $\sigma$-代数，那时“对哪个 $\sigma$-代数可测”就成为核心问题。
+\end{remark}
+
+\begin{example}\label{ex:random-variables:basic}
+\begin{enumerate}
+\item 示性函数 $\one_A$ 是随机变量当且仅当 $A\in\cF$。事实上对 $B\in\cR$，$\{\one_A\in B\}$ 只可能是 $\varnothing$、$A$、$A^c$、$\Omega$ 之一（取决于 $0,1$ 是否属于 $B$），而 $\{\one_A\in\{1\}\}=A$。
+\item 若 $\cF=2^\Omega$（例如 $\Omega$ 可数的离散概率空间），则 $\Omega$ 上的任何实值函数都是随机变量。
+\item 若 $\cF=\{\varnothing,\Omega\}$，则只有常数是随机变量。设 $X$ 可测，则每个 $\{X\leqslant x\}$ 是 $\varnothing$ 或 $\Omega$。令 $c=\inf\{x:\{X\leqslant x\}=\Omega\}$。由于 $\Omega$ 非空，任取 $\omega_0$，$x<X(\omega_0)$ 时 $\{X\leqslant x\}\neq\Omega$，所以 $c\geqslant X(\omega_0)>-\infty$；而 $x=X(\omega_0)$ 时 $\{X\leqslant x\}\neq\varnothing$，从而等于 $\Omega$，所以 $c\leqslant X(\omega_0)<\infty$。于是 $c=X(\omega_0)$ 对每个 $\omega_0$ 成立，$X\equiv c$。
+\end{enumerate}
+\end{example}
+
+\begin{theorem}[在生成元上验证可测性]\label{thm:random-variables:generators}
+设 $X:\Omega\to S$，$\cC\subseteq2^S$，$\sigma(\cC)=\cS$。若 $X^{-1}(C)\in\cF$ 对一切 $C\in\cC$ 成立，则 $X$ 是 $\cF/\cS$-可测的。
+\end{theorem}
+\begin{proof}
+令 $\cG=\{B\subseteq S: X^{-1}(B)\in\cF\}$。由原像与集合运算可交换：$X^{-1}(S)=\Omega\in\cF$，故 $S\in\cG$；若 $B\in\cG$，则 $X^{-1}(B^c)=(X^{-1}(B))^c\in\cF$，故 $B^c\in\cG$；若 $B_n\in\cG$，则 $X^{-1}(\bigcup_nB_n)=\bigcup_nX^{-1}(B_n)\in\cF$，故 $\bigcup_nB_n\in\cG$。所以 $\cG$ 是 $\sigma$-代数。由假设 $\cC\subseteq\cG$，由最小性 $\cS=\sigma(\cC)\subseteq\cG$，这正是可测性。
+\end{proof}
+
+结合命题~\ref{prop:set-systems:borel-generators}，立即得到：
+
+\begin{corollary}\label{cor:random-variables:criterion}
+$X:\Omega\to\R$ 是随机变量，当且仅当 $\{X\leqslant x\}\in\cF$ 对一切 $x\in\R$ 成立，也当且仅当 $\{X\leqslant x\}\in\cF$ 对一切 $x\in\Q$ 成立。同样，也可以用 $\{X<x\}$、$\{X>x\}$ 或 $\{X\geqslant x\}$ 代替 $\{X\leqslant x\}$。
+\end{corollary}
+\begin{proof}
+由命题~\ref{prop:set-systems:borel-generators}，$\{(-\infty,x]:x\in\Q\}$ 生成 $\cR$，于是由定理~\ref{thm:random-variables:generators} 得第二个充分性；第一个充分性更弱；必要性是显然的。对其他三种形式：$\{X<x\}=\bigcup_n\{X\leqslant x-1/n\}$，$\{X\leqslant x\}=\bigcap_n\{X<x+1/n\}$，所以 $\{X\leqslant x\}\in\cF\ \forall x$ 与 $\{X<x\}\in\cF\ \forall x$ 等价；取补集得到另外两种。
+\end{proof}
+
+\begin{theorem}[复合与连续映射]\label{thm:random-variables:composition}
+\begin{enumerate}
+\item 若 $X:(\Omega,\cF)\to(S,\cS)$ 与 $f:(S,\cS)\to(T,\cT)$ 都可测，则 $f\circ X:(\Omega,\cF)\to(T,\cT)$ 可测。
+\item 设 $S,T$ 是度量空间（或拓扑空间），$f:S\to T$ 连续，则 $f$ 是 $\cB(S)/\cB(T)$-可测的。
+\item 单调函数 $f:\R\to\R$ 是 Borel 可测的。
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+(1) 对 $B\in\cT$，$(f\circ X)^{-1}(B)=X^{-1}(f^{-1}(B))$，而 $f^{-1}(B)\in\cS$，故 $X^{-1}(f^{-1}(B))\in\cF$。
+
+(2) 开集的原像是开集，从而属于 $\cB(S)$；开集生成 $\cB(T)$，由定理~\ref{thm:random-variables:generators} 即得。
+
+(3) 设 $f$ 单调不减（单调不增时考虑 $-f$，并注意 $x\mapsto-x$ 连续）。对任意 $c$，集合 $I=\{x:f(x)\leqslant c\}$ 具有性质：若 $x\in I$ 且 $y<x$，则 $f(y)\leqslant f(x)\leqslant c$，$y\in I$。这样的集合只能是 $\varnothing$、$\R$、$(-\infty,a)$ 或 $(-\infty,a]$（$a=\sup I$），都是 Borel 集。由推论~\ref{cor:random-variables:criterion} 即得。
+\end{proof}
+
+\begin{theorem}[随机向量与分量]\label{thm:random-variables:vector}
+设 $X=(X_1,\dots,X_d):\Omega\to\R^d$。则 $X$ 是随机向量，当且仅当每个 $X_i$ 都是随机变量。
+\end{theorem}
+\begin{proof}
+必要性：坐标投影 $p_i(x)=x_i$ 是连续映射 $\R^d\to\R$，由定理~\ref{thm:random-variables:composition}，$X_i=p_i\circ X$ 可测。充分性：对 $x\in\R^d$，
+\[
+\{X\in(-\infty,x_1]\times\cdots\times(-\infty,x_d]\}=\bigcap_{i=1}^d\{X_i\leqslant x_i\}\in\cF,
+\]
+而这样的集合族生成 $\cR^d$（习题~\exref{ex:set-systems:A5}），由定理~\ref{thm:random-variables:generators} 即得。
+\end{proof}
+
+\begin{corollary}\label{cor:random-variables:arithmetic}
+设 $X_1,\dots,X_n$ 是随机变量，$f:(\R^n,\cR^n)\to(\R,\cR)$ 是 Borel 函数（例如连续函数），则 $f(X_1,\dots,X_n)$ 是随机变量。特别地，$X_1+X_2$，$X_1X_2$，$cX_1$，$\max\{X_1,X_2\}$，$\min\{X_1,X_2\}$，$X_1^+=\max\{X_1,0\}$，$X_1^-=\max\{-X_1,0\}$，$\abs{X_1}$ 都是随机变量；若 $X_2$ 处处不为 $0$，则 $X_1/X_2$ 是随机变量。
+\end{corollary}
+\begin{proof}
+由定理~\ref{thm:random-variables:vector}，$(X_1,\dots,X_n)$ 是随机向量，由定理~\ref{thm:random-variables:composition}(1) 即得第一句。所列的函数 $(x,y)\mapsto x+y,\ xy,\ \max\{x,y\}$ 等在 $\R^2$ 上连续，由定理~\ref{thm:random-variables:composition}(2) 是 Borel 函数。对商：令 $g(y)=1/y$（$y\neq0$），$g(0)=0$。对 $c>0$，$\{g\leqslant c\}=(-\infty,0]\cup[1/c,\infty)$；对 $c=0$，$\{g\leqslant0\}=(-\infty,0]$；对 $c<0$，$\{g\leqslant c\}=[1/c,0)$。它们都是 Borel 集，所以 $g$ 是 Borel 函数，$X_1/X_2=X_1\cdot g(X_2)$。
+\end{proof}
+
+\topic{广义实值随机变量与极限运算}
+
+\begin{summary}
+一列随机变量的上确界、上极限可能等于 $\pm\infty$。为了让它们也成为“随机变量”，把取值范围扩充为 $[-\infty,\infty]$。
+\end{summary}
+
+记 $\overline\R=[-\infty,\infty]$，令
+\[
+\overline\cR=\{B\subseteq\overline\R:\ B\cap\R\in\cR\}.
+\]
+容易验证 $\overline\cR$ 是 $\overline\R$ 上的 $\sigma$-代数（$(B^c)\cap\R=\R\setminus(B\cap\R)$，$(\bigcup_nB_n)\cap\R=\bigcup_n(B_n\cap\R)$），它包含 $\cR$ 以及 $\{\infty\}$、$\{-\infty\}$。（可以证明它就是 $\overline\R$ 在通常拓扑下的 Borel $\sigma$-代数，但我们用不到这一点。）取值于 $\overline\R$ 的 $\cF/\overline\cR$-可测函数称为\term{广义实值随机变量}（extended real-valued random variable）。以后在不致混淆时也简称随机变量。
+
+\begin{proposition}\label{prop:random-variables:extended}
+$X:\Omega\to\overline\R$ 是 $\cF/\overline\cR$-可测的，当且仅当 $\{X\leqslant x\}\in\cF$ 对一切 $x\in\R$ 成立。
+\end{proposition}
+\begin{proof}
+必要性：$[-\infty,x]\in\overline\cR$。充分性：令 $\cG=\{B\subseteq\overline\R: X^{-1}(B)\in\cF\}$，与定理~\ref{thm:random-variables:generators} 的证明相同，$\cG$ 是 $\sigma$-代数。由假设，$[-\infty,x]\in\cG$。于是 $\{-\infty\}=\bigcap_n[-\infty,-n]\in\cG$，$\{\infty\}=\bigcap_n(\overline\R\setminus[-\infty,n])\in\cG$，$(a,b]=[-\infty,b]\setminus[-\infty,a]\in\cG$。$\cG\cap\cR=\{B\in\cR: B\in\cG\}$ 是 $\R$ 上的 $\sigma$-代数（因为 $\R=\overline\R\setminus\{\pm\infty\}\in\cG$），它含有一切 $(a,b]$，所以含有 $\cR$。最后，任取 $B\in\overline\cR$，$B=(B\cap\R)\cup(B\cap\{-\infty\})\cup(B\cap\{\infty\})$ 是 $\cG$ 中至多三个集合的并，故 $B\in\cG$。
+\end{proof}
+
+\begin{theorem}[上下确界与上下极限]\label{thm:random-variables:limits}
+设 $X_1,X_2,\dots$ 是（广义实值）随机变量。则 $\inf_nX_n$，$\sup_nX_n$，$\liminf_nX_n$，$\limsup_nX_n$ 都是广义实值随机变量。进一步，
+\[
+\Omega_0=\{\omega:\ \lim_nX_n(\omega)\ \text{存在且有限}\}\in\cF,
+\]
+并且若 $\Omega_0=\Omega$，则 $\lim_nX_n$ 是随机变量。
+\end{theorem}
+\begin{proof}
+对 $x\in\R$，$\sup_nX_n(\omega)\leqslant x$ 当且仅当对一切 $n$ 有 $X_n(\omega)\leqslant x$，所以 $\{\sup_nX_n\leqslant x\}=\bigcap_n\{X_n\leqslant x\}\in\cF$，由命题~\ref{prop:random-variables:extended}，$\sup_nX_n$ 可测。$\inf_nX_n(\omega)<x$ 当且仅当某个 $X_n(\omega)<x$，所以 $\{\inf_nX_n<x\}=\bigcup_n\{X_n<x\}\in\cF$，从而 $\{\inf_nX_n\leqslant x\}=\bigcap_m\{\inf_nX_n<x+1/m\}\in\cF$。
+
+由于 $\liminf_nX_n=\sup_n\inf_{m\geqslant n}X_m$，$\limsup_nX_n=\inf_n\sup_{m\geqslant n}X_m$，对每个 $n$，$Y_n=\inf_{m\geqslant n}X_m$ 可测，再取上确界仍可测；$\limsup$ 同理。
+
+$\lim_nX_n(\omega)$ 存在且有限，当且仅当 $U(\omega)=\limsup_nX_n(\omega)$ 与 $L(\omega)=\liminf_nX_n(\omega)$ 相等且有限。总有 $L\leqslant U$。由于 $L(\omega)<U(\omega)$ 当且仅当存在有理数 $q$ 使 $L(\omega)<q<U(\omega)$，
+\[
+\{L<U\}=\bigcup_{q\in\Q}\bigl(\{L<q\}\cap\{U>q\}\bigr)\in\cF .
+\]
+又 $\{U<\infty\}=\bigcup_n\{U\leqslant n\}\in\cF$，$\{L>-\infty\}=\bigcup_n\{L\geqslant-n\}\in\cF$（这里 $\{L\geqslant-n\}=\{L<-n\}^c$，而 $\{L<-n\}=\bigcup_m\{L\leqslant-n-1/m\}$）。所以
+\[
+\Omega_0=\{U<\infty\}\cap\{L>-\infty\}\cap\{L<U\}^c\in\cF .
+\]
+若 $\Omega_0=\Omega$，则 $\lim_nX_n=\limsup_nX_n$ 取有限值，并且可测。
+\end{proof}
+
+\begin{definition}[几乎必然收敛]\label{def:random-variables:as}
+设 $(\Omega,\cF,P)$ 是概率空间，$X_n,X$ 是随机变量。若 $P(\{\omega:X_n(\omega)\to X(\omega)\})=1$，称 $X_n$ \term{几乎必然收敛}（converges almost surely）于 $X$，记作 $X_n\to X$ a.s.
+\end{definition}
+
+由定理~\ref{thm:random-variables:limits} 的证明，$\{X_n\to X\}=\bigcap_{k}\bigcup_N\bigcap_{n\geqslant N}\{\abs{X_n-X}<1/k\}\in\cF$，所以这个定义中的概率有意义。当极限只在一个零测集之外存在时，常令 $X_\infty=\limsup_nX_n$，它是广义实值随机变量，a.s. 等于极限。
+
+\topic{由随机变量生成的 \texorpdfstring{$\sigma$}{σ}-代数}
+
+\begin{definition}[生成的 $\sigma$-代数]\label{def:random-variables:sigma-X}
+设 $X:\Omega\to S$，$(S,\cS)$ 是可测空间。称
+\[
+\sigma(X)=X^{-1}(\cS)=\{\{X\in B\}: B\in\cS\}
+\]
+为由 $X$ \term{生成的 $\sigma$-代数}（$\sigma$-algebra generated by $X$）。对一族映射 $X_i:\Omega\to S_i$（$i\in I$），令 $\sigma(X_i:i\in I)=\sigma\bigl(\bigcup_{i\in I}\sigma(X_i)\bigr)$。
+\end{definition}
+
+由原像与集合运算可交换，$\sigma(X)$ 确实是 $\sigma$-代数（$\Omega=X^{-1}(S)$，$\{X\in B\}^c=\{X\in B^c\}$，$\bigcup_n\{X\in B_n\}=\{X\in\bigcup_nB_n\}$）。$X$ 是 $\cG/\cS$-可测的，当且仅当 $\sigma(X)\subseteq\cG$；所以 $\sigma(X)$ 是使 $X$ 可测的\uline{最小}的 $\sigma$-代数。直观地说，$\sigma(X)$ 是“观察到 $X$ 的值所获得的信息”：一个事件属于 $\sigma(X)$，当且仅当只看 $X$ 的值就能判断它是否发生。
+
+\begin{proposition}\label{prop:random-variables:sigma-generators}
+若 $\cC$ 生成 $\cS$，则 $\sigma(X)=\sigma(\{X\in C\}:C\in\cC)$。特别地，对随机变量 $X$，$\sigma(X)=\sigma(\{X\leqslant x\}:x\in\R)$。
+\end{proposition}
+\begin{proof}
+记右边为 $\cG$。由于 $\{X\in C\}\in\sigma(X)$，$\cG\subseteq\sigma(X)$。反之，$X^{-1}(C)\in\cG$ 对 $C\in\cC$ 成立，由定理~\ref{thm:random-variables:generators}，$X$ 是 $\cG/\cS$-可测的，所以 $\sigma(X)\subseteq\cG$。
+\end{proof}
+
+\begin{example}\label{ex:random-variables:sigma-examples}
+\begin{enumerate}
+\item $\sigma(\one_A)=\{\varnothing,A,A^c,\Omega\}$。
+\item 若 $X$ 只取有限个不同的值 $x_1,\dots,x_k$，则 $\sigma(X)$ 是由划分 $\{X=x_1\},\dots,\{X=x_k\}$ 生成的 $\sigma$-代数（\egref{ex:set-systems:partition}）：$\{X\in B\}=\bigcup_{i:x_i\in B}\{X=x_i\}$。
+\item 在 $\Omega=[-1,1]$ 上令 $X(\omega)=\omega^2$。则 $\{X\in B\}$ 总是关于原点对称的集合，所以 $\sigma(X)$ 中不含 $[0,1]$。直观上，知道 $\omega^2$ 不能判断 $\omega$ 的正负。
+\end{enumerate}
+\end{example}
+
+\topic{简单函数逼近}
+
+\begin{definition}[简单函数]\label{def:random-variables:simple}
+形如 $\varphi=\sum_{i=1}^nc_i\one_{A_i}$（$c_i\in\R$，$A_i\in\cF$）的函数称为\term{简单函数}（simple function）。
+\end{definition}
+
+简单函数是随机变量（推论~\ref{cor:random-variables:arithmetic}），只取有限个值。反之，只取有限个值 $y_1,\dots,y_m$ 的随机变量 $Y$ 可以写成 $\sum_jy_j\one_{\{Y=y_j\}}$，其中 $\{Y=y_j\}$ 两两不交。
+
+\begin{theorem}[简单函数逼近]\label{thm:random-variables:simple-approx}
+设 $X:\Omega\to[0,\infty]$ 是 $\cF$-可测的。令
+\[
+X_n=\sum_{k=0}^{n2^n-1}\frac{k}{2^n}\one_{\{k2^{-n}\leqslant X<(k+1)2^{-n}\}}+n\one_{\{X\geqslant n\}}.
+\]
+则每个 $X_n$ 是非负简单函数，$0\leqslant X_1\leqslant X_2\leqslant\cdots$，且对每个 $\omega$，$X_n(\omega)\uparrow X(\omega)$。在 $\{X\leqslant M\}$ 上，$n\geqslant M$ 时 $0\leqslant X-X_n\leqslant2^{-n}$，所以收敛在 $\{X\leqslant M\}$ 上是一致的。
+\end{theorem}
+\begin{proof}
+各个集合 $\{k2^{-n}\leqslant X<(k+1)2^{-n}\}=\{X\geqslant k2^{-n}\}\cap\{X<(k+1)2^{-n}\}$ 与 $\{X\geqslant n\}$ 都属于 $\cF$，故 $X_n$ 是简单函数。换一种写法：$X_n=\min\{n,\ 2^{-n}\lfloor2^nX\rfloor\}$（约定 $\lfloor\infty\rfloor=\infty$）。事实上若 $X(\omega)\geqslant n$，两边都是 $n$；若 $k2^{-n}\leqslant X(\omega)<(k+1)2^{-n}$，$k\leqslant n2^n-1$，则 $\lfloor2^nX(\omega)\rfloor=k$，两边都是 $k2^{-n}$。
+
+\emph{单调性。}对实数 $t\geqslant0$，$2\lfloor t\rfloor\leqslant\lfloor2t\rfloor$（因为 $2\lfloor t\rfloor$ 是不超过 $2t$ 的整数），于是 $2^{-n}\lfloor2^nX\rfloor=2^{-(n+1)}\cdot2\lfloor2^nX\rfloor\leqslant2^{-(n+1)}\lfloor2^{n+1}X\rfloor$。又 $n\leqslant n+1$，取最小值保持不等式，故 $X_n\leqslant X_{n+1}$。
+
+\emph{收敛。}若 $X(\omega)=\infty$，则 $X_n(\omega)=n\to\infty$。若 $X(\omega)<\infty$，当 $n\geqslant X(\omega)$ 时，$X_n(\omega)=2^{-n}\lfloor2^nX(\omega)\rfloor$，而 $2^nX(\omega)-1<\lfloor2^nX(\omega)\rfloor\leqslant2^nX(\omega)$，所以 $X(\omega)-2^{-n}<X_n(\omega)\leqslant X(\omega)$。这同时给出了 $\{X\leqslant M\}$ 上的一致估计。
+\end{proof}
+
+对一般的实值随机变量 $X$，写 $X=X^+-X^-$，分别对 $X^+,X^-$ 用定理~\ref{thm:random-variables:simple-approx}，得到简单函数 $\varphi_n=X_n^+-X_n^-\to X$，并且 $\abs{\varphi_n}\leqslant\abs X$。
+
+\topic{函数形式的单调类定理}
+
+\begin{summary}
+$\pi$-$\lambda$ 定理处理的是集合。很多时候我们要证明的是“某个性质对一切有界可测函数成立”，比如两个积分相等。函数形式的单调类定理把 $\pi$-$\lambda$ 定理搬到函数上：只要对生成元的示性函数验证，再验证性质对线性组合和递增极限封闭。
+\end{summary}
+
+在集合的情形中，“好集”的全体天然地对差集和递增并封闭，因此是 $\lambda$-类。在函数的情形中，“好函数”的全体天然地对线性组合与递增极限封闭，而对乘积往往不封闭。下面的定理说明：这样的函数类只要包含一个 $\pi$-类上的示性函数，就包含了全体有界可测函数。证明的第一步正是把“好函数”翻译回“好集”，得到一个 $\lambda$-类。
+
+\begin{theorem}[函数形式的单调类定理]\label{thm:random-variables:monotone-class}
+设 $\cP$ 是 $\Omega$ 上的 $\pi$-类，$\Omega\in\cP$。设 $\cH$ 是一族函数 $\Omega\to\R$，满足
+\begin{enumerate}
+\item 对一切 $A\in\cP$，$\one_A\in\cH$；
+\item 若 $f,g\in\cH$，$c\in\R$，则 $f+g\in\cH$，$cf\in\cH$；
+\item 若 $f_n\in\cH$，$f_n\geqslant0$，$f_n\uparrow f$，且 $f$ 有界，则 $f\in\cH$。
+\end{enumerate}
+则 $\cH$ 包含全体有界 $\sigma(\cP)$-可测函数。
+\end{theorem}
+\begin{proof}
+\emph{第一步：从函数回到集合。}令 $\cL=\{A\subseteq\Omega:\one_A\in\cH\}$。验证 $\cL$ 是 $\lambda$-类：
+\begin{itemize}
+\item $\Omega\in\cP$，由 (1)，$\one_\Omega\in\cH$，故 $\Omega\in\cL$。
+\item 若 $A,B\in\cL$，$A\subseteq B$，则 $\one_{B\setminus A}=\one_B-\one_A=\one_B+(-1)\one_A\in\cH$，由 (2)。
+\item 若 $A_n\in\cL$，$A_n\uparrow A$，则 $\one_{A_n}\geqslant0$，$\one_{A_n}\uparrow\one_A$（命题~\ref{prop:set-systems:limsup}(4)(5)），$\one_A$ 有界，由 (3)，$\one_A\in\cH$。
+\end{itemize}
+由 (1)，$\cP\subseteq\cL$。由 $\pi$-$\lambda$ 定理，$\sigma(\cP)\subseteq\cL$，即对一切 $A\in\sigma(\cP)$ 有 $\one_A\in\cH$。
+
+\emph{第二步：简单函数。}由 (2) 及第一步，一切 $\sigma(\cP)$-可测的简单函数 $\sum_ic_i\one_{A_i}$ 属于 $\cH$。
+
+\emph{第三步：有界非负可测函数。}设 $f$ 是 $\sigma(\cP)$-可测的，$0\leqslant f\leqslant M$。由定理~\ref{thm:random-variables:simple-approx}（对 $\sigma$-代数 $\sigma(\cP)$ 使用），存在 $\sigma(\cP)$-可测的非负简单函数 $f_n\uparrow f$。由第二步 $f_n\in\cH$，由 (3)，$f\in\cH$。
+
+\emph{第四步：有界可测函数。}设 $f$ 是 $\sigma(\cP)$-可测的，$\abs f\leqslant M$。则 $f^+,f^-$ 是有界非负的 $\sigma(\cP)$-可测函数（推论~\ref{cor:random-variables:arithmetic}），由第三步属于 $\cH$，由 (2)，$f=f^++(-1)f^-\in\cH$。
+\end{proof}
+
+\begin{remark}
+条件 $\Omega\in\cP$ 可以用“常数函数 $1\in\cH$”代替，证明不变。条件 (3) 只要求对\emph{有界}的递增极限封闭，这在应用中很重要：例如 $\cH$ 是“两个有限测度的积分相等”的函数类时，有界性保证积分有限，才能用单调收敛定理。
+\end{remark}
+
+作为第一个应用，我们证明“$\sigma(X)$-可测”恰好意味着“是 $X$ 的函数”。
+
+\begin{theorem}[Doob--Dynkin 引理]\label{thm:random-variables:doob-dynkin}
+设 $X:(\Omega,\cF)\to(S,\cS)$ 可测，$Y:\Omega\to\R$。则 $Y$ 是 $\sigma(X)$-可测的，当且仅当存在 $\cS/\cR$-可测函数 $f:S\to\R$ 使 $Y=f\circ X$。
+\end{theorem}
+\begin{proof}
+充分性：由定理~\ref{thm:random-variables:composition}(1)，$f\circ X$ 是 $\sigma(X)/\cR$-可测的（$X$ 是 $\sigma(X)/\cS$-可测的）。
+
+必要性。令 $\cH=\{Y:\Omega\to\R:\ \text{存在}\ \cS\text{-可测的}\ f:S\to\R\ \text{使}\ Y=f\circ X\}$，$\cP=\sigma(X)$（它是 $\sigma$-代数，当然是含 $\Omega$ 的 $\pi$-类）。逐条验证定理~\ref{thm:random-variables:monotone-class} 的条件：
+\begin{enumerate}
+\item 设 $A\in\sigma(X)$，$A=X^{-1}(B)$，$B\in\cS$。则 $\one_A(\omega)=\one_B(X(\omega))$，而 $\one_B$ 是 $\cS$-可测的。
+\item 若 $Y_1=f_1\circ X$，$Y_2=f_2\circ X$，则 $Y_1+Y_2=(f_1+f_2)\circ X$，$cY_1=(cf_1)\circ X$，$f_1+f_2$ 与 $cf_1$ 可测。
+\item 设 $Y_n=f_n\circ X\in\cH$，$Y_n\geqslant0$，$Y_n\uparrow Y$，$Y$ 有界。令 $g=\limsup_nf_n$，它是 $S$ 上的广义实值可测函数（定理~\ref{thm:random-variables:limits} 对 $(S,\cS)$ 使用）。令 $E=\{s:\abs{g(s)}<\infty\}\in\cS$，$f=g\one_E$（在 $E^c$ 上令 $f=0$），则 $f$ 是实值 $\cS$-可测函数。对每个 $\omega$，$f_n(X(\omega))=Y_n(\omega)\uparrow Y(\omega)\in\R$，所以 $g(X(\omega))=Y(\omega)$ 有限，$X(\omega)\in E$，$f(X(\omega))=Y(\omega)$。故 $Y\in\cH$。
+\end{enumerate}
+由定理~\ref{thm:random-variables:monotone-class}，每个有界 $\sigma(X)$-可测函数都属于 $\cH$。
+
+对无界的 $Y$：$Z=\arctan Y$ 是有界 $\sigma(X)$-可测函数（$\arctan$ 连续），所以 $Z=h\circ X$，$h$ 是 $\cS$-可测的。令 $E'=\{s:\abs{h(s)}<\pi/2\}\in\cS$，$f=\tan(h)\one_{E'}$（在 $E'^c$ 上为 $0$）。由于 $\tan$ 在 $(-\pi/2,\pi/2)$ 上连续，$f$ 是 $\cS$-可测的（在 $E'$ 上是连续函数与可测函数的复合，见习题~\exref{ex:random-variables:A1}）。对每个 $\omega$，$h(X(\omega))=\arctan Y(\omega)\in(-\pi/2,\pi/2)$，所以 $f(X(\omega))=\tan(\arctan Y(\omega))=Y(\omega)$。
+\end{proof}
+
+\begin{example}
+设 $X=\one_A$。则 $\sigma(X)$-可测的随机变量恰好是形如 $a\one_A+b\one_{A^c}$ 的函数，即 $f(X)$，其中 $f(1)=a$，$f(0)=b$。设 $(X_1,\dots,X_n)$ 是随机向量，则 $\sigma(X_1,\dots,X_n)$-可测的随机变量恰好是 $f(X_1,\dots,X_n)$，$f$ 为 Borel 函数。以后条件期望 $E(Y\mid X_1,\dots,X_n)$ 就是这样一个函数。
+\end{example}
+
+% =====================================================================
+\homework{Doob--Dynkin 引理的另一证明，间断点集的可测性，Borel 函数与连续函数的极限}[Doob–Dynkin 引理的另一证明，间断点集，Baire 函数]
+\label{hw:random-variables}
+
+\exercisepart{基本习题}
+
+\begin{exercises}{A}{课堂内容的补充}
+\item\label{ex:random-variables:A1} 设 $X,Y$ 是 $(\Omega,\cF)$ 上的随机变量，$A\in\cF$。证明 $Z=X\one_A+Y\one_{A^c}$（即 $A$ 上等于 $X$，$A^c$ 上等于 $Y$）是随机变量。又设 $E\in\cS$，$f:S\to\R$，$f|_E$ 对 $E$ 上的迹 $\sigma$-代数可测，证明 $f\one_E$ 是 $\cS$-可测的。
+\item 设 $\cA$ 生成 $\cS$。证明 $X^{-1}(\cA)=\{\{X\in A\}:A\in\cA\}$ 生成 $\sigma(X)$。（这是命题~\ref{prop:random-variables:sigma-generators}，请不看证明独立写一遍。）
+\item 设 $f:\R\to\R$ 连续，$X_n\to X$ a.s.。证明 $f(X_n)\to f(X)$ a.s.
+\item 称 $f:\R^d\to\R$ \term{下半连续}（lower semicontinuous），若对一切 $x$，$\liminf_{y\to x}f(y)\geqslant f(x)$。证明 $f$ 下半连续当且仅当对一切 $a$，$\{x:f(x)\leqslant a\}$ 是闭集，从而下半连续函数是 Borel 函数。
+\item 设 $X_n$ 是随机变量。证明 $\{\omega:\sum_nX_n(\omega)\ \text{收敛}\}\in\cF$，$\{\omega:\sup_n\abs{X_n(\omega)}<\infty\}\in\cF$。
+\item 在 $([-1,1],\cR\cap[-1,1])$ 上令 $X(\omega)=\omega^2$。证明 $\sigma(X)=\{B\in\cR\cap[-1,1]: B=-B\}$。
+\item 证明 Borel 函数 $f:\R\to\R$ 的全体对逐点极限（极限处处存在且有限时）封闭；但举例说明两个 Lebesgue 可测函数（对 Lebesgue 可测集的 $\sigma$-代数可测）的复合不一定是 Lebesgue 可测的。（后一问可以在做完思考题 E 之后再回答。）
+\item 设 $X,Y$ 是随机变量。证明 $\{X=Y\}$，$\{X<Y\}$ 属于 $\cF$。
+\item 证明 $\R^d$ 上的 Borel $\sigma$-代数 $\cR^d$ 是使一切连续函数 $f:\R^d\to\R$ 可测的最小 $\sigma$-代数。
+\end{exercises}
+
+\begin{probleme}{B}{Doob--Dynkin 引理：用简单函数的证明}
+本题不用单调类定理，重新证明定理~\ref{thm:random-variables:doob-dynkin}。设 $X:(\Omega,\cF)\to(S,\cS)$ 可测，$Y$ 是 $\sigma(X)$-可测的实值函数。
+\begin{questions}
+\item 设 $Y=\one_A$，$A\in\sigma(X)$。找出 $f$ 使 $Y=f\circ X$。
+\item 设 $Y=\sum_{i=1}^nc_i\one_{A_i}$ 是 $\sigma(X)$-可测简单函数，$A_i\in\sigma(X)$。找出 $f$。$f$ 是否唯一？在 $X(\Omega)$ 上是否唯一？
+\item 设 $Y\geqslant0$。由定理~\ref{thm:random-variables:simple-approx} 取 $\sigma(X)$-可测简单函数 $Y_n\uparrow Y$，$Y_n=f_n\circ X$。说明不能直接令 $f=\lim f_n$，并说明问题出在 $S\setminus X(\Omega)$ 上。
+\item 令 $f=\sup_nf_n\cdot\one_{\{\sup_nf_n<\infty\}}$。证明 $f$ 是 $\cS$-可测的实值函数，且 $Y=f\circ X$。
+\item 对一般的 $Y$ 用 $Y=Y^+-Y^-$ 完成证明。
+\item 设 $S=\R$，$X$ 是随机变量。证明 $Y$ 是 $\sigma(X)$-可测的当且仅当：对任意 $\omega,\omega'$，$X(\omega)=X(\omega')$ 蕴含 $Y(\omega)=Y(\omega')$ \emph{并且} $Y$ 是 $\cF$-可测的——这个说法对吗？若不对，给出反例并说明缺少了什么。
+\end{questions}
+\end{probleme}
+
+\begin{probleme}{C}{任意函数的间断点集是 Borel 集}
+设 $f:\R^d\to\R$ 是\emph{任意}函数（不假设可测）。本题证明 $f$ 的间断点集是 Borel 集。记 $\abs z$ 为欧氏范数。对 $\delta>0$ 令
+\[
+f^\delta(x)=\sup\{f(y):\abs{y-x}<\delta\},\qquad f_\delta(x)=\inf\{f(y):\abs{y-x}<\delta\},
+\]
+取值于 $\overline\R$。
+\begin{questions}
+\item 证明 $f^\delta$ 是下半连续的：对任意 $a$，$\{x:f^\delta(x)>a\}$ 是开集。同理 $f_\delta$ 上半连续。
+\item 证明 $\delta\downarrow0$ 时，$f^\delta(x)$ 单调不增，$f_\delta(x)$ 单调不减，从而极限 $f^0(x)=\lim_{\delta\downarrow0}f^\delta(x)$ 与 $f_0(x)=\lim_{\delta\downarrow0}f_\delta(x)$ 存在，并且 $f^0=\lim_{n\to\infty}f^{1/n}$，$f_0=\lim_nf_{1/n}$。
+\item 由 C1)、C2) 与习题 A4 证明 $f^0$、$f_0$ 是（广义实值）Borel 函数。
+\item 证明 $f$ 在 $x$ 连续，当且仅当 $f^0(x)=f_0(x)$（此时二者有限）。
+\item 由 C3)、C4) 与定理~\ref{thm:random-variables:limits} 的证明方法，证明 $\{x: f\ \text{在}\ x\ \text{处不连续}\}\in\cR^d$。
+\end{questions}
+\end{probleme}
+
+\begin{probleme}{D}{Borel 函数是连续函数的“逐次极限”}
+令 $\cB_\ast$ 为满足下列两条的\emph{最小}函数类：(a) 一切连续函数 $\R\to\R$ 属于 $\cB_\ast$；(b) 若 $f_n\in\cB_\ast$ 且 $f_n\to f$ 逐点收敛（$f$ 实值），则 $f\in\cB_\ast$。（$\cB_\ast$ 称为 \term{Baire 函数类}。）本题证明 $\cB_\ast$ 恰好是全体 Borel 函数。
+\begin{questions}
+\item 说明满足 (a)(b) 的函数类的交仍满足 (a)(b)，从而 $\cB_\ast$ 有定义；并由习题 A7 证明 $\cB_\ast$ 中的函数都是 Borel 函数。
+\item 固定连续函数 $g$，令 $\cK_g=\{f\in\cB_\ast: f+g\in\cB_\ast\}$。证明 $\cK_g$ 满足 (a)(b)，从而 $\cK_g=\cB_\ast$。
+\item 固定 $h\in\cB_\ast$，令 $\cK^h=\{f\in\cB_\ast: f+h\in\cB_\ast\}$。由 D2) 证明 $\cK^h$ 包含连续函数，再证明它满足 (b)。从而 $\cB_\ast$ 对加法封闭。同理证明对数乘封闭。
+\item 证明对 $a<b$，$\one_{(a,b]}$ 是一列连续函数的逐点极限，从而属于 $\cB_\ast$。
+\item 由定理~\ref{thm:random-variables:monotone-class}（取 $\cP=\{(a,b]\}\cup\{\varnothing,\R\}$，注意 $\one_\R$ 连续）证明：一切有界 Borel 函数属于 $\cB_\ast$。
+\item 对无界的 Borel 函数 $f$，考虑 $\max\{-n,\min\{f,n\}\}$，完成证明。
+\end{questions}
+\end{probleme}
+
+\thinkingpart
+
+\begin{probleme}*[问题]{E}{一个具体的不是 Borel 集的 Lebesgue 可测集}
+设 $C$ 是 Cantor 集（习题~\exref{ex:extension:A4}）。定义 \term{Cantor 函数}（Cantor function）$c:[0,1]\to[0,1]$：若 $x=\sum_n\varepsilon_n3^{-n}\in C$，$\varepsilon_n\in\{0,2\}$，令 $c(x)=\sum_n(\varepsilon_n/2)2^{-n}$；在 $[0,1]\setminus C$ 的每个区间（去掉的开区间）上，令 $c$ 等于该区间端点处的公共值。
+\begin{questions}
+\item 证明 $c$ 定义合理（两个端点处的值相等），单调不减，连续，$c(0)=0$，$c(1)=1$。
+\item 令 $g(x)=x+c(x)$。证明 $g$ 是 $[0,1]$ 到 $[0,2]$ 的严格递增连续双射，其逆也连续。
+\item 证明 $g$ 把 $[0,1]\setminus C$ 中的每个去掉的区间映为同样长度的区间，从而 $\lambda(g([0,1]\setminus C))=1$，$\lambda(g(C))=1$。
+\item 利用第~\ref{lec:extension-of-measures} 讲作业 D 的方法证明：$g(C)$ 含有一个不是 Lebesgue 可测的子集 $V'$。（提示：先证明任何 $\lambda^*(A)>0$ 的集合 $A$ 都含有不可测子集。）
+\item 令 $M=g^{-1}(V')\subseteq C$。证明 $M$ 是 Lebesgue 可测集（它是零外测度集的子集），但 $M$ 不是 Borel 集。（提示：若 $M$ 是 Borel 集，则 $g(M)=(g^{-1})^{-1}(M)$ 是连续函数下 Borel 集的原像。）
+\item 由此给出习题 A7 第二部分所要的例子。
+\end{questions}
+\end{probleme}
+
+\exercisepart{课外知识：Egorov 定理}
+
+\begin{probleme}{F}{几乎处处收敛与近一致收敛}
+设 $(\Omega,\cF,\mu)$ 是有限测度空间，$X_n,X$ 是实值可测函数，$X_n\to X$ a.e.。本题证明 \term{Egorov 定理}：\emph{对任意 $\varepsilon>0$，存在 $A\in\cF$，$\mu(A^c)<\varepsilon$，使 $X_n\to X$ 在 $A$ 上一致成立。}
+\begin{questions}
+\item 对 $k,N\geqslant1$ 令 $E_{k,N}=\bigcup_{n\geqslant N}\{\abs{X_n-X}\geqslant1/k\}$。证明 $E_{k,N}\in\cF$，且对固定的 $k$，$N\to\infty$ 时 $E_{k,N}\downarrow E_k$，其中 $E_k\subseteq\{X_n\not\to X\}$。
+\item 由测度的从上连续，对每个 $k$ 取 $N_k$ 使 $\mu(E_{k,N_k})<\varepsilon2^{-k}$。令 $A=\bigcap_kE_{k,N_k}^c$。证明 $\mu(A^c)<\varepsilon$。
+\item 证明 $X_n\to X$ 在 $A$ 上一致成立。
+\item 举例说明 $\mu$ 有限的条件不能去掉（考虑 $(\R,\cR,\lambda)$ 上的 $\one_{[n,n+1]}$），并说明结论不能加强为 $\mu(A^c)=0$（考虑 $([0,1],\lambda)$ 上的 $x^n$）。
+\end{questions}
+\end{probleme}

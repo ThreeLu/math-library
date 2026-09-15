@@ -1,0 +1,474 @@
+% !TEX root = ../高等概率论.tex
+% =====================================================================
+%  集合系：代数、σ-代数、生成的 σ-代数、Borel σ-代数、π-类与 λ-类、π-λ 定理
+% =====================================================================
+\lecture{集合运算与示性函数，代数与 \texorpdfstring{$\sigma$}{σ}-代数，生成的 \texorpdfstring{$\sigma$}{σ}-代数，Borel \texorpdfstring{$\sigma$}{σ}-代数，\texorpdfstring{$\pi$}{π}-类与 \texorpdfstring{$\lambda$}{λ}-类，Dynkin 的 \texorpdfstring{$\pi$-$\lambda$}{π-λ} 定理}
+\label{lec:set-systems}
+
+概率论的数学模型是一个三元组 $(\Omega,\cF,P)$，称为\term{概率空间}（probability space）：$\Omega$ 是全部可能结果组成的集合，$\cF$ 是一族“可以谈论其概率”的 $\Omega$ 的子集，$P$ 是给 $\cF$ 中每个集合指定概率的函数。本讲只讨论其中的 $\cF$：它应当满足什么条件，怎样构造，怎样验证某个集合族包含了它。
+
+一个自然的问题是：为什么不直接取 $\cF=2^\Omega$，即允许对 $\Omega$ 的一切子集谈论概率？原因在于，对于最基本的例子，比如 $[0,1)$ 上的“均匀分布”（区间的概率等于长度），不可能把它定义到 $[0,1)$ 的全部子集上并保持可数可加性与平移不变性（见第~\ref{lec:extension-of-measures} 讲的作业）。因此我们只能在一个较小的集合族上定义概率，而这个集合族必须对可数次集合运算封闭，这就是 $\sigma$-代数。
+
+\topic{集合运算与示性函数}
+
+\begin{summary}
+先统一记号。本节的内容都是初等的，但集合的上极限、下极限以及示性函数会在整个课程中反复出现。
+\end{summary}
+
+设 $\Omega$ 是一个非空集合，称为\term{样本空间}（sample space），其元素 $\omega$ 称为\term{样本点}（sample point）。$\Omega$ 的全体子集记作 $2^\Omega$，称为 $\Omega$ 的\term{幂集}（power set）。对 $A,B\subseteq\Omega$，记
+\[
+A^c=\Omega\setminus A,\qquad A\setminus B=A\cap B^c,\qquad A\triangle B=(A\setminus B)\cup(B\setminus A),
+\]
+分别称为 $A$ 的\term{补集}（complement）、$A$ 与 $B$ 的\term{差集}（difference）和\term{对称差}（symmetric difference）。若 $A\cap B=\varnothing$，称 $A,B$ \term{不交}（disjoint）；一列集合两两不交时，它们的并称为\term{不交并}（disjoint union），有时写作 $\sum_n A_n$ 或 $A_1+A_2+\cdots$。
+
+对任意指标集 $I$ 和集合族 $\{A_i\}_{i\in I}$，\term{De Morgan 律}（De Morgan's laws）成立：
+\[
+\Bigl(\bigcup_{i\in I}A_i\Bigr)^c=\bigcap_{i\in I}A_i^c,\qquad \Bigl(\bigcap_{i\in I}A_i\Bigr)^c=\bigcup_{i\in I}A_i^c .
+\]
+事实上，$\omega\notin\bigcup_iA_i$ 当且仅当对每个 $i$ 都有 $\omega\notin A_i$，即 $\omega\in\bigcap_iA_i^c$；第二式对第一式两边取补并把 $A_i$ 换成 $A_i^c$ 即得。
+
+\begin{definition}[示性函数]\label{def:set-systems:indicator}
+设 $A\subseteq\Omega$。函数
+\[
+\one_A(\omega)=\begin{cases}1,&\omega\in A,\\0,&\omega\notin A\end{cases}
+\]
+称为 $A$ 的\term{示性函数}（indicator function）。
+\end{definition}
+
+示性函数把集合运算翻译成函数运算：
+\[
+\one_{A\cap B}=\one_A\one_B=\min\{\one_A,\one_B\},\qquad \one_{A\cup B}=\max\{\one_A,\one_B\},\qquad \one_{A^c}=1-\one_A;
+\]
+$A\subseteq B$ 当且仅当 $\one_A\leqslant\one_B$；$A_1,A_2,\dots$ 两两不交时 $\one_{\bigcup_nA_n}=\sum_n\one_{A_n}$。
+
+\begin{definition}[集合列的上极限与下极限]\label{def:set-systems:limsup}
+设 $A_1,A_2,\dots\subseteq\Omega$。定义
+\[
+\limsup_{n\to\infty}A_n=\bigcap_{n=1}^\infty\bigcup_{m=n}^\infty A_m,\qquad
+\liminf_{n\to\infty}A_n=\bigcup_{n=1}^\infty\bigcap_{m=n}^\infty A_m,
+\]
+分别称为集合列 $\{A_n\}$ 的\term{上极限}（limit superior）与\term{下极限}（limit inferior）。若二者相等，称 $\{A_n\}$ 的\term{极限}存在，记作 $\lim_nA_n$。
+\end{definition}
+
+\begin{proposition}\label{prop:set-systems:limsup}
+设 $A_1,A_2,\dots\subseteq\Omega$。则
+\begin{enumerate}
+\item $\omega\in\limsup_nA_n$ 当且仅当有无穷多个 $n$ 使 $\omega\in A_n$；因此概率论中常把 $\limsup_nA_n$ 写作 $\{A_n\ \text{i.o.}\}$（infinitely often，无穷多次发生）。
+\item $\omega\in\liminf_nA_n$ 当且仅当存在 $N$，使得对一切 $n\geqslant N$ 都有 $\omega\in A_n$（$A_n$ 最终总发生）。
+\item $\liminf_nA_n\subseteq\limsup_nA_n$，且 $(\limsup_nA_n)^c=\liminf_nA_n^c$。
+\item $\one_{\limsup_nA_n}=\limsup_n\one_{A_n}$，$\one_{\liminf_nA_n}=\liminf_n\one_{A_n}$。
+\item 若 $A_1\subseteq A_2\subseteq\cdots$，则 $\lim_nA_n=\bigcup_nA_n$；若 $A_1\supseteq A_2\supseteq\cdots$，则 $\lim_nA_n=\bigcap_nA_n$。
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+(1) $\omega\in\bigcap_n\bigcup_{m\geqslant n}A_m$ 意味着：对每个 $n$，都存在 $m\geqslant n$ 使 $\omega\in A_m$。若只有有限多个 $m$ 使 $\omega\in A_m$，设其中最大的为 $M$（没有这样的 $m$ 时令 $M=0$），则取 $n=M+1$ 时找不到 $m\geqslant n$ 使 $\omega\in A_m$，矛盾。反之，若有无穷多个 $m$ 使 $\omega\in A_m$，则对每个 $n$，这些 $m$ 中必有不小于 $n$ 的，于是 $\omega\in\bigcup_{m\geqslant n}A_m$ 对一切 $n$ 成立。
+
+(2) $\omega\in\bigcup_n\bigcap_{m\geqslant n}A_m$ 意味着存在 $n$，使 $\omega\in A_m$ 对一切 $m\geqslant n$ 成立，这正是所说的条件。
+
+(3) 若 $\omega\in\liminf_nA_n$，由 (2) 存在 $N$ 使 $n\geqslant N$ 时 $\omega\in A_n$，这当然是无穷多个 $n$，由 (1) 得 $\omega\in\limsup_nA_n$。第二个等式由 De Morgan 律两次得到：
+\[
+\Bigl(\bigcap_n\bigcup_{m\geqslant n}A_m\Bigr)^c=\bigcup_n\Bigl(\bigcup_{m\geqslant n}A_m\Bigr)^c=\bigcup_n\bigcap_{m\geqslant n}A_m^c .
+\]
+
+(4) 数列 $\one_{A_n}(\omega)$ 只取 $0,1$ 两个值。它的上极限等于 $1$ 当且仅当它有无穷多项等于 $1$，即 $\omega$ 属于无穷多个 $A_n$，由 (1) 即 $\omega\in\limsup_nA_n$；否则上极限为 $0$。下极限等于 $1$ 当且仅当从某项起全等于 $1$，由 (2) 即 $\omega\in\liminf_nA_n$。
+
+(5) 设 $A_n$ 递增。对每个 $n$，$\bigcap_{m\geqslant n}A_m=A_n$，$\bigcup_{m\geqslant n}A_m=\bigcup_{m\geqslant 1}A_m$，于是 $\liminf_nA_n=\bigcup_nA_n=\limsup_nA_n$。递减的情形类似：$\bigcap_{m\geqslant n}A_m=\bigcap_{m\geqslant1}A_m$，$\bigcup_{m\geqslant n}A_m=A_n$，两者都给出 $\bigcap_nA_n$。
+\end{proof}
+
+对递增的集合列，记 $A_n\uparrow A$，表示 $A_1\subseteq A_2\subseteq\cdots$ 且 $\bigcup_nA_n=A$；对递减的集合列，记 $A_n\downarrow A$，表示 $A_1\supseteq A_2\supseteq\cdots$ 且 $\bigcap_nA_n=A$。
+
+\topic{代数与 \texorpdfstring{$\sigma$}{σ}-代数}
+
+\begin{summary}
+事件的全体应当对取补集和取并集封闭。只要求有限并封闭的称为代数，要求可数并封闭的称为 $\sigma$-代数。二者的差别正是“有限”与“可数”的差别，而极限运算需要后者。
+\end{summary}
+
+\begin{definition}[代数]\label{def:set-systems:algebra}
+设 $\cA\subseteq2^\Omega$。若
+\begin{enumerate}
+\item $\Omega\in\cA$；
+\item 若 $A\in\cA$，则 $A^c\in\cA$；
+\item 若 $A,B\in\cA$，则 $A\cup B\in\cA$，
+\end{enumerate}
+则称 $\cA$ 为 $\Omega$ 上的一个\term{代数}（algebra），也称\term{域}（field）。
+\end{definition}
+
+\begin{definition}[$\sigma$-代数]\label{def:set-systems:sigma-algebra}
+设 $\cF\subseteq2^\Omega$。若
+\begin{enumerate}
+\item $\Omega\in\cF$；
+\item 若 $A\in\cF$，则 $A^c\in\cF$；
+\item 若 $A_1,A_2,\dots\in\cF$，则 $\bigcup_{n=1}^\infty A_n\in\cF$，
+\end{enumerate}
+则称 $\cF$ 为 $\Omega$ 上的一个 \term{$\sigma$-代数}（$\sigma$-algebra），也称 \term{$\sigma$-域}（$\sigma$-field）。二元组 $(\Omega,\cF)$ 称为\term{可测空间}（measurable space），$\cF$ 中的元素称为\term{可测集}（measurable set），在概率论中称为\term{事件}（event）。
+\end{definition}
+
+有些书的定义只写 (2)、(3) 两条，另外要求 $\cF$ 非空。二者等价：若 $\cF$ 非空，任取 $A\in\cF$，则 $A^c\in\cF$，于是 $\Omega=A\cup A^c\cup A\cup\cdots\in\cF$。
+
+\begin{proposition}[代数与 $\sigma$-代数的封闭性]\label{prop:set-systems:closure}
+\begin{enumerate}
+\item 设 $\cA$ 是代数。则 $\varnothing\in\cA$，并且 $\cA$ 对有限交、有限并、差集与对称差封闭。
+\item 设 $\cF$ 是 $\sigma$-代数。则 $\cF$ 是代数，并且对可数交封闭；若 $A_n\in\cF$，则 $\limsup_nA_n\in\cF$，$\liminf_nA_n\in\cF$。
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+(1) $\varnothing=\Omega^c\in\cA$。若 $A,B\in\cA$，则 $A\cap B=(A^c\cup B^c)^c\in\cA$，这里依次用了补集封闭、并集封闭、补集封闭。对 $n$ 归纳，$A_1\cup\cdots\cup A_n=(A_1\cup\cdots\cup A_{n-1})\cup A_n\in\cA$，有限交同理。差集 $A\setminus B=A\cap B^c\in\cA$，对称差 $A\triangle B=(A\setminus B)\cup(B\setminus A)\in\cA$。
+
+(2) 若 $A,B\in\cF$，令 $A_1=A$，$A_n=B$（$n\geqslant2$），则 $A\cup B=\bigcup_nA_n\in\cF$，故 $\cF$ 是代数。若 $A_n\in\cF$，则 $\bigcap_nA_n=(\bigcup_nA_n^c)^c\in\cF$。对每个 $n$，$\bigcup_{m\geqslant n}A_m\in\cF$，再对 $n$ 取可数交得 $\limsup_nA_n\in\cF$；$\liminf_nA_n$ 同理。
+\end{proof}
+
+\begin{example}[最简单的 $\sigma$-代数]
+$\{\varnothing,\Omega\}$ 是 $\Omega$ 上最小的 $\sigma$-代数，称为\term{平凡 $\sigma$-代数}（trivial $\sigma$-algebra）；$2^\Omega$ 是最大的 $\sigma$-代数。对任意 $A\subseteq\Omega$，$\{\varnothing,A,A^c,\Omega\}$ 是 $\sigma$-代数：它只有有限个元素，对补集封闭是显然的，任意一列元素的并只能是这四个集合之一。
+\end{example}
+
+\begin{example}[有限划分生成的 $\sigma$-代数]\label{ex:set-systems:partition}
+设 $\Omega=B_1+B_2+\cdots+B_k$ 是 $\Omega$ 的一个划分，$B_i$ 非空且两两不交。令
+\[
+\cF=\Bigl\{\bigcup_{i\in I}B_i:\ I\subseteq\{1,\dots,k\}\Bigr\}.
+\]
+则 $\cF$ 是 $\sigma$-代数，恰有 $2^k$ 个元素。事实上，$I=\{1,\dots,k\}$ 给出 $\Omega$；$\bigcup_{i\in I}B_i$ 的补集是 $\bigcup_{i\notin I}B_i$，这是因为各块两两不交且并为 $\Omega$；一列形如 $\bigcup_{i\in I_n}B_i$ 的集合的并是 $\bigcup_{i\in\bigcup_nI_n}B_i$。不同的 $I$ 给出不同的集合，因为各块非空且不交，所以共有 $2^k$ 个元素。可数划分 $\Omega=\sum_{i=1}^\infty B_i$ 的情形完全类似，此时 $I$ 取遍 $\N$ 的一切子集。
+
+这个例子有很直观的概率意义：$\cF$ 描述的是“只知道结果落在哪一块”的信息。以后讨论条件期望时，$\sigma$-代数就被理解为信息。
+\end{example}
+
+\begin{example}[代数但不是 $\sigma$-代数]\label{ex:set-systems:finite-cofinite}
+设 $\Omega=\N$，令 $\cA=\{A\subseteq\N: A\ \text{有限，或}\ A^c\ \text{有限}\}$。则 $\cA$ 是代数：$\N^c=\varnothing$ 有限，故 $\N\in\cA$；对补集封闭由定义的对称性立得；若 $A,B\in\cA$，当 $A,B$ 都有限时 $A\cup B$ 有限，否则不妨设 $A^c$ 有限，则 $(A\cup B)^c\subseteq A^c$ 有限。但 $\cA$ 不是 $\sigma$-代数：单点集 $\{2n\}$ 都属于 $\cA$，它们的并是偶数集，偶数集和它的补集（奇数集）都是无限集。
+\end{example}
+
+\begin{example}[可数－余可数 $\sigma$-代数]\label{ex:set-systems:countable-cocountable}
+设 $\Omega$ 是任意集合，令 $\cF=\{A\subseteq\Omega: A\ \text{可数，或}\ A^c\ \text{可数}\}$（这里“可数”包括有限）。则 $\cF$ 是 $\sigma$-代数。$\Omega\in\cF$ 与补集封闭同上一例。设 $A_n\in\cF$。若每个 $A_n$ 都可数，则 $\bigcup_nA_n$ 是可数个可数集的并，仍可数；若某个 $A_{n_0}^c$ 可数，则 $(\bigcup_nA_n)^c\subseteq A_{n_0}^c$ 可数。当 $\Omega$ 不可数时，$\cF\neq2^\Omega$；比如 $\Omega=\R$ 时，$[0,\infty)$ 和它的补集都不可数，故 $[0,\infty)\notin\cF$。
+\end{example}
+
+\topic{生成的 \texorpdfstring{$\sigma$}{σ}-代数}
+
+\begin{summary}
+在实际问题中，我们往往只知道哪些“基本”的集合应当是事件（比如区间），而需要一个包含它们的 $\sigma$-代数。满足要求的最小的那个总是存在的。
+\end{summary}
+
+\begin{proposition}\label{prop:set-systems:intersection}
+设 $I$ 是任意非空指标集（可以不可数），$\{\cF_i\}_{i\in I}$ 是 $\Omega$ 上的一族 $\sigma$-代数。则 $\bigcap_{i\in I}\cF_i=\{A\subseteq\Omega: A\in\cF_i\ \text{对一切}\ i\in I\ \text{成立}\}$ 是 $\sigma$-代数。对代数也有同样的结论。
+\end{proposition}
+\begin{proof}
+记 $\cF=\bigcap_i\cF_i$。每个 $\cF_i$ 都含 $\Omega$，故 $\Omega\in\cF$。若 $A\in\cF$，则对每个 $i$，$A\in\cF_i$，从而 $A^c\in\cF_i$，故 $A^c\in\cF$。若 $A_n\in\cF$，则对每个 $i$，所有 $A_n$ 都在 $\cF_i$ 中，从而 $\bigcup_nA_n\in\cF_i$，故 $\bigcup_nA_n\in\cF$。代数的情形只需把可数并换成两个集合的并。
+\end{proof}
+
+注意两个 $\sigma$-代数的并一般不是 $\sigma$-代数。例如 $\Omega=\{1,2,3\}$，$\cF_1=\{\varnothing,\{1\},\{2,3\},\Omega\}$，$\cF_2=\{\varnothing,\{2\},\{1,3\},\Omega\}$，则 $\{1\},\{2\}\in\cF_1\cup\cF_2$，但 $\{1,2\}\notin\cF_1\cup\cF_2$。
+
+\begin{definition}[生成的 $\sigma$-代数]\label{def:set-systems:generated}
+设 $\cC\subseteq2^\Omega$ 是任意一个集合族。所有包含 $\cC$ 的 $\sigma$-代数的交
+\[
+\sigma(\cC)=\bigcap\{\cF:\ \cF\ \text{是}\ \Omega\ \text{上的}\ \sigma\text{-代数},\ \cC\subseteq\cF\}
+\]
+称为由 $\cC$ \term{生成的 $\sigma$-代数}（$\sigma$-algebra generated by $\cC$）。
+\end{definition}
+
+由于 $2^\Omega$ 是包含 $\cC$ 的 $\sigma$-代数，上面的交是对一个非空族取的，由命题~\ref{prop:set-systems:intersection}，$\sigma(\cC)$ 是 $\sigma$-代数。它包含 $\cC$，并且含于任何包含 $\cC$ 的 $\sigma$-代数之中，所以 $\sigma(\cC)$ 是包含 $\cC$ 的\uline{最小}的 $\sigma$-代数。同样可以定义由 $\cC$ 生成的代数，记作 $\alpha(\cC)$。
+
+\begin{proposition}\label{prop:set-systems:generated}
+设 $\cC,\cD\subseteq2^\Omega$。
+\begin{enumerate}
+\item 若 $\cC$ 本身是 $\sigma$-代数，则 $\sigma(\cC)=\cC$。
+\item 若 $\cC\subseteq\cD$，则 $\sigma(\cC)\subseteq\sigma(\cD)$。
+\item 若 $\cC\subseteq\sigma(\cD)$，则 $\sigma(\cC)\subseteq\sigma(\cD)$。特别地，若 $\cC\subseteq\sigma(\cD)$ 且 $\cD\subseteq\sigma(\cC)$，则 $\sigma(\cC)=\sigma(\cD)$。
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+(1) $\cC$ 是包含 $\cC$ 的 $\sigma$-代数，所以 $\sigma(\cC)\subseteq\cC$；反包含由定义给出。(2) $\sigma(\cD)$ 是包含 $\cD$ 从而包含 $\cC$ 的 $\sigma$-代数，由最小性 $\sigma(\cC)\subseteq\sigma(\cD)$。(3) $\sigma(\cD)$ 是包含 $\cC$ 的 $\sigma$-代数，由最小性即得第一句；第二句对两个方向各用一次第一句。
+\end{proof}
+
+生成的 $\sigma$-代数是“从外面”定义的：我们并没有写出 $\sigma(\cC)$ 里的元素长什么样。这正是它的方便之处，也是它的困难之处。要证明“$\sigma(\cC)$ 中的每个集合都具有性质 $(\ast)$”，一般的办法是下面的\term{好集原理}（good sets principle）：
+\begin{quote}
+令 $\cG=\{A\in\sigma(\cC): A\ \text{具有性质}\ (\ast)\}$（“好集”的全体）。若能证明 (a) $\cC\subseteq\cG$，(b) $\cG$ 是 $\sigma$-代数，则由最小性 $\sigma(\cC)\subseteq\cG$，即 $\sigma(\cC)$ 中每个集合都是好集。
+\end{quote}
+这个原理的困难在于步骤 (b)：很多自然的性质只能验证对补集和\emph{递增}并封闭，却无法验证对交集封闭。$\pi$-$\lambda$ 定理正是为此而设的，见本讲最后一节。
+
+\begin{example}[单点集生成的 $\sigma$-代数]
+设 $\Omega$ 是任意集合，$\cC=\{\{\omega\}:\omega\in\Omega\}$。则 $\sigma(\cC)$ 就是\egref{ex:set-systems:countable-cocountable} 中的可数－余可数 $\sigma$-代数 $\cF$。一方面，$\cF$ 是包含全体单点集的 $\sigma$-代数，所以 $\sigma(\cC)\subseteq\cF$。另一方面，若 $A$ 可数，则 $A$ 是可数个单点集的并，从而 $A\in\sigma(\cC)$；若 $A^c$ 可数，则 $A^c\in\sigma(\cC)$，从而 $A\in\sigma(\cC)$。于是 $\cF\subseteq\sigma(\cC)$。
+
+这个例子说明：在 $\R$ 上，仅仅知道每个单点是事件，得到的 $\sigma$-代数里连 $[0,\infty)$ 都没有。
+\end{example}
+
+\topic{Borel \texorpdfstring{$\sigma$}{σ}-代数}
+
+\begin{definition}[Borel $\sigma$-代数]\label{def:set-systems:borel}
+设 $S$ 是拓扑空间（例如度量空间），由 $S$ 的全体开集生成的 $\sigma$-代数称为 $S$ 上的 \term{Borel $\sigma$-代数}（Borel $\sigma$-algebra），记作 $\cB(S)$，其中的元素称为 \term{Borel 集}（Borel set）。$\R^d$ 上的 Borel $\sigma$-代数记作 $\cR^d$，$d=1$ 时简记为 $\cR$。
+\end{definition}
+
+由于闭集是开集的补集，$\cB(S)$ 也由全体闭集生成。$\cR$ 中包含了一切开集、闭集、可数集（单点集 $\{x\}$ 是闭集）、区间，以及对它们作可数次运算得到的集合，例如全体无理数 $\R\setminus\Q$。下面的命题说明 $\cR$ 可以由很小的集合族生成。
+
+\begin{lemma}\label{lem:set-systems:open-sets-R}
+$\R$ 中的每个开集都是可数个端点为有理数的开区间的并。
+\end{lemma}
+\begin{proof}
+设 $U\subseteq\R$ 是开集。令 $\cI=\{(p,q): p,q\in\Q,\ p<q,\ (p,q)\subseteq U\}$。$\cI$ 是可数集 $\Q\times\Q$ 的子集的像，故可数，并且 $\bigcup\cI\subseteq U$。反之，任取 $x\in U$，由于 $U$ 是开集，存在 $\varepsilon>0$ 使 $(x-\varepsilon,x+\varepsilon)\subseteq U$。由有理数的稠密性，取有理数 $p\in(x-\varepsilon,x)$，$q\in(x,x+\varepsilon)$，则 $x\in(p,q)\subseteq(x-\varepsilon,x+\varepsilon)\subseteq U$，即 $(p,q)\in\cI$。所以 $U=\bigcup\cI$。
+\end{proof}
+
+\begin{proposition}\label{prop:set-systems:borel-generators}
+下列每个集合族都生成 $\cR$：
+\begin{enumerate}
+\item $\cC_1=\{(a,b): a<b,\ a,b\in\R\}$；
+\item $\cC_2=\{(a,b]: a<b,\ a,b\in\R\}$；
+\item $\cC_3=\{(-\infty,x]: x\in\R\}$；
+\item $\cC_4=\{(-\infty,x]: x\in\Q\}$。
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+我们证明 $\cR=\sigma(\cC_1)=\sigma(\cC_2)=\sigma(\cC_3)=\sigma(\cC_4)$，每一步都用命题~\ref{prop:set-systems:generated}(3)：只需验证每个集合族包含于另一个生成的 $\sigma$-代数中。
+
+\emph{$\sigma(\cC_1)=\cR$。}开区间是开集，故 $\cC_1\subseteq\cR$，从而 $\sigma(\cC_1)\subseteq\cR$。由引理~\ref{lem:set-systems:open-sets-R}，每个开集都是 $\cC_1$ 中可数个集合的并，属于 $\sigma(\cC_1)$，所以 $\cR\subseteq\sigma(\cC_1)$。
+
+\emph{$\sigma(\cC_2)=\sigma(\cC_1)$。}由
+\[
+(a,b]=\bigcap_{n=1}^\infty\Bigl(a,b+\frac1n\Bigr),\qquad (a,b)=\bigcup_{n>1/(b-a)}\Bigl(a,b-\frac1n\Bigr]
+\]
+知 $\cC_2\subseteq\sigma(\cC_1)$，$\cC_1\subseteq\sigma(\cC_2)$。第一个等式成立是因为 $x\in(a,b+1/n)$ 对一切 $n$ 成立当且仅当 $a<x\leqslant b$；第二个等式中 $n>1/(b-a)$ 保证了 $b-1/n>a$，而 $a<x<b$ 当且仅当对某个充分大的 $n$ 有 $a<x\leqslant b-1/n$。
+
+\emph{$\sigma(\cC_3)=\sigma(\cC_2)$。}由 $(a,b]=(-\infty,b]\setminus(-\infty,a]$ 知 $\cC_2\subseteq\sigma(\cC_3)$；由 $(-\infty,x]=\bigcup_{n=1}^\infty(x-n,x]$ 知 $\cC_3\subseteq\sigma(\cC_2)$。
+
+\emph{$\sigma(\cC_4)=\sigma(\cC_3)$。}$\cC_4\subseteq\cC_3$ 给出 $\sigma(\cC_4)\subseteq\sigma(\cC_3)$。对任意 $x\in\R$，取有理数列 $q_n\downarrow x$ 且 $q_n>x$（例如在 $(x,x+1/n)$ 中取有理数，再令 $q_n$ 为前 $n$ 个所取之数的最小值），则 $(-\infty,x]=\bigcap_n(-\infty,q_n]$：若 $y\leqslant x$，则 $y\leqslant q_n$ 对一切 $n$ 成立；若 $y>x$，由于 $q_n\to x$，存在 $n$ 使 $q_n<y$。故 $\cC_3\subseteq\sigma(\cC_4)$。
+\end{proof}
+
+在 $\R^d$ 上可以作完全平行的讨论：$\cR^d$ 由一切形如 $(a_1,b_1)\times\cdots\times(a_d,b_d)$ 的开矩形生成，也由形如 $(a_1,b_1]\times\cdots\times(a_d,b_d]$ 的矩形生成，还由 $\{(-\infty,x_1]\times\cdots\times(-\infty,x_d]: x_i\in\Q\}$ 生成。证明留作作业（习题~\exref{ex:set-systems:A5}）。
+
+\topic{\texorpdfstring{$\pi$}{π}-类与 \texorpdfstring{$\lambda$}{λ}-类}
+
+\begin{summary}
+$\sigma$-代数的定义把两种性质捆在一起：对交集封闭，以及对补集、可数并封闭。$\pi$-类只保留前者，$\lambda$-类只保留后者的一个弱化版本。本节说明为什么要把它们拆开。
+\end{summary}
+
+\begin{definition}[$\pi$-类]\label{def:set-systems:pi}
+设 $\cP\subseteq2^\Omega$。若 $A,B\in\cP$ 蕴含 $A\cap B\in\cP$，则称 $\cP$ 为 \term{$\pi$-类}（$\pi$-system）。
+\end{definition}
+
+\begin{definition}[$\lambda$-类]\label{def:set-systems:lambda}
+设 $\cL\subseteq2^\Omega$。若
+\begin{enumerate}
+\item $\Omega\in\cL$；
+\item 若 $A,B\in\cL$ 且 $A\subseteq B$，则 $B\setminus A\in\cL$；
+\item 若 $A_n\in\cL$ 且 $A_n\uparrow A$，则 $A\in\cL$，
+\end{enumerate}
+则称 $\cL$ 为 \term{$\lambda$-类}（$\lambda$-system），也称 \term{Dynkin 类}（Dynkin system）。
+\end{definition}
+
+\begin{example}[$\pi$-类]\label{ex:set-systems:pi-examples}
+\begin{enumerate}
+\item $\{(-\infty,x]: x\in\R\}$ 是 $\pi$-类，因为 $(-\infty,x]\cap(-\infty,y]=(-\infty,\min\{x,y\}]$。
+\item $\{(a,b]: a<b\}\cup\{\varnothing\}$ 是 $\pi$-类：两个左开右闭区间的交是 $(\max\{a,a'\},\min\{b,b'\}]$，当 $\max\{a,a'\}\geqslant\min\{b,b'\}$ 时为空集。同理，$\R^d$ 中形如 $(a_1,b_1]\times\cdots\times(a_d,b_d]$ 的矩形连同空集组成 $\pi$-类。
+\item 任何代数都是 $\pi$-类。
+\end{enumerate}
+\end{example}
+
+\begin{proposition}[$\lambda$-类的等价定义]\label{prop:set-systems:lambda-equivalent}
+$\cL\subseteq2^\Omega$ 是 $\lambda$-类，当且仅当
+\begin{enumerate}
+\item[(1$'$)] $\Omega\in\cL$；
+\item[(2$'$)] 若 $A\in\cL$，则 $A^c\in\cL$；
+\item[(3$'$)] 若 $A_1,A_2,\dots\in\cL$ 两两不交，则 $\bigcup_nA_n\in\cL$。
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+设 $\cL$ 是 $\lambda$-类。(1$'$) 即 (1)。若 $A\in\cL$，由 $A\subseteq\Omega$ 及 (2) 得 $A^c=\Omega\setminus A\in\cL$，这是 (2$'$)。为证 (3$'$)，先证 $\cL$ 对两个不交集合的并封闭：设 $A,B\in\cL$，$A\cap B=\varnothing$，则 $A\subseteq B^c$，而 $B^c\in\cL$，由 (2) 得 $B^c\setminus A\in\cL$，再取补得 $(B^c\setminus A)^c=A\cup B\in\cL$。对 $n$ 归纳，若 $A_1,\dots,A_n\in\cL$ 两两不交，则 $B_n=A_1\cup\cdots\cup A_n\in\cL$（$B_{n-1}$ 与 $A_n$ 不交）。现在 $B_n\uparrow\bigcup_nA_n$，由 (3) 得 $\bigcup_nA_n\in\cL$。
+
+反之，设 $\cL$ 满足 (1$'$)–(3$'$)。(1) 即 (1$'$)。设 $A,B\in\cL$，$A\subseteq B$。则 $B^c\in\cL$，且 $A$ 与 $B^c$ 不交，由 (3$'$)（取 $A_1=A$，$A_2=B^c$，其余为 $\varnothing=\Omega^c\in\cL$）得 $A\cup B^c\in\cL$，再取补得 $(A\cup B^c)^c=B\cap A^c=B\setminus A\in\cL$，这是 (2)。设 $A_n\in\cL$，$A_n\uparrow A$。令 $D_1=A_1$，$D_n=A_n\setminus A_{n-1}$（$n\geqslant2$），由刚证的 (2) 知 $D_n\in\cL$；它们两两不交（若 $m<n$，则 $D_m\subseteq A_m\subseteq A_{n-1}$，而 $D_n\cap A_{n-1}=\varnothing$），且 $\bigcup_{k\leqslant n}D_k=A_n$，从而 $\bigcup_nD_n=\bigcup_nA_n=A$。由 (3$'$) 得 $A\in\cL$，这是 (3)。
+\end{proof}
+
+\begin{example}[$\lambda$-类不一定是 $\sigma$-代数]\label{ex:set-systems:even}
+设 $\Omega=\{1,2,3,4\}$，$\cL$ 是 $\Omega$ 的全体偶数元子集：
+\[
+\cL=\bigl\{\varnothing,\ \Omega,\ \{1,2\},\{3,4\},\{1,3\},\{2,4\},\{1,4\},\{2,3\}\bigr\}.
+\]
+用命题~\ref{prop:set-systems:lambda-equivalent} 验证：$\Omega$ 有 $4$ 个元素；偶数元子集的补集有 $4-\text{偶数}$ 个元素，仍为偶数；由于 $\Omega$ 有限，一列两两不交的非空集合只有有限个，而不交的偶数元集合的并仍是偶数元集合。所以 $\cL$ 是 $\lambda$-类。但 $\{1,2\}\cap\{1,3\}=\{1\}\notin\cL$，所以 $\cL$ 不是 $\pi$-类，更不是 $\sigma$-代数。
+\end{example}
+
+\medskip\noindent\textbf{为什么需要 $\lambda$-类。}回到好集原理。设 $\mu,\nu$ 是 $(\Omega,\cF)$ 上的两个概率（下一讲给出严格定义），我们想知道它们何时相等。令
+\[
+\cD=\{A\in\cF: \mu(A)=\nu(A)\}.
+\]
+利用概率的基本性质（下一讲的定理~\ref{thm:measures:basic}）可以检验：$\Omega\in\cD$，因为 $\mu(\Omega)=\nu(\Omega)=1$；若 $A\subseteq B$ 都在 $\cD$ 中，则 $\mu(B\setminus A)=\mu(B)-\mu(A)=\nu(B)-\nu(A)=\nu(B\setminus A)$；若 $A_n\uparrow A$ 且 $A_n\in\cD$，则由概率的连续性，$\mu(A)=\lim\mu(A_n)=\lim\nu(A_n)=\nu(A)$。于是 $\cD$ 总是 $\lambda$-类。但从 $\mu(A)=\nu(A)$，$\mu(B)=\nu(B)$ 推不出 $\mu(A\cap B)=\nu(A\cap B)$，所以一般无法说明 $\cD$ 是 $\sigma$-代数。具体地，在 $\Omega=\{1,2,3,4\}$ 上取 $\mu$ 为均匀分布（每点概率 $1/4$），$\nu$ 给 $1,4$ 各 $1/2$ 的概率、给 $2,3$ 概率 $0$。逐个比较 $16$ 个子集可知
+\[
+\cD=\bigl\{\varnothing,\ \Omega,\ \{1,2\},\{3,4\},\{1,3\},\{2,4\}\bigr\}.
+\]
+它是 $\lambda$-类（补集和不交并都可以直接验证），但 $\{1,2\}\cap\{1,3\}=\{1\}\notin\cD$。
+
+这就是说，“好集”的全体天然地构成 $\lambda$-类。凡是由等式、极限定义出来的性质，比如两个测度相等、两个积分相等、某个函数等式对示性函数成立，好集族对差集和递增并封闭几乎是自动的，而对交集封闭通常不成立。$\pi$-$\lambda$ 定理告诉我们：只要生成元本身对交集封闭，这个缺陷就无关紧要。
+
+\topic{Dynkin 的 \texorpdfstring{$\pi$-$\lambda$}{π-λ} 定理}
+
+\begin{summary}
+证明分两大步：第一步，同时是 $\pi$-类和 $\lambda$-类的集合族是 $\sigma$-代数；第二步，由 $\pi$-类生成的最小 $\lambda$-类仍是 $\pi$-类。两步合起来，就得到最小 $\lambda$-类等于生成的 $\sigma$-代数。
+\end{summary}
+
+与命题~\ref{prop:set-systems:intersection} 的证明完全相同，任意一族 $\lambda$-类的交仍是 $\lambda$-类：$\Omega$ 属于每一个；若 $A\subseteq B$ 都属于每一个，则 $B\setminus A$ 属于每一个；若递增列 $A_n$ 的每一项都属于每一个，则 $\bigcup_nA_n$ 属于每一个。由于 $2^\Omega$ 是 $\lambda$-类，对任意 $\cC\subseteq2^\Omega$，可以定义包含 $\cC$ 的最小 $\lambda$-类
+\[
+\ell(\cC)=\bigcap\{\cL:\ \cL\ \text{是}\ \lambda\text{-类},\ \cC\subseteq\cL\}.
+\]
+由于 $\sigma$-代数一定是 $\lambda$-类（$B\setminus A=B\cap A^c$，递增并是可数并），$\sigma(\cC)$ 是包含 $\cC$ 的 $\lambda$-类，所以总有 $\ell(\cC)\subseteq\sigma(\cC)$。
+
+\begin{lemma}[第一步]\label{lem:set-systems:pi-lambda-sigma}
+若 $\cG\subseteq2^\Omega$ 既是 $\pi$-类又是 $\lambda$-类，则 $\cG$ 是 $\sigma$-代数。
+\end{lemma}
+\begin{proof}
+逐条验证定义~\ref{def:set-systems:sigma-algebra}。
+
+(1) $\Omega\in\cG$，因为 $\cG$ 是 $\lambda$-类。
+
+(2) 若 $A\in\cG$，由 $A\subseteq\Omega$ 及 $\lambda$-类的性质 (2) 得 $A^c=\Omega\setminus A\in\cG$。
+
+(3) 先证 $\cG$ 对有限并封闭。设 $A,B\in\cG$，由 (2) 得 $A^c,B^c\in\cG$，由 $\pi$-类的性质得 $A^c\cap B^c\in\cG$，再由 (2) 得 $A\cup B=(A^c\cap B^c)^c\in\cG$。归纳可得 $\cG$ 对任意有限并封闭。现设 $A_1,A_2,\dots\in\cG$，令 $B_n=A_1\cup\cdots\cup A_n$，则 $B_n\in\cG$，且 $B_n\uparrow\bigcup_{k=1}^\infty A_k$。由 $\lambda$-类的性质 (3) 得 $\bigcup_kA_k\in\cG$。
+\end{proof}
+
+\begin{lemma}[第二步]\label{lem:set-systems:ell-is-pi}
+若 $\cP$ 是 $\pi$-类，则 $\ell(\cP)$ 是 $\pi$-类。
+\end{lemma}
+\begin{proof}
+对每个 $A\subseteq\Omega$，令
+\[
+\cG_A=\{B\subseteq\Omega: A\cap B\in\ell(\cP)\}.
+\]
+我们要证明：对任意 $A,B\in\ell(\cP)$，都有 $B\in\cG_A$。分三步。
+
+\emph{(a) 若 $A\in\ell(\cP)$，则 $\cG_A$ 是 $\lambda$-类。}逐条验证定义~\ref{def:set-systems:lambda}：
+\begin{itemize}
+\item $A\cap\Omega=A\in\ell(\cP)$，故 $\Omega\in\cG_A$。
+\item 设 $B,C\in\cG_A$ 且 $C\subseteq B$。则 $A\cap C\subseteq A\cap B$，二者都属于 $\ell(\cP)$，由于 $\ell(\cP)$ 是 $\lambda$-类，$(A\cap B)\setminus(A\cap C)\in\ell(\cP)$。而
+\[
+(A\cap B)\setminus(A\cap C)=A\cap B\cap(A^c\cup C^c)=A\cap B\cap C^c=A\cap(B\setminus C),
+\]
+故 $B\setminus C\in\cG_A$。
+\item 设 $B_n\in\cG_A$，$B_n\uparrow B$。则 $A\cap B_n\in\ell(\cP)$，且 $A\cap B_n\uparrow A\cap B$（递增是显然的，并且 $\bigcup_n(A\cap B_n)=A\cap\bigcup_nB_n$）。由 $\ell(\cP)$ 是 $\lambda$-类得 $A\cap B\in\ell(\cP)$，即 $B\in\cG_A$。
+\end{itemize}
+
+\emph{(b) 若 $A\in\cP$，则 $\ell(\cP)\subseteq\cG_A$。}对任意 $B\in\cP$，由于 $\cP$ 是 $\pi$-类，$A\cap B\in\cP\subseteq\ell(\cP)$，即 $B\in\cG_A$。所以 $\cP\subseteq\cG_A$。又 $A\in\cP\subseteq\ell(\cP)$，由 (a)，$\cG_A$ 是 $\lambda$-类。由 $\ell(\cP)$ 的最小性，$\ell(\cP)\subseteq\cG_A$。
+
+\emph{(c) 若 $A\in\ell(\cP)$，则 $\ell(\cP)\subseteq\cG_A$。}任取 $B\in\cP$。由 (b)（把 (b) 中的 $A$ 换成 $B$），$\ell(\cP)\subseteq\cG_B$，而 $A\in\ell(\cP)$，所以 $A\in\cG_B$，即 $B\cap A\in\ell(\cP)$，也就是 $B\in\cG_A$。这说明 $\cP\subseteq\cG_A$。由 (a)，$\cG_A$ 是 $\lambda$-类，再由最小性得 $\ell(\cP)\subseteq\cG_A$。
+
+由 (c)，对任意 $A,B\in\ell(\cP)$ 有 $B\in\cG_A$，即 $A\cap B\in\ell(\cP)$。所以 $\ell(\cP)$ 是 $\pi$-类。
+\end{proof}
+
+证明中的 (b)、(c) 两步是“先固定一个变量在小集合族里，再把它放大到大集合族里”的典型手法：先对 $A\in\cP$，$B\in\ell(\cP)$ 证明 $A\cap B\in\ell(\cP)$，再利用交集的对称性，把 $A$ 的范围也放大到 $\ell(\cP)$。以后证明乘积测度等结论时还会见到同样的两步放大。
+
+\begin{theorem}[Dynkin 的 $\pi$-$\lambda$ 定理]\label{thm:set-systems:pi-lambda}
+设 $\cP$ 是 $\pi$-类，$\cL$ 是 $\lambda$-类，且 $\cP\subseteq\cL$。则 $\sigma(\cP)\subseteq\cL$。进一步，$\ell(\cP)=\sigma(\cP)$。
+\end{theorem}
+\begin{proof}
+由引理~\ref{lem:set-systems:ell-is-pi}，$\ell(\cP)$ 是 $\pi$-类；它当然也是 $\lambda$-类。由引理~\ref{lem:set-systems:pi-lambda-sigma}，$\ell(\cP)$ 是 $\sigma$-代数。它包含 $\cP$，所以由 $\sigma(\cP)$ 的最小性，$\sigma(\cP)\subseteq\ell(\cP)$。前面已经说明 $\ell(\cP)\subseteq\sigma(\cP)$，故 $\ell(\cP)=\sigma(\cP)$。最后，$\cL$ 是包含 $\cP$ 的 $\lambda$-类，由 $\ell(\cP)$ 的最小性，$\sigma(\cP)=\ell(\cP)\subseteq\cL$。
+\end{proof}
+
+于是好集原理可以改写成下面的形式，这是本课程中最常用的论证模式之一。
+
+\begin{corollary}[$\pi$-$\lambda$ 形式的好集原理]\label{cor:set-systems:good-sets}
+设 $\cP$ 是 $\pi$-类，$\cG\subseteq2^\Omega$。若 $\cP\subseteq\cG$ 且 $\cG$ 是 $\lambda$-类，则 $\sigma(\cP)\subseteq\cG$。
+\end{corollary}
+\begin{proof}
+这就是定理~\ref{thm:set-systems:pi-lambda}。
+\end{proof}
+
+\begin{remark}
+$\pi$-类的条件不能去掉。\egref{ex:set-systems:even} 中取 $\cC=\{\{1,2\},\{1,3\}\}$，则 $\cC\subseteq\cL$，$\cL$ 是 $\lambda$-类，但 $\sigma(\cC)$ 含有 $\{1\}=\{1,2\}\cap\{1,3\}$，从而 $\sigma(\cC)=2^\Omega\not\subseteq\cL$（$\{1\}$、$\{2\}=\{1,2\}\setminus\{1\}$、$\{3\}=\{1,3\}\setminus\{1\}$、$\{4\}=(\{1,2\}\cup\{1,3\})^c$ 都在 $\sigma(\cC)$ 中）。
+\end{remark}
+
+% =====================================================================
+\homework{单调类定理，无穷 \texorpdfstring{$\sigma$}{σ}-代数的基数，可数生成}[单调类定理，无穷 σ-代数的基数，可数生成]
+\label{hw:set-systems}
+
+\exercisepart{基本习题}
+
+\begin{exercises}{A}{课堂内容的补充}
+\item\label{ex:set-systems:A1} 设 $A_n,B_n\subseteq\Omega$。证明：
+\begin{questions}
+\item $\limsup_n(A_n\cup B_n)=\limsup_nA_n\cup\limsup_nB_n$；
+\item $\liminf_n(A_n\cap B_n)=\liminf_nA_n\cap\liminf_nB_n$；
+\item $\limsup_n(A_n\cap B_n)\subseteq\limsup_nA_n\cap\limsup_nB_n$，并举例说明等号可以不成立。
+\end{questions}
+\item 设 $\Omega=\R$，$A_n=[0,1]$（$n$ 为奇数），$A_n=[1,2]$（$n$ 为偶数）。求 $\limsup_nA_n$ 与 $\liminf_nA_n$。再对 $A_n=(-1/n,\,1+(-1)^n]$ 求上、下极限。
+\item 证明：$\cA\subseteq2^\Omega$ 是代数，当且仅当 $\Omega\in\cA$，且 $A,B\in\cA$ 蕴含 $A\setminus B\in\cA$。
+\item\label{ex:set-systems:A4} 设 $\cF_1\subseteq\cF_2\subseteq\cdots$ 是 $\Omega$ 上的 $\sigma$-代数。
+\begin{questions}
+\item 证明 $\bigcup_n\cF_n$ 是代数。
+\item 设 $\Omega=\N$，$\cF_n=\sigma(\{1\},\{2\},\dots,\{n\})$。写出 $\cF_n$ 的全部元素，并证明 $\bigcup_n\cF_n$ 不是 $\sigma$-代数。
+\end{questions}
+\item\label{ex:set-systems:A5} 证明 $\cR^d$ 由下列每一个集合族生成：
+\begin{questions}
+\item 开矩形 $(a_1,b_1)\times\cdots\times(a_d,b_d)$ 的全体（提示：仿照引理~\ref{lem:set-systems:open-sets-R}，用有理顶点的开矩形）；
+\item 矩形 $(a_1,b_1]\times\cdots\times(a_d,b_d]$ 的全体；
+\item $\{(-\infty,x_1]\times\cdots\times(-\infty,x_d]: x_1,\dots,x_d\in\Q\}$。
+\end{questions}
+由 (3) 说明 $\cR^d$ 是\term{可数生成的}（countably generated），即存在可数集合族 $\cC$ 使 $\sigma(\cC)=\cR^d$。
+\item 设 $A\subseteq\N$。若极限 $\lim_{n\to\infty}\abs{A\cap\{1,\dots,n\}}/n$ 存在，称 $A$ 有\term{渐近密度}（asymptotic density）。令 $\cA$ 为有渐近密度的集合的全体。$\cA$ 是否对补集封闭？是否对不交并封闭？是否是代数？（提示：考虑偶数集与一个“在偶数和奇数之间按越来越长的段落交替选取”的集合的交。）
+\item 设 $f:\Omega\to S$ 是映射，$\cS$ 是 $S$ 上的 $\sigma$-代数，$\cF$ 是 $\Omega$ 上的 $\sigma$-代数。证明：
+\begin{questions}
+\item $f^{-1}(\cS)=\{f^{-1}(B): B\in\cS\}$ 是 $\Omega$ 上的 $\sigma$-代数；
+\item $\{B\subseteq S: f^{-1}(B)\in\cF\}$ 是 $S$ 上的 $\sigma$-代数；
+\item 对任意 $\cC\subseteq2^S$，$\sigma(f^{-1}(\cC))=f^{-1}(\sigma(\cC))$（提示：用 (2) 证明一个方向）。
+\end{questions}
+\item 设 $\Omega_0\subseteq\Omega$，$\cF$ 是 $\Omega$ 上的 $\sigma$-代数。证明 $\cF\cap\Omega_0=\{A\cap\Omega_0: A\in\cF\}$ 是 $\Omega_0$ 上的 $\sigma$-代数（称为\term{迹 $\sigma$-代数}，trace $\sigma$-algebra）；并证明对 $\cC\subseteq2^\Omega$ 有 $\sigma_{\Omega_0}(\cC\cap\Omega_0)=\sigma(\cC)\cap\Omega_0$，其中左边表示在 $\Omega_0$ 上生成的 $\sigma$-代数。
+\item 证明：若 $\cL$ 是 $\lambda$-类，$A,B\in\cL$ 且 $A\cap B=\varnothing$，则 $A\cup B\in\cL$；但 $A,B\in\cL$ 一般推不出 $A\cup B\in\cL$。
+\end{exercises}
+
+\begin{probleme}{B}{单调类定理}
+$\pi$-$\lambda$ 定理有一个历史上更早的“孪生”版本。称 $\cM\subseteq2^\Omega$ 为\term{单调类}（monotone class），如果 $A_n\in\cM$，$A_n\uparrow A$ 蕴含 $A\in\cM$，并且 $A_n\in\cM$，$A_n\downarrow A$ 蕴含 $A\in\cM$。本题证明：\emph{若 $\cA$ 是代数，则包含 $\cA$ 的最小单调类 $m(\cA)$ 等于 $\sigma(\cA)$。}
+\begin{questions}
+\item 证明任意一族单调类的交是单调类，从而 $m(\cA)$ 有定义，并且 $m(\cA)\subseteq\sigma(\cA)$。
+\item 证明：若一个代数同时是单调类，则它是 $\sigma$-代数。
+\item 对 $A\subseteq\Omega$，令 $\cM_A=\{B\in m(\cA): A\cap B,\ A\setminus B,\ B\setminus A\in m(\cA)\}$。证明：若 $A\in m(\cA)$，则 $\cM_A$ 是单调类。
+\item 证明：若 $A\in\cA$，则 $\cA\subseteq\cM_A$，从而 $m(\cA)\subseteq\cM_A$。
+\item 利用 $B\in\cM_A\iff A\in\cM_B$，证明：若 $A\in m(\cA)$，则 $m(\cA)\subseteq\cM_A$。由此说明 $m(\cA)$ 对交集和差集封闭。
+\item 证明 $\Omega\in m(\cA)$，从而 $m(\cA)$ 是代数。结合 B2) 得到 $m(\cA)=\sigma(\cA)$。
+\end{questions}
+最后比较两个定理：
+\begin{questions}[resume]
+\item 用单调类定理证明：若 $\cA$ 是代数，$\cL$ 是包含 $\cA$ 的 $\lambda$-类，则 $\sigma(\cA)\subseteq\cL$。（提示：$\lambda$-类对递增并封闭；它对递减交也封闭吗？）
+\item 举例说明：若 $\cA$ 只是 $\pi$-类而不是代数，则 $m(\cA)$ 可以严格小于 $\sigma(\cA)$。（提示：在 $\Omega=\{1,2\}$ 上取 $\cA=\{\{1\}\}$。）
+\end{questions}
+\end{probleme}
+
+\begin{probleme}{C}{无穷 $\sigma$-代数不可数}
+本题证明：\emph{若 $\sigma$-代数 $\cF$ 有无穷多个元素，则 $\cF$ 的基数不小于连续统的基数；特别地，不存在可数无穷的 $\sigma$-代数。}
+\begin{questions}
+\item 对 $\omega\in\Omega$，令 $[\omega]=\bigcap\{A\in\cF:\omega\in A\}$。说明 $[\omega]$ 不一定属于 $\cF$。现假设 $\cF$ 是可数的，证明 $[\omega]\in\cF$。
+\item 仍假设 $\cF$ 可数。证明：对任意 $\omega,\omega'$，$[\omega]$ 与 $[\omega']$ 或者相等，或者不交。（提示：若 $\omega'\notin[\omega]$，则存在 $A\in\cF$ 使 $\omega\in A$，$\omega'\notin A$，考虑 $A^c$。）
+\item 仍假设 $\cF$ 可数。设 $\{[\omega]:\omega\in\Omega\}$ 中互不相同的集合为 $E_1,E_2,\dots$（有限或可数个）。证明每个 $A\in\cF$ 都是若干个 $E_i$ 的并。
+\item 由 C3) 和\egref{ex:set-systems:partition} 证明：若 $\cF$ 可数，则 $\cF$ 是有限的。
+\item 现去掉可数的假设，设 $\cF$ 是无穷 $\sigma$-代数。证明存在一列两两不交的非空集合 $B_1,B_2,\dots\in\cF$。（提示：若 $\cF$ 无穷，则存在 $A\in\cF$ 使 $\cF\cap A=\{C\cap A: C\in\cF\}$ 和 $\cF\cap A^c$ 中至少一个是无穷的，而且 $A$、$A^c$ 都非空；归纳地往下取。）
+\item 利用 C5) 中的 $B_n$，构造从 $2^\N$ 到 $\cF$ 的单射，从而完成证明。
+\end{questions}
+\end{probleme}
+
+\begin{probleme}{D}{生成的 $\sigma$-代数中的集合只依赖可数个生成元}
+设 $\cC\subseteq2^\Omega$ 是任意集合族（可以不可数）。本题证明：\emph{对每个 $A\in\sigma(\cC)$，存在可数子族 $\cC_0\subseteq\cC$ 使 $A\in\sigma(\cC_0)$。}这一结论在研究 $[0,1]$ 上的连续函数空间、无穷乘积空间时十分有用。
+\begin{questions}
+\item 令 $\cG=\bigcup\{\sigma(\cC_0):\ \cC_0\subseteq\cC\ \text{可数}\}$。证明 $\cC\subseteq\cG\subseteq\sigma(\cC)$。
+\item 证明 $\Omega\in\cG$，且 $\cG$ 对补集封闭。
+\item 设 $A_n\in\cG$，$A_n\in\sigma(\cC_n)$，$\cC_n$ 可数。说明 $\bigcup_n\cC_n$ 可数，并证明 $\bigcup_nA_n\in\sigma(\bigcup_n\cC_n)$。
+\item 由 D1)–D3) 得到 $\cG=\sigma(\cC)$。
+\end{questions}
+作为应用，设 $T$ 是不可数集，$\Omega=\R^T$ 为一切函数 $f:T\to\R$ 的集合，$\cC=\{\{f: f(t)\leqslant x\}: t\in T,\ x\in\R\}$。
+\begin{questions}[resume]
+\item 证明：对每个 $A\in\sigma(\cC)$，存在可数集 $T_0\subseteq T$，使得若 $f,g\in\Omega$ 在 $T_0$ 上相等，则 $f\in A\iff g\in A$。
+\item 取 $T=[0,1]$。证明 $\{f\in\R^{[0,1]}: f\ \text{在}\ [0,1]\ \text{上连续}\}\notin\sigma(\cC)$，也有 $\{f: \sup_{t\in[0,1]}f(t)\leqslant 1\}\notin\sigma(\cC)$。
+\end{questions}
+这说明在一切函数构成的空间上，由“有限个时刻的取值”生成的 $\sigma$-代数太小，连“路径连续”都不是事件。下一讲会看到，把空间换成连续函数空间 $C[0,1]$，情况就好得多。
+\end{probleme}
+
+\thinkingpart
+
+\begin{probleme}[问题]{E}{可数生成的 $\sigma$-代数与原子}
+设 $(\Omega,\cF)$ 是可测空间。称 $\cF$ 可数生成，若存在可数族 $\cC=\{C_1,C_2,\dots\}$ 使 $\sigma(\cC)=\cF$。
+\begin{questions}
+\item 设 $\cF=\sigma(\cC)$，$\cC$ 如上。在 $\Omega$ 上定义 $\omega\sim\omega'$ 当且仅当对一切 $n$ 有 $\one_{C_n}(\omega)=\one_{C_n}(\omega')$。证明 $\sim$ 的每个等价类属于 $\cF$。
+\item 证明：若 $A\in\cF$，$\omega\in A$，$\omega\sim\omega'$，则 $\omega'\in A$。（提示：好集原理。）于是每个等价类是 $\cF$ 的\term{原子}（atom）：它的可测子集只有空集和它自身。
+\item 证明 $\R$ 上的可数－余可数 $\sigma$-代数不是可数生成的，尽管它比 $\cR$ “小”。（提示：若它由 $C_1,C_2,\dots$ 生成，每个 $C_n$ 可以取为可数集或余可数集，考察 E1) 中的等价类。）
+\end{questions}
+\end{probleme}
+
+\exercisepart{课外知识：Borel 集的基数}
+
+\begin{probleme}{F}{$\cR$ 与 $\R$ 等势}
+本题证明 $\abs{\cR}=\abs{\R}$，从而 $\cR\neq2^\R$（因为 $\abs{2^\R}>\abs{\R}$）。需要用到下面这个关于序数的事实，这里不加证明地承认：\emph{存在一个不可数的良序集 $(\Lambda,<)$，它的每个真前段 $\{\beta:\beta<\alpha\}$ 都是可数的；并且 $\Lambda$ 的每个可数子集都有严格上界。}（$\Lambda$ 就是第一个不可数序数 $\omega_1$。）
+\begin{questions}
+\item 令 $\cE_0$ 为 $\R$ 中端点为有理数的开区间的全体连同空集。对 $\alpha\in\Lambda$，若 $\alpha$ 是最小元，令 $\cE_\alpha=\cE_0$；否则令 $\cE_\alpha$ 为从 $\bigcup_{\beta<\alpha}\cE_\beta$ 中取可数多个集合作可数并、或者取一个集合作补集所得到的集合的全体。证明对一切 $\alpha$，$\cE_\alpha\subseteq\cR$。
+\item 证明 $\cE=\bigcup_{\alpha\in\Lambda}\cE_\alpha$ 是 $\sigma$-代数。（提示：可数个 $\alpha_n$ 有严格上界。）从而 $\cE=\cR$。
+\item 用超限归纳法证明对一切 $\alpha$，$\abs{\cE_\alpha}\leqslant\abs{\R}$。（可以使用 $\abs{\R^\N}=\abs{\R}$ 以及“不超过 $\abs{\R}$ 个基数不超过 $\abs{\R}$ 的集合之并，基数不超过 $\abs{\R}$”。）
+\item 由 $\abs{\Lambda}\leqslant\abs{\R}$ 得到 $\abs{\cR}\leqslant\abs{\R}$，再证明反向不等式。
+\end{questions}
+\end{probleme}

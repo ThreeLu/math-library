@@ -33,6 +33,7 @@
   \RequirePackage[a4paper,textwidth=16.3cm,hcentering,top=2.6cm,bottom=2.9cm,marginparwidth=2cm,marginparsep=2.5mm]{geometry}
 \fi
 \pagestyle{plain}
+\setlength{\emergencystretch}{3em}
 
 % ---------------------------------------------------------------------
 %  字体：宋体 / 黑体（粗体）/ 楷体（斜体），缺字体时依次回退
@@ -70,6 +71,7 @@
 \RequirePackage{xeCJKfntef}          % \CJKunderline：中西文混排下划线
 \RequirePackage[most]{tcolorbox}
 \RequirePackage{environ}
+\RequirePackage{etoolbox}
 \RequirePackage{xparse}
 \RequirePackage[unicode,bookmarksnumbered,bookmarksopen]{hyperref}
 % 与于品原版一致：不给链接上色，保留 hyperref 默认的红色链接框。
@@ -180,6 +182,12 @@
 \newtheorem*{question}{问题}
 \newtheorem*{thinking}{思考题}
 \newtheorem*{historynote}{历史注记}
+% 不编号的环境没有自己的锚点；在开头放 \phantomsection，使 \label 指向正确位置。
+\AtBeginEnvironment{example}{\phantomsection}
+\AtBeginEnvironment{remark}{\phantomsection}
+\AtBeginEnvironment{practice}{\phantomsection}
+% 引用不编号的例子：\egref{标签} 排作“第 N 页的例子”并带链接；\egref[文字]{标签} 自定文字
+\NewDocumentCommand{\egref}{o m}{\hyperref[#2]{\IfValueTF{#1}{#1}{第~\pageref*{#2}~页的例子}}}
 
 % 附录内的定义、命题、引理、定理、推论另起编号，排作“定理 A.1”；
 % 在附录的 \section 之后使用，不影响正文各讲的连续编号。
@@ -343,17 +351,33 @@
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\Q}{\mathbb{Q}}
 \newcommand{\C}{\mathbb{C}}
+% 花体字母 \cA … \cZ
 \newcommand{\cA}{\mathcal{A}}
 \newcommand{\cB}{\mathcal{B}}
 \newcommand{\cC}{\mathcal{C}}
 \newcommand{\cD}{\mathcal{D}}
+\newcommand{\cE}{\mathcal{E}}
 \newcommand{\cF}{\mathcal{F}}
 \newcommand{\cG}{\mathcal{G}}
 \newcommand{\cH}{\mathcal{H}}
+\newcommand{\cI}{\mathcal{I}}
+\newcommand{\cJ}{\mathcal{J}}
+\newcommand{\cK}{\mathcal{K}}
 \newcommand{\cL}{\mathcal{L}}
+\newcommand{\cM}{\mathcal{M}}
+\newcommand{\cN}{\mathcal{N}}
+\newcommand{\cO}{\mathcal{O}}
 \newcommand{\cP}{\mathcal{P}}
+\newcommand{\cQ}{\mathcal{Q}}
+\newcommand{\cR}{\mathcal{R}}
 \newcommand{\cS}{\mathcal{S}}
 \newcommand{\cT}{\mathcal{T}}
+\newcommand{\cU}{\mathcal{U}}
+\newcommand{\cV}{\mathcal{V}}
+\newcommand{\cW}{\mathcal{W}}
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\cY}{\mathcal{Y}}
+\newcommand{\cZ}{\mathcal{Z}}
 \newcommand{\one}{1}                                  % 示性函数 \one_A，排作 1_A（与 Durrett 一致）
 \DeclareMathOperator{\Var}{Var}
 \DeclareMathOperator{\Cov}{Cov}
