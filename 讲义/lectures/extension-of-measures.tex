@@ -5,21 +5,21 @@
 \lecture{半代数与代数，代数上的测度，外测度与 Carathéodory 可测集，测度延拓定理的存在性与唯一性，Lebesgue--Stieltjes 测度与 Lebesgue 测度}
 \label{lec:extension-of-measures}
 
-上一讲解决了唯一性：测度由它在一个（适当有限的）$\pi$-类上的值决定。本讲解决存在性。以 $\R$ 上的长度为例，我们只知道区间的长度应当是 $b-a$，问题是：能否在 $\cR$ 上定义一个测度，使它在区间上取值 $b-a$？
+上一讲解决了唯一性：测度由它在一个（适当有限的）$\pi$-类上的取值决定。这一讲解决存在性。我们以 $\R$ 上的长度为例说明问题在哪里。我们知道区间 $(a,b]$ 的长度应当是 $b-a$，我们想要的是 $\cR$ 上的一个测度 $\lambda$，使它在每个区间上取值 $b-a$。困难在于，$\cR$ 中的元素太多，我们根本写不出一般的 Borel 集长什么样，自然也无法直接写出 $\lambda$ 的定义。
 
-直接在 $\cR$ 上写出定义是做不到的，因为我们根本写不出一般 Borel 集的样子。延拓的思路分三步：
+一般而言，在一个“相对有限”的集合族上定义测度，要比在“相对无限”的 $\sigma$-代数上定义简单得多。有限个区间的并是可以写出来的，它们的长度也是可以直接定义的。于是我们的策略是分三步走：
 \begin{enumerate}
-\item 在一个结构简单的集合族（半代数，例如左开右闭区间）上给出集函数，并验证它满足可加性与可数次可加性；
-\item 把集函数延拓到由它生成的代数（有限个区间的不交并）上，得到代数上的测度；
+\item 在一个结构非常简单的集合族，即左开右闭区间的全体（称为半代数）上给出集函数，验证它满足有限可加性与可数次可加性；
+\item 把它延拓到有限个区间的不交并组成的代数上，这一步只是有限的组合操作；
 \item 用外测度把代数上的测度延拓到生成的 $\sigma$-代数上。
 \end{enumerate}
-第三步是本讲的核心，称为 Carathéodory 延拓定理。
+第三步是一个抽象的定理，称为 Carathéodory 延拓定理，它对任意集合上的任意代数都成立，是我们构造测度的最有效的工具。今后构造乘积测度、构造无穷维空间上的测度，走的都是这条路。
+
+Carathéodory 定理的证明较长，其中涉及的外测度、Carathéodory 可测性等概念在课程后面几乎不再出现。同学们第一次读的时候，可以先把定理的叙述和它在 Lebesgue--Stieltjes 测度上的应用弄清楚，再回过头来仔细研究证明。
 
 \topic{半代数与代数}
 
-\begin{summary}
-区间的全体不是代数（两个区间的并未必是区间），但它具有一个较弱的结构：交集仍是区间，补集是有限个区间的不交并。这种结构称为半代数。
-\end{summary}
+我们先说明为什么要引入半代数。左开右闭区间的全体不是代数：两个区间的并未必是区间，一个区间的补集也未必是区间。但它具有一个比代数弱的结构：两个区间的交仍是区间，一个区间的补集是有限个区间的不交并。这个结构已经足以让我们在上面谈论“有限可加性”，并且可以不费力地扩充成代数。
 
 \begin{definition}[半代数]\label{def:extension:semialgebra}
 设 $\cS\subseteq2^\Omega$ 非空。若
@@ -75,7 +75,7 @@ A\cap B=\bigcup_{i,j}(S_i\cap T_j),
 
 与 $\sigma$-代数上的测度相比，唯一的区别是：可数可加性只对“并集恰好还在 $\cA$ 中”的情形提出要求。取 $A_n=\varnothing$（$n>k$）可知预测度是有限可加的，于是和命题~\ref{prop:measures:additivity-continuity} 的证明一样，它是单调的。
 
-下面的定理把半代数上的集函数延拓为代数上的测度。先证明一个只用有限可加性的引理。
+下面的定理把半代数上的集函数延拓为代数上的测度。我们指出，从半代数到代数这一步是纯粹有限的操作，所需的只是有限可加性，唯一的技术要点是说明定义与集合的表示方法无关；真正需要分析的是可数次可加性，即下面定理中的条件 (ii)。先证明一个只用有限可加性的引理。
 
 \begin{lemma}\label{lem:extension:finite-additive}
 设 $\cS$ 是半代数，$\mu:\cS\to[0,\infty]$，$\mu(\varnothing)=0$，并且满足
@@ -130,9 +130,7 @@ A\cap B=\bigcup_{i,j}(S_i\cap T_j),
 
 \topic{外测度与 Carathéodory 定理}
 
-\begin{summary}
-给定代数上的测度 $\mu$，对任意集合 $E$，用 $\cA$ 中集合的可数覆盖从外面逼近它，得到外测度 $\mu^*(E)$。外测度对一切集合都有定义，但一般不可加。Carathéodory 找到了一个巧妙的条件，挑出使 $\mu^*$ 可加的那些集合，它们组成一个 $\sigma$-代数。
-\end{summary}
+现在我们有了代数 $\cA$ 上的测度 $\mu$，要把它延拓到 $\sigma(\cA)$ 上去。想法其实很朴素，同学们在数学分析中学 Riemann 积分的时候已经见过：对任意集合 $E$，用 $\cA$ 中的集合从外面把它盖住，盖住所用的集合的测度之和总是不小于 $E$ 的“大小”的，对一切覆盖取下确界，就得到 $E$ 的一个合理的“大小”，称为外测度。外测度对一切子集都有定义，但它一般不是可加的。Carathéodory 找到了一个条件，把使外测度可加的那些集合挑出来，它们恰好组成一个 $\sigma$-代数，并且包含 $\cA$。
 
 \begin{definition}[外测度]\label{def:extension:outer}
 函数 $\mu^*:2^\Omega\to[0,\infty]$ 若满足
@@ -167,7 +165,11 @@ A\cap B=\bigcup_{i,j}(S_i\cap T_j),
 最后设 $A\in\cA$。取覆盖 $A_1=A$，其余为空集，得 $\mu^*(A)\leqslant\mu(A)$。反之，设 $A\subseteq\bigcup_nA_n$，$A_n\in\cA$。令 $B_1=A\cap A_1$，$B_n=A\cap A_n\cap A_1^c\cap\cdots\cap A_{n-1}^c$，则 $B_n\in\cA$ 两两不交，$B_n\subseteq A_n$，$\bigcup_nB_n=A\in\cA$。由 $\mu$ 在代数上的可数可加性与单调性，$\mu(A)=\sum_n\mu(B_n)\leqslant\sum_n\mu(A_n)$。对一切覆盖取下确界得 $\mu(A)\leqslant\mu^*(A)$。
 \end{proof}
 
-外测度的直观意义是：若 $\nu$ 是 $\sigma(\cA)$ 上与 $\mu$ 在 $\cA$ 上相等的测度，那么对 $E\in\sigma(\cA)$ 和任何覆盖，由次可加性，$\nu(E)\leqslant\sum_n\nu(A_n)=\sum_n\mu(A_n)$，故 $\nu(E)\leqslant\mu^*(E)$。外测度是一切可能的延拓所能取到的上界。“好”的集合应当是使这个上界与“从内部的逼近”吻合的集合，Carathéodory 把这个想法表述成下面的定义。
+\begin{example}[覆盖必须是可数的]
+我们强调，外测度定义中的覆盖 $\{A_n\}$ 是可数个集合，不能换成有限个。考虑 $[0,1]$ 中有限个区间的并组成的代数，其上的测度是区间的长度。如果只允许用有限个区间来盖住 $\Q\cap[0,1]$，那么这有限个区间的并是闭集（把区间都换成闭区间不改变长度），它包含 $\Q\cap[0,1]$，从而包含它的闭包 $[0,1]$，长度之和至少为 $1$。可是如果允许可数个区间，把第 $n$ 个有理数 $q_n$ 用长度为 $\varepsilon2^{-n}$ 的区间盖住，长度之和不超过 $\varepsilon$，所以 $\Q\cap[0,1]$ 的外测度是 $0$。前一种“有限覆盖”的做法对应的是 Jordan 测度，它与 Riemann 积分相配；Lebesgue 的想法正是把有限换成可数。$\Q\cap[0,1]$ 的示性函数不是 Riemann 可积的，而在 Lebesgue 的理论中它的积分就是 $0$。
+\end{example}
+
+外测度还有一个直观的意义。若 $\nu$ 是 $\sigma(\cA)$ 上的测度，并且在 $\cA$ 上与 $\mu$ 相等，那么对 $E\in\sigma(\cA)$ 和 $E$ 的任何覆盖 $\{A_n\}$，由次可加性，$\nu(E)\leqslant\sum_n\nu(A_n)=\sum_n\mu(A_n)$，从而 $\nu(E)\leqslant\mu^*(E)$。所以外测度是一切可能的延拓在 $E$ 上所能取到的值的上界。我们希望找到一些集合，对它们而言这个上界是“准确的”。Carathéodory 把这个想法表述成下面的定义。
 
 \begin{definition}[Carathéodory 可测]\label{def:extension:caratheodory}
 设 $\mu^*$ 是 $\Omega$ 上的外测度。若 $E\subseteq\Omega$ 满足
@@ -177,7 +179,7 @@ A\cap B=\bigcup_{i,j}(S_i\cap T_j),
 则称 $E$ 是 \term{$\mu^*$-可测的}（$\mu^*$-measurable）。$\mu^*$-可测集的全体记作 $\cM(\mu^*)$。
 \end{definition}
 
-定义中的 $F$ 称为“试验集”：$E$ 可测，意味着 $E$ 把任何集合都“干净地”切成两半，外测度可加。由次可加性，$\mu^*(F)\leqslant\mu^*(F\cap E)+\mu^*(F\cap E^c)$ 总成立，所以要验证 $E$ 可测，只需验证
+定义中的 $F$ 称为试验集。$E$ 是 $\mu^*$-可测的，意思是用 $E$ 把任何一个集合 $F$ 切成两块，两块的外测度之和恰好等于 $F$ 的外测度。由次可加性，$\mu^*(F)\leqslant\mu^*(F\cap E)+\mu^*(F\cap E^c)$ 总成立，所以要验证 $E$ 可测，只需验证
 \begin{equation}\label{eq:extension:caratheodory-half}
 \mu^*(F)\geqslant\mu^*(F\cap E)+\mu^*(F\cap E^c)\qquad\text{对一切}\ F\ \text{满足}\ \mu^*(F)<\infty
 \end{equation}
@@ -222,6 +224,14 @@ A\cap B=\bigcup_{i,j}(S_i\cap T_j),
 最后，设 $\mu^*(N)=0$。对任意 $F$，由单调性 $\mu^*(F\cap N)\leqslant\mu^*(N)=0$，$\mu^*(F\cap N^c)\leqslant\mu^*(F)$，所以 \eqref{eq:extension:caratheodory-half} 成立，$N\in\cM$。
 \end{proof}
 
+\begin{remark}[Carathéodory 条件的直观]
+Carathéodory 的条件初看起来很不自然，我们来解释它为什么是合理的。以 $\R$ 上的长度为例，设 $E\subseteq I=(a,b]$。在条件中取试验集 $F=I$，得到
+\[
+\lambda^*(E)=(b-a)-\lambda^*(I\setminus E).
+\]
+左边是用区间从外面盖住 $E$ 得到的大小，右边是用 $I$ 的长度减去 $E$ 在 $I$ 中的补集的外测度，这可以理解为从里面逼近 $E$ 得到的大小（称为内测度）。所以对这样的 $E$，Carathéodory 条件说的就是“外测度等于内测度”，这正是 Lebesgue 当年定义可测集的方式。Carathéodory 的高明之处在于，他不需要定义内测度，而是要求等式对一切试验集 $F$ 都成立，这样一来，条件就只涉及外测度本身，对任意集合上的任意外测度都有意义，证明也变得非常整齐。
+\end{remark}
+
 \begin{lemma}\label{lem:extension:algebra-measurable}
 设 $\mu$ 是代数 $\cA$ 上的测度，$\mu^*$ 是它诱导的外测度。则 $\cA\subseteq\cM(\mu^*)$。
 \end{lemma}
@@ -261,6 +271,10 @@ A\cap B=\bigcup_{i,j}(S_i\cap T_j),
 由定理~\ref{thm:extension:semialgebra}，$\mu$ 延拓为代数 $\overline\cS$ 上的测度 $\bar\mu$。由引理~\ref{lem:extension:algebra-from-semialgebra}，$\sigma(\overline\cS)=\sigma(\cS)$（$\cS\subseteq\overline\cS\subseteq\sigma(\cS)$）。由定理~\ref{thm:extension:main}，$\bar\mu$ 延拓为 $\sigma(\cS)$ 上的测度。唯一性：任何在 $\cS$ 上等于 $\mu$ 的测度在 $\overline\cS$ 上都等于 $\bar\mu$（有限可加性），而 $\bar\mu$ 在 $\overline\cS$ 上 $\sigma$-有限，由定理~\ref{thm:extension:main}(2) 即得。
 \end{proof}
 
+\begin{remark}
+我们把这一路走下来的过程总结一下。要在 $\sigma(\cS)$ 上构造一个测度，只需要在半代数 $\cS$ 上给出集函数，并验证两件事：有限可加性 (i) 与可数次可加性 (ii)。其余的一切，即延拓到代数、定义外测度、挑出可测集、验证可数可加性，都由一般的理论自动完成，与具体的问题无关。所以在具体问题中，我们的全部工作都集中在验证 (i) 和 (ii) 上，而 (ii) 往往是唯一需要动脑筋的地方。下一节的 Lebesgue--Stieltjes 测度是第一个例子。
+\end{remark}
+
 \begin{example}[没有 $\sigma$-有限性时延拓可以不唯一]
 在 $\R$ 上取代数 $\overline{\cS_1}$，令 $\mu(\varnothing)=0$，$\mu(A)=\infty$（$A\neq\varnothing$）。$\mu$ 是 $\overline{\cS_1}$ 上的测度：一列不交集合的并非空，当且仅当其中某一项非空。以下三个 $\cR$ 上的测度都是它的延拓：$\nu_1(B)=\#(B\cap\Q)$，$\nu_2(B)=2\#(B\cap\Q)$，以及 $\nu_3(B)=\infty\cdot\one_{\{B\neq\varnothing\}}$（$\nu_3$ 是测度：可数个不交集合的并非空当且仅当某一项非空）。事实上，非空的 $\overline{\cS_1}$ 中的集合含有非退化区间，从而含有无穷多个有理数。
 \end{example}
@@ -271,9 +285,7 @@ A\cap B=\bigcup_{i,j}(S_i\cap T_j),
 
 \topic{Lebesgue--Stieltjes 测度与 Lebesgue 测度}
 
-\begin{summary}
-把延拓定理用在 $\R$ 的半代数 $\cS_1$ 上。唯一需要真正动脑筋的是验证可数次可加性 (ii)，关键工具是闭区间的紧性和函数的右连续性。
-\end{summary}
+现在把延拓定理用到 $\R$ 上。我们不只构造长度，而是一次性地构造一大类测度：给定一个单调不减的函数 $F$，我们想让区间 $(a,b]$ 的“质量”等于 $F(b)-F(a)$。$F(x)=x$ 时这就是长度；以后会看到，$F$ 取为分布函数时，这就是随机变量的分布。验证有限可加性只是区间端点的排列组合，验证可数次可加性则要用到闭区间的紧性和 $F$ 的右连续性，这是整个构造中唯一真正用到 $\R$ 的拓扑性质的地方。
 
 \begin{definition}[Stieltjes 测度函数]\label{def:extension:stieltjes}
 函数 $F:\R\to\R$ 若满足
@@ -324,6 +336,10 @@ F(b)-F(a+\delta)\leqslant\sum_{j=1}^J\bigl(F(b_{i_j}+\eta_{i_j})-F(a_{i_j})\bigr
 \emph{唯一性。}设 $\nu$ 是 $\cR$ 上满足 $\nu((a,b])=F(b)-F(a)$（$a,b$ 有限）的测度。$\cP=\{(a,b]:-\infty<a<b<\infty\}\cup\{\varnothing\}$ 是生成 $\cR$ 的 $\pi$-类，$(-n,n]\in\cP$，$(-n,n]\uparrow\R$，$\nu((-n,n])<\infty$。由唯一性定理（定理~\ref{thm:measures:uniqueness}），$\nu=\mu_F$。
 \end{proof}
 
+\begin{remark}
+我们回顾一下这个证明中紧性是怎样起作用的。可数次可加性要求：若 $(a,b]$ 被可数个区间盖住，则长度之和不小于 $b-a$。对有限个区间，这是显然的；困难在于可数个。紧性把可数覆盖化成有限覆盖，但紧性只对闭区间和开覆盖成立，所以我们付出了两个 $\varepsilon$ 的代价：把 $(a,b]$ 缩成闭区间 $[a+\delta,b]$，把每个 $(a_i,b_i]$ 放大成开区间 $(a_i,b_i+\eta_i)$。右连续性保证了这两处代价可以任意小。这个“缩小一点、放大一点、用紧性、再令 $\varepsilon\to0$”的论证，同学们应该熟记，它在测度论中反复出现。
+\end{remark}
+
 \begin{proposition}[Lebesgue 测度的基本性质]\label{prop:extension:lebesgue}
 \begin{enumerate}
 \item 对任意 $x\in\R$，$\lambda(\{x\})=0$；从而对 $a<b$，$\lambda([a,b])=\lambda((a,b))=\lambda([a,b))=b-a$，并且每个可数集都是 $\lambda$-零测集。
@@ -335,6 +351,10 @@ F(b)-F(a+\delta)\leqslant\sum_{j=1}^J\bigl(F(b_{i_j}+\eta_{i_j})-F(a_{i_j})\bigr
 
 (2) 令 $\cG=\{A\in\cR: A+x\in\cR\}$。$\cG$ 是 $\sigma$-代数：$\R+x=\R$；$(A+x)^c=A^c+x$；$(\bigcup_nA_n)+x=\bigcup_n(A_n+x)$。$\cG$ 包含一切 $(a,b]$，因为 $(a,b]+x=(a+x,b+x]$。所以 $\cG\supseteq\sigma(\cS_1)=\cR$。现在令 $\nu(A)=\lambda(A+x)$，由刚才的两个集合等式，$\nu$ 是 $\cR$ 上的测度，且 $\nu((a,b])=(b+x)-(a+x)=b-a$。由定理~\ref{thm:extension:lebesgue-stieltjes} 的唯一性，$\nu=\lambda$。
 \end{proof}
+
+\begin{remark}
+平移不变性在本质上刻画了 Lebesgue 测度：若 $\mu$ 是 $\cR$ 上的测度，在平移下不变，并且 $\mu((0,1])=1$，那么 $\mu=\lambda$。证明的想法很几何：$(0,1]$ 是 $n$ 个平移后互相重合的小区间 $(\frac{k-1}n,\frac kn]$ 的不交并，所以每个小区间的测度是 $1/n$；于是端点为有理数的区间的测度等于长度；再用单调性和连续性推到一切区间，最后用唯一性（习题~\exref{ex:extension:A10}）。这说明长度这个概念并不是人为规定的：只要求“平移不变”和“单位区间长度为 $1$”，长度就被唯一确定了。
+\end{remark}
 
 \begin{example}[几个 Lebesgue--Stieltjes 测度]\label{ex:extension:LS-examples}
 \begin{enumerate}
@@ -380,6 +400,7 @@ F(b)-F(a+\delta)\leqslant\sum_{j=1}^J\bigl(F(b_{i_j}+\eta_{i_j})-F(a_{i_j})\bigr
 \item 设 $F,G$ 是 Stieltjes 测度函数。证明 $\mu_F(B)\leqslant\mu_G(B)$ 对一切 $B\in\cR$ 成立，当且仅当 $G-F$ 单调不减。
 \item 设 $\cA$ 是 $\N$ 上有限集与余有限集组成的代数，$\mu$ 如\egref{ex:measures:finitely-additive}（有限集上为 $0$，余有限集上为 $1$）。证明 $\mu$ 不能延拓为 $2^\N$（甚至 $\sigma(\cA)$）上的测度。它违反了定理~\ref{thm:extension:main} 的哪个条件？
 \item 设 $\mu$ 是 $(\R,\cR)$ 上的测度，对一切 $x$ 有 $\mu(\{x\})=0$，且 $\mu$ 在有界区间上有限。证明对应的 Stieltjes 测度函数 $F$ 是连续的。
+\item\label{ex:extension:A10} 设 $\mu$ 是 $(\R,\cR)$ 上的测度，满足 $\mu(A+x)=\mu(A)$ 对一切 $A\in\cR$，$x\in\R$ 成立，并且 $\mu((0,1])=1$。证明 $\mu=\lambda$。（提示：先对 $(0,1/n]$，再对端点为有理数的区间，最后对一切区间计算 $\mu$。）
 \end{exercises}
 
 \begin{probleme}{B}{$d$ 维 Lebesgue--Stieltjes 测度的构造}

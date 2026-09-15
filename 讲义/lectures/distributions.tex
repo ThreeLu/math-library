@@ -5,13 +5,11 @@
 \lecture{随机变量的分布与分布函数，分布函数的刻画与分位数变换，离散分布、有密度的分布与 Cantor 分布，耦合与随机序，二进制展开与均匀分布，正态分布的尾部估计}
 \label{lec:distributions}
 
-随机变量 $X$ 本身是 $\Omega$ 上的函数，而 $\Omega$ 往往是抽象的、不必关心的。我们真正关心的是 $X$ 取各种值的概率，这由 $X$ 在 $\R$ 上诱导的测度，即 $X$ 的分布来描述。本讲说明：$\R$ 上的概率分布与分布函数一一对应，并且每个分布函数都可以由 $(0,1)$ 上的均匀分布经过一次变换得到。后半部分讨论几个具体的例子，它们展示了分布可以有多么不同的形态，以及“把几个随机变量放在同一个概率空间上”（耦合）这一想法的威力。
+上一讲说随机变量是 $\Omega$ 上的函数。可是在实际的问题中，$\Omega$ 往往是抽象的，我们既不知道也不关心它具体是什么。比如说一个人的身高，我们关心的是“身高在 $170$ 到 $180$ 厘米之间的概率”，而不是这个概率是在哪个样本空间上算出来的。我们真正关心的，是 $X$ 取各种值的概率，也就是 $X$ 把 $P$ 搬到 $\R$ 上得到的那个测度，称为 $X$ 的分布。可以不夸张地说，概率论研究的主要对象是分布，而样本空间只是用来承载随机变量的舞台。只要分布相同，舞台换成什么样都可以，这一点在后面的构造中会反复用到。
+
+这一讲有两个主题。第一个主题是理论的：$\R$ 上的概率分布与分布函数一一对应，并且每一个分布都可以由 $(0,1)$ 上的均匀分布经过一次单调变换得到。这一部分是前三讲测度论的直接应用。第二个主题是例子：跳跃点处处稠密的分布、既没有跳跃也没有密度的 Cantor 分布、两枚硬币的耦合、公平硬币与均匀分布之间的关系，以及正态分布的尾部。这些例子各自说明了一个道理，请同学们在读的时候注意每个例子是为了说明什么。
 
 \topic{分布与分布函数}
-
-\begin{summary}
-随机变量把 $P$ “推”到 $\R$ 上，得到分布。分布由分布函数决定，分布函数由单调性、右连续性与两端的极限刻画。
-\end{summary}
 
 \begin{definition}[分布]\label{def:distributions:law}
 设 $(\Omega,\cF,P)$ 是概率空间，$X:(\Omega,\cF)\to(S,\cS)$ 可测。称 $(S,\cS)$ 上的函数
@@ -121,10 +119,6 @@ $\R$ 上的概率测度、满足 (1)(2)(3) 的函数 $F$、以及随机变量的
 
 \topic{离散分布、有密度的分布与 Cantor 分布}
 
-\begin{summary}
-分布函数可以有跳跃，可以是可微函数的积分，也可以连续却“几乎处处导数为零”。三种情形分别对应离散分布、有密度的分布与奇异连续分布。
-\end{summary}
-
 \begin{definition}[离散分布]\label{def:distributions:discrete}
 若存在可数集 $D\subseteq\R$ 使 $\mu(D)=1$，称 $\R$ 上的概率测度 $\mu$（或其分布函数）为\term{离散的}（discrete）。
 \end{definition}
@@ -136,13 +130,13 @@ $\R$ 上的概率测度、满足 (1)(2)(3) 的函数 $F$、以及随机变量的
 \[
 F(x)=\sum_{i=1}^\infty\alpha_i\one_{[q_i,\infty)}(x).
 \]
-由\egref{ex:extension:LS-examples} 的 (4)，$F$ 是分布函数，对应的分布 $\sum_i\alpha_i\delta_{q_i}$ 集中在 $\Q$ 上，是离散的。它具有以下看似矛盾的性质：
+由\egref{ex:extension:LS-examples} 的 (4)，$F$ 是分布函数，对应的分布 $\sum_i\alpha_i\delta_{q_i}$ 集中在 $\Q$ 上，是离散的。它有几个初看起来很不协调的性质：
 \begin{enumerate}
 \item $F$ 严格递增：若 $x<y$，取有理数 $q_j\in(x,y)$，则 $F(y)-F(x)=\sum_{i:x<q_i\leqslant y}\alpha_i\geqslant\alpha_j>0$。
 \item $F$ 在每个有理数 $q_j$ 处有跳跃 $\alpha_j$，从而间断点稠密：由定理~\ref{thm:distributions:df-properties}(5)，$F(q_j)-F(q_j-)=\mu(\{q_j\})=\alpha_j$。
 \item $F$ 在每个无理数处连续：$\mu(\{x\})=0$。
 \end{enumerate}
-图像上，$F$ 在任何一个小区间里都有无穷多个跳跃，却没有任何一段是平的。它提醒我们：“离散分布”指的是测度集中在可数集上，而不是分布函数长得像楼梯。
+画图的话，$F$ 在任何一个小区间里都有无穷多个跳跃，却没有任何一段是平的，这样的函数是画不出来的。所以我们不能凭初等概率论中的印象，把“离散分布”理解成“分布函数长得像楼梯”。离散分布的确切含义是测度集中在一个可数集上，至于这个可数集在 $\R$ 中怎样分布，可以非常复杂。
 \end{example}
 
 \begin{definition}[密度]\label{def:distributions:density}
@@ -163,7 +157,7 @@ F(x)=\int_{-\infty}^xf(y)\dd y\qquad\text{对一切}\ x\in\R,
 \end{enumerate}
 \end{example}
 
-最后是一个既无跳跃又无密度的例子。
+离散分布与有密度的分布是初等概率论中仅有的两类分布。一个自然的问题是：是否每个分布都是这两类的组合？答案是否定的。下面的例子既没有跳跃，也没有密度。
 
 \begin{example}[Cantor 分布]\label{ex:distributions:cantor}
 回忆 Cantor 集 $C=\bigcap_nC_n$（习题~\exref{ex:extension:A4}）：$C_n$ 是 $2^n$ 个长度为 $3^{-n}$ 的闭区间的不交并，$C_{n+1}$ 由 $C_n$ 的每个区间去掉中间的开三分之一得到。$\lambda(C_n)=(2/3)^n$，所以 $\lambda(C)=0$。
@@ -180,23 +174,25 @@ F(x)=\int_{-\infty}^xf(y)\dd y\qquad\text{对一切}\ x\in\R,
 \end{example}
 
 \begin{remark}
+我们为什么要花力气讨论这两个古怪的例子？这是因为，一旦用测度的语言来描述分布，分布就不再只是“概率质量函数”或“密度函数”，而是 $\R$ 上任意的概率测度，而任意的概率测度可以非常复杂。Lebesgue--Stieltjes 测度的理论告诉我们，只要是右连续的单调不减函数，不管它多么古怪，都对应一个分布。Cantor 分布说明测度论的框架确实比初等概率论大；在以后的极限定理中，极限分布会是什么样子事先并不知道，我们必须在一个足够大的框架里工作。
+\end{remark}
+
+\begin{remark}
 以后会证明（Lebesgue 分解定理）：$\R$ 上的每个概率测度都可以唯一地写成 $\mu=a\mu_d+b\mu_{ac}+c\mu_s$，其中 $a+b+c=1$，$\mu_d$ 离散，$\mu_{ac}$ 有密度，$\mu_s$ 连续且奇异。本讲作业 D 证明其中较容易的一半：分出离散部分。
 \end{remark}
 
 \topic{耦合与随机序}
 
-\begin{summary}
-比较两个分布时，一个非常有效的方法是：把两个随机变量构造在同一个概率空间上，使它们之间满足某种逐点关系（比如 $X\leqslant Y$），然后读出分布之间的关系。这就是耦合。
-\end{summary}
+我们现在讨论耦合。它的想法很简单：要比较两个分布，就把两个服从这两个分布的随机变量构造在同一个概率空间上，并且让它们之间满足某种逐点的关系（比如 $X\leqslant Y$），然后从逐点的关系读出分布之间的关系。难处在于怎样构造。这个想法在 Markov 链的收敛定理、Poisson 逼近等许多地方都有重要的应用。
 
 \begin{definition}[耦合]\label{def:distributions:coupling}
 设 $\mu,\nu$ 是 $(\R,\cR)$ 上的概率测度。若 $(X,Y)$ 是某个概率空间上的随机向量，$X$ 的分布是 $\mu$，$Y$ 的分布是 $\nu$，则称 $(X,Y)$ 是 $\mu$ 与 $\nu$ 的一个\term{耦合}（coupling）。
 \end{definition}
 
-耦合总是存在的。例如设 $F,G$ 是 $\mu,\nu$ 的分布函数，由定理~\ref{thm:extension:Rd}，$(\R^2,\cR^2)$ 上存在测度 $\pi$ 使 $\pi((a_1,b_1]\times(a_2,b_2])=(F(b_1)-F(a_1))(G(b_2)-G(a_2))$；取 $X,Y$ 为两个坐标投影，则 $P(X\leqslant x)=\pi((-\infty,x]\times\R)=F(x)$，$P(Y\leqslant y)=G(y)$（用从下连续取极限）。这是“独立”的耦合。耦合的艺术在于选择一个\emph{有用的}耦合。
+耦合总是存在的。例如设 $F,G$ 是 $\mu,\nu$ 的分布函数，由定理~\ref{thm:extension:Rd}，$(\R^2,\cR^2)$ 上存在测度 $\pi$ 使 $\pi((a_1,b_1]\times(a_2,b_2])=(F(b_1)-F(a_1))(G(b_2)-G(a_2))$；取 $X,Y$ 为两个坐标投影，则 $P(X\leqslant x)=\pi((-\infty,x]\times\R)=F(x)$，$P(Y\leqslant y)=G(y)$（用从下连续取极限）。这是“独立”的耦合，它把两个随机变量互不相干地放在一起，对比较两个分布没有什么帮助。耦合方法的关键是构造一个有用的耦合。
 
 \begin{example}[两枚硬币]\label{ex:distributions:two-coins}
-设 $0\leqslant p\leqslant q\leqslant1$。硬币甲正面朝上的概率是 $p$，硬币乙是 $q$。各独立地掷 $n$ 次，记正面次数分别为 $S$ 与 $T$。直觉告诉我们，对每个 $k$，$P(S\geqslant k)\leqslant P(T\geqslant k)$。直接比较
+设 $0\leqslant p\leqslant q\leqslant1$。硬币甲正面朝上的概率是 $p$，硬币乙是 $q$。各独立地掷 $n$ 次，记正面次数分别为 $S$ 与 $T$。我们直观上认为，乙更容易出现正面，所以对每个 $k$，应当有 $P(S\geqslant k)\leqslant P(T\geqslant k)$。直接比较
 \[
 \sum_{j\geqslant k}\binom njp^j(1-p)^{n-j}\quad\text{与}\quad\sum_{j\geqslant k}\binom njq^j(1-q)^{n-j}
 \]
@@ -210,7 +206,7 @@ X_i=\one_{\{U_i\leqslant p\}},\qquad Y_i=\one_{\{U_i\leqslant q\}},\qquad S=\sum
 \[
 P(X_1=a_1,\dots,X_n=a_n)=\prod_{i=1}^np^{a_i}(1-p)^{1-a_i}=p^{\sum a_i}(1-p)^{n-\sum a_i}.
 \]
-这正是“$n$ 次独立的、正面概率为 $p$ 的抛掷”的概率模型。对 $j$ 求和，$\{S=j\}$ 是 $\binom nj$ 个这样的事件的不交并，$P(S=j)=\binom njp^j(1-p)^{n-j}$，即 $S$ 服从二项分布 $\mathrm{Bin}(n,p)$。同理 $T\sim\mathrm{Bin}(n,q)$。
+这就是“$n$ 次独立的、正面概率为 $p$ 的抛掷”的概率模型。对 $j$ 求和，$\{S=j\}$ 是 $\binom nj$ 个这样的事件的不交并，$P(S=j)=\binom njp^j(1-p)^{n-j}$，即 $S$ 服从二项分布 $\mathrm{Bin}(n,p)$。同理 $T\sim\mathrm{Bin}(n,q)$。
 
 \emph{逐点比较。}由 $p\leqslant q$，$\{U_i\leqslant p\}\subseteq\{U_i\leqslant q\}$，故 $X_i\leqslant Y_i$ 处处成立，$S\leqslant T$ 处处成立。于是 $\{S\geqslant k\}\subseteq\{T\geqslant k\}$，
 \[
@@ -238,15 +234,17 @@ P(S\geqslant k)\leqslant P(T\geqslant k).
 
 在两枚硬币的例子中，$n=1$ 时 $X_1$ 与 $Y_1$ 恰好是这个分位数耦合（差一个 $\omega\mapsto1-\omega$ 的翻转）。
 
+\begin{remark}
+这个定理说明，“$X$ 随机地小于 $Y$”这个关于分布的条件，与“$X\leqslant Y$”这个逐点的条件，在允许重新构造随机变量的意义下是一回事。这是耦合方法的一个典型模式：分布之间的不等式往往难以直接处理，而随机变量之间的逐点不等式可以直接取期望、取概率、取极限。比如以后学了期望就知道，若 $X\preceq_{\mathrm{st}}Y$，则对任何单调不减的函数 $g$，$Eg(X)\leqslant Eg(Y)$，因为在耦合下 $g(X)\leqslant g(Y)$ 处处成立。
+\end{remark}
+
 \begin{historynote}
-耦合方法今天是概率论的基本工具。它的一个惊人的新近应用是：2026 年初，A.\ Song 在一维情形下证明，存在普适常数 $c>0$，使得对任何满足 $\abs X\leqslant1$、均值为 $0$ 的随机变量 $X$，都可以在同一个概率空间上构造三个服从标准正态分布的随机变量 $G_1,G_2,G_3$（它们不必独立），使 $cX=G_1+G_2+G_3$。随后 D.\ M.\ Hua、A.\ Song 与 S.\ Tudose 把结论推广到 $\R^n$ 中的随机向量，并由此解决了 M.\ Talagrand 关于 Gauss 空间中“大集合的 Minkowski 和包含凸体”的凸性问题。论文还指出，一般情形下只用两个标准正态随机向量是不够的。这里的要点正是耦合：三个 $G_i$ 各自的分布都是固定的，自由度全在于如何把它们“摆放”在同一个概率空间上。
+耦合在今天的概率论研究中仍然非常活跃。我们举一个最近的例子：2026 年初，A.\ Song 在一维情形下证明，存在普适常数 $c>0$，使得对任何满足 $\abs X\leqslant1$、均值为 $0$ 的随机变量 $X$，都可以在同一个概率空间上构造三个服从标准正态分布的随机变量 $G_1,G_2,G_3$（它们不必独立），使 $cX=G_1+G_2+G_3$。随后 D.\ M.\ Hua、A.\ Song 与 S.\ Tudose 把结论推广到 $\R^n$ 中的随机向量，并由此解决了 M.\ Talagrand 关于 Gauss 空间中“大集合的 Minkowski 和包含凸体”的凸性问题。论文还指出，一般情形下只用两个标准正态随机向量是不够的。这是一个关于耦合的结果：三个 $G_i$ 各自的分布都已经固定为标准正态分布，能够选择的只是它们之间的联合分布，也就是怎样把它们放在同一个概率空间上。
 \end{historynote}
 
 \topic{二进制展开与均匀分布}
 
-\begin{summary}
-均匀分布与“无穷次公平抛硬币”是同一个对象的两种看法：均匀随机数的二进制各位是公平硬币；反过来，把公平硬币的结果当作二进制各位，就得到均匀随机数。
-\end{summary}
+我们在初等概率论中经常说“把一枚公平的硬币无穷次地抛下去”，却从来没有问过：这样的概率空间是否存在？另一方面，“在 $[0,1]$ 中均匀地取一个数”似乎是另一个完全不同的随机试验。这一节说明，二者其实是同一个对象的两种看法：一个均匀随机数的二进制各位是无穷次公平抛硬币的结果；反过来，把公平硬币的结果当作二进制各位，就得到一个均匀随机数。
 
 对 $\omega\in[0,1)$ 与 $n\geqslant1$，令
 \[
@@ -303,14 +301,12 @@ d_m'\leqslant P(U\leqslant d_m')\leqslant P(U\leqslant x)\leqslant P(U<d_m)\leqs
 \end{proof}
 
 \begin{remark}
-条件 \eqref{eq:distributions:fair} 就是以后要定义的“$\xi_1,\xi_2,\dots$ 独立同分布，$P(\xi_n=0)=P(\xi_n=1)=1/2$”。定理的证明只用到 \eqref{eq:distributions:fair} 这个关于有限维分布的条件，这与上一讲 $C[0,1]$ 的例子是同一个道理：有限维分布决定了一切。作为推论，$P(\text{从某项起}\ \xi_n\ \text{全为}\ 1)=0$：该事件包含于 $\bigcup_N\bigcap_{n\geqslant N}\{\xi_n=1\}$，而 $P(\xi_N=\cdots=\xi_{N+m}=1)=2^{-m-1}$。所以“二进制展开的歧义”只发生在一个零概率事件上。
+条件 \eqref{eq:distributions:fair} 就是以后要定义的“$\xi_1,\xi_2,\dots$ 独立同分布，$P(\xi_n=0)=P(\xi_n=1)=1/2$”。定理的证明只用到 \eqref{eq:distributions:fair} 这个关于有限维分布的条件，这与第~\ref{lec:measures} 讲 $C[0,1]$ 的例子是同一个道理：有限维分布决定了一切。作为推论，$P(\text{从某项起}\ \xi_n\ \text{全为}\ 1)=0$：该事件包含于 $\bigcup_N\bigcap_{n\geqslant N}\{\xi_n=1\}$，而 $P(\xi_N=\cdots=\xi_{N+m}=1)=2^{-m-1}$。所以“二进制展开的歧义”只发生在一个零概率事件上。
 \end{remark}
 
 \topic{正态分布的尾部估计}
 
-\begin{summary}
-标准正态分布函数没有初等表达式，但它的尾部概率 $P(X\geqslant x)$ 可以被两个初等函数紧紧夹住：它大约是 $\varphi(x)/x$。
-\end{summary}
+正态分布是概率论中最重要的分布，中心极限定理会告诉我们原因。它的分布函数 $\Phi$ 没有初等的表达式，可是在很多问题中，比如以后的重对数律，我们需要知道 $P(X\geqslant x)$ 在 $x$ 很大时有多小。下面的定理说，它可以被两个初等函数紧紧地夹住，大约是 $\varphi(x)/x$。
 
 设 $X$ 服从标准正态分布，即对 Borel 集 $B$，$P(X\in B)=\frac1{\sqrt{2\pi}}\int_Be^{-x^2/2}\dd x$。记 $\varphi(x)=(2\pi)^{-1/2}e^{-x^2/2}$，$\overline\Phi(x)=P(X\geqslant x)=\int_x^\infty\varphi(y)\dd y$。
 

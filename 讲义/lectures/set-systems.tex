@@ -5,15 +5,15 @@
 \lecture{集合运算与示性函数，代数与 \texorpdfstring{$\sigma$}{σ}-代数，生成的 \texorpdfstring{$\sigma$}{σ}-代数，Borel \texorpdfstring{$\sigma$}{σ}-代数，\texorpdfstring{$\pi$}{π}-类与 \texorpdfstring{$\lambda$}{λ}-类，Dynkin 的 \texorpdfstring{$\pi$-$\lambda$}{π-λ} 定理}
 \label{lec:set-systems}
 
-概率论的数学模型是一个三元组 $(\Omega,\cF,P)$，称为\term{概率空间}（probability space）：$\Omega$ 是全部可能结果组成的集合，$\cF$ 是一族“可以谈论其概率”的 $\Omega$ 的子集，$P$ 是给 $\cF$ 中每个集合指定概率的函数。本讲只讨论其中的 $\cF$：它应当满足什么条件，怎样构造，怎样验证某个集合族包含了它。
+我们先描述一下这门课所要建立的理论的大体轮廓。初等概率论中处理的大多是有限的模型：掷骰子、抽签、有限次抛硬币。样本空间只有有限个点，每一个子集都可以谈论概率，而计算概率归根到底是数数。可是一旦样本空间变成无限的，比如“在 $[0,1]$ 中随机地取一个数”，或者“把一枚硬币无穷次地抛下去”，这套做法就行不通了：单独一个点的概率只能是 $0$，概率不能再通过“把每个点的概率加起来”得到。我们需要一种新的语言，这就是测度论。
 
-一个自然的问题是：为什么不直接取 $\cF=2^\Omega$，即允许对 $\Omega$ 的一切子集谈论概率？原因在于，对于最基本的例子，比如 $[0,1)$ 上的“均匀分布”（区间的概率等于长度），不可能把它定义到 $[0,1)$ 的全部子集上并保持可数可加性与平移不变性（见第~\ref{lec:extension-of-measures} 讲的作业）。因此我们只能在一个较小的集合族上定义概率，而这个集合族必须对可数次集合运算封闭，这就是 $\sigma$-代数。
+按照 Kolmogorov 的公理化，概率论的数学模型是一个三元组 $(\Omega,\cF,P)$，称为\term{概率空间}（probability space）。其中 $\Omega$ 是全部可能结果组成的集合；$\cF$ 是 $\Omega$ 的某些子集组成的集合，我们只对 $\cF$ 中的集合谈论概率；$P$ 是定义在 $\cF$ 上的函数，给每个集合指定它的概率。三样东西各自回答一个问题：可能发生什么，哪些事情可以问概率，概率是多少。这一讲只讨论第二个问题，即 $\cF$ 应当满足什么条件。
+
+一个自然的疑问是：为什么不干脆取 $\cF=2^\Omega$，允许对一切子集谈论概率？答案是做不到。以 $[0,1)$ 上的“均匀分布”为例，我们希望区间的概率等于它的长度，并且希望概率在平移下不变、对可数个不交集合可加。第~\ref{lec:extension-of-measures} 讲的作业将证明，满足这些要求的函数不可能定义在 $[0,1)$ 的全体子集上。所以我们只能退一步，只在一部分“足够好”的集合上定义概率。另一方面，这一部分集合又不能太少：概率论中关心的许多事件，比如“抛硬币时正面出现无穷多次”“频率 $S_n/n$ 收敛到 $1/2$”，都要通过对可数个事件取交、取并才能写出来。这两方面的要求折中的结果，就是本讲的 $\sigma$-代数。
+
+这一讲的内容几乎全是集合论的语言，初读时可能有些枯燥。但后面几乎每一个定理都要用到这里的工具，特别是最后一节的 $\pi$-$\lambda$ 定理，请同学们务必把它的证明搞清楚。
 
 \topic{集合运算与示性函数}
-
-\begin{summary}
-先统一记号。本节的内容都是初等的，但集合的上极限、下极限以及示性函数会在整个课程中反复出现。
-\end{summary}
 
 设 $\Omega$ 是一个非空集合，称为\term{样本空间}（sample space），其元素 $\omega$ 称为\term{样本点}（sample point）。$\Omega$ 的全体子集记作 $2^\Omega$，称为 $\Omega$ 的\term{幂集}（power set）。对 $A,B\subseteq\Omega$，记
 \[
@@ -39,7 +39,7 @@ A^c=\Omega\setminus A,\qquad A\setminus B=A\cap B^c,\qquad A\triangle B=(A\setmi
 \[
 \one_{A\cap B}=\one_A\one_B=\min\{\one_A,\one_B\},\qquad \one_{A\cup B}=\max\{\one_A,\one_B\},\qquad \one_{A^c}=1-\one_A;
 \]
-$A\subseteq B$ 当且仅当 $\one_A\leqslant\one_B$；$A_1,A_2,\dots$ 两两不交时 $\one_{\bigcup_nA_n}=\sum_n\one_{A_n}$。
+$A\subseteq B$ 当且仅当 $\one_A\leqslant\one_B$；$A_1,A_2,\dots$ 两两不交时 $\one_{\bigcup_nA_n}=\sum_n\one_{A_n}$。以后我们会经常在集合与函数之间来回转换：集合的问题有时写成示性函数更容易处理，积分的理论也正是从示性函数出发的。
 
 \begin{definition}[集合列的上极限与下极限]\label{def:set-systems:limsup}
 设 $A_1,A_2,\dots\subseteq\Omega$。定义
@@ -75,13 +75,19 @@ $A\subseteq B$ 当且仅当 $\one_A\leqslant\one_B$；$A_1,A_2,\dots$ 两两不�
 (5) 设 $A_n$ 递增。对每个 $n$，$\bigcap_{m\geqslant n}A_m=A_n$，$\bigcup_{m\geqslant n}A_m=\bigcup_{m\geqslant 1}A_m$，于是 $\liminf_nA_n=\bigcup_nA_n=\limsup_nA_n$。递减的情形类似：$\bigcap_{m\geqslant n}A_m=\bigcap_{m\geqslant1}A_m$，$\bigcup_{m\geqslant n}A_m=A_n$，两者都给出 $\bigcap_nA_n$。
 \end{proof}
 
+\begin{remark}[上极限与下极限的概率意义]
+我们在概率论中关心的很多事件恰好是这种形式。假设 $A_n$ 是“第 $n$ 次抛硬币得到正面”这一事件，那么
+\begin{enumerate}
+\item $\limsup_nA_n$ 是“正面出现无穷多次”；
+\item $\liminf_nA_n$ 是“从某一次起以后全是正面”；
+\item $(\limsup_nA_n)^c=\liminf_nA_n^c$ 说的是：“正面只出现有限次”与“从某一次起以后全是反面”是同一件事。
+\end{enumerate}
+上极限的定义 $\bigcap_n\bigcup_{m\geqslant n}A_m$ 可以这样读：“无论 $n$ 多大，在第 $n$ 次以后总还会有 $A_m$ 发生”。这和数列的上极限是完全平行的，命题中的 (4) 正说明了这一点。以后的 Borel--Cantelli 引理就是在研究 $P(\limsup_nA_n)$ 什么时候等于 $0$、什么时候等于 $1$。
+\end{remark}
+
 对递增的集合列，记 $A_n\uparrow A$，表示 $A_1\subseteq A_2\subseteq\cdots$ 且 $\bigcup_nA_n=A$；对递减的集合列，记 $A_n\downarrow A$，表示 $A_1\supseteq A_2\supseteq\cdots$ 且 $\bigcap_nA_n=A$。
 
 \topic{代数与 \texorpdfstring{$\sigma$}{σ}-代数}
-
-\begin{summary}
-事件的全体应当对取补集和取并集封闭。只要求有限并封闭的称为代数，要求可数并封闭的称为 $\sigma$-代数。二者的差别正是“有限”与“可数”的差别，而极限运算需要后者。
-\end{summary}
 
 \begin{definition}[代数]\label{def:set-systems:algebra}
 设 $\cA\subseteq2^\Omega$。若
@@ -104,6 +110,15 @@ $A\subseteq B$ 当且仅当 $\one_A\leqslant\one_B$；$A_1,A_2,\dots$ 两两不�
 \end{definition}
 
 有些书的定义只写 (2)、(3) 两条，另外要求 $\cF$ 非空。二者等价：若 $\cF$ 非空，任取 $A\in\cF$，则 $A^c\in\cF$，于是 $\Omega=A\cup A^c\cup A\cup\cdots\in\cF$。
+
+\begin{remark}[为什么是“可数”]
+代数与 $\sigma$-代数的区别只在于允许有限并还是可数并。我们指出，“可数”恰好是一个合适的折中：
+\begin{enumerate}
+\item 只允许有限并是不够的。取极限是分析的基本操作，而像 $\limsup_nA_n$ 这样的集合一定要用到可数次运算。代数上当然也可以讨论“有限可加”的概率，但下一讲会看到，这样得到的“概率”连最基本的极限都无法交换。
+\item 允许任意并又太多了。在 $[0,1]$ 上随机取一个数，每个单点的概率都是 $0$，而 $[0,1]$ 是不可数个单点的并，概率却是 $1$。如果要求概率对任意多个不交集合可加，这就会导出矛盾。
+\end{enumerate}
+顺便说一句，$\sigma$-代数中的 $\sigma$ 来自德文 Summe 的首字母，当时人们把并集称为和，$\sigma$ 表示的就是可数并。
+\end{remark}
 
 \begin{proposition}[代数与 $\sigma$-代数的封闭性]\label{prop:set-systems:closure}
 \begin{enumerate}
@@ -128,7 +143,7 @@ $\{\varnothing,\Omega\}$ 是 $\Omega$ 上最小的 $\sigma$-代数，称为\term
 \]
 则 $\cF$ 是 $\sigma$-代数，恰有 $2^k$ 个元素。事实上，$I=\{1,\dots,k\}$ 给出 $\Omega$；$\bigcup_{i\in I}B_i$ 的补集是 $\bigcup_{i\notin I}B_i$，这是因为各块两两不交且并为 $\Omega$；一列形如 $\bigcup_{i\in I_n}B_i$ 的集合的并是 $\bigcup_{i\in\bigcup_nI_n}B_i$。不同的 $I$ 给出不同的集合，因为各块非空且不交，所以共有 $2^k$ 个元素。可数划分 $\Omega=\sum_{i=1}^\infty B_i$ 的情形完全类似，此时 $I$ 取遍 $\N$ 的一切子集。
 
-这个例子有很直观的概率意义：$\cF$ 描述的是“只知道结果落在哪一块”的信息。以后讨论条件期望时，$\sigma$-代数就被理解为信息。
+这个例子有很直观的概率意义。设想我们只能观察到结果落在哪一块，而看不到结果本身，那么我们能够判断发生与否的事件，恰好是 $\cF$ 中的集合。比如说，把一枚硬币抛两次，$\Omega=\{\text{正正},\text{正反},\text{反正},\text{反反}\}$。若只知道第一次的结果，划分就是 $\{\text{正正},\text{正反}\}$ 与 $\{\text{反正},\text{反反}\}$，对应的 $\sigma$-代数有 $4$ 个元素，“第一次是正面”在其中，“两次结果相同”不在其中。划分越细，$\sigma$-代数越大，我们掌握的信息就越多。以后讨论条件期望和鞅的时候，我们总是把 $\sigma$-代数理解为信息，这个例子是理解这种说法的最好的出发点。
 \end{example}
 
 \begin{example}[代数但不是 $\sigma$-代数]\label{ex:set-systems:finite-cofinite}
@@ -140,10 +155,6 @@ $\{\varnothing,\Omega\}$ 是 $\Omega$ 上最小的 $\sigma$-代数，称为\term
 \end{example}
 
 \topic{生成的 \texorpdfstring{$\sigma$}{σ}-代数}
-
-\begin{summary}
-在实际问题中，我们往往只知道哪些“基本”的集合应当是事件（比如区间），而需要一个包含它们的 $\sigma$-代数。满足要求的最小的那个总是存在的。
-\end{summary}
 
 \begin{proposition}\label{prop:set-systems:intersection}
 设 $I$ 是任意非空指标集（可以不可数），$\{\cF_i\}_{i\in I}$ 是 $\Omega$ 上的一族 $\sigma$-代数。则 $\bigcap_{i\in I}\cF_i=\{A\subseteq\Omega: A\in\cF_i\ \text{对一切}\ i\in I\ \text{成立}\}$ 是 $\sigma$-代数。对代数也有同样的结论。
@@ -176,16 +187,20 @@ $\{\varnothing,\Omega\}$ 是 $\Omega$ 上最小的 $\sigma$-代数，称为\term
 (1) $\cC$ 是包含 $\cC$ 的 $\sigma$-代数，所以 $\sigma(\cC)\subseteq\cC$；反包含由定义给出。(2) $\sigma(\cD)$ 是包含 $\cD$ 从而包含 $\cC$ 的 $\sigma$-代数，由最小性 $\sigma(\cC)\subseteq\sigma(\cD)$。(3) $\sigma(\cD)$ 是包含 $\cC$ 的 $\sigma$-代数，由最小性即得第一句；第二句对两个方向各用一次第一句。
 \end{proof}
 
-生成的 $\sigma$-代数是“从外面”定义的：我们并没有写出 $\sigma(\cC)$ 里的元素长什么样。这正是它的方便之处，也是它的困难之处。要证明“$\sigma(\cC)$ 中的每个集合都具有性质 $(\ast)$”，一般的办法是下面的\term{好集原理}（good sets principle）：
+\begin{remark}
+生成的 $\sigma$-代数是“从外面”定义的：我们取了一切包含 $\cC$ 的 $\sigma$-代数的交，而并没有写出 $\sigma(\cC)$ 里的元素长什么样。请比较线性代数中由一组向量张成的子空间：那里既可以说“包含这组向量的最小子空间”，也可以直接写出一般元素，即有限线性组合。对 $\sigma$-代数，后一种描述很难做到。如果试图从 $\cC$ 出发，反复地取补集、取可数并，把得到的集合都放进来，那么做一次、两次、可数多次都不够，要一直做“不可数多次”才能停下来（本讲作业 F）。所以对 $\sigma(\cC)$，我们几乎从不去考察一般元素的具体形状。
+\end{remark}
+
+这种定义方式既是方便之处，也是困难之处。要证明“$\sigma(\cC)$ 中的每个集合都具有性质 $(\ast)$”，一般的办法是下面的\term{好集原理}（good sets principle）：
 \begin{quote}
 令 $\cG=\{A\in\sigma(\cC): A\ \text{具有性质}\ (\ast)\}$（“好集”的全体）。若能证明 (a) $\cC\subseteq\cG$，(b) $\cG$ 是 $\sigma$-代数，则由最小性 $\sigma(\cC)\subseteq\cG$，即 $\sigma(\cC)$ 中每个集合都是好集。
 \end{quote}
-这个原理的困难在于步骤 (b)：很多自然的性质只能验证对补集和\emph{递增}并封闭，却无法验证对交集封闭。$\pi$-$\lambda$ 定理正是为此而设的，见本讲最后一节。
+这个原理用起来的困难在于步骤 (b)：很多自然的性质，我们只能验证它对补集和递增并封闭，却无法验证它对交集封闭。本讲最后一节的 $\pi$-$\lambda$ 定理就是用来解决这个困难的。
 
 \begin{example}[单点集生成的 $\sigma$-代数]
 设 $\Omega$ 是任意集合，$\cC=\{\{\omega\}:\omega\in\Omega\}$。则 $\sigma(\cC)$ 就是\egref{ex:set-systems:countable-cocountable} 中的可数－余可数 $\sigma$-代数 $\cF$。一方面，$\cF$ 是包含全体单点集的 $\sigma$-代数，所以 $\sigma(\cC)\subseteq\cF$。另一方面，若 $A$ 可数，则 $A$ 是可数个单点集的并，从而 $A\in\sigma(\cC)$；若 $A^c$ 可数，则 $A^c\in\sigma(\cC)$，从而 $A\in\sigma(\cC)$。于是 $\cF\subseteq\sigma(\cC)$。
 
-这个例子说明：在 $\R$ 上，仅仅知道每个单点是事件，得到的 $\sigma$-代数里连 $[0,\infty)$ 都没有。
+这个例子说明，生成元选得不好，得到的 $\sigma$-代数可能非常小：在 $\R$ 上，仅仅知道每个单点是事件，得到的 $\sigma$-代数里连 $[0,\infty)$ 都没有。
 \end{example}
 
 \topic{Borel \texorpdfstring{$\sigma$}{σ}-代数}
@@ -228,13 +243,13 @@ $\R$ 中的每个开集都是可数个端点为有理数的开区间的并。
 \emph{$\sigma(\cC_4)=\sigma(\cC_3)$。}$\cC_4\subseteq\cC_3$ 给出 $\sigma(\cC_4)\subseteq\sigma(\cC_3)$。对任意 $x\in\R$，取有理数列 $q_n\downarrow x$ 且 $q_n>x$（例如在 $(x,x+1/n)$ 中取有理数，再令 $q_n$ 为前 $n$ 个所取之数的最小值），则 $(-\infty,x]=\bigcap_n(-\infty,q_n]$：若 $y\leqslant x$，则 $y\leqslant q_n$ 对一切 $n$ 成立；若 $y>x$，由于 $q_n\to x$，存在 $n$ 使 $q_n<y$。故 $\cC_3\subseteq\sigma(\cC_4)$。
 \end{proof}
 
+\begin{remark}
+命题说明，要验证某个集合族包含 $\cR$，只要验证它包含一切 $(-\infty,x]$ 就可以了。这是今后反复使用的原则：随机变量 $X$ 的分布由 $P(X\leqslant x)$ 决定，$X$ 是否可测只要看 $\{X\leqslant x\}$ 是不是事件，都源于此。$\cR$ 中的集合非常多，我们在分析和概率中能够“写出来”的集合，只要不借助选择公理，基本上都是 Borel 集；但 $\cR$ 并不是 $\R$ 的全体子集（本讲作业 F，以及第~\ref{lec:extension-of-measures} 讲的作业）。
+\end{remark}
+
 在 $\R^d$ 上可以作完全平行的讨论：$\cR^d$ 由一切形如 $(a_1,b_1)\times\cdots\times(a_d,b_d)$ 的开矩形生成，也由形如 $(a_1,b_1]\times\cdots\times(a_d,b_d]$ 的矩形生成，还由 $\{(-\infty,x_1]\times\cdots\times(-\infty,x_d]: x_i\in\Q\}$ 生成。证明留作作业（习题~\exref{ex:set-systems:A5}）。
 
 \topic{\texorpdfstring{$\pi$}{π}-类与 \texorpdfstring{$\lambda$}{λ}-类}
-
-\begin{summary}
-$\sigma$-代数的定义把两种性质捆在一起：对交集封闭，以及对补集、可数并封闭。$\pi$-类只保留前者，$\lambda$-类只保留后者的一个弱化版本。本节说明为什么要把它们拆开。
-\end{summary}
 
 \begin{definition}[$\pi$-类]\label{def:set-systems:pi}
 设 $\cP\subseteq2^\Omega$。若 $A,B\in\cP$ 蕴含 $A\cap B\in\cP$，则称 $\cP$ 为 \term{$\pi$-类}（$\pi$-system）。
@@ -280,23 +295,34 @@ $\cL\subseteq2^\Omega$ 是 $\lambda$-类，当且仅当
 用命题~\ref{prop:set-systems:lambda-equivalent} 验证：$\Omega$ 有 $4$ 个元素；偶数元子集的补集有 $4-\text{偶数}$ 个元素，仍为偶数；由于 $\Omega$ 有限，一列两两不交的非空集合只有有限个，而不交的偶数元集合的并仍是偶数元集合。所以 $\cL$ 是 $\lambda$-类。但 $\{1,2\}\cap\{1,3\}=\{1\}\notin\cL$，所以 $\cL$ 不是 $\pi$-类，更不是 $\sigma$-代数。
 \end{example}
 
-\medskip\noindent\textbf{为什么需要 $\lambda$-类。}回到好集原理。设 $\mu,\nu$ 是 $(\Omega,\cF)$ 上的两个概率（下一讲给出严格定义），我们想知道它们何时相等。令
+为什么要引入 $\lambda$-类这样一个看起来不太自然的概念？我们回到好集原理，看一个具体的问题。设 $\mu,\nu$ 是 $(\Omega,\cF)$ 上的两个概率（下一讲给出严格定义），我们想知道它们何时相等。令
 \[
-\cD=\{A\in\cF: \mu(A)=\nu(A)\}.
+\cD=\{A\in\cF: \mu(A)=\nu(A)\}
 \]
-利用概率的基本性质（下一讲的定理~\ref{thm:measures:basic}）可以检验：$\Omega\in\cD$，因为 $\mu(\Omega)=\nu(\Omega)=1$；若 $A\subseteq B$ 都在 $\cD$ 中，则 $\mu(B\setminus A)=\mu(B)-\mu(A)=\nu(B)-\nu(A)=\nu(B\setminus A)$；若 $A_n\uparrow A$ 且 $A_n\in\cD$，则由概率的连续性，$\mu(A)=\lim\mu(A_n)=\lim\nu(A_n)=\nu(A)$。于是 $\cD$ 总是 $\lambda$-类。但从 $\mu(A)=\nu(A)$，$\mu(B)=\nu(B)$ 推不出 $\mu(A\cap B)=\nu(A\cap B)$，所以一般无法说明 $\cD$ 是 $\sigma$-代数。具体地，在 $\Omega=\{1,2,3,4\}$ 上取 $\mu$ 为均匀分布（每点概率 $1/4$），$\nu$ 给 $1,4$ 各 $1/2$ 的概率、给 $2,3$ 概率 $0$。逐个比较 $16$ 个子集可知
+为“好集”的全体。利用概率的基本性质（下一讲的定理~\ref{thm:measures:basic}），我们可以检验：
+\begin{enumerate}
+\item $\Omega\in\cD$，因为 $\mu(\Omega)=\nu(\Omega)=1$；
+\item 若 $A\subseteq B$ 都在 $\cD$ 中，则 $\mu(B\setminus A)=\mu(B)-\mu(A)=\nu(B)-\nu(A)=\nu(B\setminus A)$；
+\item 若 $A_n\uparrow A$ 且 $A_n\in\cD$，则由概率的连续性，$\mu(A)=\lim\mu(A_n)=\lim\nu(A_n)=\nu(A)$。
+\end{enumerate}
+这恰好是 $\lambda$-类的三条公理。但是，从 $\mu(A)=\nu(A)$ 与 $\mu(B)=\nu(B)$ 推不出 $\mu(A\cap B)=\nu(A\cap B)$，所以我们没有办法说明 $\cD$ 是 $\sigma$-代数。比如说，在 $\Omega=\{1,2,3,4\}$ 上取 $\mu$ 为均匀分布（每点概率 $1/4$），$\nu$ 给 $1,4$ 各 $1/2$ 的概率，给 $2,3$ 概率 $0$。逐个比较 $16$ 个子集可知
 \[
 \cD=\bigl\{\varnothing,\ \Omega,\ \{1,2\},\{3,4\},\{1,3\},\{2,4\}\bigr\}.
 \]
-它是 $\lambda$-类（补集和不交并都可以直接验证），但 $\{1,2\}\cap\{1,3\}=\{1\}\notin\cD$。
+它是 $\lambda$-类，但 $\{1,2\}\cap\{1,3\}=\{1\}\notin\cD$。
 
-这就是说，“好集”的全体天然地构成 $\lambda$-类。凡是由等式、极限定义出来的性质，比如两个测度相等、两个积分相等、某个函数等式对示性函数成立，好集族对差集和递增并封闭几乎是自动的，而对交集封闭通常不成立。$\pi$-$\lambda$ 定理告诉我们：只要生成元本身对交集封闭，这个缺陷就无关紧要。
+\begin{remark}[$\pi$-类与 $\lambda$-类的分工]
+上面的讨论不是偶然的。凡是用等式和极限定义出来的性质，比如两个测度相等、两个积分相等、某个函数等式对示性函数成立，好集的全体对差集和递增并封闭几乎是自动的，而对交集封闭通常没有理由成立。$\sigma$-代数的定义把两种要求捆在了一起，而 $\pi$-类与 $\lambda$-类把它们拆开了：
+\begin{enumerate}
+\item 对交集封闭的要求，交给生成元去验证，生成元是我们自己选的，可以选成 $\pi$-类，比如一切 $(-\infty,x]$；
+\item 对差集和递增并封闭的要求，交给好集去验证，这通常由测度或积分的性质自动给出。
+\end{enumerate}
+下一节的 $\pi$-$\lambda$ 定理说，这两半合在一起就足够了。这就是这个定理在整个课程中反复出现的原因。
+\end{remark}
 
 \topic{Dynkin 的 \texorpdfstring{$\pi$-$\lambda$}{π-λ} 定理}
 
-\begin{summary}
-证明分两大步：第一步，同时是 $\pi$-类和 $\lambda$-类的集合族是 $\sigma$-代数；第二步，由 $\pi$-类生成的最小 $\lambda$-类仍是 $\pi$-类。两步合起来，就得到最小 $\lambda$-类等于生成的 $\sigma$-代数。
-\end{summary}
+我们先说明定理的证明思路。所要证明的是：包含 $\pi$-类 $\cP$ 的最小 $\lambda$-类 $\ell(\cP)$ 就是 $\sigma(\cP)$。证明分两大步：第一步，同时是 $\pi$-类和 $\lambda$-类的集合族一定是 $\sigma$-代数；第二步，$\ell(\cP)$ 仍是 $\pi$-类。第一步是定义的直接验证，真正需要想法的是第二步。
 
 与命题~\ref{prop:set-systems:intersection} 的证明完全相同，任意一族 $\lambda$-类的交仍是 $\lambda$-类：$\Omega$ 属于每一个；若 $A\subseteq B$ 都属于每一个，则 $B\setminus A$ 属于每一个；若递增列 $A_n$ 的每一项都属于每一个，则 $\bigcup_nA_n$ 属于每一个。由于 $2^\Omega$ 是 $\lambda$-类，对任意 $\cC\subseteq2^\Omega$，可以定义包含 $\cC$ 的最小 $\lambda$-类
 \[
@@ -345,7 +371,7 @@ $\cL\subseteq2^\Omega$ 是 $\lambda$-类，当且仅当
 由 (c)，对任意 $A,B\in\ell(\cP)$ 有 $B\in\cG_A$，即 $A\cap B\in\ell(\cP)$。所以 $\ell(\cP)$ 是 $\pi$-类。
 \end{proof}
 
-证明中的 (b)、(c) 两步是“先固定一个变量在小集合族里，再把它放大到大集合族里”的典型手法：先对 $A\in\cP$，$B\in\ell(\cP)$ 证明 $A\cap B\in\ell(\cP)$，再利用交集的对称性，把 $A$ 的范围也放大到 $\ell(\cP)$。以后证明乘积测度等结论时还会见到同样的两步放大。
+这是一个值得学习的证明。我们想证明的是一个关于两个变量 $A,B$ 的性质（$A\cap B\in\ell(\cP)$），直接证明做不到，于是分两次放大：(b) 先让 $A$ 留在小的集合族 $\cP$ 里，把 $B$ 放大到 $\ell(\cP)$；(c) 再利用交集的对称性，把 $A$ 也放大到 $\ell(\cP)$。每一次放大用的都是同一个事实，即“好集”构成 $\lambda$-类，而 $\ell(\cP)$ 是最小的 $\lambda$-类。以后证明乘积测度的性质时，我们还会见到同样的两次放大。
 
 \begin{theorem}[Dynkin 的 $\pi$-$\lambda$ 定理]\label{thm:set-systems:pi-lambda}
 设 $\cP$ 是 $\pi$-类，$\cL$ 是 $\lambda$-类，且 $\cP\subseteq\cL$。则 $\sigma(\cP)\subseteq\cL$。进一步，$\ell(\cP)=\sigma(\cP)$。
@@ -354,7 +380,7 @@ $\cL\subseteq2^\Omega$ 是 $\lambda$-类，当且仅当
 由引理~\ref{lem:set-systems:ell-is-pi}，$\ell(\cP)$ 是 $\pi$-类；它当然也是 $\lambda$-类。由引理~\ref{lem:set-systems:pi-lambda-sigma}，$\ell(\cP)$ 是 $\sigma$-代数。它包含 $\cP$，所以由 $\sigma(\cP)$ 的最小性，$\sigma(\cP)\subseteq\ell(\cP)$。前面已经说明 $\ell(\cP)\subseteq\sigma(\cP)$，故 $\ell(\cP)=\sigma(\cP)$。最后，$\cL$ 是包含 $\cP$ 的 $\lambda$-类，由 $\ell(\cP)$ 的最小性，$\sigma(\cP)=\ell(\cP)\subseteq\cL$。
 \end{proof}
 
-于是好集原理可以改写成下面的形式，这是本课程中最常用的论证模式之一。
+于是好集原理可以改写成下面的形式。
 
 \begin{corollary}[$\pi$-$\lambda$ 形式的好集原理]\label{cor:set-systems:good-sets}
 设 $\cP$ 是 $\pi$-类，$\cG\subseteq2^\Omega$。若 $\cP\subseteq\cG$ 且 $\cG$ 是 $\lambda$-类，则 $\sigma(\cP)\subseteq\cG$。
@@ -362,6 +388,16 @@ $\cL\subseteq2^\Omega$ 是 $\lambda$-类，当且仅当
 \begin{proof}
 这就是定理~\ref{thm:set-systems:pi-lambda}。
 \end{proof}
+
+\begin{remark}[怎样使用 $\pi$-$\lambda$ 定理]
+在应用中，我们总是按照同样的步骤来使用这个定理，同学们应该熟记：
+\begin{enumerate}
+\item 找一个生成所考虑的 $\sigma$-代数的 $\pi$-类 $\cP$，并在 $\cP$ 上验证所要的性质；
+\item 令 $\cG$ 为具有这个性质的集合的全体，验证 $\cG$ 是 $\lambda$-类；
+\item 由推论~\ref{cor:set-systems:good-sets} 得到 $\sigma(\cP)\subseteq\cG$。
+\end{enumerate}
+第 1 步通常是具体的计算，第 2 步通常是测度或积分的一般性质，第 3 步不需要做任何事情。下一讲的测度唯一性定理、第~\ref{lec:random-variables} 讲的单调类定理，以及以后关于独立性的判别，都是这样证明的。
+\end{remark}
 
 \begin{remark}
 $\pi$-类的条件不能去掉。\egref{ex:set-systems:even} 中取 $\cC=\{\{1,2\},\{1,3\}\}$，则 $\cC\subseteq\cL$，$\cL$ 是 $\lambda$-类，但 $\sigma(\cC)$ 含有 $\{1\}=\{1,2\}\cap\{1,3\}$，从而 $\sigma(\cC)=2^\Omega\not\subseteq\cL$（$\{1\}$、$\{2\}=\{1,2\}\setminus\{1\}$、$\{3\}=\{1,3\}\setminus\{1\}$、$\{4\}=(\{1,2\}\cup\{1,3\})^c$ 都在 $\sigma(\cC)$ 中）。

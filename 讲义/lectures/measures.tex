@@ -5,13 +5,11 @@
 \lecture{测度与概率空间，测度的基本性质与连续性，零测集，测度的唯一性定理，\texorpdfstring{$C[0,1]$}{C[0,1]} 上的概率测度由有限维分布决定}
 \label{lec:measures}
 
-有了可测空间 $(\Omega,\cF)$，下一步是在 $\cF$ 上给每个集合指定一个“大小”。长度、面积、个数、概率都是这样的“大小”，它们共同的性质是可数可加性。本讲先从定义推出测度的全部基本性质，然后回答一个问题：两个测度在什么条件下相等。答案是上一讲 $\pi$-$\lambda$ 定理最重要的应用。
+有了可测空间 $(\Omega,\cF)$，我们就可以在 $\cF$ 上给每个集合指定一个“大小”了。区间的长度、平面图形的面积、有限集合的元素个数、事件的概率，都是这样的“大小”。它们来自完全不同的地方，却有一个共同的性质：把一个集合切成可数块，每块的大小加起来等于整体的大小。测度就是对这个性质的抽象。
+
+对于一个新的数学对象，我们总是例行公事般地先问几个问题：它最基本的例子是什么？它有哪些基本性质？它是否存在？在什么意义下唯一？对于测度，这一讲给出例子、基本性质和唯一性，存在性（也就是怎样构造测度）是下一讲的内容。唯一性定理是上一讲 $\pi$-$\lambda$ 定理最重要的应用，请同学们把两讲对照起来读。
 
 \topic{测度与概率空间}
-
-\begin{summary}
-测度是定义在 $\sigma$-代数上、取值于 $[0,\infty]$ 的可数可加函数。概率测度是总质量为 $1$ 的测度。
-\end{summary}
 
 我们约定 $[0,\infty]$ 中的运算：$a+\infty=\infty+a=\infty$（$a\in[0,\infty]$），$a\leqslant\infty$ 对一切 $a$ 成立。非负项级数 $\sum_na_n$（$a_n\in[0,\infty]$）总有意义：它是部分和的（可能为 $\infty$ 的）上确界。数学分析中已知，非负项级数的和与求和次序无关，非负项二重级数可以按任意方式交换求和次序：$\sum_m\sum_na_{mn}=\sum_n\sum_ma_{mn}$。下文反复使用这一事实。
 
@@ -26,6 +24,12 @@
 \end{enumerate}
 则称 $\mu$ 为 $(\Omega,\cF)$ 上的\term{测度}（measure），三元组 $(\Omega,\cF,\mu)$ 称为\term{测度空间}（measure space）。
 \end{definition}
+
+\begin{remark}
+我们直观上可以把测度想成是撒在 $\Omega$ 上的“质量”：$\mu(A)$ 是落在 $A$ 中的质量。概率测度就是总质量为 $1$ 的情形，“事件 $A$ 的概率”就是“质量有多大比例落在 $A$ 里”。这种想法在后面讨论分布、弱收敛的时候非常有帮助。
+
+定义中的可数可加性是一个很强的要求。它把“有限”的加法与“无限”的极限捆在了一起：若 $A_n$ 两两不交，则 $\sum_{k\leqslant n}\mu(A_k)=\mu(A_1\cup\cdots\cup A_n)$，可数可加性说的是这个量当 $n\to\infty$ 时的极限恰好是 $\mu(\bigcup_kA_k)$。换句话说，测度与集合的极限可以交换。下面的定理~\ref{thm:measures:basic} 中的连续性就是这句话的精确表述。
+\end{remark}
 
 \begin{definition}[有限测度，$\sigma$-有限测度，概率测度]\label{def:measures:finite}
 设 $\mu$ 是 $(\Omega,\cF)$ 上的测度。
@@ -67,21 +71,17 @@ P(A)=\sum_{\omega\in A}p(\omega),\qquad A\subseteq\Omega.
 设 $\Omega$ 不可数，$\cF$ 为可数－余可数 $\sigma$-代数（\egref{ex:set-systems:countable-cocountable}）。令 $P(A)=0$（$A$ 可数），$P(A)=1$（$A^c$ 可数）。由于 $\Omega$ 不可数，$A$ 与 $A^c$ 不能同时可数，所以 $P$ 定义合理。它是概率测度，证明留作习题~\exref{ex:measures:A1}。
 \end{example}
 
-下面两个“反例”说明可数可加性是一个实质性的要求。
+我们再看两个反面的例子，它们说明可数可加性确实是一个实质性的要求。
 
 \begin{example}[有限可加但不可数可加]\label{ex:measures:finitely-additive}
 设 $\Omega=\N$，$\cA$ 为有限集与余有限集组成的代数（\egref{ex:set-systems:finite-cofinite}）。令 $\mu(A)=0$（$A$ 有限），$\mu(A)=1$（$A^c$ 有限）。$\mu$ 是\term{有限可加的}（finitely additive）：若 $A,B\in\cA$ 不交，它们不能都是余有限集（否则 $A\cap B$ 是余有限集，非空），若都有限则 $A\cup B$ 有限，两边都是 $0$；若一个余有限一个有限，则 $A\cup B$ 余有限，两边都是 $1$。但 $\N=\bigcup_n\{n\}$ 是可数个 $\mu$ 值为 $0$ 的集合的不交并，而 $\mu(\N)=1$。
 \end{example}
 
 \begin{example}[$\N$ 上不存在“均匀”的概率测度]
-设 $P$ 是 $(\N,2^\N)$ 上的概率测度。若 $P(\{n\})=c$ 对一切 $n$ 成立，则 $1=P(\N)=\sum_nc$，而右边在 $c=0$ 时为 $0$，在 $c>0$ 时为 $\infty$，矛盾。所以“随机取一个正整数，每个数机会均等”在可数可加的框架里不是一个概率模型。
+设 $P$ 是 $(\N,2^\N)$ 上的概率测度。若 $P(\{n\})=c$ 对一切 $n$ 成立，则 $1=P(\N)=\sum_nc$，而右边在 $c=0$ 时为 $0$，在 $c>0$ 时为 $\infty$，矛盾。所以“随机取一个正整数，每个数机会均等”在可数可加的框架里不是一个概率模型。初学者常常对此感到意外，因为日常语言中“随机取一个正整数”似乎是有意义的。这是概率论的公理化与直观第一次发生冲突的地方：Kolmogorov 的体系选择了可数可加性，换来的是可以对事件取极限，付出的代价是一些直观上“均匀”的模型不再存在。在有限可加的框架里，这样的“概率”是存在的（本讲作业 E），但它几乎无法用来做分析。
 \end{example}
 
 \topic{测度的基本性质}
-
-\begin{summary}
-从可数可加性出发，本节推出单调性、次可加性和两种连续性。连续性是可数可加性的“极限形式”，以后几乎每个极限定理都要用到它。
-\end{summary}
 
 \begin{theorem}[测度的基本性质]\label{thm:measures:basic}
 设 $(\Omega,\cF,\mu)$ 是测度空间，下面出现的集合都属于 $\cF$。
@@ -127,6 +127,10 @@ P(A)=\sum_{\omega\in A}p(\omega),\qquad A\subseteq\Omega.
 
 对概率测度，(3) 和 (7) 中的有限性条件自动成立，特别地 $P(A^c)=1-P(A)$。
 
+\begin{remark}
+定理~\ref{thm:measures:basic} 中的 (6) 与 (7) 同学们应该熟记，它们说的是：\uline{测度与单调集合列的极限可以交换}。在数学分析中，极限与求和、极限与积分能否交换是反复出现的难题，而在测度论中，对单调的集合列，这件事是无条件（从上连续需要有限性）成立的。这是可数可加性带给我们的最直接的好处。以后的单调收敛定理、Fatou 引理、控制收敛定理，归根到底都是从这里出发的。
+\end{remark}
+
 \begin{proposition}[集合列上、下极限的测度]\label{prop:measures:fatou-sets}
 设 $(\Omega,\cF,\mu)$ 是测度空间，$A_n\in\cF$。则
 \begin{enumerate}
@@ -169,15 +173,17 @@ P(A)=\sum_{\omega\in A}p(\omega),\qquad A\subseteq\Omega.
 设 $(\Omega,\cF,\mu)$ 是测度空间。若 $N\in\cF$ 且 $\mu(N)=0$，称 $N$ 为\term{零测集}（null set）。若某个关于 $\omega$ 的性质在一个零测集之外成立，即存在零测集 $N$，使该性质对一切 $\omega\notin N$ 成立，则称该性质\term{几乎处处}（almost everywhere，a.e.）成立；当 $\mu=P$ 是概率测度时，称它\term{几乎必然}（almost surely，a.s.）成立，也说以概率 $1$ 成立。
 \end{definition}
 
-由次可加性，可数个零测集的并仍是零测集。注意定义中不要求“性质成立的点的集合”本身属于 $\cF$，只要求它包含一个可测集的补集。若 $\cF$ 包含一切零测集的子集，称测度空间是\term{完备的}（complete）；任何测度空间都可以完备化，见作业 B。
+由次可加性，可数个零测集的并仍是零测集。注意定义中不要求“性质成立的点的集合”本身属于 $\cF$，只要求它包含一个可测集的补集。
+
+\begin{remark}
+在概率论中，几乎所有的结论都是“几乎必然”成立的。比如强大数定律说的是：抛一枚公平的硬币，正面出现的频率几乎必然收敛到 $1/2$。它并不是说频率对每一个 $\omega$ 都收敛（“每次都是正面”这个样本点显然不满足），而是说不收敛的那些 $\omega$ 合起来概率为零。零测集上发生的事情，我们一概不关心。所以在概率论中，两个随机变量几乎必然相等时，我们通常就把它们看成是同一个。
+\end{remark}
+
+若 $\cF$ 包含一切零测集的子集，称测度空间是\term{完备的}（complete）；任何测度空间都可以完备化，见作业 B。
 
 \topic{测度的唯一性定理}
 
-\begin{summary}
-两个测度若在一个 $\pi$-类上相等，并且满足适当的有限性条件，则它们在该 $\pi$-类生成的 $\sigma$-代数上相等。证明就是把上一讲“为什么需要 $\lambda$-类”一段中的观察严格化。
-\end{summary}
-
-先看有限测度的情形。
+我们现在回答两个测度何时相等的问题。上一讲在引入 $\lambda$-类的时候，其实已经给出了证明的全部想法，这里只是把它写严格。先看有限测度的情形。
 
 \begin{theorem}[有限测度的唯一性]\label{thm:measures:uniqueness-finite}
 设 $\cP$ 是 $\Omega$ 上的 $\pi$-类，$\mu,\nu$ 是可测空间 $(\Omega,\cF)$ 上的有限测度，$\sigma(\cP)\subseteq\cF$。若 $\mu(\Omega)=\nu(\Omega)$，且 $\mu(A)=\nu(A)$ 对一切 $A\in\cP$ 成立，则 $\mu(A)=\nu(A)$ 对一切 $A\in\sigma(\cP)$ 成立。
@@ -215,6 +221,8 @@ P(A)=\sum_{\omega\in A}p(\omega),\qquad A\subseteq\Omega.
 现取 $E=E_n$。对 $A\in\sigma(\cP)$，$E_n\cap A\uparrow A$，由从下连续，$\mu(A)=\lim_n\mu(E_n\cap A)=\lim_n\nu(E_n\cap A)=\nu(A)$。
 \end{proof}
 
+我们指出，这个证明的结构是测度论中处理无限测度的标准手法：先把问题限制在测度有限的一块 $E$ 上，在这一块上用有限测度的论证（这里需要有限性，是因为要做减法），然后让 $E$ 逐渐长大到整个空间，用连续性取极限。以后遇到 $\sigma$-有限的测度，我们几乎总是这样处理。
+
 \begin{example}[有限性条件不能去掉]
 在 $(\R,\cR)$ 上令 $\mu(A)=\#(A\cap\Q)$，$\nu(A)=2\#(A\cap\Q)$，它们都是测度（\egref{ex:measures:combination}）。令 $\cP=\{(a,b]:a<b\}\cup\{\varnothing\}$，这是生成 $\cR$ 的 $\pi$-类（命题~\ref{prop:set-systems:borel-generators} 与\egref{ex:set-systems:pi-examples}）。每个 $(a,b]$ 都含有无穷多个有理数，所以 $\mu((a,b])=\nu((a,b])=\infty$，二者在 $\cP$ 上相等。但 $\mu(\{0\})=1\neq2=\nu(\{0\})$。这里定理~\ref{thm:measures:uniqueness} 的条件不满足：$\cP$ 中除空集外没有测度有限的集合。
 \end{example}
@@ -230,13 +238,9 @@ P(A)=\sum_{\omega\in A}p(\omega),\qquad A\subseteq\Omega.
 $\cP=\{(-\infty,x]:x\in\R\}$ 是 $\pi$-类（\egref{ex:set-systems:pi-examples}），$\sigma(\cP)=\cR$（命题~\ref{prop:set-systems:borel-generators}），且 $\mu(\R)=\nu(\R)=1$。由定理~\ref{thm:measures:uniqueness-finite} 即得。$d$ 维情形：$\{(-\infty,x_1]\times\cdots\times(-\infty,x_d]\}$ 对交集封闭（交集是把各坐标取最小值），它生成 $\cR^d$（习题~\exref{ex:set-systems:A5}），同样由定理~\ref{thm:measures:uniqueness-finite} 得到。
 \end{proof}
 
-这个推论是后面“分布函数”一讲的基础：一个随机变量的分布完全由函数 $x\mapsto P(X\leqslant x)$ 决定。
+这个推论虽然简单，但是其重要性不言而喻：一个随机变量的分布完全由函数 $x\mapsto P(X\leqslant x)$ 决定。$\cR$ 中的集合多得无法描述，而我们只要知道一个单变量的单调函数，就知道了每一个 Borel 集的概率。第~\ref{lec:distributions} 讲将从这里出发。
 
 \topic{例子：\texorpdfstring{$C[0,1]$}{C[0,1]} 上的概率测度}
-
-\begin{summary}
-在连续函数空间上，我们能直接描述的只是“有限个时刻的取值”的概率，这样的事件组成 $\pi$-类。唯一性定理保证：这些有限维的信息已经决定了整个 Borel $\sigma$-代数上的概率测度。这正是引入 $\pi$-类的动机。
-\end{summary}
 
 设 $C=C[0,1]$ 是 $[0,1]$ 上全体实值连续函数的集合，赋予\term{一致度量}（uniform metric）
 \[
@@ -244,11 +248,15 @@ d(f,g)=\sup_{t\in[0,1]}\abs{f(t)-g(t)}.
 \]
 由于 $[0,1]$ 上的连续函数有界，$d(f,g)<\infty$；$d$ 满足度量的三条公理，这是熟知的。记 $B(g,r)=\{f\in C:d(f,g)<r\}$ 为开球，$\overline B(g,r)=\{f\in C:d(f,g)\leqslant r\}$ 为闭球，$\cB(C)$ 为由 $d$ 诱导的拓扑的 Borel $\sigma$-代数。
 
-设想我们要描述一个“随机连续函数”，比如花粉颗粒在 $[0,1]$ 时间段内的位置（Brown 运动）。物理上可以测量、可以写出概率的，是有限个时刻的位置：比如 $P(f(t_1)\leqslant x_1,\dots,f(t_k)\leqslant x_k)$。可是我们关心的事件往往涉及无穷多个时刻，例如“整个时间段内位置不超过 $1$”，即 $\{f:\sup_tf(t)\leqslant1\}$。问题是：有限维的信息是否足以决定这类事件的概率？令
+为什么要看这个例子？设想我们要描述一个“随机连续函数”，比如说花粉颗粒在时间段 $[0,1]$ 内的位置（这就是 Brown 运动）。物理上可以测量、从而可以写出概率的，只是有限个时刻的位置，比如
+\[
+P\bigl(f(t_1)\leqslant x_1,\dots,f(t_k)\leqslant x_k\bigr).
+\]
+这样的量称为\term{有限维分布}（finite-dimensional distribution）。可是我们真正关心的事件往往涉及无穷多个时刻，例如“整个时间段内位置都不超过 $1$”，即 $\{f:\sup_tf(t)\leqslant1\}$。于是一个很基本的问题是：有限维分布是否足以决定这类事件的概率？令
 \[
 \cP=\bigl\{\{f\in C: f(t_1)\leqslant x_1,\dots,f(t_k)\leqslant x_k\}:\ k\geqslant1,\ t_1,\dots,t_k\in[0,1],\ x_1,\dots,x_k\in\R\bigr\},
 \]
-其中的集合称为（有限维）\term{柱集}（cylinder set）。两个柱集的交还是柱集：把两组时刻合并成一组，同一时刻出现两次时取两个上界中较小的一个。所以 $\cP$ 是 $\pi$-类。
+其中的集合称为（有限维）\term{柱集}（cylinder set）。两个柱集的交还是柱集：把两组时刻合并成一组，同一时刻出现两次时取两个上界中较小的一个。所以 $\cP$ 是 $\pi$-类。这里 $\pi$-类不是我们刻意选出来的，而是问题本身给出来的：能够写出概率的事件，自然就对“同时发生”封闭。我们要证明两件事：$\cP$ 生成整个 Borel $\sigma$-代数；然后由唯一性定理，有限维分布决定了测度。
 
 \begin{lemma}\label{lem:measures:C-separable}
 $C[0,1]$ 中存在可数稠密子集：令 $\cQ$ 为这样的函数 $g$ 的全体：存在正整数 $n$ 和有理数 $q_0,\dots,q_n$，使 $g(k/n)=q_k$，且 $g$ 在每个区间 $[k/n,(k+1)/n]$ 上是线性函数。则 $\cQ$ 可数，并且对任意 $f\in C$ 与 $\varepsilon>0$，存在 $g\in\cQ$ 使 $d(f,g)<\varepsilon$。
@@ -304,11 +312,17 @@ $\cB(C)=\sigma(\cP)$。
 \]
 所以若两个随机连续函数模型给出相同的有限维分布，那么“最大值不超过 $1$”在两个模型中的概率也相同。
 
-与上一讲作业 D 对比：在一切函数组成的空间 $\R^{[0,1]}$ 上，“$\sup_tf(t)\leqslant1$”甚至不是由柱集生成的 $\sigma$-代数中的事件。区别在于，连续性让“不可数个时刻”可以用“可数个有理时刻”代替。
+与上一讲作业 D 对比：在一切函数组成的空间 $\R^{[0,1]}$ 上，“$\sup_tf(t)\leqslant1$”甚至不是由柱集生成的 $\sigma$-代数中的事件。区别在于，连续性让“不可数个时刻”可以用“可数个有理时刻”代替。可见一个事件是否可测，与样本空间取得是否恰当密切相关。这也是为什么研究 Brown 运动时，人们坚持把样本空间取为连续函数空间，而不是一切函数的空间。
 \end{example}
 
 \begin{remark}
-这个例子也说明了测度论中的一个基本分工。唯一性定理只回答“有限维分布是否\emph{至多}决定一个测度”，并不回答“给定一族相容的有限维分布，是否\emph{存在}一个测度”。存在性要难得多：对于 $C[0,1]$ 上的 Brown 运动，需要专门的构造。$\R$ 和 $\R^d$ 上的存在性问题由下一讲的测度延拓定理解决。
+我们把这个例子的思路总结一下，因为它在整个课程中会反复出现：
+\begin{enumerate}
+\item 我们能直接算出概率的，只是一个很小的集合族（有限维柱集、区间、矩形）；
+\item 这个集合族恰好对交集封闭，并且生成了我们关心的 $\sigma$-代数；
+\item 于是由唯一性定理，这个小集合族上的概率已经决定了一切。
+\end{enumerate}
+需要强调的是，唯一性定理只回答“有限维分布\emph{至多}决定一个测度”，并不回答“给定一族有限维分布，是否\emph{存在}这样的测度”。存在性要难得多，对于 $C[0,1]$ 上的 Brown 运动，需要专门的构造。$\R$ 和 $\R^d$ 上的存在性问题，由下一讲的测度延拓定理解决。
 \end{remark}
 
 % =====================================================================
@@ -381,7 +395,7 @@ P\Bigl(\bigcup_{i=1}^nA_i\Bigr)=\sum_{k=1}^n(-1)^{k-1}\sum_{1\leqslant i_1<\cdot
 \thinkingpart
 
 \begin{probleme}*[问题]{D}{Ulam 定理：$C[0,1]$ 上的概率测度是胎紧的}
-设 $(S,\rho)$ 是\term{可分}（有可数稠密子集）且\term{完备}的度量空间（这样的空间称为 Polish 空间，$\R^d$ 和 $C[0,1]$ 都是），$\mu$ 是 $(S,\cB(S))$ 上的概率测度。本题证明：\emph{对任意 $\varepsilon>0$，存在紧集 $K$ 使 $\mu(K)>1-\varepsilon$。}这一性质称为\term{胎紧}（tightness），在弱收敛理论中至关重要。
+设 $(S,\rho)$ 是\term{可分}（有可数稠密子集）且\term{完备}的度量空间（这样的空间称为 Polish 空间，$\R^d$ 和 $C[0,1]$ 都是），$\mu$ 是 $(S,\cB(S))$ 上的概率测度。本题证明：\emph{对任意 $\varepsilon>0$，存在紧集 $K$ 使 $\mu(K)>1-\varepsilon$。}这一性质称为\term{胎紧}（tightness），在弱收敛理论中非常重要。
 \begin{questions}
 \item 设 $\{s_1,s_2,\dots\}$ 是稠密子集。证明对每个 $k$，$\bigcup_{i=1}^\infty\overline B(s_i,1/k)=S$。
 \item 由测度的从下连续，对每个 $k$ 取 $n_k$ 使 $\mu\bigl(\bigcup_{i\leqslant n_k}\overline B(s_i,1/k)\bigr)>1-\varepsilon2^{-k}$。令 $K=\bigcap_k\bigcup_{i\leqslant n_k}\overline B(s_i,1/k)$。证明 $\mu(K)>1-\varepsilon$。

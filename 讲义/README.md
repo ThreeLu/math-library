@@ -43,7 +43,7 @@ xelatex -output-directory=build 高等概率论.tex   # 两遍
 % ---- 一讲 ----
 \lecture{罗列本讲知识点的标题，可以很长}      % 另起一页，编号 1, 2, 3, ...
 \topic{讲内小标题}                            % 不编号、不进目录
-\begin{summary} 方框导语 \end{summary}
+% summary 方框导语环境仍保留在模版中，但本讲义不使用
 
 % ---- 数学陈述：定义、命题、引理、定理、推论共用全书连续编号，正文为楷体 ----
 \begin{definition}[名称]\label{def:slug:xxx} ... \end{definition}
