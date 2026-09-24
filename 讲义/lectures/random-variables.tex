@@ -1,8 +1,8 @@
 % !TEX root = ../高等概率论.tex
 % =====================================================================
-%  随机变量：可测映射、生成的 σ-代数、简单函数逼近、函数形式的单调类定理、Doob–Dynkin 引理
+%  随机变量：可测映射、乘积 σ-代数与截口、不可数族的上确界、生成的 σ-代数、简单函数逼近、函数形式的单调类定理、Doob–Dynkin 引理
 % =====================================================================
-\lecture{可测映射与随机变量，可测性的判别与运算，广义实值随机变量，由随机变量生成的 \texorpdfstring{$\sigma$}{σ}-代数，简单函数逼近，函数形式的单调类定理，Doob--Dynkin 引理}
+\lecture{可测映射与随机变量，可测性的判别与运算，乘积 \texorpdfstring{$\sigma$}{σ}-代数与截口，广义实值随机变量，不可数个随机变量的上确界与经验分布函数，由随机变量生成的 \texorpdfstring{$\sigma$}{σ}-代数，简单函数逼近，函数形式的单调类定理，Doob--Dynkin 引理}
 \label{lec:random-variables}
 
 初等概率论把随机变量说成是“取值随机的量”。这个名字其实有些误导：随机变量既不随机，也不是变量，它是从样本空间 $\Omega$ 到 $\R$ 的一个完全确定的函数 $X$。随机性全部来自 $\omega$ 的选取：先按照概率 $P$ 随机地选出一个样本点 $\omega$，然后读出数值 $X(\omega)$。所以同一个样本空间上可以同时定义许多随机变量，比如说把硬币抛 $n$ 次，第一次的结果、正面的总数、最长的连续正面的长度，都是同一个 $\omega$ 的函数。
@@ -99,6 +99,69 @@ $X:\Omega\to\R$ 是随机变量，当且仅当 $\{X\leqslant x\}\in\cF$ 对一�
 由定理~\ref{thm:random-variables:vector}，$(X_1,\dots,X_n)$ 是随机向量，由定理~\ref{thm:random-variables:composition}(1) 即得第一句。所列的函数 $(x,y)\mapsto x+y,\ xy,\ \max\{x,y\}$ 等在 $\R^2$ 上连续，由定理~\ref{thm:random-variables:composition}(2) 是 Borel 函数。对商：令 $g(y)=1/y$（$y\neq0$），$g(0)=0$。对 $c>0$，$\{g\leqslant c\}=(-\infty,0]\cup[1/c,\infty)$；对 $c=0$，$\{g\leqslant0\}=(-\infty,0]$；对 $c<0$，$\{g\leqslant c\}=[1/c,0)$。它们都是 Borel 集，所以 $g$ 是 Borel 函数，$X_1/X_2=X_1\cdot g(X_2)$。
 \end{proof}
 
+我们再换一个角度看 $X_1+X_2$ 的可测性。上面的证明把 $(X_1,X_2)$ 看成取值于 $\R^2$ 的随机向量，再复合上连续函数 $(x,y)\mapsto x+y$。其实也可以直接验证：对任意 $c\in\R$，
+\[
+\{X_1+X_2<c\}=\bigcup_{q\in\Q}\bigl(\{X_1<q\}\cap\{X_2<c-q\}\bigr).
+\]
+这因为：若 $X_1(\omega)+X_2(\omega)<c$，则 $X_1(\omega)<c-X_2(\omega)$，由有理数的稠密性，可以取有理数 $q$ 使 $X_1(\omega)<q<c-X_2(\omega)$，此时 $X_2(\omega)<c-q$；反之，若 $X_1(\omega)<q$ 且 $X_2(\omega)<c-q$，两式相加得 $X_1(\omega)+X_2(\omega)<c$。右边是可数个事件的并，所以属于 $\cF$，再由推论~\ref{cor:random-variables:criterion} 即得。这个直接的证明用到了有理数的稠密性，每换一个函数（比如 $X_1X_2$）就要重新想一个办法。前面那个经过 $\R^2$ 的证明则一劳永逸：只要 $f$ 是 $\R^2$ 上的 Borel 函数，$f(X_1,X_2)$ 就是随机变量。为了把这个想法用到一般的可测空间上，我们需要乘积空间上的 $\sigma$-代数。
+
+\topic{乘积 \texorpdfstring{$\sigma$}{σ}-代数与截口}
+
+\begin{definition}[乘积 $\sigma$-代数]\label{def:random-variables:product}
+设 $(S,\cS)$ 与 $(T,\cT)$ 是可测空间。形如 $A\times B$（$A\in\cS$，$B\in\cT$）的集合称为 $S\times T$ 中的\term{可测矩形}（measurable rectangle）。由全体可测矩形生成的 $\sigma$-代数
+\[
+\cS\otimes\cT=\sigma\bigl(\{A\times B: A\in\cS,\ B\in\cT\}\bigr)
+\]
+称为\term{乘积 $\sigma$-代数}（product $\sigma$-algebra）。有限个可测空间的乘积 $\cS_1\otimes\cdots\otimes\cS_d$ 同样定义。
+\end{definition}
+
+两个可测矩形的交还是可测矩形：$(A\times B)\cap(A'\times B')=(A\cap A')\times(B\cap B')$，所以可测矩形的全体是一个 $\pi$-类。以后构造乘积测度时，我们会用它和唯一性定理。我们强调，$\cS\otimes\cT$ 中的集合一般不是矩形。比如说平面上的对角线 $\{(x,x):x\in\R\}$ 是闭集，属于 $\cR^2$，但它不是任何 $A\times B$ 的形式：若它等于 $A\times B$，则 $(0,0)$ 与 $(1,1)$ 都在其中，于是 $0\in A$，$1\in B$，从而 $(0,1)\in A\times B$，矛盾。
+
+\begin{proposition}\label{prop:random-variables:Rd-product}
+$\cR^d=\cR\otimes\cdots\otimes\cR$（$d$ 个）。
+\end{proposition}
+\begin{proof}
+记右边为 $\cR^{\otimes d}$。一方面，每个矩形 $(a_1,b_1]\times\cdots\times(a_d,b_d]$ 都是可测矩形，而这样的矩形生成 $\cR^d$（习题~\exref{ex:set-systems:A5}），所以 $\cR^d\subseteq\cR^{\otimes d}$。另一方面，设 $A_1,\dots,A_d\in\cR$。坐标投影 $p_i(x)=x_i$ 是 $\R^d\to\R$ 的连续映射，由定理~\ref{thm:random-variables:composition}(2)，它是 $\cR^d/\cR$-可测的，所以
+\[
+A_1\times\cdots\times A_d=\bigcap_{i=1}^dp_i^{-1}(A_i)\in\cR^d .
+\]
+于是 $\cR^d$ 包含一切可测矩形，从而 $\cR^{\otimes d}\subseteq\cR^d$。
+\end{proof}
+
+\begin{theorem}[取值于乘积空间的映射]\label{thm:random-variables:product-map}
+设 $X:\Omega\to S$，$Y:\Omega\to T$，$(X,Y):\Omega\to S\times T$ 表示 $\omega\mapsto(X(\omega),Y(\omega))$。则 $(X,Y)$ 是 $\cF/\cS\otimes\cT$-可测的，当且仅当 $X$ 是 $\cF/\cS$-可测的且 $Y$ 是 $\cF/\cT$-可测的。
+\end{theorem}
+\begin{proof}
+必要性：投影 $\pi_S(s,t)=s$ 是 $\cS\otimes\cT/\cS$-可测的，因为 $\pi_S^{-1}(A)=A\times T$ 是可测矩形。于是 $X=\pi_S\circ(X,Y)$ 可测（定理~\ref{thm:random-variables:composition}(1)）。$Y$ 同理。
+
+充分性：对可测矩形 $A\times B$，$\{(X,Y)\in A\times B\}=\{X\in A\}\cap\{Y\in B\}\in\cF$。可测矩形生成 $\cS\otimes\cT$，由定理~\ref{thm:random-variables:generators} 即得。
+\end{proof}
+
+由命题~\ref{prop:random-variables:Rd-product}，定理~\ref{thm:random-variables:vector} 是这个定理的特例。这个定理说明，乘积 $\sigma$-代数恰好是使“联合起来可测”与“分别可测”等价的那个 $\sigma$-代数：它是使两个投影都可测的最小 $\sigma$-代数（习题~\exref{ex:random-variables:A10}）。于是对任意 $\cS\otimes\cT$-可测的函数 $f:S\times T\to\R$，$f(X,Y)$ 都是随机变量。
+
+下面讨论乘积空间中集合的截口。对 $E\subseteq S\times T$ 与 $s\in S$，称
+\[
+E_s=\{t\in T:(s,t)\in E\}
+\]
+为 $E$ 在 $s$ 处的\term{截口}（section）；类似地，对 $t\in T$，$E^t=\{s\in S:(s,t)\in E\}$。对函数 $f:S\times T\to\R$，令 $f_s(t)=f(s,t)$，$f^t(s)=f(s,t)$。几何上，$E_s$ 就是用竖直的直线 $\{s\}\times T$ 去截 $E$ 所得的集合。
+
+\begin{theorem}[截口的可测性]\label{thm:random-variables:sections}
+设 $E\in\cS\otimes\cT$，$f:S\times T\to\R$ 是 $\cS\otimes\cT$-可测的。则对每个 $s\in S$，$E_s\in\cT$，$f_s$ 是 $\cT$-可测的；对每个 $t\in T$，$E^t\in\cS$，$f^t$ 是 $\cS$-可测的。
+\end{theorem}
+\begin{proof}
+固定 $s\in S$，令 $\iota_s:T\to S\times T$，$\iota_s(t)=(s,t)$。对可测矩形 $A\times B$，
+\[
+\iota_s^{-1}(A\times B)=\{t:(s,t)\in A\times B\}=\begin{cases}B,&s\in A,\\ \varnothing,&s\notin A,\end{cases}
+\]
+都属于 $\cT$。由定理~\ref{thm:random-variables:generators}，$\iota_s$ 是 $\cT/\cS\otimes\cT$-可测的。而按照定义，$E_s=\iota_s^{-1}(E)$，$f_s=f\circ\iota_s$，所以 $E_s\in\cT$，并且由定理~\ref{thm:random-variables:composition}(1)，$f_s$ 是 $\cT$-可测的。$E^t$ 与 $f^t$ 同理。
+\end{proof}
+
+特别地，取 $S=T=\R$，由命题~\ref{prop:random-variables:Rd-product}：\emph{平面上 Borel 集的截口都是直线上的 Borel 集，平面上 Borel 函数固定一个变量后是另一个变量的 Borel 函数。}这个事实在以后的 Fubini 定理中是第一步：要计算 $\int\bigl(\int f(s,t)\,dt\bigr)ds$，首先要知道里面的积分对每个 $s$ 有意义。
+
+\begin{remark}[Lebesgue 可测集的截口]
+这个结论对 Lebesgue 可测集并不成立。回忆第~\ref{lec:extension-of-measures} 讲，Lebesgue 可测集（外测度 $\lambda^*$ 的 Carathéodory 可测集）是比 Borel 集更大的一族集合，零外测度集的每个子集都是 Lebesgue 可测的；用二维外测度 $\lambda_2^*$ 同样可以定义平面上的 Lebesgue 可测集。设 $V\subseteq[0,1)$ 不是 Lebesgue 可测集（第~\ref{lec:extension-of-measures} 讲作业 D），令 $E=\{0\}\times V$。$E$ 包含于直线 $\{0\}\times\R$，后者的二维 Lebesgue 测度为零（第~\ref{lec:extension-of-measures} 讲作业 B6），所以 $E$ 的二维外测度为零，是平面上的 Lebesgue 可测集。可是它在 $s=0$ 处的截口 $E_0=V$ 不是 Lebesgue 可测的。问题出在：Lebesgue 可测集的全体不是由矩形生成的，它还把一切零测集的子集都放了进来，而零测集的子集可以非常古怪。这是概率论中宁愿使用 Borel $\sigma$-代数与乘积 $\sigma$-代数的原因之一。
+\end{remark}
+
 \topic{广义实值随机变量与极限运算}
 
 一列随机变量的上确界、上极限可能等于 $\pm\infty$，比如 $\sup_nX_n$。为了让它们也成为随机变量，我们把取值范围扩充为 $[-\infty,\infty]$。记 $\overline\R=[-\infty,\infty]$，令
@@ -146,6 +209,64 @@ $\lim_nX_n(\omega)$ 存在且有限，当且仅当 $U(\omega)=\limsup_nX_n(\omeg
 \end{definition}
 
 由定理~\ref{thm:random-variables:limits} 的证明，$\{X_n\to X\}=\bigcap_{k}\bigcup_N\bigcap_{n\geqslant N}\{\abs{X_n-X}<1/k\}\in\cF$，所以这个定义中的概率有意义。当极限只在一个零测集之外存在时，常令 $X_\infty=\limsup_nX_n$，它是广义实值随机变量，a.s. 等于极限。
+
+\topic{不可数个随机变量的上确界}
+
+定理~\ref{thm:random-variables:limits} 中取上确界的是可数个随机变量，证明中用到的是 $\{\sup_nX_n\leqslant x\}=\bigcap_n\{X_n\leqslant x\}$ 这个可数交。在概率论中我们经常遇到不可数多个随机变量，比如说随时间连续变化的随机过程 $\{X_t:t\in[0,1]\}$，我们关心它在整个时间段上的最大值 $\sup_{t\in[0,1]}X_t$。这时
+\[
+\Bigl\{\sup_{t\in[0,1]}X_t\leqslant x\Bigr\}=\bigcap_{t\in[0,1]}\{X_t\leqslant x\}
+\]
+是不可数个事件的交，而 $\sigma$-代数对不可数交并不封闭。于是一个自然的问题是：不可数个随机变量的上确界、下确界是不是随机变量？一般来说，答案是否定的。
+
+\begin{example}[不可数个随机变量的上确界可以不可测]
+取 $(\Omega,\cF)=(\R,\cR)$。由第~\ref{lec:set-systems} 讲作业 F，存在不是 Borel 集的集合 $V\subseteq\R$。对 $t\in V$ 令 $X_t=\one_{\{t\}}$。单点集是闭集，所以每个 $X_t$ 都是随机变量。可是对每个 $\omega$，
+\[
+\sup_{t\in V}X_t(\omega)=\begin{cases}1,&\omega\in V,\\0,&\omega\notin V,\end{cases}
+\]
+即 $\sup_{t\in V}X_t=\one_V$，由\egref{ex:random-variables:basic} 的 (1)，它不是随机变量。同样，$\inf_{t\in V}(1-X_t)=\one_{V^c}$ 也不是随机变量。这个例子里，每个 $X_t$ 都再简单不过，毛病完全出在“不可数个”上。
+\end{example}
+
+所以要保证不可数个随机变量的上确界可测，必须对 $t\mapsto X_t(\omega)$ 的正则性有所要求。第~\ref{lec:measures} 讲 $C[0,1]$ 的例子中我们已经见过这种想法：对连续函数，$\sup_{t\in[0,1]}f(t)=\sup_{t\in\Q\cap[0,1]}f(t)$，不可数个时刻可以用可数个有理时刻代替。下面的命题说，只要右连续就够了。
+
+\begin{proposition}[右连续时化为可数个]\label{prop:random-variables:sup-right-continuous}
+设 $T\subseteq\R$，$D\subseteq T$ 是可数集，并且对每个 $t\in T$，存在 $d_n\in D$ 使 $d_n\geqslant t$ 且 $d_n\to t$。（例如 $T=\R$，$D=\Q$；或者 $T=[a,b]$，$D=(\Q\cap[a,b])\cup\{b\}$。）设 $\{X_t:t\in T\}$ 是一族随机变量，并且对每个 $\omega$，函数 $t\mapsto X_t(\omega)$ 在 $T$ 上右连续，即 $s\in T$，$s\geqslant t$，$s\to t$ 时 $X_s(\omega)\to X_t(\omega)$。则
+\[
+\sup_{t\in T}X_t=\sup_{t\in D}X_t,\qquad \inf_{t\in T}X_t=\inf_{t\in D}X_t,
+\]
+从而它们都是广义实值随机变量。
+\end{proposition}
+\begin{proof}
+固定 $\omega$。由于 $D\subseteq T$，$\sup_{t\in D}X_t(\omega)\leqslant\sup_{t\in T}X_t(\omega)$。反之，任取 $t\in T$，按假设取 $d_n\in D$，$d_n\geqslant t$，$d_n\to t$，由右连续性，
+\[
+X_t(\omega)=\lim_nX_{d_n}(\omega)\leqslant\sup_{s\in D}X_s(\omega).
+\]
+对 $t\in T$ 取上确界得 $\sup_{t\in T}X_t(\omega)\leqslant\sup_{s\in D}X_s(\omega)$。下确界同理。$D$ 是可数集，由定理~\ref{thm:random-variables:limits}，$\sup_{t\in D}X_t$ 与 $\inf_{t\in D}X_t$ 是广义实值随机变量。
+\end{proof}
+
+我们来看一个统计中的重要例子。设 $X_1,\dots,X_n$ 是概率空间 $(\Omega,\cF,P)$ 上的随机变量，我们把它们想成对某个量的 $n$ 次观测，比如 $n$ 个人的身高。令
+\[
+F_n(x)=F_n(x,\omega)=\frac1n\sum_{i=1}^n\one_{\{X_i(\omega)\leqslant x\}},\qquad x\in\R,
+\]
+即 $X_1(\omega),\dots,X_n(\omega)$ 中不超过 $x$ 的个数所占的比例。它称为\term{经验分布函数}（empirical distribution function）。对固定的 $x$，$F_n(x,\cdot)$ 是 $n$ 个示性函数的平均，是随机变量；对固定的 $\omega$，$x\mapsto F_n(x,\omega)$ 是一个分布函数，它对应的分布在每个观测值 $X_i(\omega)$ 处放上质量 $1/n$，是一个在 $X_i(\omega)$ 处跳跃的阶梯函数，单调不减且右连续。
+
+在统计中，$X_i$ 的分布函数 $F$ 往往是未知的，而 $F_n$ 是可以从数据算出来的。自然要问 $F_n$ 与 $F$ 相差多少。衡量两个函数的差别，最直接的办法是看最大的偏差
+\[
+D_n=\sup_{x\in\R}\abs{F_n(x)-F(x)}.
+\]
+这里对不可数个 $x$ 取了上确界，所以 $D_n$ 是不是随机变量，需要验证。如果它不是随机变量，那么“$D_n\to0$ 的概率是多少”这个问题就没有意义。
+
+\begin{proposition}\label{prop:random-variables:empirical}
+设 $X_1,\dots,X_n$ 是随机变量，$F$ 是任意一个分布函数。则 $D_n=\sup_{x\in\R}\abs{F_n(x)-F(x)}$ 是取值于 $[0,1]$ 的随机变量。对一列随机变量 $X_1,X_2,\dots$，事件 $\{D_n\to0\}$ 属于 $\cF$。
+\end{proposition}
+\begin{proof}
+令 $Y_x(\omega)=\abs{F_n(x,\omega)-F(x)}$。对每个 $x$，$F_n(x,\cdot)$ 是随机变量，$F(x)$ 是常数，由推论~\ref{cor:random-variables:arithmetic}，$Y_x$ 是随机变量。对每个 $\omega$，$x\mapsto F_n(x,\omega)$ 与 $x\mapsto F(x)$ 都右连续，二者之差右连续，再复合上连续函数 $\abs{\cdot}$ 仍右连续。由命题~\ref{prop:random-variables:sup-right-continuous}（取 $T=\R$，$D=\Q$），$D_n=\sup_{x\in\Q}Y_x$ 是广义实值随机变量。由于 $F_n$ 与 $F$ 都取值于 $[0,1]$，$0\leqslant Y_x\leqslant1$，所以 $D_n$ 取值于 $[0,1]$，是随机变量。
+
+最后，$D_n\geqslant0$，所以 $D_n(\omega)\to0$ 当且仅当 $\limsup_nD_n(\omega)\leqslant0$，而由定理~\ref{thm:random-variables:limits}，$\limsup_nD_n$ 是广义实值随机变量，故 $\{D_n\to0\}=\{\limsup_nD_n\leqslant0\}\in\cF$。
+\end{proof}
+
+\begin{remark}[Glivenko--Cantelli 定理]
+以后学了独立性与强大数定律，我们会证明：若 $X_1,X_2,\dots$ 独立同分布，分布函数为 $F$，则 $D_n\to0$ a.s.。这称为 \term{Glivenko--Cantelli 定理}，在统计中有时被称为统计学的基本定理：观测次数足够多时，经验分布函数在整条实轴上一致地逼近真实的分布函数。对每个固定的 $x$，$F_n(x)\to F(x)$ a.s. 只是强大数定律；难处在于 $x$ 有不可数多个，而每个 $x$ 都有一个概率为零的例外集，不可数个零测集的并可以不是零测集。证明时要用 $F_n$ 与 $F$ 的单调性，把不可数个 $x$ 归结为有限个点。这与上面把 $\sup_{x\in\R}$ 化成 $\sup_{x\in\Q}$ 是同一种想法。
+\end{remark}
 
 \topic{由随机变量生成的 \texorpdfstring{$\sigma$}{σ}-代数}
 
@@ -279,6 +400,14 @@ Doob--Dynkin 引理的两个方向难易程度很不一样。“$Y=f(X)$ 蕴含 
 \item 证明 Borel 函数 $f:\R\to\R$ 的全体对逐点极限（极限处处存在且有限时）封闭；但举例说明两个 Lebesgue 可测函数（对 Lebesgue 可测集的 $\sigma$-代数可测）的复合不一定是 Lebesgue 可测的。（后一问可以在做完思考题 E 之后再回答。）
 \item 设 $X,Y$ 是随机变量。证明 $\{X=Y\}$，$\{X<Y\}$ 属于 $\cF$。
 \item 证明 $\R^d$ 上的 Borel $\sigma$-代数 $\cR^d$ 是使一切连续函数 $f:\R^d\to\R$ 可测的最小 $\sigma$-代数。
+\item\label{ex:random-variables:A10} 设 $(S,\cS)$，$(T,\cT)$ 是可测空间，$\pi_S,\pi_T$ 是 $S\times T$ 到两个分量的投影。证明 $\cS\otimes\cT=\sigma(\pi_S,\pi_T)$，即它是使两个投影都可测的最小 $\sigma$-代数。又设 $f:S\to\R$ 是 $\cS$-可测的，$g:T\to\R$ 是 $\cT$-可测的，证明 $(s,t)\mapsto f(s)g(t)$ 与 $(s,t)\mapsto f(s)+g(t)$ 都是 $\cS\otimes\cT$-可测的。
+\item 设 $f:\R\to\R$ 是 Borel 函数。证明 $f$ 的图像 $\{(x,f(x)):x\in\R\}$ 属于 $\cR^2$，并写出它的各个截口。
+\item 设 $\{X_t:t\in[0,1]\}$ 是一族随机变量，并且对每个 $\omega$，$t\mapsto X_t(\omega)$ 在 $[0,1]$ 上连续。证明 $\sup_{t\in[0,1]}X_t$ 是随机变量，并且 $\{\omega:\ \text{存在}\ t\in[0,1]\ \text{使}\ X_t(\omega)=0\}\in\cF$。（提示：由紧性，这个事件等于 $\{\inf_{t\in[0,1]}\abs{X_t}=0\}$。）若只假设 $t\mapsto X_t(\omega)$ 左连续，命题~\ref{prop:random-variables:sup-right-continuous} 应当怎样修改？
+\item 在命题~\ref{prop:random-variables:empirical} 中，设 $F$ 连续。把 $X_1(\omega),\dots,X_n(\omega)$ 从小到大排列为 $X_{(1)}(\omega)\leqslant\cdots\leqslant X_{(n)}(\omega)$。证明
+\[
+D_n=\max_{1\leqslant k\leqslant n}\max\Bigl\{\frac kn-F(X_{(k)}),\ F(X_{(k)})-\frac{k-1}n\Bigr\},
+\]
+由此再证明一次 $D_n$ 是随机变量。（需要先说明每个 $X_{(k)}$ 是随机变量：$X_{(k)}=\min_{\abs I=k}\max_{i\in I}X_i$，其中 $I$ 取遍 $\{1,\dots,n\}$ 的 $k$ 元子集。）
 \end{exercises}
 
 \begin{probleme}{B}{Doob--Dynkin 引理：用简单函数的证明}

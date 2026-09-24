@@ -1,0 +1,534 @@
+% !TEX root = ../高等概率论.tex
+% =====================================================================
+%  积分：简单函数、有界函数、非负函数、可积函数的积分，Levi 单调收敛定理，线性性，与 Riemann 积分的关系
+% =====================================================================
+\lecture{Riemann 积分的局限，简单函数的积分，有界函数的积分，非负可测函数的积分，Levi 单调收敛定理，积分的线性性，可积函数，Lebesgue 积分与 Riemann 积分}
+\label{lec:integration}
+
+有了测度和可测函数，我们现在来定义积分。在概率论中，积分就是期望：随机变量 $X$ 的期望 $EX$ 将被定义为 $\int X\dd P$。初等概率论中，期望有两套公式，离散型的 $\sum_xxP(X=x)$ 和有密度的 $\int xf(x)\dd x$。第~\ref{lec:distributions} 讲的 Cantor 分布既没有跳跃也没有密度，这两套公式对它都不适用。更何况 $\Omega$ 是一个抽象的集合，它上面没有“区间”，也就谈不上 Riemann 和。所以我们需要一个对任意测度空间都有意义的积分，并且它要把求和与 Riemann 积分都包括进来。
+
+我们先回忆 Riemann 积分的长处与短处。按照定义，Riemann 积分是 Riemann 和 $\sum_kf(\xi_k)(x_k-x_{k-1})$ 的极限。用这个定义证明线性性是很简单的：$f+g$ 的 Riemann 和就是 $f$ 的 Riemann 和加上 $g$ 的 Riemann 和，取极限即可。可是涉及极限交换的性质就困难得多。比如说，设 $q_1,q_2,\dots$ 是 $[0,1]$ 中有理数的一个排列，令
+\[
+f_n=\one_{\{q_1,\dots,q_n\}}.
+\]
+每个 $f_n$ 只有有限个间断点，是 Riemann 可积的，积分为 $0$；$f_n$ 单调递增地收敛到 Dirichlet 函数 $\one_{\Q\cap[0,1]}$，而后者根本不是 Riemann 可积的。所以对 Riemann 积分，即使是单调递增的非负函数列，极限与积分也不能交换。数学分析中的办法是加上“一致收敛”的条件，而在概率论中，我们遇到的极限几乎都不是一致的。
+
+Lebesgue 积分的做法正好反过来。它的定义方式使得线性性不再一目了然，但是极限与积分的交换非常方便。这一讲的核心结论是 \term{Levi 单调收敛定理}：若 $0\leqslant f_n\uparrow f$，则 $\int f_n\dd\mu\uparrow\int f\dd\mu$。我们会看到，只要有了这个定理，线性性就可以通过简单函数逼近几乎自动地得到。
+
+定义分四步完成：简单函数，有界函数，非负函数，一般的函数。每一步都证明同样的几条性质。这种“四步法”以后在证明关于积分的等式时还会反复使用。
+
+\emph{本讲约定：}$(\Omega,\cF,\mu)$ 是测度空间，并且 $\mu$ 是 $\sigma$-有限的（概率测度当然是有限的，从而是 $\sigma$-有限的）。所说的函数都是 $\cF$-可测的。在 $[0,\infty]$ 中约定 $0\cdot\infty=0$。
+
+\topic{简单函数的积分}
+
+回忆第~\ref{lec:random-variables} 讲的定义~\ref{def:random-variables:simple}：简单函数是形如 $\sum_{i=1}^nc_i\one_{A_i}$（$A_i\in\cF$）的函数，也就是只取有限个值的可测函数。若简单函数 $\varphi$ 取的不同的值是 $y_1,\dots,y_m$，则
+\[
+\varphi=\sum_{j=1}^my_j\one_{\{\varphi=y_j\}},
+\]
+其中 $\{\varphi=y_j\}\in\cF$ 两两不交，并为 $\Omega$。这称为 $\varphi$ 的\term{标准表示}（canonical representation）。
+
+\begin{definition}[简单函数的积分]\label{def:integration:simple}
+设 $\varphi$ 是简单函数，并且 $\mu(\{\varphi\neq0\})<\infty$。定义
+\[
+\int\varphi\dd\mu=\sum_{y\neq0}y\,\mu(\{\varphi=y\}),
+\]
+其中 $y$ 取遍 $\varphi$ 取到的一切非零值（只有有限个）。
+\end{definition}
+
+由于 $\{\varphi=y\}\subseteq\{\varphi\neq0\}$（$y\neq0$），和式中每一项都是有限的实数。我们要求 $\mu(\{\varphi\neq0\})<\infty$，是为了避免出现 $\infty-\infty$：比如在 $(\R,\cR,\lambda)$ 上，$\one_{[0,\infty)}-\one_{(-\infty,0)}$ 的积分就没有合理的定义。
+
+在计算中，简单函数常常不是以标准表示给出的，比如 $\varphi=2\cdot\one_{[0,1]}+2\cdot\one_{(1,3]}$，同一个值 $2$ 分成了两块。下面的引理说，只要各块两两不交，按哪种表示计算都一样。
+
+\begin{lemma}\label{lem:integration:representation}
+设 $\varphi=\sum_{i=1}^na_i\one_{A_i}$，其中 $a_i\in\R$，$A_i\in\cF$ 两两不交，并且 $a_i\neq0$ 时 $\mu(A_i)<\infty$。则 $\mu(\{\varphi\neq0\})<\infty$，且
+\[
+\int\varphi\dd\mu=\sum_{i=1}^na_i\mu(A_i).
+\]
+\end{lemma}
+\begin{proof}
+由于 $A_i$ 两两不交，每个 $\omega$ 至多属于一个 $A_i$，所以 $\omega\in A_i$ 时 $\varphi(\omega)=a_i$，$\omega\notin\bigcup_iA_i$ 时 $\varphi(\omega)=0$。于是对 $\varphi$ 取到的每个非零值 $y$，
+\[
+\{\varphi=y\}=\bigcup_{i:\,a_i=y}A_i\quad(\text{不交并}).
+\]
+事实上，若 $\omega\in A_i$ 且 $a_i=y$，则 $\varphi(\omega)=y$；反之若 $\varphi(\omega)=y\neq0$，则 $\omega$ 属于某个 $A_i$，并且 $a_i=\varphi(\omega)=y$。特别地 $\{\varphi\neq0\}=\bigcup_{i:a_i\neq0}A_i$ 的测度有限。由有限可加性，
+\[
+\int\varphi\dd\mu=\sum_{y\neq0}y\sum_{i:\,a_i=y}\mu(A_i)=\sum_{i:\,a_i\neq0}a_i\mu(A_i)=\sum_{i=1}^na_i\mu(A_i),
+\]
+最后一步是因为 $a_i=0$ 的项等于 $0\cdot\mu(A_i)=0$（即使 $\mu(A_i)=\infty$）。
+\end{proof}
+
+记 $\cE_0$ 为满足 $\mu(\{\varphi\neq0\})<\infty$ 的简单函数的全体。若 $\varphi,\psi\in\cE_0$，$a\in\R$，则 $a\varphi$，$\varphi+\psi$，$\abs\varphi$ 都属于 $\cE_0$，因为 $\{\varphi+\psi\neq0\}\subseteq\{\varphi\neq0\}\cup\{\psi\neq0\}$。
+
+\begin{proposition}\label{prop:integration:simple}
+设 $\varphi,\psi\in\cE_0$。则
+\begin{enumerate}
+\item 若 $\varphi\geqslant0$ a.e.，则 $\int\varphi\dd\mu\geqslant0$；
+\item 对任意 $a\in\R$，$\int a\varphi\dd\mu=a\int\varphi\dd\mu$；
+\item $\int(\varphi+\psi)\dd\mu=\int\varphi\dd\mu+\int\psi\dd\mu$。
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+(1) 若 $y<0$ 是 $\varphi$ 取到的值，则 $\{\varphi=y\}\subseteq\{\varphi<0\}$ 是零测集，这一项为 $0$。其余各项 $y\mu(\{\varphi=y\})$ 都 $\geqslant0$。
+
+(2) $a=0$ 时两边都是 $0$。$a\neq0$ 时，$a\varphi$ 取的非零值恰好是 $ay$（$y$ 取遍 $\varphi$ 的非零值），且 $\{a\varphi=ay\}=\{\varphi=y\}$，所以 $\int a\varphi\dd\mu=\sum_{y\neq0}ay\,\mu(\{\varphi=y\})=a\int\varphi\dd\mu$。
+
+(3) 设 $\varphi=\sum_{i=1}^ma_i\one_{A_i}$，$\psi=\sum_{j=1}^nb_j\one_{B_j}$ 是只保留非零值的标准表示，即 $a_i$ 是 $\varphi$ 的全部非零值，$A_i=\{\varphi=a_i\}$；$b_j$，$B_j$ 同样。为了让两组集合“覆盖同一块地方”，令
+\[
+A_0=\bigcup_jB_j\setminus\bigcup_iA_i,\qquad B_0=\bigcup_iA_i\setminus\bigcup_jB_j,\qquad a_0=b_0=0.
+\]
+则 $\varphi=\sum_{i=0}^ma_i\one_{A_i}$，$\psi=\sum_{j=0}^nb_j\one_{B_j}$，$A_0,\dots,A_m$ 两两不交，$B_0,\dots,B_n$ 两两不交，并且二者的并都等于 $U=\bigcup_iA_i\cup\bigcup_jB_j$，$\mu(U)<\infty$。于是 $A_i=\bigcup_{j=0}^n(A_i\cap B_j)$，$B_j=\bigcup_{i=0}^m(A_i\cap B_j)$，都是不交并，并且
+\[
+\varphi+\psi=\sum_{i=0}^m\sum_{j=0}^n(a_i+b_j)\one_{A_i\cap B_j},
+\]
+其中 $A_i\cap B_j$ 两两不交，测度有限。由引理~\ref{lem:integration:representation} 与有限可加性，
+\[
+\begin{aligned}
+\int(\varphi+\psi)\dd\mu&=\sum_{i,j}(a_i+b_j)\mu(A_i\cap B_j)=\sum_ia_i\sum_j\mu(A_i\cap B_j)+\sum_jb_j\sum_i\mu(A_i\cap B_j)\\
+&=\sum_ia_i\mu(A_i)+\sum_jb_j\mu(B_j),
+\end{aligned}
+\]
+这就是 $\int\varphi\dd\mu+\int\psi\dd\mu$。
+\end{proof}
+
+下面三条性质只用到 (1)(2)(3)，以后每推广一次积分，只要验证了 (1)(2)(3)，它们就自动成立。为了不重复同样的论证，我们把它写成一个一般的引理。
+
+\begin{lemma}\label{lem:integration:consequences}
+设 $\cK$ 是一族实值函数，对加法、数乘和取绝对值封闭，$I:\cK\to\R$ 满足：(1) $f\geqslant0$ a.e. 蕴含 $I(f)\geqslant0$；(2) $I(af)=aI(f)$；(3) $I(f+g)=I(f)+I(g)$。则对 $f,g\in\cK$：
+\begin{enumerate}
+\setcounter{enumi}{3}
+\item 若 $f\leqslant g$ a.e.，则 $I(f)\leqslant I(g)$；
+\item 若 $f=g$ a.e.，则 $I(f)=I(g)$；
+\item $\abs{I(f)}\leqslant I(\abs f)$。
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(4) $g-f=g+(-1)f\in\cK$ 且 $g-f\geqslant0$ a.e.，由 (3)(2)(1)，$I(g)=I(f)+I(g-f)\geqslant I(f)$。(5) $f=g$ a.e. 蕴含 $f\leqslant g$ a.e. 与 $g\leqslant f$ a.e.，用两次 (4)。(6) 由 $f\leqslant\abs f$ 与 (4) 得 $I(f)\leqslant I(\abs f)$；由 $-f\leqslant\abs f$，(4) 与 (2) 得 $-I(f)\leqslant I(\abs f)$。
+\end{proof}
+
+特别地，$\cE_0$ 上的积分满足 (4)(5)(6)。
+
+\topic{有界函数的积分}
+
+第二步，设 $E\in\cF$，$\mu(E)<\infty$，$f$ 是有界可测函数，并且在 $E^c$ 上 $f=0$。若 $\varphi,\psi\in\cE_0$ 满足 $\varphi\leqslant f\leqslant\psi$，我们当然希望 $\int\varphi\dd\mu\leqslant\int f\dd\mu\leqslant\int\psi\dd\mu$。这启发我们用下面的方式定义 $\int f\dd\mu$。以下在本节中，$\varphi,\psi$ 总是指在 $E^c$ 上为零的简单函数（它们自动属于 $\cE_0$）。
+
+\begin{theorem}\label{thm:integration:bounded}
+在上述假设下，
+\[
+\sup_{\varphi\leqslant f}\int\varphi\dd\mu=\inf_{\psi\geqslant f}\int\psi\dd\mu .
+\]
+这个公共值定义为 $\int f\dd\mu$。
+\end{theorem}
+\begin{proof}
+设 $\abs f\leqslant M$。$\varphi=-M\one_E$ 与 $\psi=M\one_E$ 分别满足 $\varphi\leqslant f\leqslant\psi$，所以上确界与下确界都是对非空集合取的。若 $\varphi\leqslant f\leqslant\psi$，则 $\varphi\leqslant\psi$，由引理~\ref{lem:integration:consequences}(4)，$\int\varphi\dd\mu\leqslant\int\psi\dd\mu$。先对 $\varphi$ 取上确界、再对 $\psi$ 取下确界，得到“$\leqslant$”。
+
+反过来，固定正整数 $n$，把值域 $[-M,M]$ 等分成 $2n$ 段，令
+\[
+E_k=\Bigl\{\omega\in E:\ \frac{(k-1)M}n<f(\omega)\leqslant\frac{kM}n\Bigr\},\qquad -n\leqslant k\leqslant n,
+\]
+其中 $k=-n$ 时的集合就是 $\{\omega\in E: f(\omega)=-M\}$。由于 $f$ 可测，$E_k\in\cF$；$E_{-n},\dots,E_n$ 两两不交，并且它们的并是 $E$，因为 $[-M,M]$ 是 $\{-M\}$ 与 $2n$ 个区间 $((k-1)M/n,kM/n]$（$-n<k\leqslant n$）的不交并。令
+\[
+\psi_n=\sum_{k=-n}^n\frac{kM}n\one_{E_k},\qquad \varphi_n=\sum_{k=-n}^n\frac{(k-1)M}n\one_{E_k}.
+\]
+则 $\varphi_n\leqslant f\leqslant\psi_n$，并且 $\psi_n-\varphi_n=\frac Mn\one_E$。由命题~\ref{prop:integration:simple}，
+\[
+\sup_{\varphi\leqslant f}\int\varphi\dd\mu\geqslant\int\varphi_n\dd\mu=\int\psi_n\dd\mu-\frac Mn\mu(E)\geqslant\inf_{\psi\geqslant f}\int\psi\dd\mu-\frac Mn\mu(E).
+\]
+由于 $\mu(E)<\infty$，令 $n\to\infty$ 即得“$\geqslant$”。
+\end{proof}
+
+\begin{remark}[与 Darboux 和比较]
+这个定义在形式上和 Riemann 积分的 Darboux 上、下和完全一样：从下面和上面用“简单”的函数夹住 $f$，看上、下两个极限是否相等。区别在于什么样的函数算“简单”。在 Riemann 积分中，夹住 $f$ 的是阶梯函数，它们只能在区间上取常数，这相当于分割\emph{定义域}。对 Dirichlet 函数 $\one_{\Q\cap[0,1]}$，任何一个小区间里都既有有理数又有无理数，阶梯函数从上面夹住它只能取 $1$，从下面夹住它只能取 $0$，上、下和永远相差 $1$。而在这里，$\varphi,\psi$ 可以在任意可测集上取常数，于是我们可以分割\emph{值域}：定理的证明中，$\varphi_n$ 与 $\psi_n$ 的差恒为 $M/n$，与 $f$ 多么不连续毫无关系。这样做的代价是，集合 $E_k=\{(k-1)M/n<f\leqslant kM/n\}$ 必须有测度，这正是我们要求 $f$ 可测的原因。所以在 Lebesgue 的理论中，有界可测函数在测度有限的集合上总是可积的。
+\end{remark}
+
+我们指出这一步定义的两个一致性。第一，若 $f$ 本身属于 $\cE_0$ 且在 $E^c$ 上为零，取 $\varphi=\psi=f$，可见新的定义与定义~\ref{def:integration:simple} 一致。第二，定义与 $E$ 的选取无关：设 $f$ 在 $E^c$ 与 $E'^c$ 上都为零，$\mu(E),\mu(E')<\infty$，则 $f$ 在 $(E\cap E')^c$ 上也为零。若 $\varphi\leqslant f$ 在 $E^c$ 上为零，则在 $E\setminus E'$ 上 $\varphi\leqslant f=0$，所以 $\varphi\one_{E\cap E'}\geqslant\varphi$，并且 $\varphi\one_{E\cap E'}\leqslant f$（在 $E\cap E'$ 上它等于 $\varphi$，在别处它等于 $0=f$）。由引理~\ref{lem:integration:consequences}(4)，用 $E$ 算出的上确界不超过用 $E\cap E'$ 算出的；反过来的不等式是显然的，因为在 $(E\cap E')^c$ 上为零的 $\varphi$ 也在 $E^c$ 上为零。所以用 $E$ 与用 $E\cap E'$ 定义的积分相同，同理用 $E'$ 与用 $E\cap E'$ 定义的也相同。
+
+\begin{proposition}\label{prop:integration:bounded}
+设 $\mu(E)<\infty$，$f,g$ 是有界可测函数，在 $E^c$ 上为零。则
+\begin{enumerate}
+\item 若 $f\geqslant0$ a.e.，则 $\int f\dd\mu\geqslant0$；
+\item 对任意 $a\in\R$，$\int af\dd\mu=a\int f\dd\mu$；
+\item $\int(f+g)\dd\mu=\int f\dd\mu+\int g\dd\mu$；
+\end{enumerate}
+从而由引理~\ref{lem:integration:consequences}，(4)(5)(6) 也成立。
+\end{proposition}
+\begin{proof}
+(1) 设 $N=\{f<0\}$，$\mu(N)=0$。简单函数 $\varphi=-M\one_{E\cap N}$（$M$ 是 $\abs f$ 的上界）满足 $\varphi\leqslant f$，并且 $\int\varphi\dd\mu=-M\mu(E\cap N)=0$。所以 $\int f\dd\mu\geqslant0$。
+
+(2) $a=0$ 显然。设 $a>0$。$a\varphi\leqslant af$ 当且仅当 $\varphi\leqslant f$，而 $\varphi\mapsto a\varphi$ 是在 $E^c$ 上为零的简单函数全体到自身的一一对应，所以
+\[
+\int af\dd\mu=\sup_{\varphi\leqslant f}\int a\varphi\dd\mu=a\sup_{\varphi\leqslant f}\int\varphi\dd\mu=a\int f\dd\mu .
+\]
+设 $a<0$。此时 $a\psi\leqslant af$ 当且仅当 $\psi\geqslant f$，所以
+\[
+\int af\dd\mu=\sup_{\psi\geqslant f}\int a\psi\dd\mu=a\inf_{\psi\geqslant f}\int\psi\dd\mu=a\int f\dd\mu,
+\]
+这里用了 $a<0$ 时 $\sup(a\,\cdot)=a\inf(\cdot)$。
+
+(3) $f+g$ 有界，在 $E^c$ 上为零。若 $\psi_1\geqslant f$，$\psi_2\geqslant g$，则 $\psi_1+\psi_2\geqslant f+g$，由定理~\ref{thm:integration:bounded} 中的下确界表示与简单函数积分的线性性，
+\[
+\int(f+g)\dd\mu\leqslant\int(\psi_1+\psi_2)\dd\mu=\int\psi_1\dd\mu+\int\psi_2\dd\mu .
+\]
+对 $\psi_1$、$\psi_2$ 分别取下确界得 $\int(f+g)\dd\mu\leqslant\int f\dd\mu+\int g\dd\mu$。把这个不等式用于 $-f,-g$，再用 (2)，得 $-\int(f+g)\dd\mu\leqslant-\int f\dd\mu-\int g\dd\mu$，即反向不等式。
+\end{proof}
+
+对 $A\in\cF$，记 $\int_Af\dd\mu=\int f\one_A\dd\mu$，称为 $f$ 在 $A$ 上的积分。
+
+\topic{非负函数的积分}
+
+第三步，设 $f:\Omega\to[0,\infty]$ 可测。
+
+\begin{definition}[非负函数的积分]\label{def:integration:nonnegative}
+\[
+\int f\dd\mu=\sup\Bigl\{\int h\dd\mu:\ 0\leqslant h\leqslant f,\ h\ \text{有界可测},\ \mu(\{h>0\})<\infty\Bigr\}\in[0,\infty].
+\]
+\end{definition}
+
+这里的每个 $h$ 在 $\{h>0\}^c$ 上为零，而 $\{h>0\}$ 的测度有限，所以 $\int h\dd\mu$ 已经由第二步定义好了。这个定义的好处是它显然有意义，不需要再证明什么“上确界等于下确界”。我们仍然先说明它与第二步一致：若 $f\geqslant0$ 有界，并且在测度有限的集合 $E$ 之外为零，那么 $f$ 本身就是定义中的一个 $h$，所以新的积分不小于旧的；另一方面，定义中的每个 $h$ 满足 $0\leqslant h\leqslant f$，都在 $E^c$ 上为零，由命题~\ref{prop:integration:bounded}(4)，$\int h\dd\mu$ 不超过旧的积分。所以二者相等。
+
+由定义立即可以得到下面几条性质。
+
+\begin{proposition}\label{prop:integration:nonnegative-basic}
+设 $f,g:\Omega\to[0,\infty]$ 可测。
+\begin{enumerate}
+\item 若 $g\leqslant f$，则 $\int g\dd\mu\leqslant\int f\dd\mu$。
+\item 对 $0\leqslant a<\infty$，$\int af\dd\mu=a\int f\dd\mu$。
+\item 若 $g\leqslant f$ a.e.，则 $\int g\dd\mu\leqslant\int f\dd\mu$；若 $f=g$ a.e.，则 $\int f\dd\mu=\int g\dd\mu$。
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+(1) 定义 $\int g\dd\mu$ 的那一族 $h$ 包含于定义 $\int f\dd\mu$ 的那一族之中，前者的上确界不超过后者。
+
+(2) $a=0$ 时两边都是 $0$（$0\cdot f$ 恒为零，而零函数的积分为 $0$）。$a>0$ 时，$h\mapsto ah$ 是定义 $\int f$ 的那一族到定义 $\int af$ 的那一族的一一对应，且 $\int ah\dd\mu=a\int h\dd\mu$（命题~\ref{prop:integration:bounded}(2)）。
+
+(3) 设 $N$ 是零测集，在 $N^c$ 上 $g\leqslant f$。任取定义 $\int g$ 的一个 $h$，令 $h'=h\one_{N^c}$。在 $N^c$ 上 $h'=h\leqslant g\leqslant f$，在 $N$ 上 $h'=0\leqslant f$，所以 $h'$ 属于定义 $\int f$ 的那一族；又 $h'=h$ a.e.，由命题~\ref{prop:integration:bounded}(5)，$\int h\dd\mu=\int h'\dd\mu\leqslant\int f\dd\mu$。对 $h$ 取上确界得第一个结论。第二个结论由第一个结论用两次得到。
+\end{proof}
+
+下面的引理用到了 $\mu$ 的 $\sigma$-有限性，它给出了计算积分的一个办法：把 $f$ 在高度 $n$ 处截断、在测度有限的集合 $E_n$ 之外砍掉，得到的是第二步中的有界函数。
+
+\begin{lemma}\label{lem:integration:truncation}
+设 $E_n\in\cF$，$E_n\uparrow\Omega$，$\mu(E_n)<\infty$（由 $\sigma$-有限性，这样的 $E_n$ 存在）。记 $a\wedge b=\min\{a,b\}$。则对可测的 $f:\Omega\to[0,\infty]$，
+\[
+\int_{E_n}(f\wedge n)\dd\mu\ \uparrow\ \int f\dd\mu\qquad(n\to\infty).
+\]
+\end{lemma}
+\begin{proof}
+$h_n=(f\wedge n)\one_{E_n}$ 有界，在 $E_n^c$ 上为零，并且 $h_n\leqslant h_{n+1}$，由命题~\ref{prop:integration:bounded}(4)，左边关于 $n$ 单调不减。$h_n$ 是定义~\ref{def:integration:nonnegative} 中的一个 $h$，所以左边每一项不超过 $\int f\dd\mu$。
+
+为了证明极限等于 $\int f\dd\mu$，任取定义中的一个 $h$：$0\leqslant h\leqslant f$，$h\leqslant M$，$\mu(\{h>0\})<\infty$。当 $n\geqslant M$ 时，$h\leqslant f\wedge n$，所以 $h\one_{E_n}\leqslant h_n$。由命题~\ref{prop:integration:bounded}(3)(4)，
+\[
+\int h_n\dd\mu\geqslant\int h\one_{E_n}\dd\mu=\int h\dd\mu-\int h\one_{E_n^c}\dd\mu .
+\]
+而 $0\leqslant h\one_{E_n^c}\leqslant M\one_{E_n^c\cap\{h>0\}}$，所以 $0\leqslant\int h\one_{E_n^c}\dd\mu\leqslant M\mu(E_n^c\cap\{h>0\})$。由于 $E_n^c\cap\{h>0\}\downarrow\varnothing$，且 $\mu(\{h>0\})<\infty$，由测度的从上连续，$\mu(E_n^c\cap\{h>0\})\to0$。于是 $\lim_n\int h_n\dd\mu\geqslant\int h\dd\mu$。对 $h$ 取上确界即得。
+\end{proof}
+
+作为第一个应用，我们算出非负简单函数的积分，这里不再要求 $\{\varphi>0\}$ 的测度有限。
+
+\begin{corollary}\label{cor:integration:nonnegative-simple}
+设 $\varphi\geqslant0$ 是简单函数，取的不同的值为 $y_1,\dots,y_m$。则 $\int\varphi\dd\mu=\sum_{j=1}^my_j\mu(\{\varphi=y_j\})$（约定 $0\cdot\infty=0$）。特别地，$\int\one_A\dd\mu=\mu(A)$ 对一切 $A\in\cF$ 成立。
+\end{corollary}
+\begin{proof}
+当 $n\geqslant\max_jy_j$ 时 $\varphi\wedge n=\varphi$，于是 $(\varphi\wedge n)\one_{E_n}=\sum_jy_j\one_{\{\varphi=y_j\}\cap E_n}$ 属于 $\cE_0$，由引理~\ref{lem:integration:representation}，它的积分是 $\sum_jy_j\mu(\{\varphi=y_j\}\cap E_n)$。由测度的从下连续，$\mu(\{\varphi=y_j\}\cap E_n)\uparrow\mu(\{\varphi=y_j\})$。再由引理~\ref{lem:integration:truncation} 即得。
+\end{proof}
+
+\topic{Levi 单调收敛定理}
+
+现在证明本讲的核心定理。
+
+\begin{theorem}[Levi 单调收敛定理]\label{thm:integration:mct}
+设 $f_n:\Omega\to[0,\infty]$ 可测，$f_1\leqslant f_2\leqslant\cdots$，$f_n\uparrow f$（逐点）。则
+\[
+\int f_n\dd\mu\ \uparrow\ \int f\dd\mu .
+\]
+\end{theorem}
+\begin{proof}
+由定理~\ref{thm:random-variables:limits}，$f=\sup_nf_n$ 是可测的。由命题~\ref{prop:integration:nonnegative-basic}(1)，$\int f_n\dd\mu$ 单调不减，且每一项不超过 $\int f\dd\mu$。记 $L=\lim_n\int f_n\dd\mu$，则 $L\leqslant\int f\dd\mu$。
+
+为了证明 $L\geqslant\int f\dd\mu$，只需对定义~\ref{def:integration:nonnegative} 中的每个 $h$ 证明 $L\geqslant\int h\dd\mu$。设 $0\leqslant h\leqslant f$，$h\leqslant M$，$S=\{h>0\}$，$\mu(S)<\infty$。固定 $c\in(0,1)$，令
+\[
+A_n=\{f_n\geqslant ch\}.
+\]
+$A_n\in\cF$：它的补集 $\{f_n<ch\}=\bigcup_{q\in\Q}(\{f_n<q\}\cap\{q<ch\})$ 是可数个事件的并。由于 $f_n$ 单调不减，$A_n$ 单调递增。我们断言 $A_n\uparrow\Omega$：若 $h(\omega)=0$，则 $\omega\in A_1$；若 $h(\omega)>0$，则 $f(\omega)\geqslant h(\omega)>ch(\omega)$，而 $f_n(\omega)\uparrow f(\omega)$，所以 $n$ 充分大时 $f_n(\omega)>ch(\omega)$。
+
+函数 $ch\one_{A_n}$ 有界，在 $S^c$ 上为零，并且 $ch\one_{A_n}\leqslant f_n$（在 $A_n$ 上由 $A_n$ 的定义，在 $A_n^c$ 上左边为零）。所以它是定义 $\int f_n\dd\mu$ 的一个 $h$，从而由命题~\ref{prop:integration:bounded}(2)(3)，
+\[
+\int f_n\dd\mu\geqslant\int ch\one_{A_n}\dd\mu=c\Bigl(\int h\dd\mu-\int h\one_{A_n^c}\dd\mu\Bigr)\geqslant c\Bigl(\int h\dd\mu-M\mu(S\cap A_n^c)\Bigr).
+\]
+由于 $S\cap A_n^c\downarrow\varnothing$，$\mu(S)<\infty$，由从上连续，$\mu(S\cap A_n^c)\to0$。令 $n\to\infty$ 得 $L\geqslant c\int h\dd\mu$。再令 $c\uparrow1$ 得 $L\geqslant\int h\dd\mu$。
+\end{proof}
+
+\begin{remark}
+这是一个值得学习的证明，我们把它的思路说清楚。要证明的是 $f_n$ 的积分最终不会比 $f$ 的积分小多少。$f$ 的积分是由 $f$ 下方的有界函数 $h$ 逼近的，所以只要说明 $f_n$ 最终能“托住” $h$ 的几乎全部。$f_n$ 未必处处不小于 $h$，但在集合 $A_n$ 上它不小于 $ch$，而 $A_n$ 逐渐长满整个空间。于是差别只在 $A_n^c$ 上，它的测度趋于零。取 $c<1$ 而不是 $c=1$，是因为 $f_n$ 可能永远严格小于 $f=h$，这时 $\{f_n\geqslant h\}$ 可能是空集。
+
+证明中关键的一步是 $\mu(S\cap A_n^c)\to0$，它用到的是测度的从上连续，也就是可数可加性。这正是 Riemann 积分所缺少的：在本讲开头的例子中，$f_n=\one_{\{q_1,\dots,q_n\}}$ 的极限是有理数集的示性函数，而“$[0,1]$ 中有理数集的长度是 $0$”这个结论，需要把可数个单点的长度加起来。Jordan 测度只有有限可加性，做不到这一点。
+\end{remark}
+
+\topic{积分的线性性}
+
+从定义~\ref{def:integration:nonnegative} 出发，线性性的一半是容易的：若 $h$ 是定义 $\int f$ 的一个函数，$k$ 是定义 $\int g$ 的一个函数，则 $h+k$ 有界，$\{h+k>0\}\subseteq\{h>0\}\cup\{k>0\}$ 的测度有限，并且 $h+k\leqslant f+g$，所以
+\[
+\int(f+g)\dd\mu\geqslant\int(h+k)\dd\mu=\int h\dd\mu+\int k\dd\mu .
+\]
+对 $h,k$ 取上确界得 $\int(f+g)\dd\mu\geqslant\int f\dd\mu+\int g\dd\mu$。反向的不等式就不容易了：给定 $f+g$ 下方的一个 $h$，我们需要把它拆成 $f$ 下方的一块与 $g$ 下方的一块，这并不方便。这时单调收敛定理就派上了用场：用简单函数从下面逼近 $f$ 和 $g$，对简单函数线性性已经成立，再取极限。
+
+\begin{theorem}[非负函数积分的线性性]\label{thm:integration:linear-nonnegative}
+设 $f,g:\Omega\to[0,\infty]$ 可测，$a,b\in[0,\infty)$。则
+\[
+\int(af+bg)\dd\mu=a\int f\dd\mu+b\int g\dd\mu .
+\]
+\end{theorem}
+\begin{proof}
+由命题~\ref{prop:integration:nonnegative-basic}(2)，只需证明 $\int(f+g)\dd\mu=\int f\dd\mu+\int g\dd\mu$。
+
+\emph{第一步：非负简单函数。}设 $\varphi,\psi\geqslant0$ 是简单函数（不要求 $\{\varphi>0\}$ 的测度有限）。取 $E_n\uparrow\Omega$，$\mu(E_n)<\infty$。则 $\varphi\one_{E_n}$，$\psi\one_{E_n}$ 属于 $\cE_0$，由命题~\ref{prop:integration:simple}(3)，
+\[
+\int(\varphi+\psi)\one_{E_n}\dd\mu=\int\varphi\one_{E_n}\dd\mu+\int\psi\one_{E_n}\dd\mu .
+\]
+（由前两步的一致性，这里的积分按哪一步的定义理解都一样。）当 $n\to\infty$ 时，$\varphi\one_{E_n}\uparrow\varphi$，$\psi\one_{E_n}\uparrow\psi$，$(\varphi+\psi)\one_{E_n}\uparrow\varphi+\psi$，由单调收敛定理，三个积分分别收敛到 $\int\varphi$、$\int\psi$、$\int(\varphi+\psi)$。所以 $\int(\varphi+\psi)\dd\mu=\int\varphi\dd\mu+\int\psi\dd\mu$。
+
+\emph{第二步：一般情形。}由定理~\ref{thm:random-variables:simple-approx}，存在非负简单函数 $\varphi_n\uparrow f$，$\psi_n\uparrow g$。于是 $\varphi_n+\psi_n$ 是非负简单函数，并且 $\varphi_n+\psi_n\uparrow f+g$（在 $[0,\infty]$ 中，单调数列的和的极限等于极限的和）。由单调收敛定理与第一步，
+\[
+\int(f+g)\dd\mu=\lim_n\int(\varphi_n+\psi_n)\dd\mu=\lim_n\Bigl(\int\varphi_n\dd\mu+\int\psi_n\dd\mu\Bigr)=\int f\dd\mu+\int g\dd\mu .
+\]
+\end{proof}
+
+\begin{remark}
+我们看到，单调收敛定理是 Lebesgue 积分理论的核心：积分的定义本身只提供了“从下面逼近”这一个信息，而单调收敛定理说，\emph{任何}一列从下面单调逼近 $f$ 的函数都给出同一个积分。有了它，线性性、逐项积分以及下面的一系列性质都顺理成章。上面的证明也展示了今后证明积分等式的标准套路：先对示性函数验证，由线性性推到简单函数，由单调收敛定理推到非负可测函数，最后通过 $f=f^+-f^-$ 推到一般的可积函数。
+\end{remark}
+
+下面是线性性与单调收敛定理的几个直接推论。
+
+\begin{corollary}[逐项积分]\label{cor:integration:series}
+设 $f_n:\Omega\to[0,\infty]$ 可测。则 $\int\sum_{n=1}^\infty f_n\dd\mu=\sum_{n=1}^\infty\int f_n\dd\mu$。
+\end{corollary}
+\begin{proof}
+部分和 $g_N=\sum_{n\leqslant N}f_n$ 非负可测，单调递增地收敛到 $\sum_nf_n$。由定理~\ref{thm:integration:linear-nonnegative}，$\int g_N\dd\mu=\sum_{n\leqslant N}\int f_n\dd\mu$。由单调收敛定理，令 $N\to\infty$ 即得。
+\end{proof}
+
+请同学们注意，这里对非负函数不需要任何收敛性的假设，这与数学分析中逐项积分需要一致收敛形成鲜明的对比。
+
+\begin{corollary}[不定积分是测度]\label{cor:integration:indefinite}
+设 $f:\Omega\to[0,\infty]$ 可测。则 $\nu(A)=\int_Af\dd\mu$（$A\in\cF$）是 $(\Omega,\cF)$ 上的测度。
+\end{corollary}
+\begin{proof}
+$\nu(\varnothing)=\int0\dd\mu=0$。设 $A_n\in\cF$ 两两不交，$A=\bigcup_nA_n$。则 $f\one_A=\sum_nf\one_{A_n}$（每一点至多有一项非零），由推论~\ref{cor:integration:series}，$\nu(A)=\sum_n\int f\one_{A_n}\dd\mu=\sum_n\nu(A_n)$。
+\end{proof}
+
+\begin{proposition}\label{prop:integration:markov}
+设 $f:\Omega\to[0,\infty]$ 可测。
+\begin{enumerate}
+\item （Markov 不等式）对 $c>0$，$\mu(\{f\geqslant c\})\leqslant\frac1c\int f\dd\mu$。
+\item $\int f\dd\mu=0$ 当且仅当 $f=0$ a.e.
+\item 若 $\int f\dd\mu<\infty$，则 $f<\infty$ a.e.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+(1) $c\one_{\{f\geqslant c\}}\leqslant f$，由命题~\ref{prop:integration:nonnegative-basic}(1)(2) 与推论~\ref{cor:integration:nonnegative-simple}，$c\mu(\{f\geqslant c\})\leqslant\int f\dd\mu$。
+
+(2) 若 $f=0$ a.e.，由命题~\ref{prop:integration:nonnegative-basic}(3)，$\int f\dd\mu=\int0\dd\mu=0$。反之，设 $\int f\dd\mu=0$。由 (1)，$\mu(\{f\geqslant1/n\})\leqslant n\cdot0=0$。由于 $f\geqslant0$，$\{f\neq0\}=\{f>0\}=\bigcup_n\{f\geqslant1/n\}$ 是可数个零测集的并，为零测集。
+
+(3) 对一切 $c>0$，$\mu(\{f=\infty\})\leqslant\mu(\{f\geqslant c\})\leqslant\frac1c\int f\dd\mu$，令 $c\to\infty$。
+\end{proof}
+
+\begin{example}[计数测度与级数]
+取 $\Omega=\N$，$\cF=2^\N$，$\mu$ 为计数测度（它是 $\sigma$-有限的）。任意 $f:\N\to[0,\infty]$ 都可以写成 $f=\sum_if(i)\one_{\{i\}}$，由逐项积分与 $\int\one_{\{i\}}\dd\mu=1$，
+\[
+\int f\dd\mu=\sum_{i=1}^\infty f(i).
+\]
+所以非负项级数是积分的特例。对这个测度，单调收敛定理说的是：若 $0\leqslant a_{n,i}\uparrow a_i$（$n\to\infty$），则 $\sum_ia_{n,i}\uparrow\sum_ia_i$。逐项积分则说的是非负二重级数可以交换求和次序。这两个结论在数学分析中需要单独证明，这里成了一般定理的特例。
+\end{example}
+
+\topic{可积函数}
+
+第四步，考虑一般的可测函数 $f:\Omega\to\R$。记 $f^+=\max\{f,0\}$，$f^-=\max\{-f,0\}$，则
+\[
+f=f^+-f^-,\qquad\abs f=f^++f^-,
+\]
+并且 $f^+,f^-$ 是非负可测函数（推论~\ref{cor:random-variables:arithmetic}）。
+
+\begin{definition}[可积函数]\label{def:integration:integrable}
+若 $\int\abs f\dd\mu<\infty$，称 $f$ \term{可积}（integrable），定义
+\[
+\int f\dd\mu=\int f^+\dd\mu-\int f^-\dd\mu .
+\]
+\end{definition}
+
+由于 $f^\pm\leqslant\abs f$，两个积分都有限，右边有意义。当 $f$ 非负时，$f^-=0$，新的定义与第三步一致。我们顺便约定：若 $\int f^+\dd\mu$ 与 $\int f^-\dd\mu$ 中至少有一个有限，也用同一个公式定义 $\int f\dd\mu\in[-\infty,\infty]$。以后讨论期望时会用到这个约定。取值于 $\overline\R$ 的可积函数由命题~\ref{prop:integration:markov}(3) 几乎处处有限，把它在零测集 $\{\abs f=\infty\}$ 上改成 $0$ 不改变积分（命题~\ref{prop:integration:nonnegative-basic}(3)），所以下面只讨论实值函数。
+
+\begin{lemma}\label{lem:integration:difference}
+设 $f=f_1-f_2$，其中 $f_1,f_2\geqslant0$ 可积。则 $\int f\dd\mu=\int f_1\dd\mu-\int f_2\dd\mu$。
+\end{lemma}
+\begin{proof}
+由 $f^+-f^-=f_1-f_2$ 得 $f_1+f^-=f_2+f^+$，四个函数都非负。由定理~\ref{thm:integration:linear-nonnegative}，
+\[
+\int f_1\dd\mu+\int f^-\dd\mu=\int f_2\dd\mu+\int f^+\dd\mu .
+\]
+各项都有限，移项即得。
+\end{proof}
+
+这个引理说，把 $f$ 写成两个非负可积函数之差，不管怎样写，算出的积分都一样。
+
+\begin{theorem}\label{thm:integration:integrable}
+设 $f,g$ 可积。则
+\begin{enumerate}
+\item 若 $f\geqslant0$ a.e.，则 $\int f\dd\mu\geqslant0$；
+\item 对任意 $a\in\R$，$af$ 可积，且 $\int af\dd\mu=a\int f\dd\mu$；
+\item $f+g$ 可积，且 $\int(f+g)\dd\mu=\int f\dd\mu+\int g\dd\mu$；
+\item 若 $f\leqslant g$ a.e.，则 $\int f\dd\mu\leqslant\int g\dd\mu$；
+\item 若 $f=g$ a.e.，则 $\int f\dd\mu=\int g\dd\mu$；
+\item $\abs{\int f\dd\mu}\leqslant\int\abs f\dd\mu$。
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+(1) $f\geqslant0$ a.e. 蕴含 $f^-=0$ a.e.，由命题~\ref{prop:integration:nonnegative-basic}(3)，$\int f^-\dd\mu=0$，于是 $\int f\dd\mu=\int f^+\dd\mu\geqslant0$。
+
+(2) $\abs{af}=\abs a\abs f$，由命题~\ref{prop:integration:nonnegative-basic}(2) 可积。若 $a\geqslant0$，则 $(af)^+=af^+$，$(af)^-=af^-$，于是 $\int af\dd\mu=a\int f^+\dd\mu-a\int f^-\dd\mu=a\int f\dd\mu$。若 $a<0$，则 $(af)^+=\abs af^-$，$(af)^-=\abs af^+$，于是 $\int af\dd\mu=\abs a\int f^-\dd\mu-\abs a\int f^+\dd\mu=a\int f\dd\mu$。
+
+(3) $\abs{f+g}\leqslant\abs f+\abs g$，由命题~\ref{prop:integration:nonnegative-basic}(1) 与定理~\ref{thm:integration:linear-nonnegative}，$\int\abs{f+g}\dd\mu\leqslant\int\abs f\dd\mu+\int\abs g\dd\mu<\infty$。又 $f+g=(f^++g^+)-(f^-+g^-)$，两个括号都是非负可积函数，由引理~\ref{lem:integration:difference} 与定理~\ref{thm:integration:linear-nonnegative}，
+\[
+\int(f+g)\dd\mu=\int f^+\dd\mu+\int g^+\dd\mu-\int f^-\dd\mu-\int g^-\dd\mu=\int f\dd\mu+\int g\dd\mu .
+\]
+
+(4)(5)(6) 由 (1)(2)(3) 与引理~\ref{lem:integration:consequences} 得到（可积函数的全体对加法、数乘、取绝对值封闭）。
+\end{proof}
+
+我们把常用的记号列在这里。
+\begin{enumerate}
+\item $(\Omega,\cF,\mu)=(\R,\cR,\lambda)$ 时，$\int f\dd\lambda$ 也写作 $\int f(x)\dd x$；对 $a<b$，$\int_{[a,b]}f\dd\lambda$ 写作 $\int_a^bf(x)\dd x$。下一节说明这与 Riemann 积分的记号是相容的。
+\item $\mu=\mu_F$ 是 Stieltjes 测度函数 $F$ 对应的 Lebesgue--Stieltjes 测度时，$\int f\dd\mu_F$ 也写作 $\int f(x)\dd F(x)$，称为 \term{Lebesgue--Stieltjes 积分}。
+\item $\Omega$ 可数，$\mu$ 是计数测度时，$\int f\dd\mu$ 就是 $\sum_{i\in\Omega}f(i)$（对非负 $f$ 见上面的例子；对可积的 $f$ 分成正、负部即可）。
+\end{enumerate}
+
+\topic{Lebesgue 积分与 Riemann 积分}
+
+最后我们说明，对数学分析中遇到的函数，新的积分与 Riemann 积分给出同样的值。所以数学分析中计算积分的一切技巧，比如 Newton--Leibniz 公式、分部积分、换元，都可以继续用来计算 Lebesgue 积分。
+
+\begin{theorem}\label{thm:integration:riemann}
+设 $f:[a,b]\to\R$ 有界，Borel 可测，并且在 $[a,b]$ 上 Riemann 可积。则 $f\one_{[a,b]}$ 关于 $\lambda$ 可积，并且
+\[
+\int_{[a,b]}f\dd\lambda=\int_a^bf(x)\dd x\quad(\text{右边是 Riemann 积分}).
+\]
+特别地，这对 $[a,b]$ 上的连续函数成立。
+\end{theorem}
+\begin{proof}
+在 $[a,b]$ 之外令 $f=0$，则 $f$ 有界，在测度有限的集合 $[a,b]$ 之外为零，所以它的积分由第二步定义。任取 $[a,b]$ 的分割 $P$：$a=x_0<x_1<\cdots<x_n=b$。令 $I_1=[x_0,x_1]$，$I_k=(x_{k-1},x_k]$（$2\leqslant k\leqslant n$），它们两两不交，并为 $[a,b]$。令 $m_k=\inf_{[x_{k-1},x_k]}f$，$M_k=\sup_{[x_{k-1},x_k]}f$，以及
+\[
+s_P=\sum_{k=1}^nm_k\one_{I_k},\qquad t_P=\sum_{k=1}^nM_k\one_{I_k}.
+\]
+它们是在 $[a,b]^c$ 上为零的简单函数，并且 $s_P\leqslant f\leqslant t_P$。由引理~\ref{lem:integration:representation} 与命题~\ref{prop:extension:lebesgue}(1)（$\lambda(I_k)=x_k-x_{k-1}$），
+\[
+\int s_P\dd\lambda=\sum_km_k(x_k-x_{k-1})=L(P),\qquad\int t_P\dd\lambda=\sum_kM_k(x_k-x_{k-1})=U(P),
+\]
+正是 Darboux 下和与上和。由定理~\ref{thm:integration:bounded} 中积分的上、下确界表示，$L(P)\leqslant\int f\dd\lambda\leqslant U(P)$ 对一切分割 $P$ 成立。$f$ Riemann 可积，意味着 $\sup_PL(P)=\inf_PU(P)=\int_a^bf(x)\dd x$，于是二者相等。
+\end{proof}
+
+\begin{remark}
+定理中“Borel 可测”这个条件其实可以去掉，不过要把 Borel $\sigma$-代数换成 Lebesgue 可测集的 $\sigma$-代数：Riemann 可积函数都是 Lebesgue 可测的。这需要 Lebesgue 给出的 Riemann 可积性判别法：有界函数 $f$ 在 $[a,b]$ 上 Riemann 可积，当且仅当它的间断点集是 Lebesgue 零测集。这是本讲作业 B。反过来，Lebesgue 可积的函数远比 Riemann 可积的函数多，Dirichlet 函数 $\one_{\Q\cap[0,1]}$ 就是一个例子：它是简单函数，由推论~\ref{cor:integration:nonnegative-simple}，$\int\one_{\Q\cap[0,1]}\dd\lambda=\lambda(\Q\cap[0,1])=0$。
+\end{remark}
+
+对无界区间上的非负函数，单调收敛定理把 Lebesgue 积分与反常积分联系起来。设 $f\geqslant0$ 在 $\R$ 上连续。对 $n\geqslant1$，$f\one_{[-n,n]}\uparrow f$，由单调收敛定理与定理~\ref{thm:integration:riemann}，
+\[
+\int f\dd\lambda=\lim_{n\to\infty}\int_{-n}^nf(x)\dd x,
+\]
+右边是反常积分（两边都可以是 $\infty$）。对 $(-\infty,x]$ 上的积分同理。所以对第~\ref{lec:distributions} 讲中的密度 $f$（取为连续或分段连续的函数），$F(x)=\int_{-\infty}^xf(y)\dd y$ 中的积分按 Riemann 的反常积分理解与按 Lebesgue 积分 $\int_{(-\infty,x]}f\dd\lambda$ 理解是一样的。
+
+对变号的函数要小心。$\int_0^\infty\frac{\sin x}x\dd x$ 作为反常积分收敛（等于 $\pi/2$），但 $\frac{\sin x}x$ 在 $(0,\infty)$ 上不是 Lebesgue 可积的，因为 $\int_0^\infty\frac{\abs{\sin x}}x\dd x=\infty$（习题 A9）。Lebesgue 积分要求绝对可积，它不承认靠正负相消得到的“条件收敛”。这与级数的情形一样：计数测度下的可积性就是绝对收敛。
+
+% =====================================================================
+\homework{Riemann 可积性的 Lebesgue 判别法，分层积分公式，Riemann--Lebesgue 引理}[Riemann 可积性的判别，分层积分公式，Riemann–Lebesgue 引理]
+\label{hw:integration}
+
+\exercisepart{基本习题}
+
+\begin{exercises}{A}{课堂内容的补充}
+\item\label{ex:integration:A1} 设 $f\geqslant0$ 可测，$E_{n,m}=\{m2^{-n}\leqslant f<(m+1)2^{-n}\}$。证明 $n\to\infty$ 时
+\[
+\sum_{m=1}^\infty\frac m{2^n}\mu(E_{n,m})\ \uparrow\ \int_{\{f<\infty\}}f\dd\mu ;
+\]
+特别地，若 $\mu(\{f=\infty\})=0$，则左边单调递增地收敛到 $\int f\dd\mu$。（提示：由逐项积分，左边是一个非负函数的积分，这个函数是什么？它关于 $n$ 单调吗？）
+\item\label{ex:integration:A2} 设 $x\in\Omega$，$\delta_x$ 是 Dirac 测度。证明对非负可测函数 $f$，$\int f\dd\delta_x=f(x)$。又设 $\mu=\sum_ip_i\delta_{x_i}$（$p_i\geqslant0$），证明 $\int f\dd\mu=\sum_ip_if(x_i)$。（用四步法：示性函数，简单函数，非负函数。）
+\item 在计数测度 $(\N,2^\N,\#)$ 上，证明 $f$ 可积当且仅当 $\sum_i\abs{f(i)}<\infty$，此时 $\int f\dd\#=\sum_if(i)$。又用逐项积分证明：对 $a_{m,n}\geqslant0$，$\sum_m\sum_na_{m,n}=\sum_n\sum_ma_{m,n}$。
+\item 对本讲开头的例子 $f_n=\one_{\{q_1,\dots,q_n\}}$，验证 $f_n$ Riemann 可积，积分为 $0$，而极限 $\one_{\Q\cap[0,1]}$ 不是 Riemann 可积的；计算这些函数的 Lebesgue 积分，并与单调收敛定理对照。
+\item 举例说明单调收敛定理中 $f_n\geqslant0$ 的条件不能去掉。然后证明：若 $f_n\uparrow f$ 并且 $f_1$ 可积，则 $\int f_n\dd\mu\uparrow\int f\dd\mu$；若 $f_n\downarrow f$ 并且 $f_1$ 可积，则 $\int f_n\dd\mu\downarrow\int f\dd\mu$。（这里 $\int f\dd\mu$ 按本讲的约定可以是 $\pm\infty$。）
+\item 设 $f$ 可积。证明 $n\to\infty$ 时 $\int_{\{\abs f>n\}}\abs f\dd\mu\to0$；又设 $E_n\uparrow\Omega$，证明 $\int_{E_n^c}\abs f\dd\mu\to0$。（提示：对 $\abs f\one_{\{\abs f\leqslant n\}}$ 与 $\abs f\one_{E_n}$ 用单调收敛定理。）
+\item 设 $f\geqslant0$ 可测，$A\in\cF$。证明：若 $\mu(A)=0$，则 $\int_Af\dd\mu=0$；若 $f>0$ 处处成立且 $\int_Af\dd\mu=0$，则 $\mu(A)=0$。
+\item 设 $V\subseteq[0,1]$ 是任意集合（不一定可测），在定理~\ref{thm:integration:bounded} 中把 $f$ 换成 $\one_V$，$E=[0,1]$，$\varphi,\psi$ 仍取 Borel 可测的简单函数。证明
+\[
+\begin{aligned}
+\sup_{\varphi\leqslant\one_V}\int\varphi\dd\lambda&=\sup\{\lambda(A):A\subseteq V,\ A\in\cR\},\\
+\inf_{\psi\geqslant\one_V}\int\psi\dd\lambda&=\inf\{\lambda(B):B\supseteq V,\ B\in\cR\}.
+\end{aligned}
+\]
+并说明：若二者相等，则存在 Borel 集 $A\subseteq V\subseteq B$ 使 $\lambda(B\setminus A)=0$。这说明定理~\ref{thm:integration:bounded} 中可测性的假设是必要的。
+\item 证明 $\int_0^\infty\frac{\abs{\sin x}}x\dd x=\infty$。（提示：在每个 $[k\pi,(k+1)\pi]$ 上估计，再用逐项积分。）
+\item 设 $p>0$。证明 $\int_{(0,1]}x^{-p}\dd x<\infty$ 当且仅当 $p<1$，$\int_{[1,\infty)}x^{-p}\dd x<\infty$ 当且仅当 $p>1$。（用单调收敛定理把问题化为 Riemann 积分。）
+\end{exercises}
+
+\begin{probleme}{B}{Riemann 可积性的 Lebesgue 判别法}
+设 $f:[a,b]\to\R$ 有界，$\abs f\leqslant M$，不假设可测。对 $x\in[a,b]$ 与 $\delta>0$ 令
+\[
+f^\delta(x)=\sup\{f(y):y\in[a,b],\ \abs{y-x}<\delta\},\qquad f_\delta(x)=\inf\{f(y):y\in[a,b],\ \abs{y-x}<\delta\},
+\]
+$f^0(x)=\lim_{\delta\downarrow0}f^\delta(x)$，$f_0(x)=\lim_{\delta\downarrow0}f_\delta(x)$（单调极限）。本题证明：\emph{$f$ Riemann 可积当且仅当 $f$ 的间断点集是 Lebesgue 零测集。}
+\begin{questions}
+\item 证明 $f^0$ 上半连续：对任意 $c$，$\{x:f^0(x)<c\}$ 是 $[a,b]$ 中的相对开集。同理 $f_0$ 下半连续。从而 $f^0,f_0$ 是 Borel 函数，并且 $f_0\leqslant f\leqslant f^0$。
+\item 证明 $f$ 在 $x$ 处连续当且仅当 $f^0(x)=f_0(x)$。
+\item 令 $P_k$ 为把 $[a,b]$ 等分成 $2^k$ 份的分割，$s_{P_k},t_{P_k}$ 如定理~\ref{thm:integration:riemann} 的证明。证明 $s_{P_k}$ 单调不减，$t_{P_k}$ 单调不增，并且在不属于任何 $P_k$ 分点的 $x$ 处，$t_{P_k}(x)\to f^0(x)$，$s_{P_k}(x)\to f_0(x)$。
+\item 由于全体分点是可数集，B3) 中的收敛几乎处处成立。对 $M-t_{P_k}\geqslant0$ 与 $s_{P_k}+M\geqslant0$ 用单调收敛定理，证明 $U(P_k)\to\int_a^bf^0\dd\lambda$，$L(P_k)\to\int_a^bf_0\dd\lambda$。
+\item 利用数学分析中的 Darboux 定理（分割的细度趋于零时，上、下和分别收敛到上、下积分），证明 $f$ Riemann 可积当且仅当 $\int_a^b(f^0-f_0)\dd\lambda=0$，再由命题~\ref{prop:integration:markov}(2) 与 B2) 完成证明。
+\item 证明 Riemann 可积的 $f$ 是 Lebesgue 可测的（对 Lebesgue 可测集的 $\sigma$-代数），并且它的 Lebesgue 积分等于 Riemann 积分。（提示：$f_0\leqslant f\leqslant f^0$，且 $f^0=f_0$ a.e.；用第~\ref{lec:extension-of-measures} 讲的完备性。）
+\item 用这个判别法说明：Riemann 函数（在既约分数 $p/q$ 处取 $1/q$，在无理数处取 $0$）Riemann 可积；Cantor 集的示性函数 $\one_C$ Riemann 可积；$\one_{\Q\cap[0,1]}$ 不是。
+\end{questions}
+\end{probleme}
+
+\begin{probleme}{C}{分层积分公式}
+设 $f:\Omega\to[0,\infty]$ 可测。本题证明
+\[
+\int f\dd\mu=\int_{(0,\infty)}\mu(\{f>t\})\dd t,
+\]
+其中右边是 $(0,\infty)$ 上关于 Lebesgue 测度的积分。直观上，左边按“竖条”计算 $f$ 的图像下方的面积，右边按“横条”计算：高度 $t$ 处横条的长度是 $\mu(\{f>t\})$。这正是 Lebesgue 分割值域的想法。
+\begin{questions}
+\item 令 $G(t)=\mu(\{f>t\})$，$t>0$。证明 $G$ 单调不增、右连续，从而是 Borel 函数（取值于 $[0,\infty]$ 的单调函数同样可测）。
+\item 设 $f=\sum_{j=1}^my_j\one_{A_j}$，$0<y_1<\cdots<y_m$，$A_j$ 两两不交。写出 $G$，并验证公式成立（注意某些 $\mu(A_j)$ 可能是 $\infty$）。
+\item 对一般的 $f$，取非负简单函数 $\varphi_n\uparrow f$。证明对每个 $t>0$，$\{\varphi_n>t\}\uparrow\{f>t\}$，从而 $\mu(\{\varphi_n>t\})\uparrow\mu(\{f>t\})$。
+\item 在 $\Omega$ 上和在 $(0,\infty)$ 上各用一次单调收敛定理，完成证明。
+\item 设 $X$ 是概率空间上取非负整数值的随机变量。证明 $\int X\dd P=\sum_{k=1}^\infty P(X\geqslant k)$。
+\item 设 $p>0$。证明 $\int f^p\dd\mu=\int_{(0,\infty)}pt^{p-1}\mu(\{f>t\})\dd t$。（提示：对 $f^p$ 用公式，再在每个有界区间 $[\varepsilon,N]$ 上用 Riemann 积分的换元公式与定理~\ref{thm:integration:riemann}，单调函数是 Riemann 可积的，最后用单调收敛定理令 $\varepsilon\to0$，$N\to\infty$。）
+\end{questions}
+\end{probleme}
+
+\thinkingpart
+
+\begin{probleme}[问题]{D}{为什么要求 \texorpdfstring{$\sigma$}{σ}-有限}
+在 $(\R,\cR)$ 上令 $\mu(A)=\infty$（$A\neq\varnothing$），$\mu(\varnothing)=0$。
+\begin{questions}
+\item 证明 $\mu$ 是测度，但不是 $\sigma$-有限的。
+\item 若照搬定义~\ref{def:integration:nonnegative}，证明 $\int\one_\R\dd\mu=0$，而 $\mu(\R)=\infty$。
+\item 另一种定义是 $\int f\dd\mu=\sup\{\sum_jy_j\mu(\{\varphi=y_j\}):0\leqslant\varphi\leqslant f,\ \varphi\ \text{简单}\}$。证明对 $\sigma$-有限的 $\mu$，两种定义给出同样的值（用推论~\ref{cor:integration:nonnegative-simple} 与单调收敛定理）。
+\item 对一般的测度，用 D3) 的定义重新证明单调收敛定理与线性性。哪一步需要修改？
+\end{questions}
+\end{probleme}
+
+\begin{probleme}[问题]{E}{Lebesgue 积分的平移与伸缩}
+设 $f$ 是 $\R$ 上关于 $\lambda$ 可积的函数，$c\in\R$，$a\neq0$。用四步法（示性函数、简单函数、非负函数、可积函数）以及 Lebesgue 测度的平移不变性与伸缩性（第~\ref{lec:extension-of-measures} 讲），证明
+\[
+\int f(x+c)\dd x=\int f(x)\dd x,\qquad\int f(ax)\dd x=\frac1{\abs a}\int f(x)\dd x .
+\]
+在四步法的每一步中，你分别用到了什么？
+\end{probleme}
+
+\exercisepart{课外知识：Riemann--Lebesgue 引理}
+
+\begin{probleme}{F}{Riemann--Lebesgue 引理}
+设 $g$ 是 $\R$ 上关于 $\lambda$ 可积的函数。本题证明
+\[
+\lim_{n\to\infty}\int g(x)\cos nx\dd x=0 .
+\]
+这个结论在 Fourier 分析中很基本；以后讨论特征函数时，我们会看到它的一个概率论版本：有密度的分布，其特征函数在无穷远处趋于零。
+\begin{questions}
+\item 设 $g\geqslant0$。由定理~\ref{thm:random-variables:simple-approx} 取简单函数 $0\leqslant\varphi_k\uparrow g$，证明 $\lambda(\{\varphi_k>0\})<\infty$（提示：Markov 不等式），并由单调收敛定理证明 $\int(g-\varphi_k)\dd x\to0$。由此证明对一般可积的 $g$ 与 $\varepsilon>0$，存在 $\varphi=\sum_{i=1}^mb_i\one_{A_i}\in\cE_0$ 使 $\int\abs{g-\varphi}\dd x<\varepsilon$。
+\item 利用第~\ref{lec:extension-of-measures} 讲作业 C7，把每个 $A_i$ 换成有限个区间的并 $B_i$，使 $\lambda(A_i\triangle B_i)$ 很小。证明存在\term{阶梯函数} $q=\sum_{j=1}^kc_j\one_{(a_{j-1},a_j]}$ 使 $\int\abs{g-q}\dd x<2\varepsilon$。
+\item 对 $q=\one_{(\alpha,\beta]}$ 直接计算 $\int q(x)\cos nx\dd x$，证明它趋于零。从而对一切阶梯函数 $q$ 成立。
+\item 由 $\abs{\int g\cos nx\dd x}\leqslant\int\abs{g-q}\dd x+\abs{\int q\cos nx\dd x}$ 完成证明。其中用到了积分的哪些性质？
+\item 证明同样有 $\int g(x)\sin nx\dd x\to0$。又设 $g$ 只在 $[a,b]$ 上可积，证明 $\int_a^bg(x)\cos nx\dd x\to0$。
+\end{questions}
+\end{probleme}
