@@ -73,6 +73,9 @@
 \RequirePackage{environ}
 \RequirePackage{etoolbox}
 \RequirePackage{xparse}
+\RequirePackage{newunicodechar}
+% 选读标记 ★：第一遍可以跳过的小节、定理或证明
+\newunicodechar{★}{\ensuremath{^{\bigstar}}}
 \RequirePackage[unicode,bookmarksnumbered,bookmarksopen]{hyperref}
 % 与于品原版一致：不给链接上色，保留 hyperref 默认的红色链接框。
 \hypersetup{pdfborder={0 0 1}}
