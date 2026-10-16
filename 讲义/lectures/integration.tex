@@ -1,8 +1,8 @@
 % !TEX root = ../高等概率论.tex
 % =====================================================================
-%  积分：简单函数、有界函数、非负函数、可积函数的积分，Levi 单调收敛定理，线性性，与 Riemann 积分的关系
+%  积分：简单函数、有界函数、非负函数、可积函数的积分，Levi 单调收敛定理，线性性，与 Riemann 积分的关系，Fatou 引理，控制收敛定理
 % =====================================================================
-\lecture{Riemann 积分的局限，简单函数的积分，有界函数的积分，非负可测函数的积分，Levi 单调收敛定理，积分的线性性，可积函数，Lebesgue 积分与 Riemann 积分}
+\lecture{Riemann 积分的局限，简单函数的积分，有界函数的积分，非负可测函数的积分，Levi 单调收敛定理，积分的线性性，可积函数，Lebesgue 积分与 Riemann 积分，Fatou 引理，控制收敛定理，含参变量的积分}
 \label{lec:integration}
 
 有了测度和可测函数，我们现在来定义积分。在概率论中，积分就是期望：随机变量 $X$ 的期望 $EX$ 将被定义为 $\int X\dd P$。初等概率论中，期望有两套公式，离散型的 $\sum_xxP(X=x)$ 和有密度的 $\int xf(x)\dd x$。第~\ref{lec:distributions} 讲的 Cantor 分布既没有跳跃也没有密度，这两套公式对它都不适用。更何况 $\Omega$ 是一个抽象的集合，它上面没有“区间”，也就谈不上 Riemann 和。所以我们需要一个对任意测度空间都有意义的积分，并且它要把求和与 Riemann 积分都包括进来。
@@ -433,6 +433,268 @@ s_P=\sum_{k=1}^nm_k\one_{I_k},\qquad t_P=\sum_{k=1}^nM_k\one_{I_k}.
 
 对变号的函数要小心。$\int_0^\infty\frac{\sin x}x\dd x$ 作为反常积分收敛（等于 $\pi/2$），但 $\frac{\sin x}x$ 在 $(0,\infty)$ 上不是 Lebesgue 可积的，因为 $\int_0^\infty\frac{\abs{\sin x}}x\dd x=\infty$（习题 A9）。Lebesgue 积分要求绝对可积，它不承认靠正负相消得到的“条件收敛”。这与级数的情形一样：计数测度下的可积性就是绝对收敛。
 
+\topic{Fatou 引理}
+
+单调收敛定理只管单调的函数列。可是在概率论中，我们遇到的函数列多半不单调，比如样本均值 $(X_1+\cdots+X_n)/n$，它随 $n$ 忽大忽小。所以我们需要能处理一般函数列的极限定理。这一节和下一节给出两个：Fatou 引理与控制收敛定理。它们都是从单调收敛定理推出来的。
+
+我们先看几个例子，弄清楚“积分的极限”与“极限的积分”可以差多少。
+
+\begin{example}[质量的三种逃逸方式]\label{ex:integration:escape}
+下面三个例子中，$f_n\geqslant0$，$f_n\to0$ 处处成立，可是 $\int f_n\dd\lambda=1$ 对一切 $n$ 成立，所以
+\[
+\int\lim_nf_n\dd\lambda=0<1=\lim_n\int f_n\dd\lambda .
+\]
+\begin{enumerate}
+\item \emph{向上逃逸。}在 $(0,1)$ 上取 $f_n=n\one_{(0,1/n)}$。图像是一个底为 $1/n$、高为 $n$ 的长方形，面积为 $1$。对固定的 $x\in(0,1)$，当 $n>1/x$ 时 $x\notin(0,1/n)$，所以 $f_n(x)=0$。长方形越来越瘦，越来越高，最后“缩”到 $x=0$ 这一点上，而这一点不在 $(0,1)$ 中。
+\item \emph{向右逃逸。}在 $\R$ 上取 $f_n=\one_{[n,n+1]}$。长方形的形状不变，但是一直往右走。对固定的 $x$，当 $n>x$ 时 $f_n(x)=0$。
+\item \emph{摊平。}在 $\R$ 上取 $f_n=\frac1n\one_{[0,n]}$。长方形越来越矮，越来越宽。这里 $f_n\to0$ 甚至是一致的：$\sup_x\abs{f_n(x)}=1/n$。
+\end{enumerate}
+这三个例子说明，一般的函数列，极限与积分不能交换；即使一致收敛也不行（第三个例子，在测度无限的空间上）。它们还说明了一个现象：在极限过程中，积分只会“丢失”，而不会“凭空产生”。三个例子中丢失的都是 $1$，极限函数的积分比积分的极限小。Fatou 引理说，对非负函数这总是对的。
+\end{example}
+
+\begin{theorem}[Fatou 引理]\label{thm:integration:fatou}
+设 $f_n:\Omega\to[0,\infty]$ 可测。则
+\[
+\int\liminf_{n\to\infty}f_n\dd\mu\leqslant\liminf_{n\to\infty}\int f_n\dd\mu .
+\]
+\end{theorem}
+
+\begin{remark}[证明思路]
+$\liminf_nf_n$ 按定义是 $\lim_n\inf_{m\geqslant n}f_m$，而 $g_n=\inf_{m\geqslant n}f_m$ 关于 $n$ 单调递增。所以左边可以用单调收敛定理算出来。另一方面，$g_n$ 不超过每个 $f_m$（$m\geqslant n$），它的积分就不超过每个 $\int f_m$。两件事合起来就是结论。
+\end{remark}
+
+\begin{proof}
+令 $g_n=\inf_{m\geqslant n}f_m$。
+
+\emph{第一步：$g_n$ 非负可测，并且单调递增地收敛到 $\liminf_nf_n$。}由定理~\ref{thm:random-variables:limits}，$g_n$ 是可测的，取值于 $[0,\infty]$。当 $n$ 增大时，取下确界的范围 $\{m:m\geqslant n\}$ 变小，所以 $g_n\leqslant g_{n+1}$。按照下极限的定义，$\liminf_nf_n=\lim_ng_n=\sup_ng_n$。
+
+\emph{第二步：比较积分。}对每个 $m\geqslant n$，$g_n\leqslant f_m$，由命题~\ref{prop:integration:nonnegative-basic}(1)，$\int g_n\dd\mu\leqslant\int f_m\dd\mu$。对 $m\geqslant n$ 取下确界，
+\[
+\int g_n\dd\mu\leqslant\inf_{m\geqslant n}\int f_m\dd\mu .
+\]
+
+\emph{第三步：取极限。}令 $n\to\infty$。由第一步与单调收敛定理（定理~\ref{thm:integration:mct}），左边收敛到 $\int\liminf_nf_n\dd\mu$；右边是数列 $\int f_m\dd\mu$ 的“后段下确界”，单调递增地收敛到 $\liminf_m\int f_m\dd\mu$。不等号在极限中保持，结论得证。
+\end{proof}
+
+我们来看 Fatou 引理的条件起什么作用，以及它和前面学过的东西的联系。
+
+\begin{example}[非负性不能去掉]
+在 $(0,1)$ 上取 $f_n=-n\one_{(0,1/n)}$。则 $f_n\to0$ 处处成立，$\int\liminf_nf_n\dd\lambda=0$，而 $\int f_n\dd\lambda=-1$，于是 $\liminf_n\int f_n\dd\lambda=-1<0$。Fatou 引理的不等号反过来了。这就是\egref{ex:integration:escape} 中第一个例子的相反数：对非负函数积分只会丢失，对非正函数积分只会“凭空增加”。
+\end{example}
+
+\begin{example}[不等号可以是严格的，并且右边不能换成上极限]
+设 $A\in\cF$，令 $f_n=\one_A$（$n$ 为偶数），$f_n=\one_{A^c}$（$n$ 为奇数）。每个点要么属于 $A$ 要么属于 $A^c$，所以 $\liminf_nf_n=0$。而 $\int f_n\dd\mu$ 在 $\mu(A)$ 与 $\mu(A^c)$ 之间来回跳。在 $([0,1],\lambda)$ 上取 $A=[0,1/3]$，则
+\[
+\int\liminf_nf_n\dd\lambda=0<\frac13=\liminf_n\int f_n\dd\lambda<\frac23=\limsup_n\int f_n\dd\lambda .
+\]
+\end{example}
+
+\begin{example}[集合的 Fatou 引理]
+取 $f_n=\one_{A_n}$。由于 $\one_{A_n}(\omega)$ 只取 $0$ 和 $1$，$\liminf_n\one_{A_n}(\omega)=1$ 当且仅当 $\omega$ 从某项起一直属于 $A_n$，也就是 $\omega\in\liminf_nA_n$（定义~\ref{def:set-systems:limsup}）。所以 $\liminf_n\one_{A_n}=\one_{\liminf_nA_n}$，Fatou 引理给出
+\[
+\mu\bigl(\liminf_nA_n\bigr)\leqslant\liminf_n\mu(A_n),
+\]
+这就是命题~\ref{prop:measures:fatou-sets}(1)。所以 Fatou 引理是那个关于集合的命题在函数上的推广，这也是它名字的来历。
+\end{example}
+
+Fatou 引理最常见的用法是：已知 $f_n\to f$ a.e.，并且 $\int f_n\dd\mu\leqslant C$ 对一切 $n$ 成立，那么 $\int f\dd\mu\leqslant C$。也就是说，\emph{积分的有界性在几乎处处收敛的极限下保持}。我们把它写成一个推论。
+
+\begin{corollary}\label{cor:integration:fatou-bound}
+设 $f_n,f:\Omega\to[0,\infty]$ 可测，$f_n\to f$ a.e.，并且 $\sup_n\int f_n\dd\mu\leqslant C$。则 $\int f\dd\mu\leqslant C$。
+\end{corollary}
+\begin{proof}
+设 $N$ 是零测集，在 $N^c$ 上 $f_n\to f$。在 $N^c$ 上 $\liminf_nf_n=f$，所以 $\liminf_nf_n=f$ a.e.。由命题~\ref{prop:integration:nonnegative-basic}(3) 与 Fatou 引理，
+\[
+\int f\dd\mu=\int\liminf_nf_n\dd\mu\leqslant\liminf_n\int f_n\dd\mu\leqslant C .\qedhere
+\]
+\end{proof}
+
+\topic{控制收敛定理}
+
+Fatou 引理只给出一个不等式。要得到等式，就得排除\egref{ex:integration:escape} 中那样的“逃逸”。在那三个例子中，没有一个可积函数能把全部 $f_n$ 都压在下面：第一个例子中 $\sup_nf_n(x)$ 大约是 $1/x$，在 $(0,1)$ 上不可积；第二个例子中 $\sup_nf_n=\one_{[1,\infty)}$，第三个例子中 $\sup_nf_n(x)$ 大约是 $\min\{1,1/x\}$，在 $\R$ 上都不可积。下面的定理说，只要存在这样一个可积的“控制函数”，质量就逃不掉，极限与积分可以交换。
+
+\begin{theorem}[Lebesgue 控制收敛定理]\label{thm:integration:dct}
+设 $f_n,f:\Omega\to\R$ 可测，$f_n\to f$ a.e.。若存在可积函数 $g$，使对每个 $n$，$\abs{f_n}\leqslant g$ a.e.，则 $f$ 可积，并且
+\[
+\lim_{n\to\infty}\int\abs{f_n-f}\dd\mu=0,\qquad\text{从而}\qquad\lim_{n\to\infty}\int f_n\dd\mu=\int f\dd\mu .
+\]
+\end{theorem}
+
+\begin{remark}[证明思路]
+要证明 $\int\abs{f_n-f}\to0$。$\abs{f_n-f}$ 不超过 $2g$，于是 $2g-\abs{f_n-f}$ 是非负的，并且收敛到 $2g$。对它用 Fatou 引理，得到 $\int2g\leqslant\int2g-\limsup\int\abs{f_n-f}$。因为 $\int2g$ 是有限数，可以从两边消去，就得到 $\limsup\int\abs{f_n-f}\leqslant0$。这里 $g$ 可积是必不可少的：如果 $\int g=\infty$，就无法从两边消去 $\infty$。
+\end{remark}
+
+\begin{proof}
+\emph{第一步：把“几乎处处”化为“处处”。}对每个 $n$，有零测集 $N_n$，在 $N_n^c$ 上 $\abs{f_n}\leqslant g$；又有零测集 $N_0$，在 $N_0^c$ 上 $f_n\to f$。可积函数 $g$ 几乎处处有限（命题~\ref{prop:integration:markov}(3)），设 $\{g=\infty\}=N'$。令 $N=N_0\cup N'\cup\bigcup_{n\geqslant1}N_n$，它是可数个零测集的并，仍是零测集。把 $f_n,f,g$ 都换成 $f_n\one_{N^c}$，$f\one_{N^c}$，$g\one_{N^c}$。它们仍然可测；由命题~\ref{prop:integration:nonnegative-basic}(3) 与定理~\ref{thm:integration:integrable}(5)，这样修改不改变任何一个积分。所以下面不妨设：处处有 $f_n\to f$，$\abs{f_n}\leqslant g<\infty$。
+
+\emph{第二步：$f$ 可积。}在 $\abs{f_n}\leqslant g$ 中令 $n\to\infty$，得 $\abs f\leqslant g$。于是 $\int\abs f\dd\mu\leqslant\int g\dd\mu<\infty$。
+
+\emph{第三步：用 Fatou 引理。}令 $h_n=2g-\abs{f_n-f}$。由 $\abs{f_n-f}\leqslant\abs{f_n}+\abs f\leqslant2g$ 知 $h_n\geqslant0$；它可测；并且由于 $f_n\to f$，$h_n\to2g$。对 $h_n$ 用 Fatou 引理（定理~\ref{thm:integration:fatou}）：
+\[
+\int2g\dd\mu=\int\liminf_nh_n\dd\mu\leqslant\liminf_n\int h_n\dd\mu .
+\]
+$\abs{f_n-f}$ 与 $2g$ 都可积，由线性性（定理~\ref{thm:integration:integrable}(2)(3)），$\int h_n\dd\mu=\int2g\dd\mu-\int\abs{f_n-f}\dd\mu$。于是
+\[
+\int2g\dd\mu\leqslant\liminf_n\Bigl(\int2g\dd\mu-\int\abs{f_n-f}\dd\mu\Bigr)=\int2g\dd\mu-\limsup_n\int\abs{f_n-f}\dd\mu .
+\]
+
+\emph{第四步：消去。}$\int2g\dd\mu$ 是有限数，从两边消去，得 $\limsup_n\int\abs{f_n-f}\dd\mu\leqslant0$。而 $\int\abs{f_n-f}\dd\mu\geqslant0$，所以它的极限存在且等于 $0$。最后，由定理~\ref{thm:integration:integrable}(3)(6)，
+\[
+\Bigl\lvert\int f_n\dd\mu-\int f\dd\mu\Bigr\rvert=\Bigl\lvert\int(f_n-f)\dd\mu\Bigr\rvert\leqslant\int\abs{f_n-f}\dd\mu\to0 .\qedhere
+\]
+\end{proof}
+
+\begin{remark}[控制函数的含义]
+条件“$\abs{f_n}\leqslant g$ 对一切 $n$ 成立，$g$ 可积”等价于说 $\sup_n\abs{f_n}$ 被一个可积函数控制，也就是 $\int\sup_n\abs{f_n}\dd\mu<\infty$（若这个积分有限，取 $g=\sup_n\abs{f_n}$ 即可）。直观上，它规定了一个所有 $f_n$ 都不许越出的“围栏”，而这个围栏本身的面积有限。\egref{ex:integration:escape} 的三个例子都越出了任何有限面积的围栏。控制收敛定理的条件是充分的，但不是必要的；以后讲一致可积性时，我们会看到在概率空间上什么样的条件才是“恰好”的。
+\end{remark}
+
+在概率空间或者一般的有限测度空间上，常数是可积的，于是有下面这个常用的特例。
+
+\begin{corollary}[有界收敛定理]\label{cor:integration:bct}
+设 $\mu(\Omega)<\infty$，$f_n\to f$ a.e.，并且存在常数 $M$ 使 $\abs{f_n}\leqslant M$ a.e. 对一切 $n$ 成立。则 $\int\abs{f_n-f}\dd\mu\to0$，$\int f_n\dd\mu\to\int f\dd\mu$。
+\end{corollary}
+\begin{proof}
+取 $g=M$（常函数），$\int g\dd\mu=M\mu(\Omega)<\infty$，由控制收敛定理即得。
+\end{proof}
+
+\begin{corollary}[可积函数项级数的逐项积分]\label{cor:integration:series-integrable}
+设 $f_n$ 可测，$\sum_{n=1}^\infty\int\abs{f_n}\dd\mu<\infty$。则级数 $\sum_nf_n$ 几乎处处绝对收敛，其和（在不收敛的零测集上定义为 $0$）可积，并且
+\[
+\int\sum_{n=1}^\infty f_n\dd\mu=\sum_{n=1}^\infty\int f_n\dd\mu .
+\]
+\end{corollary}
+\begin{proof}
+令 $g=\sum_n\abs{f_n}$，取值于 $[0,\infty]$。由逐项积分（推论~\ref{cor:integration:series}），$\int g\dd\mu=\sum_n\int\abs{f_n}\dd\mu<\infty$，所以 $g$ 可积，从而 $g<\infty$ a.e.（命题~\ref{prop:integration:markov}(3)）。在 $\{g<\infty\}$ 上，级数 $\sum_nf_n$ 绝对收敛。令 $N=\{g=\infty\}$，部分和 $s_N=\sum_{n\leqslant N}f_n\one_{N^c}$。则 $s_N\to s=\sum_nf_n\one_{N^c}$ 处处成立，并且 $\abs{s_N}\leqslant g$。由控制收敛定理，$s$ 可积，并且 $\int s\dd\mu=\lim_N\int s_N\dd\mu=\lim_N\sum_{n\leqslant N}\int f_n\dd\mu$（有限和的积分可以拆开，这是线性性；在零测集 $N$ 上的修改不改变积分）。
+\end{proof}
+
+下面是控制收敛定理的几个典型应用。做这类题目的步骤总是一样的，同学们应该熟记：（1）写出被积函数列 $f_n$，求出逐点极限 $f$；（2）找一个与 $n$ 无关的可积函数 $g$，使 $\abs{f_n}\leqslant g$；（3）由控制收敛定理交换极限与积分。其中第（2）步是需要动脑筋的地方。
+
+\begin{workedexample}\label{we:integration:exp-limit}
+证明 $\displaystyle\lim_{n\to\infty}\int_0^n\Bigl(1-\frac xn\Bigr)^n\dd x=1$。
+\end{workedexample}
+\begin{solution}
+令 $f_n(x)=(1-x/n)^n\one_{[0,n]}(x)$，$x\in[0,\infty)$。这样 $\int_0^n(1-x/n)^n\dd x=\int_{[0,\infty)}f_n\dd\lambda$，积分区域就不再随 $n$ 变化了。（每个 $f_n$ 在 $[0,n]$ 上连续，在 $(n,\infty)$ 上为零，是 Borel 函数；它在 $[0,n]$ 上的 Lebesgue 积分等于 Riemann 积分，由定理~\ref{thm:integration:riemann}。）
+
+\emph{逐点极限。}固定 $x\geqslant0$。当 $n>x$ 时 $x\in[0,n]$，$f_n(x)=(1-x/n)^n$。由数学分析中的重要极限，$(1-x/n)^n\to e^{-x}$。所以 $f_n(x)\to e^{-x}$。
+
+\emph{控制函数。}对一切实数 $y$，有 $1-y\leqslant e^{-y}$（函数 $e^{-y}-1+y$ 在 $y=0$ 处取最小值 $0$）。当 $0\leqslant x\leqslant n$ 时，$0\leqslant1-x/n\leqslant e^{-x/n}$，两边 $n$ 次方得 $0\leqslant f_n(x)\leqslant e^{-x}$；当 $x>n$ 时 $f_n(x)=0\leqslant e^{-x}$。所以 $\abs{f_n}\leqslant g$，$g(x)=e^{-x}$。$g$ 在 $[0,\infty)$ 上可积：由单调收敛定理与定理~\ref{thm:integration:riemann}，$\int_{[0,\infty)}e^{-x}\dd x=\lim_{N}\int_0^Ne^{-x}\dd x=\lim_N(1-e^{-N})=1$。
+
+\emph{交换极限与积分。}由控制收敛定理，$\int f_n\dd\lambda\to\int_{[0,\infty)}e^{-x}\dd x=1$。
+\end{solution}
+
+\begin{workedexample}\label{we:integration:dct-fails}
+在 $(0,1)$ 上取 $f_n(x)=n^2x(1-x)^n$。求 $\lim_nf_n(x)$ 与 $\lim_n\int_0^1f_n(x)\dd x$。能否找到控制函数？
+\end{workedexample}
+\begin{solution}
+\emph{逐点极限。}固定 $x\in(0,1)$，令 $q=1-x\in(0,1)$。则 $f_n(x)=xn^2q^n\to0$，因为 $n^2q^n\to0$（指数衰减快于多项式增长，例如由 $\sum_nn^2q^n$ 收敛的比值判别法）。所以 $f_n\to0$ 处处成立。
+
+\emph{积分。}用分部积分或 Beta 积分：$\int_0^1x(1-x)^n\dd x$，令 $u=1-x$，等于 $\int_0^1(1-u)u^n\dd u=\frac1{n+1}-\frac1{n+2}=\frac1{(n+1)(n+2)}$。于是
+\[
+\int_0^1f_n(x)\dd x=\frac{n^2}{(n+1)(n+2)}\to1\neq0 .
+\]
+极限与积分不能交换。
+
+\emph{控制函数不存在。}如果存在可积的 $g$ 使 $\abs{f_n}\leqslant g$ a.e. 对一切 $n$ 成立，控制收敛定理就会给出 $\int f_n\to0$，与上面的计算矛盾。所以不存在这样的 $g$。我们也可以直接看出 $\sup_nf_n$ 不可积：当 $n\geqslant2$，$x\in[\frac1{n+1},\frac1n]$ 时，$(1-x)^n\geqslant(1-\frac1n)^n\geqslant\frac14$（数列 $(1-\frac1n)^n$ 单调递增，$n=2$ 时等于 $\frac14$），所以
+\[
+f_n(x)\geqslant n^2\cdot\frac1{n+1}\cdot\frac14\geqslant\frac{n+1}{16}\geqslant\frac1{16x},
+\]
+其中用到 $n^2\geqslant(n+1)^2/4$ 与 $n+1\geqslant1/x$。这些区间盖住了 $(0,\frac12]$，所以 $\sup_nf_n(x)\geqslant\frac1{16x}$ 在 $(0,\frac12]$ 上成立，而 $\int_0^{1/2}\frac{\dd x}x=\infty$。这正是\egref{ex:integration:escape} 中“向上逃逸”的情形：$f_n$ 的质量挤到了 $x=0$ 附近。
+\end{solution}
+
+\begin{workedexample}\label{we:integration:zeta2}
+证明 $\displaystyle\int_0^\infty\frac x{e^x-1}\dd x=\sum_{n=1}^\infty\frac1{n^2}$。
+\end{workedexample}
+\begin{solution}
+思路是把被积函数展开成级数，再逐项积分。对 $x>0$，$0<e^{-x}<1$，由几何级数，
+\[
+\frac x{e^x-1}=\frac{xe^{-x}}{1-e^{-x}}=\sum_{n=1}^\infty xe^{-nx}.
+\]
+每一项 $xe^{-nx}$ 非负、连续，所以可以用非负函数的逐项积分（推论~\ref{cor:integration:series}），不需要任何控制：
+\[
+\int_{(0,\infty)}\frac x{e^x-1}\dd x=\sum_{n=1}^\infty\int_{(0,\infty)}xe^{-nx}\dd x .
+\]
+对每个 $n$，由单调收敛定理与定理~\ref{thm:integration:riemann}，$\int_{(0,\infty)}xe^{-nx}\dd x=\lim_N\int_0^Nxe^{-nx}\dd x$。分部积分，
+\[
+\int_0^Nxe^{-nx}\dd x=\Bigl[-\frac{x}{n}e^{-nx}\Bigr]_0^N+\frac1n\int_0^Ne^{-nx}\dd x=-\frac Nne^{-nN}+\frac1{n^2}(1-e^{-nN})\to\frac1{n^2}.
+\]
+所以原积分等于 $\sum_n1/n^2$。（以后在特征函数一讲会顺便知道这个和是 $\pi^2/6$。）
+
+注意：这个例子里我们用的是非负项的逐项积分，它不需要控制函数，只需要每一项非负。这比数学分析中逐项积分需要一致收敛方便得多：这里的级数在 $x\to0$ 附近并不一致收敛。
+\end{solution}
+
+\topic{含参变量的积分}
+
+控制收敛定理的一个重要应用是含参变量积分的连续性与求导。在数学分析中，这些结论需要一致收敛之类的条件；现在只需要一个控制函数。以后在特征函数一讲，我们会用它来对 $\varphi(t)=Ee^{itX}$ 求导。
+
+\begin{theorem}[含参变量积分的连续性]\label{thm:integration:parameter-continuity}
+设 $I\subseteq\R$ 是区间，$f:\Omega\times I\to\R$ 满足：
+\begin{enumerate}
+\item 对每个 $t\in I$，$x\mapsto f(x,t)$ 可测；
+\item 对每个 $x\in\Omega$，$t\mapsto f(x,t)$ 在 $t_0\in I$ 处连续；
+\item 存在可积函数 $g$，使对一切 $t\in I$，$\abs{f(x,t)}\leqslant g(x)$ 对一切 $x$ 成立。
+\end{enumerate}
+则 $F(t)=\int f(x,t)\,\mu(\dd x)$ 在 $t_0$ 处连续。
+\end{theorem}
+\begin{proof}
+由 (3)，每个 $f(\cdot,t)$ 可积，$F(t)$ 有定义。实变函数在一点连续，等价于对任意 $t_n\to t_0$（$t_n\in I$）有 $F(t_n)\to F(t_0)$（数学分析中的 Heine 定理）。任取这样一列 $t_n$，令 $f_n(x)=f(x,t_n)$。由 (2)，$f_n(x)\to f(x,t_0)$ 对每个 $x$ 成立；由 (3)，$\abs{f_n}\leqslant g$。由控制收敛定理，$F(t_n)=\int f_n\dd\mu\to\int f(x,t_0)\,\mu(\dd x)=F(t_0)$。
+\end{proof}
+
+\begin{theorem}[积分号下求导]\label{thm:integration:differentiation}
+设 $I\subseteq\R$ 是开区间，$f:\Omega\times I\to\R$ 满足：
+\begin{enumerate}
+\item 对每个 $t\in I$，$x\mapsto f(x,t)$ 可积；
+\item 对每个 $x\in\Omega$，$t\mapsto f(x,t)$ 在 $I$ 上可导，导数记为 $\partial_tf(x,t)$；
+\item 存在可积函数 $g$，使 $\abs{\partial_tf(x,t)}\leqslant g(x)$ 对一切 $x\in\Omega$，$t\in I$ 成立。
+\end{enumerate}
+则 $F(t)=\int f(x,t)\,\mu(\dd x)$ 在 $I$ 上可导，并且 $F'(t)=\int\partial_tf(x,t)\,\mu(\dd x)$。
+\end{theorem}
+\begin{proof}
+固定 $t\in I$，任取 $h_n\to0$，$h_n\neq0$，$t+h_n\in I$。令
+\[
+q_n(x)=\frac{f(x,t+h_n)-f(x,t)}{h_n}.
+\]
+由 (1)，$q_n$ 可测且可积，并且 $\frac{F(t+h_n)-F(t)}{h_n}=\int q_n\dd\mu$。由 (2)，$q_n(x)\to\partial_tf(x,t)$ 对每个 $x$ 成立；特别地 $x\mapsto\partial_tf(x,t)$ 作为可测函数列的极限是可测的（定理~\ref{thm:random-variables:limits}）。由微分中值定理，对每个 $x$，存在 $\theta$ 介于 $t$ 与 $t+h_n$ 之间（$\theta$ 依赖于 $x$ 与 $n$），使 $q_n(x)=\partial_tf(x,\theta)$，于是由 (3)，$\abs{q_n(x)}\leqslant g(x)$。由控制收敛定理，
+\[
+\frac{F(t+h_n)-F(t)}{h_n}=\int q_n\dd\mu\to\int\partial_tf(x,t)\,\mu(\dd x).
+\]
+由于 $h_n$ 是任意趋于零的数列，由 Heine 定理，$F'(t)$ 存在并等于右边。
+\end{proof}
+
+\begin{remark}
+证明中我们并不需要 $\theta$ 作为 $x$ 的函数可测，因为我们只是用它来逐点估计 $\abs{q_n(x)}$；$q_n$ 本身的可测性是由它的定义式得到的。这是这类证明中容易出错的地方。另外，条件 (3) 往往不能在整个 $I$ 上成立，这时只需对每个 $t_0\in I$，在 $t_0$ 的某个小开区间上验证，就得到 $F$ 在 $t_0$ 处可导。
+\end{remark}
+
+\begin{workedexample}\label{we:integration:factorial}
+设 $n\geqslant0$ 是整数。证明 $\displaystyle\int_0^\infty x^ne^{-x}\dd x=n!$。
+\end{workedexample}
+\begin{solution}
+思路：先算一个依赖参数 $t$ 的简单积分，再对 $t$ 反复求导，每求一次导数，被积函数就多出一个因子 $-x$。
+
+对 $t>0$，令 $F(t)=\int_{(0,\infty)}e^{-tx}\dd x$。和\wegref{we:integration:exp-limit} 中一样，由单调收敛定理与 Riemann 积分，$F(t)=\lim_N\frac{1-e^{-tN}}t=\frac1t$。
+
+我们用归纳法证明：对每个 $k\geqslant0$ 与 $t>0$，$x^ke^{-tx}$ 在 $(0,\infty)$ 上可积，并且
+\[
+\int_{(0,\infty)}x^ke^{-tx}\dd x=\frac{k!}{t^{k+1}} .
+\]
+$k=0$ 是上面的计算。设对 $k$ 成立，考虑 $f(x,t)=x^ke^{-tx}$。固定 $t_0>0$，在开区间 $I=(t_0/2,\infty)$ 上验证定理~\ref{thm:integration:differentiation} 的条件：(1) 由归纳假设，每个 $f(\cdot,t)$ 可积；(2) $\partial_tf(x,t)=-x^{k+1}e^{-tx}$；(3) 当 $t\in I$ 时，$\abs{\partial_tf(x,t)}\leqslant x^{k+1}e^{-t_0x/2}=:g(x)$，而 $g$ 可积，这是因为 $x^{k+1}e^{-t_0x/4}$ 在 $(0,\infty)$ 上有界（它是连续的，并且在 $x\to\infty$ 时趋于 $0$），设上界为 $C$，则 $g(x)\leqslant Ce^{-t_0x/4}$，而后者的积分是 $4C/t_0<\infty$。于是在 $t_0$ 处，
+\[
+-\int_{(0,\infty)}x^{k+1}e^{-t_0x}\dd x=\frac{\dd}{\dd t}\Bigl(\frac{k!}{t^{k+1}}\Bigr)\Big|_{t=t_0}=-\frac{(k+1)!}{t_0^{k+2}} ,
+\]
+并且左边的被积函数 $\leqslant g$ 可积。这就是 $k+1$ 时的结论。最后取 $t=1$。
+\end{solution}
+
+\topic{本讲小结}
+
+这一讲建立了 Lebesgue 积分，我们把逻辑线索再理一遍。
+\begin{enumerate}
+\item 积分分四步定义：简单函数（直接按“值乘测度”求和），有界函数（用简单函数从上下两边夹，定理~\ref{thm:integration:bounded}），非负函数（用下方的有界函数取上确界，定义~\ref{def:integration:nonnegative}），可积函数（$\int f=\int f^+-\int f^-$）。
+\item 整个理论的支柱是 Levi 单调收敛定理（定理~\ref{thm:integration:mct}）。它的证明用到测度的可数可加性，这是 Lebesgue 积分比 Riemann 积分好用的根本原因。
+\item 由单调收敛定理推出：积分的线性性，非负函数逐项积分，不定积分是测度，Markov 不等式；再推出 Fatou 引理（对非负函数，积分在极限中只会丢失），由 Fatou 引理推出控制收敛定理（有可积的控制函数时，极限与积分可以交换）。
+\item 证明关于积分的等式时，标准的套路是“四步法”：示性函数，简单函数，非负函数（单调收敛定理），可积函数（拆成正部与负部）。
+\item 对数学分析中的函数，Lebesgue 积分与 Riemann 积分相同（定理~\ref{thm:integration:riemann}），所以具体的积分仍然用 Newton--Leibniz 公式计算。
+\end{enumerate}
+下一讲之后，我们把这些定理翻译成期望的语言：$EX=\int X\dd P$，单调收敛定理、Fatou 引理和控制收敛定理将是我们处理随机变量极限的基本工具。
+
 % =====================================================================
 \homework{Riemann 可积性的 Lebesgue 判别法，分层积分公式，Riemann--Lebesgue 引理}[Riemann 可积性的判别，分层积分公式，Riemann–Lebesgue 引理]
 \label{hw:integration}
@@ -461,6 +723,96 @@ s_P=\sum_{k=1}^nm_k\one_{I_k},\qquad t_P=\sum_{k=1}^nM_k\one_{I_k}.
 并说明：若二者相等，则存在 Borel 集 $A\subseteq V\subseteq B$ 使 $\lambda(B\setminus A)=0$。这说明定理~\ref{thm:integration:bounded} 中可测性的假设是必要的。
 \item 证明 $\int_0^\infty\frac{\abs{\sin x}}x\dd x=\infty$。（提示：在每个 $[k\pi,(k+1)\pi]$ 上估计，再用逐项积分。）
 \item 设 $p>0$。证明 $\int_{(0,1]}x^{-p}\dd x<\infty$ 当且仅当 $p<1$，$\int_{[1,\infty)}x^{-p}\dd x<\infty$ 当且仅当 $p>1$。（用单调收敛定理把问题化为 Riemann 积分。）
+\item\label{ex:integration:A11} （反向 Fatou 引理）设 $f_n$ 可测，存在可积函数 $g$ 使 $f_n\leqslant g$ 对一切 $n$ 成立。证明
+\[
+\limsup_n\int f_n\dd\mu\leqslant\int\limsup_nf_n\dd\mu .
+\]
+（这里 $\int\limsup_nf_n\dd\mu$ 可以是 $-\infty$。）
+\begin{solution}
+思路：把“上方有界”化为“非负”，用 Fatou 引理。
+
+令 $h_n=g-f_n$。由 $f_n\leqslant g$，$h_n\geqslant0$；它可测（$g$ 可积从而 a.e. 有限，像控制收敛定理证明第一步那样，在零测集上把 $g$ 改成 $0$、$f_n$ 改成 $0$ 不影响任何积分，所以不妨设 $g$ 处处有限）。由 Fatou 引理（定理~\ref{thm:integration:fatou}），
+\[
+\int\liminf_n(g-f_n)\dd\mu\leqslant\liminf_n\int(g-f_n)\dd\mu .
+\]
+左边：$\liminf_n(g-f_n)=g-\limsup_nf_n$。右边：由于 $f_n^+\leqslant g^+$，$\int f_n^+\dd\mu<\infty$，所以 $\int f_n\dd\mu$ 按本讲的约定有意义，取值于 $[-\infty,\infty)$。我们说明 $\int(g-f_n)\dd\mu=\int g\dd\mu-\int f_n\dd\mu$：当 $\int f_n$ 有限时，这是线性性（定理~\ref{thm:integration:integrable}(3)）；当 $\int f_n=-\infty$，即 $\int f_n^-=\infty$ 时，由 $g-f_n=g-f_n^++f_n^-\geqslant f_n^--2\abs g$ 得 $\int(g-f_n)\geqslant\int f_n^--2\int\abs g=\infty$，两边都是 $+\infty$。于是右边等于 $\int g\dd\mu-\limsup_n\int f_n\dd\mu$。
+
+同样地，$\limsup_nf_n\leqslant g$，所以 $\int\limsup_nf_n\dd\mu$ 有意义（可以是 $-\infty$），左边等于 $\int g\dd\mu-\int\limsup_nf_n\dd\mu$。得
+\[
+\int g\dd\mu-\int\limsup_nf_n\dd\mu\leqslant\int g\dd\mu-\limsup_n\int f_n\dd\mu ,
+\]
+消去有限数 $\int g\dd\mu$ 即得结论。
+
+注意：控制收敛定理正是 Fatou 引理与反向 Fatou 引理的结合：$\int\liminf f_n\leqslant\liminf\int f_n\leqslant\limsup\int f_n\leqslant\int\limsup f_n$，当 $f_n\to f$ 时两端都等于 $\int f$。
+\end{solution}
+
+\item\label{ex:integration:A12} 计算 $\displaystyle\lim_{n\to\infty}\int_0^\infty\frac{n\sin(x/n)}{x(1+x^2)}\dd x$。
+\begin{solution}
+思路：被积函数逐点收敛，找一个控制函数。
+
+令 $f_n(x)=\frac{n\sin(x/n)}{x(1+x^2)}$，$x>0$。它在 $(0,\infty)$ 上连续，是 Borel 函数。
+
+\emph{逐点极限。}固定 $x>0$，由 $\lim_{y\to0}\frac{\sin y}y=1$，$n\sin(x/n)=x\cdot\frac{\sin(x/n)}{x/n}\to x$，所以 $f_n(x)\to\frac1{1+x^2}$。
+
+\emph{控制函数。}对一切实数 $y$，$\abs{\sin y}\leqslant\abs y$。所以 $\abs{n\sin(x/n)}\leqslant n\cdot\frac xn=x$，从而 $\abs{f_n(x)}\leqslant\frac1{1+x^2}=:g(x)$。$g$ 可积：由单调收敛定理，$\int_{(0,\infty)}g\dd\lambda=\lim_N\arctan N=\frac\pi2$。
+
+由控制收敛定理，极限等于 $\int_0^\infty\frac{\dd x}{1+x^2}=\frac\pi2$。
+\end{solution}
+
+\item\label{ex:integration:A13} （广义控制收敛定理）设 $f_n\to f$ a.e.，$g_n\to g$ a.e.，$\abs{f_n}\leqslant g_n$，$g_n,g$ 可积，并且 $\int g_n\dd\mu\to\int g\dd\mu$。证明 $\int f_n\dd\mu\to\int f\dd\mu$。
+\begin{solution}
+思路：和控制收敛定理的证明一样，对两个非负函数列 $g_n+f_n$ 与 $g_n-f_n$ 用 Fatou 引理。
+
+和控制收敛定理证明的第一步一样，去掉一个零测集之后不妨设处处收敛，$g_n,g$ 处处有限。令 $n\to\infty$，$\abs f\leqslant g$，所以 $f$ 可积。
+
+$g_n+f_n\geqslant0$，并且 $g_n+f_n\to g+f$。由 Fatou 引理与线性性，
+\[
+\int g\dd\mu+\int f\dd\mu\leqslant\liminf_n\Bigl(\int g_n\dd\mu+\int f_n\dd\mu\Bigr)=\int g\dd\mu+\liminf_n\int f_n\dd\mu ,
+\]
+这里用到了 $\int g_n\to\int g$（一个收敛数列与另一个数列之和的下极限，等于极限加下极限）。消去 $\int g$（有限），得 $\int f\leqslant\liminf_n\int f_n$。
+
+$g_n-f_n\geqslant0$，$g_n-f_n\to g-f$。同样得到 $\int g-\int f\leqslant\int g-\limsup_n\int f_n$，即 $\limsup_n\int f_n\leqslant\int f$。
+
+两式合起来，$\lim_n\int f_n\dd\mu=\int f\dd\mu$。控制收敛定理是 $g_n=g$ 的特例。
+\end{solution}
+
+\item\label{ex:integration:A14} （Scheffé 引理）设 $f_n,f\geqslant0$ 可积，$f_n\to f$ a.e.，并且 $\int f_n\dd\mu\to\int f\dd\mu$。证明 $\int\abs{f_n-f}\dd\mu\to0$。特别地，若 $f_n,f$ 都是概率密度（非负，积分为 $1$），并且 $f_n\to f$ a.e.，则 $\int\abs{f_n-f}\dd x\to0$。
+\begin{solution}
+思路：$f-f_n$ 的正部被 $f$ 控制，可以用控制收敛定理；负部用总积分的条件来处理。
+
+记 $(f-f_n)^+=\max\{f-f_n,0\}$，$(f-f_n)^-=\max\{f_n-f,0\}$。
+
+\emph{正部。}由于 $f_n\geqslant0$，$f-f_n\leqslant f$，所以 $0\leqslant(f-f_n)^+\leqslant f$。又 $(f-f_n)^+\to0$ a.e.（$x\mapsto\max\{x,0\}$ 连续）。$f$ 可积，由控制收敛定理，$\int(f-f_n)^+\dd\mu\to0$。
+
+\emph{负部。}$f-f_n=(f-f_n)^+-(f-f_n)^-$，积分得
+\[
+\int(f-f_n)^-\dd\mu=\int(f-f_n)^+\dd\mu-\int f\dd\mu+\int f_n\dd\mu\to0-\int f\dd\mu+\int f\dd\mu=0 .
+\]
+
+于是 $\int\abs{f_n-f}\dd\mu=\int(f-f_n)^+\dd\mu+\int(f-f_n)^-\dd\mu\to0$。
+
+这个结论在概率论中的意义是：若随机变量 $X_n$ 的密度 $f_n$ 几乎处处收敛到 $X$ 的密度 $f$，则对一切 Borel 集 $B$，$\abs{P(X_n\in B)-P(X\in B)}=\abs{\int_B(f_n-f)\dd x}\leqslant\int\abs{f_n-f}\dd x\to0$，并且这个收敛关于 $B$ 是一致的。
+\end{solution}
+
+\item\label{ex:integration:A15} （积分的绝对连续性）设 $g$ 可积。证明：对任意 $\varepsilon>0$，存在 $\delta>0$，使得只要 $A\in\cF$，$\mu(A)<\delta$，就有 $\int_A\abs g\dd\mu<\varepsilon$。
+\begin{solution}
+思路：把 $\abs g$ 拆成有界的部分和“高处”的部分。有界部分在小集合上的积分小，因为它不超过界乘以集合的测度；高处的部分整体积分小，由单调收敛定理。
+
+令 $g_M=\abs g\one_{\{\abs g\leqslant M\}}$。当 $M\uparrow\infty$（取 $M=1,2,\dots$）时，$g_M\uparrow\abs g\one_{\{\abs g<\infty\}}$，而 $\abs g<\infty$ a.e.，所以由单调收敛定理，$\int g_M\dd\mu\uparrow\int\abs g\dd\mu$。$\int\abs g$ 有限，所以
+\[
+\int\abs g\one_{\{\abs g>M\}}\dd\mu=\int\abs g\dd\mu-\int g_M\dd\mu\to0 .
+\]
+给定 $\varepsilon>0$，取整数 $M$ 使 $\int\abs g\one_{\{\abs g>M\}}\dd\mu<\varepsilon/2$，再取 $\delta=\frac\varepsilon{2M}$。若 $\mu(A)<\delta$，则
+\[
+\begin{aligned}
+\int_A\abs g\dd\mu&=\int_A\abs g\one_{\{\abs g\leqslant M\}}\dd\mu+\int_A\abs g\one_{\{\abs g>M\}}\dd\mu\\
+&\leqslant M\mu(A)+\int\abs g\one_{\{\abs g>M\}}\dd\mu<\frac\varepsilon2+\frac\varepsilon2=\varepsilon .
+\end{aligned}
+\]
+（第一项的估计：$\abs g\one_{\{\abs g\leqslant M\}}\one_A\leqslant M\one_A$，由单调性与 $\int M\one_A=M\mu(A)$。）
+
+下一讲讨论测度的绝对连续性时，我们会从另一个角度再看到这个结论：$\nu(A)=\int_A\abs g\dd\mu$ 是有限测度，而上面的结论说 $\mu(A)$ 小时 $\nu(A)$ 也小。
+\end{solution}
 \end{exercises}
 
 \begin{probleme}{B}{Riemann 可积性的 Lebesgue 判别法}
