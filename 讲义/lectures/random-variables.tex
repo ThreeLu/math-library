@@ -9,6 +9,17 @@
 
 对这个函数，我们只提一个要求：对每个 Borel 集 $B$，“$X$ 落在 $B$ 中”必须是一个事件，否则我们就无法谈论 $P(X\in B)$。这个要求只涉及 $\sigma$-代数 $\cF$，与概率测度 $P$ 无关。所以这一讲的全部内容都不涉及 $P$，它研究的是可测函数这一类对象本身：怎样判断一个函数可测，可测函数经过哪些运算仍然可测。结论是，分析中能够遇到的一切运算，包括四则运算、复合连续函数、取上下确界与极限，都不会破坏可测性。
 
+\topic{本讲用到的前文结果}
+
+\begin{enumerate}
+\item 生成的 $\sigma$-代数与好集原理（定义~\ref{def:set-systems:generated} 及其后的讨论）：要证 $\sigma(\cC)$ 中每个集合有某性质，只需证有该性质的集合构成 $\sigma$-代数并包含 $\cC$。
+\item $\cR$ 由 $\{(-\infty,x]:x\in\Q\}$ 生成（命题~\ref{prop:set-systems:borel-generators}）；$\cR^d$ 由 $\{(-\infty,x_1]\times\cdots\times(-\infty,x_d]\}$ 生成（习题~\exref{ex:set-systems:A5}）。
+\item 原像与生成的 $\sigma$-代数可交换：$\sigma(f^{-1}(\cC))=f^{-1}(\sigma(\cC))$（习题~\exref{ex:set-systems:A7}）。
+\item $\pi$-$\lambda$ 定理（定理~\ref{thm:set-systems:pi-lambda}）。
+\item 集合列与数列的上、下极限（命题~\ref{prop:set-systems:limsup}）。
+\item 第~\ref{lec:extension-of-measures} 讲的 Lebesgue 可测集与不可测集（作业 D），只在注记和习题中用到。
+\end{enumerate}
+
 \topic{可测映射与随机变量}
 
 对映射 $X:\Omega\to S$ 与 $B\subseteq S$，记 $X^{-1}(B)=\{\omega\in\Omega: X(\omega)\in B\}$，简写为 $\{X\in B\}$。原像与集合运算可交换：
@@ -43,6 +54,30 @@ X^{-1}(B)\in\cF\qquad\text{对一切}\ B\in\cS,
 \item 若 $\cF=\{\varnothing,\Omega\}$，则只有常数是随机变量。设 $X$ 可测，则每个 $\{X\leqslant x\}$ 是 $\varnothing$ 或 $\Omega$。令 $c=\inf\{x:\{X\leqslant x\}=\Omega\}$。由于 $\Omega$ 非空，任取 $\omega_0$，$x<X(\omega_0)$ 时 $\{X\leqslant x\}\neq\Omega$，所以 $c\geqslant X(\omega_0)>-\infty$；而 $x=X(\omega_0)$ 时 $\{X\leqslant x\}\neq\varnothing$，从而等于 $\Omega$，所以 $c\leqslant X(\omega_0)<\infty$。于是 $c=X(\omega_0)$ 对每个 $\omega_0$ 成立，$X\equiv c$。
 \end{enumerate}
 \end{example}
+
+\begin{workedexample}\label{we:random-variables:coin}
+在无穷次抛硬币的空间 $\Omega=\{0,1\}^\N$，$\cF=\sigma(\{A_n\})$，$A_n=\{\omega_n=1\}$ 上（\egref{ex:set-systems:coin-tossing}），证明下列函数是（广义实值）随机变量：
+\begin{enumerate}
+\item $\xi_n(\omega)=\omega_n$（第 $n$ 次的结果）与 $S_n=\xi_1+\cdots+\xi_n$；
+\item $T(\omega)=\inf\{n:\omega_n=1\}$（第一次出现正面的时刻，约定 $\inf\varnothing=\infty$）；
+\item $L_n(\omega)$ = 前 $n$ 次中最长的连续正面的长度。
+\end{enumerate}
+\end{workedexample}
+\begin{solution}
+我们只用定义：对每个 $x$ 验证 $\{X\leqslant x\}\in\cF$，或者直接验证 $\{X\in B\}\in\cF$。（下面推论~\ref{cor:random-variables:criterion} 说明只验证 $\{X\leqslant x\}$ 就够了。）
+
+(1) $\xi_n=\one_{A_n}$，对 Borel 集 $B$，$\{\xi_n\in B\}$ 是 $\varnothing,A_n,A_n^c,\Omega$ 之一，都属于 $\cF$。$S_n$ 只取 $0,1,\dots,n$ 这有限个值，$\{S_n=k\}$ 是前 $n$ 个坐标中恰有 $k$ 个 $1$ 的那些柱集之并，属于 $\cF_n\subseteq\cF$；于是 $\{S_n\in B\}=\bigcup_{k\in B\cap\{0,\dots,n\}}\{S_n=k\}\in\cF$。
+
+(2) $T$ 取值于 $\{1,2,\dots\}\cup\{\infty\}$。对正整数 $n$，$T\leqslant n$ 当且仅当前 $n$ 次中至少有一次正面，所以
+\[
+\{T\leqslant n\}=A_1\cup\cdots\cup A_n\in\cF .
+\]
+对实数 $x$，$\{T\leqslant x\}=\{T\leqslant\lfloor x\rfloor\}$（$x<1$ 时为空集），所以 $\{T\leqslant x\}\in\cF$ 对一切实数 $x$ 成立，由下面的命题~\ref{prop:random-variables:extended}，$T$ 是广义实值随机变量。$\{T=\infty\}=\bigcap_nA_n^c$ 是“永远不出现正面”。
+
+(3) $L_n(\omega)$ 只依赖于 $\omega_1,\dots,\omega_n$，只取 $0,\dots,n$ 这些值，$\{L_n=j\}$ 是有限个柱集的并，属于 $\cF_n$。与 (1) 同理，$L_n$ 是随机变量。
+
+这个例题说明了一个一般的原则：\emph{只依赖于前 $n$ 次结果的量，都是 $\cF_n$-可测的随机变量}。这是因为 $\cF_n$ 恰好由前 $n$ 个坐标决定的柱集组成。至于依赖于全部无穷多次结果的量，比如 $\limsup_nS_n/n$，需要用下面的定理~\ref{thm:random-variables:limits}。
+\end{solution}
 
 \begin{theorem}[在生成元上验证可测性]\label{thm:random-variables:generators}
 设 $X:\Omega\to S$，$\cC\subseteq2^S$，$\sigma(\cC)=\cS$。若 $X^{-1}(C)\in\cF$ 对一切 $C\in\cC$ 成立，则 $X$ 是 $\cF/\cS$-可测的。
@@ -80,6 +115,26 @@ $X:\Omega\to\R$ 是随机变量，当且仅当 $\{X\leqslant x\}\in\cF$ 对一�
 \begin{remark}
 (2) 的证明是简单的，但是其重要性不言而喻：拓扑空间之间的连续映射一定是可测的。一般而言，连续性是非常容易验证的，所以我们现在有了一大类可测函数的例子。再加上下面的四则运算与极限运算，分析中遇到的函数几乎都是可测的。事实上，要构造一个不可测的函数，必须借助选择公理（第~\ref{lec:extension-of-measures} 讲作业 D）。所以在实际的问题中，可测性很少是真正的障碍，但我们仍然需要知道它为什么成立。
 \end{remark}
+
+\begin{workedexample}\label{we:random-variables:borel-functions}
+证明下列函数 $\R\to\R$ 是 Borel 函数：
+\begin{enumerate}
+\item Dirichlet 函数 $\one_\Q$；
+\item $f(x)=\sin(1/x)$（$x\neq0$），$f(0)=0$；
+\item $\lfloor x\rfloor$ 与 $x-\lfloor x\rfloor$。
+\end{enumerate}
+\end{workedexample}
+\begin{solution}
+(1) $\Q$ 是 Borel 集（可数个单点之并），由\egref{ex:random-variables:basic}(1)，$\one_\Q$ 是 Borel 函数。它处处不连续，所以这个例子说明可测函数可以非常不规则。
+
+(2) $f$ 在 $0$ 处不连续，不能直接用定理~\ref{thm:random-variables:composition}(2)。用推论~\ref{cor:random-variables:criterion}：对实数 $a$，
+\[
+\{f\leqslant a\}=\{x\neq0:\ \sin(1/x)\leqslant a\}\cup\bigl(\{0\}\cap\{0\leqslant a\}\bigr).
+\]
+第二部分是 $\{0\}$ 或空集。第一部分：$g(x)=\sin(1/x)$ 在开集 $U=\R\setminus\{0\}$ 上连续，所以 $\{x\in U:g(x)>a\}$ 是 $U$ 中的相对开集，即某个开集与 $U$ 的交，也是开集；第一部分是 $U$ 减去这个开集，属于 $\cR$。所以 $\{f\leqslant a\}\in\cR$。一般地，若把 $\R$ 分成两个 Borel 集，函数在每一块上分别可测，则拼起来的函数可测，见习题~\exref{ex:random-variables:A1}。
+
+(3) $\lfloor x\rfloor$ 单调不减，由定理~\ref{thm:random-variables:composition}(3) 是 Borel 函数；$x-\lfloor x\rfloor$ 是两个 Borel 函数之差，由下面的推论~\ref{cor:random-variables:arithmetic} 是 Borel 函数。
+\end{solution}
 
 \begin{theorem}[随机向量与分量]\label{thm:random-variables:vector}
 设 $X=(X_1,\dots,X_d):\Omega\to\R^d$。则 $X$ 是随机向量，当且仅当每个 $X_i$ 都是随机变量。
@@ -295,6 +350,21 @@ D_n=\sup_{x\in\R}\abs{F_n(x)-F(x)}.
 \end{enumerate}
 \end{example}
 
+\begin{workedexample}\label{we:random-variables:sigma-sum}
+把公平硬币抛两次，$\Omega=\{00,01,10,11\}$，$\cF=2^\Omega$，$\omega=\omega_1\omega_2$。令 $X=\omega_1+\omega_2$（正面的次数），$Y=\omega_1$（第一次的结果），$Z=\one_{\{\omega_1\neq\omega_2\}}$（两次结果不同）。写出 $\sigma(X)$，并判断 $Y$、$Z$ 是否是 $\sigma(X)$-可测的。
+\end{workedexample}
+\begin{solution}
+$X$ 取值 $0,1,2$，由\egref{ex:random-variables:sigma-examples}(2)，$\sigma(X)$ 由划分
+\[
+\{X=0\}=\{00\},\qquad\{X=1\}=\{01,10\},\qquad\{X=2\}=\{11\}
+\]
+生成，是这三块的并的全体，共 $2^3=8$ 个元素。
+
+$Y$ 不是 $\sigma(X)$-可测的：$\{Y=1\}=\{10,11\}$ 不是三块中某几块的并（它把 $\{01,10\}$ 这一块切开了）。直观上，知道一共有一次正面，不能知道是第一次还是第二次。
+
+$Z$ 是 $\sigma(X)$-可测的：$\{Z=1\}=\{01,10\}=\{X=1\}$。事实上 $Z=f(X)$，其中 $f(1)=1$，$f(0)=f(2)=0$。这正是下面 Doob--Dynkin 引理（定理~\ref{thm:random-variables:doob-dynkin}）的内容：$\sigma(X)$-可测的随机变量恰好是 $X$ 的函数。判断方法也很简单：$Z$ 在每一块上取常数，而 $Y$ 在 $\{01,10\}$ 这一块上取两个不同的值。
+\end{solution}
+
 \topic{简单函数逼近}
 
 \begin{definition}[简单函数]\label{def:random-variables:simple}
@@ -384,6 +454,17 @@ Doob--Dynkin 引理的两个方向难易程度很不一样。“$Y=f(X)$ 蕴含 
 设 $X=\one_A$。则 $\sigma(X)$-可测的随机变量恰好是形如 $a\one_A+b\one_{A^c}$ 的函数，即 $f(X)$，其中 $f(1)=a$，$f(0)=b$。设 $(X_1,\dots,X_n)$ 是随机向量，则 $\sigma(X_1,\dots,X_n)$-可测的随机变量恰好是 $f(X_1,\dots,X_n)$，$f$ 为 Borel 函数。以后条件期望 $E(Y\mid X_1,\dots,X_n)$ 就是这样一个函数。
 \end{example}
 
+\topic{本讲小结}
+
+\begin{enumerate}
+\item 随机变量是可测函数 $X:\Omega\to\R$：每个 $\{X\in B\}$（$B\in\cR$）都是事件。定义中没有概率测度。只需在生成元上验证，比如对一切 $x$ 验证 $\{X\leqslant x\}\in\cF$（推论~\ref{cor:random-variables:criterion}）。
+\item 可测性对一切常见运算封闭：复合、连续函数、四则运算、可数个的上下确界与上下极限（定理~\ref{thm:random-variables:composition}、推论~\ref{cor:random-variables:arithmetic}、定理~\ref{thm:random-variables:limits}）。$\{X_n\ \text{收敛}\}$ 是事件，几乎必然收敛有意义。
+\item 不可数个随机变量的上确界可以不可测；路径右连续时可以化为可数个（命题~\ref{prop:random-variables:sup-right-continuous}），经验分布函数的 $D_n$ 是随机变量。
+\item 乘积 $\sigma$-代数由可测矩形生成，$\cR^d=\cR\otimes\cdots\otimes\cR$；可测集与可测函数的截口可测（定理~\ref{thm:random-variables:sections}），这是第~\ref{lec:product-measures} 讲 Fubini 定理的第一步。
+\item $\sigma(X)$ 是 $X$ 所含的信息；$Y$ 是 $\sigma(X)$-可测的当且仅当 $Y=f(X)$（Doob--Dynkin 引理）。
+\item 非负可测函数是递增简单函数列的极限（定理~\ref{thm:random-variables:simple-approx}），这是第~\ref{lec:integration} 讲定义积分的出发点；函数形式的单调类定理把 $\pi$-$\lambda$ 定理推广到函数上。
+\end{enumerate}
+
 % =====================================================================
 \homework{Doob--Dynkin 引理的另一证明，间断点集的可测性，Borel 函数与连续函数的极限}[Doob–Dynkin 引理的另一证明，间断点集，Baire 函数]
 \label{hw:random-variables}
@@ -391,34 +472,217 @@ Doob--Dynkin 引理的两个方向难易程度很不一样。“$Y=f(X)$ 蕴含 
 \exercisepart{基本习题}
 
 \begin{exercises}{A}{课堂内容的补充}
-\item\label{ex:random-variables:A1} 设 $X,Y$ 是 $(\Omega,\cF)$ 上的随机变量，$A\in\cF$。证明 $Z=X\one_A+Y\one_{A^c}$（即 $A$ 上等于 $X$，$A^c$ 上等于 $Y$）是随机变量。又设 $E\in\cS$，$f:S\to\R$，$f|_E$ 对 $E$ 上的迹 $\sigma$-代数可测，证明 $f\one_E$ 是 $\cS$-可测的。
-\item 设 $\cA$ 生成 $\cS$。证明 $X^{-1}(\cA)=\{\{X\in A\}:A\in\cA\}$ 生成 $\sigma(X)$。（这是命题~\ref{prop:random-variables:sigma-generators}，请不看证明独立写一遍。）
-\item 设 $f:\R\to\R$ 连续，$X_n\to X$ a.s.。证明 $f(X_n)\to f(X)$ a.s.
-\item 称 $f:\R^d\to\R$ \term{下半连续}（lower semicontinuous），若对一切 $x$，$\liminf_{y\to x}f(y)\geqslant f(x)$。证明 $f$ 下半连续当且仅当对一切 $a$，$\{x:f(x)\leqslant a\}$ 是闭集，从而下半连续函数是 Borel 函数。
-\item 设 $X_n$ 是随机变量。证明 $\{\omega:\sum_nX_n(\omega)\ \text{收敛}\}\in\cF$，$\{\omega:\sup_n\abs{X_n(\omega)}<\infty\}\in\cF$。
-\item 在 $([-1,1],\cR\cap[-1,1])$ 上令 $X(\omega)=\omega^2$。证明 $\sigma(X)=\{B\in\cR\cap[-1,1]: B=-B\}$。
-\item 证明 Borel 函数 $f:\R\to\R$ 的全体对逐点极限（极限处处存在且有限时）封闭；但举例说明两个 Lebesgue 可测函数（对 Lebesgue 可测集的 $\sigma$-代数可测）的复合不一定是 Lebesgue 可测的。（后一问可以在做完思考题 E 之后再回答。）
-\item 设 $X,Y$ 是随机变量。证明 $\{X=Y\}$，$\{X<Y\}$ 属于 $\cF$。
-\item 证明 $\R^d$ 上的 Borel $\sigma$-代数 $\cR^d$ 是使一切连续函数 $f:\R^d\to\R$ 可测的最小 $\sigma$-代数。
-\item\label{ex:random-variables:A10} 设 $(S,\cS)$，$(T,\cT)$ 是可测空间，$\pi_S,\pi_T$ 是 $S\times T$ 到两个分量的投影。证明 $\cS\otimes\cT=\sigma(\pi_S,\pi_T)$，即它是使两个投影都可测的最小 $\sigma$-代数。又设 $f:S\to\R$ 是 $\cS$-可测的，$g:T\to\R$ 是 $\cT$-可测的，证明 $(s,t)\mapsto f(s)g(t)$ 与 $(s,t)\mapsto f(s)+g(t)$ 都是 $\cS\otimes\cT$-可测的。
-\item 设 $f:\R\to\R$ 是 Borel 函数。证明 $f$ 的图像 $\{(x,f(x)):x\in\R\}$ 属于 $\cR^2$，并写出它的各个截口。
-\item 设 $\{X_t:t\in[0,1]\}$ 是一族随机变量，并且对每个 $\omega$，$t\mapsto X_t(\omega)$ 在 $[0,1]$ 上连续。证明 $\sup_{t\in[0,1]}X_t$ 是随机变量，并且 $\{\omega:\ \text{存在}\ t\in[0,1]\ \text{使}\ X_t(\omega)=0\}\in\cF$。（提示：由紧性，这个事件等于 $\{\inf_{t\in[0,1]}\abs{X_t}=0\}$。）若只假设 $t\mapsto X_t(\omega)$ 左连续，命题~\ref{prop:random-variables:sup-right-continuous} 应当怎样修改？
-\item 在命题~\ref{prop:random-variables:empirical} 中，设 $F$ 连续。把 $X_1(\omega),\dots,X_n(\omega)$ 从小到大排列为 $X_{(1)}(\omega)\leqslant\cdots\leqslant X_{(n)}(\omega)$。证明
+\item\label{ex:random-variables:A1} 拼接可测函数。
+\begin{questions}
+\item 设 $X,Y$ 是 $(\Omega,\cF)$ 上的随机变量，$A\in\cF$。证明 $Z=X\one_A+Y\one_{A^c}$（即 $A$ 上等于 $X$，$A^c$ 上等于 $Y$）是随机变量。
+\begin{solution}
+对任意 $x\in\R$，$Z(\omega)\leqslant x$ 当且仅当“$\omega\in A$ 且 $X(\omega)\leqslant x$”或“$\omega\in A^c$ 且 $Y(\omega)\leqslant x$”，所以
+\[
+\{Z\leqslant x\}=\bigl(\{X\leqslant x\}\cap A\bigr)\cup\bigl(\{Y\leqslant x\}\cap A^c\bigr)\in\cF .
+\]
+由推论~\ref{cor:random-variables:criterion}，$Z$ 是随机变量。
+\end{solution}
+\item 设 $E\in\cS$，$f:S\to\R$，$f|_E$ 对 $E$ 上的迹 $\sigma$-代数可测，证明 $f\one_E$ 是 $\cS$-可测的。
+\begin{solution}
+$f|_E$ 对迹 $\sigma$-代数 $\cS\cap E=\{C\cap E:C\in\cS\}$ 可测，意思是 $\{s\in E:f(s)\leqslant x\}=C_x\cap E$ 对某个 $C_x\in\cS$ 成立。由于 $E\in\cS$，$C_x\cap E\in\cS$。于是
+\[
+\{f\one_E\leqslant x\}=\{s\in E:f(s)\leqslant x\}\cup\bigl(E^c\cap\{0\leqslant x\}\bigr)\in\cS,
+\]
+其中第二部分在 $x\geqslant0$ 时是 $E^c$，否则是空集。
+\end{solution}
+\end{questions}
+
+\item\label{ex:random-variables:A2} 设 $\cA$ 生成 $\cS$。证明 $X^{-1}(\cA)=\{\{X\in A\}:A\in\cA\}$ 生成 $\sigma(X)$。（这是命题~\ref{prop:random-variables:sigma-generators}，请不看证明独立写一遍。）
+\begin{solution}
+记 $\cG=\sigma(X^{-1}(\cA))$。每个 $\{X\in A\}$ 属于 $\sigma(X)$，所以 $\cG\subseteq\sigma(X)$。反之，令 $\cB=\{B\subseteq S:\ \{X\in B\}\in\cG\}$，它是 $\sigma$-代数（原像保持补集与可数并），并且包含 $\cA$，所以包含 $\sigma(\cA)=\cS$。这说明对一切 $B\in\cS$，$\{X\in B\}\in\cG$，即 $\sigma(X)\subseteq\cG$。（这也是第~\ref{lec:set-systems} 讲习题~\exref{ex:set-systems:A7} 第 3 小问的特例。）
+\end{solution}
+
+\item\label{ex:random-variables:A3} 设 $f:\R\to\R$ 连续，$X_n\to X$ a.s.。证明 $f(X_n)\to f(X)$ a.s.
+\begin{solution}
+令 $\Omega_0=\{X_n\to X\}$，$P(\Omega_0)=1$。对 $\omega\in\Omega_0$，数列 $X_n(\omega)\to X(\omega)$，由 $f$ 的连续性 $f(X_n(\omega))\to f(X(\omega))$。所以 $\{f(X_n)\to f(X)\}\supseteq\Omega_0$。左边是事件（$f(X_n)$、$f(X)$ 是随机变量，定义~\ref{def:random-variables:as} 后的说明），概率不小于 $P(\Omega_0)=1$。
+\end{solution}
+
+\item\label{ex:random-variables:A4} 称 $f:\R^d\to\R$ \term{下半连续}（lower semicontinuous），若对一切 $x$，$\liminf_{y\to x}f(y)\geqslant f(x)$。证明 $f$ 下半连续当且仅当对一切 $a$，$\{x:f(x)\leqslant a\}$ 是闭集，从而下半连续函数是 Borel 函数。
+\begin{solution}
+按定义，$\liminf_{y\to x}f(y)\geqslant f(x)$ 的意思是：对任意 $\varepsilon>0$，存在 $\delta>0$，使 $\abs{y-x}<\delta$ 时 $f(y)>f(x)-\varepsilon$。
+
+“$\Rightarrow$”：设 $x_k\in\{f\leqslant a\}$，$x_k\to x$。对任意 $\varepsilon>0$，取 $\delta$ 如上，$k$ 充分大时 $\abs{x_k-x}<\delta$，于是 $f(x)-\varepsilon<f(x_k)\leqslant a$。$\varepsilon$ 任意，$f(x)\leqslant a$。所以 $\{f\leqslant a\}$ 是闭集。
+
+“$\Leftarrow$”：若 $f$ 在某点 $x$ 不是下半连续的，则存在 $\varepsilon>0$ 与 $y_k\to x$ 使 $f(y_k)\leqslant f(x)-\varepsilon$。令 $a=f(x)-\varepsilon$，则 $y_k\in\{f\leqslant a\}$，这是闭集，所以 $x\in\{f\leqslant a\}$，即 $f(x)\leqslant f(x)-\varepsilon$，矛盾。
+
+可测性：$\{f\leqslant a\}$ 是闭集，属于 $\cR^d$，由推论~\ref{cor:random-variables:criterion}。
+\end{solution}
+
+\item\label{ex:random-variables:A5} 设 $X_n$ 是随机变量。
+\begin{questions}
+\item 证明 $\{\omega:\sum_nX_n(\omega)\ \text{收敛}\}\in\cF$。
+\begin{solution}
+部分和 $S_n=X_1+\cdots+X_n$ 是随机变量（推论~\ref{cor:random-variables:arithmetic}）。级数收敛就是 $\lim_nS_n$ 存在且有限，由定理~\ref{thm:random-variables:limits}（对 $S_n$ 用），这个集合属于 $\cF$。也可以直接用 Cauchy 准则写出：
+\[
+\Bigl\{\sum_nX_n\ \text{收敛}\Bigr\}=\bigcap_{k\geqslant1}\bigcup_{N\geqslant1}\bigcap_{m,n\geqslant N}\Bigl\{\abs{S_n-S_m}\leqslant\frac1k\Bigr\}.
+\]
+\end{solution}
+\item 证明 $\{\omega:\sup_n\abs{X_n(\omega)}<\infty\}\in\cF$。
+\begin{solution}
+$\sup_n\abs{X_n}$ 是广义实值随机变量（定理~\ref{thm:random-variables:limits}），所以 $\{\sup_n\abs{X_n}<\infty\}=\bigcup_{m\geqslant1}\{\sup_n\abs{X_n}\leqslant m\}\in\cF$。
+\end{solution}
+\end{questions}
+
+\item\label{ex:random-variables:A6} 在 $([-1,1],\cR\cap[-1,1])$ 上令 $X(\omega)=\omega^2$。证明 $\sigma(X)=\{B\in\cR\cap[-1,1]: B=-B\}$。
+\begin{solution}
+记右边为 $\cE$。
+
+“$\subseteq$”：$X$ 连续，所以 $\{X\in C\}$ 是 Borel 集；又 $\omega\in\{X\in C\}\iff\omega^2\in C\iff(-\omega)^2\in C$，所以它关于原点对称。
+
+“$\supseteq$”：设 $B\in\cE$。令 $C=\{\omega^2:\omega\in B\cap[0,1]\}$。映射 $h(\omega)=\omega^2$ 是 $[0,1]$ 到自身的连续双射，逆映射 $\sqrt{\cdot}$ 也连续，所以 $C=h(B\cap[0,1])=(\sqrt{\cdot})^{-1}(B\cap[0,1])$ 是 Borel 集。再验证 $\{X\in C\}=B$：$\omega\in\{X\in C\}\iff\omega^2\in C\iff\abs\omega\in B\cap[0,1]\iff\omega\in B$，最后一步用了 $B=-B$。所以 $B\in\sigma(X)$。
+\end{solution}
+
+\item\label{ex:random-variables:A7} Borel 函数与 Lebesgue 可测函数。
+\begin{questions}
+\item 证明 Borel 函数 $f:\R\to\R$ 的全体对逐点极限（极限处处存在且有限时）封闭。
+\begin{solution}
+设 $f_n$ 是 Borel 函数，$f_n(x)\to f(x)\in\R$ 对每个 $x$ 成立。把定理~\ref{thm:random-variables:limits} 用于可测空间 $(\R,\cR)$ 上的“随机变量” $f_n$：$f=\lim_nf_n=\limsup_nf_n$ 是 $\cR$-可测的。
+\end{solution}
+\item 举例说明两个 Lebesgue 可测函数（对 Lebesgue 可测集的 $\sigma$-代数可测）的复合不一定是 Lebesgue 可测的。（可以在做完思考题 E 之后再回答。）
+\begin{solution}
+用问题 E 的记号：$g:[0,1]\to[0,2]$ 是严格递增的连续双射，$V'\subseteq g(C)$ 不是 Lebesgue 可测的，$M=g^{-1}(V')\subseteq C$ 是 Lebesgue 可测集（零测集的子集）。令 $h:\R\to[0,1]$ 在 $[0,2]$ 上等于 $g^{-1}$，在 $(-\infty,0)$ 上等于 $0$，在 $(2,\infty)$ 上等于 $1$，它连续，从而 Lebesgue 可测。令 $\varphi=\one_M$，它是 Lebesgue 可测函数。但
+\[
+\{\varphi\circ h=1\}\cap[0,2]=\{y\in[0,2]:\ g^{-1}(y)\in M\}=g(M)=V'
+\]
+不是 Lebesgue 可测的，所以 $\varphi\circ h$ 不是 Lebesgue 可测函数。
+
+问题出在：$\varphi$ 的可测性是对 Lebesgue $\sigma$-代数说的，而 $h$ 只保证 \emph{Borel} 集的原像是 Lebesgue 可测的；Lebesgue 可测集 $M$ 的原像就不一定了。这又一次说明 Borel $\sigma$-代数在复合运算下更好用。
+\end{solution}
+\end{questions}
+
+\item\label{ex:random-variables:A8} 设 $X,Y$ 是随机变量。证明 $\{X=Y\}$，$\{X<Y\}$ 属于 $\cF$。
+\begin{solution}
+$X-Y$ 是随机变量（推论~\ref{cor:random-variables:arithmetic}），$\{X=Y\}=\{X-Y\in\{0\}\}$，$\{X<Y\}=\{X-Y\in(-\infty,0)\}$，$\{0\}$ 与 $(-\infty,0)$ 是 Borel 集。也可以直接写：$\{X<Y\}=\bigcup_{q\in\Q}\{X<q\}\cap\{q<Y\}$。
+\end{solution}
+
+\item\label{ex:random-variables:A9} 证明 $\R^d$ 上的 Borel $\sigma$-代数 $\cR^d$ 是使一切连续函数 $f:\R^d\to\R$ 可测的最小 $\sigma$-代数。
+\begin{solution}
+记 $\cG=\sigma(f:\ f\ \text{连续})=\sigma\bigl(\bigcup_f\sigma(f)\bigr)$。连续函数是 Borel 函数（定理~\ref{thm:random-variables:composition}(2)），所以 $\sigma(f)\subseteq\cR^d$，$\cG\subseteq\cR^d$。
+
+反之，设 $U\subseteq\R^d$ 是开集，$U\neq\R^d$。令 $f(x)=\inf_{y\in U^c}\abs{x-y}$ 为 $x$ 到闭集 $U^c$ 的距离，它是连续函数（第~\ref{lec:measures} 讲作业 C1)），并且 $f(x)>0\iff x\notin U^c\iff x\in U$。所以 $U=\{f>0\}\in\sigma(f)\subseteq\cG$。$U=\R^d$ 当然也在 $\cG$ 中。于是 $\cG$ 包含一切开集，$\cR^d\subseteq\cG$。
+\end{solution}
+
+\item\label{ex:random-variables:A10} 设 $(S,\cS)$，$(T,\cT)$ 是可测空间，$\pi_S,\pi_T$ 是 $S\times T$ 到两个分量的投影。
+\begin{questions}
+\item 证明 $\cS\otimes\cT=\sigma(\pi_S,\pi_T)$，即它是使两个投影都可测的最小 $\sigma$-代数。
+\begin{solution}
+$\sigma(\pi_S)=\{A\times T:A\in\cS\}$，$\sigma(\pi_T)=\{S\times B:B\in\cT\}$。这些都是可测矩形，所以 $\sigma(\pi_S,\pi_T)\subseteq\cS\otimes\cT$。反之，$A\times B=(A\times T)\cap(S\times B)\in\sigma(\pi_S,\pi_T)$，所以一切可测矩形都在其中，$\cS\otimes\cT\subseteq\sigma(\pi_S,\pi_T)$。
+\end{solution}
+\item 设 $f:S\to\R$ 是 $\cS$-可测的，$g:T\to\R$ 是 $\cT$-可测的，证明 $(s,t)\mapsto f(s)g(t)$ 与 $(s,t)\mapsto f(s)+g(t)$ 都是 $\cS\otimes\cT$-可测的。
+\begin{solution}
+由 A10-1)，$\pi_S$ 是 $\cS\otimes\cT/\cS$-可测的，所以 $f\circ\pi_S:(s,t)\mapsto f(s)$ 是 $\cS\otimes\cT$-可测的（定理~\ref{thm:random-variables:composition}(1)）；同理 $(s,t)\mapsto g(t)$ 可测。两个可测函数的积与和可测（推论~\ref{cor:random-variables:arithmetic}，它对任意可测空间成立）。
+\end{solution}
+\end{questions}
+
+\item\label{ex:random-variables:A11} 设 $f:\R\to\R$ 是 Borel 函数。证明 $f$ 的图像 $\{(x,f(x)):x\in\R\}$ 属于 $\cR^2$，并写出它的各个截口。
+\begin{solution}
+令 $h(x,y)=y-f(x)$。$(x,y)\mapsto f(x)$ 是 Borel 函数 $f$ 与连续投影的复合，$(x,y)\mapsto y$ 连续，所以 $h$ 是 $\cR^2$-可测的。图像 $G=\{h=0\}\in\cR^2$。
+
+截口：$G_x=\{y:(x,y)\in G\}=\{f(x)\}$ 是单点；$G^y=\{x:(x,y)\in G\}=f^{-1}(\{y\})$，是 Borel 集，与定理~\ref{thm:random-variables:sections} 一致。
+\end{solution}
+
+\item\label{ex:random-variables:A12} 设 $\{X_t:t\in[0,1]\}$ 是一族随机变量。
+\begin{questions}
+\item 设对每个 $\omega$，$t\mapsto X_t(\omega)$ 在 $[0,1]$ 上连续。证明 $\sup_{t\in[0,1]}X_t$ 是随机变量。
+\begin{solution}
+连续函数右连续。取 $T=[0,1]$，$D=\Q\cap[0,1]$：对 $t<1$，可取 $D$ 中从右边趋于 $t$ 的数列；$t=1$ 时 $1\in D$。由命题~\ref{prop:random-variables:sup-right-continuous}，$\sup_{t\in[0,1]}X_t=\sup_{t\in D}X_t$ 是广义实值随机变量。又连续函数在紧集 $[0,1]$ 上有界，上确界有限，所以它是（实值）随机变量。
+\end{solution}
+\item 在同样的假设下，证明 $\{\omega:\ \text{存在}\ t\in[0,1]\ \text{使}\ X_t(\omega)=0\}\in\cF$。
+\begin{solution}
+$t\mapsto\abs{X_t(\omega)}$ 连续，在 $[0,1]$ 上取到最小值。所以存在 $t$ 使 $X_t(\omega)=0$，当且仅当 $\min_t\abs{X_t(\omega)}=0$，当且仅当 $\inf_{t\in[0,1]}\abs{X_t(\omega)}=0$。对 $\abs{X_t}$ 用命题~\ref{prop:random-variables:sup-right-continuous}，$\inf_{t\in[0,1]}\abs{X_t}=\inf_{t\in D}\abs{X_t}$ 是随机变量，所求的事件是 $\{\inf_{t\in D}\abs{X_t}\leqslant0\}\in\cF$。
+\end{solution}
+\item 若只假设 $t\mapsto X_t(\omega)$ 左连续，命题~\ref{prop:random-variables:sup-right-continuous} 应当怎样修改？
+\begin{solution}
+把“从右边逼近”换成“从左边逼近”：设 $D\subseteq T$ 可数，对每个 $t\in T$ 存在 $d_n\in D$，$d_n\leqslant t$，$d_n\to t$（例如 $T=[a,b]$，$D=(\Q\cap[a,b])\cup\{a\}$）。若 $t\mapsto X_t(\omega)$ 在 $T$ 上左连续，则 $\sup_{t\in T}X_t=\sup_{t\in D}X_t$，$\inf$ 同理。证明与原命题完全相同：$X_t(\omega)=\lim_nX_{d_n}(\omega)\leqslant\sup_{s\in D}X_s(\omega)$。
+\end{solution}
+\end{questions}
+
+\item\label{ex:random-variables:A13} 在命题~\ref{prop:random-variables:empirical} 中，设 $F$ 连续。把 $X_1(\omega),\dots,X_n(\omega)$ 从小到大排列为 $X_{(1)}(\omega)\leqslant\cdots\leqslant X_{(n)}(\omega)$。证明
 \[
 D_n=\max_{1\leqslant k\leqslant n}\max\Bigl\{\frac kn-F(X_{(k)}),\ F(X_{(k)})-\frac{k-1}n\Bigr\},
 \]
 由此再证明一次 $D_n$ 是随机变量。（需要先说明每个 $X_{(k)}$ 是随机变量：$X_{(k)}=\min_{\abs I=k}\max_{i\in I}X_i$，其中 $I$ 取遍 $\{1,\dots,n\}$ 的 $k$ 元子集。）
+\begin{solution}
+固定 $\omega$，记 $x_{(k)}=X_{(k)}(\omega)$，约定 $x_{(0)}=-\infty$，$x_{(n+1)}=+\infty$，$F(-\infty)=0$，$F(+\infty)=1$。记右边的最大值为 $M$。
+
+\emph{第一步：$D_n\leqslant M$。}区间 $I_k=[x_{(k)},x_{(k+1)})$（$k=0,\dots,n$）把 $\R$ 分成不交的几段（有些可能是空的）。若 $I_k$ 非空，对 $x\in I_k$，恰好有 $k$ 个观测值不超过 $x$，$F_n(x)=\frac kn$。由 $F$ 单调不减且连续，
+\[
+\sup_{x\in I_k}\Bigl(\frac kn-F(x)\Bigr)=\frac kn-F(x_{(k)}),\qquad\sup_{x\in I_k}\Bigl(F(x)-\frac kn\Bigr)=F(x_{(k+1)})-\frac kn .
+\]
+当 $1\leqslant k\leqslant n$ 时，第一式是 $M$ 中的项 $\frac kn-F(x_{(k)})$；当 $k=0$ 时，第一式是 $\sup_{x<x_{(1)}}(-F(x))\leqslant0$。当 $0\leqslant k\leqslant n-1$ 时，第二式是 $M$ 中的项 $F(x_{(j)})-\frac{j-1}n$（$j=k+1$）；当 $k=n$ 时，第二式是 $\sup_x(F(x)-1)\leqslant0$。另一方面 $M\geqslant0$：$M$ 中的两项 $\frac1n-F(x_{(1)})$ 与 $F(x_{(1)})-0$ 之和为 $\frac1n$，其中至少有一个是正的。所以对每个非空的 $I_k$，$\sup_{x\in I_k}\abs{F_n(x)-F(x)}\leqslant M$。对 $k$ 取最大值得 $D_n\leqslant M$。
+
+\emph{第二步：$M\leqslant D_n$。}对每个 $k$，在 $x=x_{(k)}$ 处，$F_n(x_{(k)})\geqslant\frac kn$（至少有 $k$ 个值不超过它），所以 $\frac kn-F(x_{(k)})\leqslant F_n(x_{(k)})-F(x_{(k)})\leqslant D_n$。在 $x\uparrow x_{(k)}$ 时（$x<x_{(k)}$），不超过 $x$ 的观测值至多 $k-1$ 个，$F_n(x)\leqslant\frac{k-1}n$，所以 $F(x)-\frac{k-1}n\leqslant F(x)-F_n(x)\leqslant D_n$；令 $x\uparrow x_{(k)}$，由 $F$ 的连续性，$F(x_{(k)})-\frac{k-1}n\leqslant D_n$。
+
+\emph{可测性。}$X_{(k)}$ 是第 $k$ 小的值，它等于一切 $k$ 元子集 $I$ 上最大值中最小的一个：任何 $k$ 个值的最大值不小于第 $k$ 小的值，而取最小的 $k$ 个值时恰好相等。有限个随机变量的最大、最小值是随机变量（推论~\ref{cor:random-variables:arithmetic}），所以 $X_{(k)}$ 是随机变量；$F$ 连续，$F(X_{(k)})$ 是随机变量；$D_n$ 是有限个随机变量的最大值。
+
+这个公式在统计中很有用：计算 $D_n$ 只需要比较 $2n$ 个数，而不必对一切 $x$ 求上确界。
+\end{solution}
+
+\item\label{ex:random-variables:A14} （可测函数类的刻画）设 $(\Omega,\cF)$ 是可测空间。
+\begin{questions}
+\item 证明：$\cF$-可测的实值函数的全体，是包含全体简单函数、并且对逐点极限封闭的最小函数类。
+\begin{solution}
+记 $\cC$ 为包含全体简单函数、对逐点极限（极限处处存在且有限）封闭的最小函数类（这样的类的交仍是这样的类，全体函数是一个这样的类，所以最小者存在）。
+
+可测函数的全体包含简单函数，并且对逐点极限封闭（定理~\ref{thm:random-variables:limits}），所以 $\cC$ 包含于它。
+
+反之，设 $X$ 可测。由定理~\ref{thm:random-variables:simple-approx}，存在简单函数 $\varphi_n\to X^+$，$\psi_n\to X^-$，于是简单函数 $\varphi_n-\psi_n\to X$ 逐点成立，$X\in\cC$。
+\end{solution}
+\item 由 A14-1) 再证明一次 Doob--Dynkin 引理（定理~\ref{thm:random-variables:doob-dynkin}）中的必要性。
+\begin{solution}
+令 $\cK=\{Y:\ Y=f\circ X,\ f\ \text{是}\ \cS\text{-可测的实值函数}\}$。我们验证 $\cK$ 包含一切 $\sigma(X)$-可测的简单函数，并且对逐点极限封闭，然后对可测空间 $(\Omega,\sigma(X))$ 用 A14-1)。
+
+\emph{简单函数。}$Y=\sum_ic_i\one_{A_i}$，$A_i=X^{-1}(B_i)$，$B_i\in\cS$，则 $Y=f\circ X$，$f=\sum_ic_i\one_{B_i}$。
+
+\emph{逐点极限。}设 $Y_n=f_n\circ X\to Y$ 逐点。令 $E=\{s:\ \limsup_nf_n(s)=\liminf_nf_n(s)\in\R\}$，由定理~\ref{thm:random-variables:limits}（对 $(S,\cS)$ 使用），$E\in\cS$；令 $f=\limsup_nf_n\cdot\one_E$（在 $E^c$ 上为 $0$），它是 $\cS$-可测的实值函数。对每个 $\omega$，$f_n(X(\omega))=Y_n(\omega)$ 收敛到 $Y(\omega)$，所以 $X(\omega)\in E$，$f(X(\omega))=Y(\omega)$。
+
+由 A14-1)，$\cK$ 包含一切 $\sigma(X)$-可测函数。注意关键的一步是在 $E^c$ 上把 $f$ 改成 $0$：在 $X(\Omega)$ 之外，$f_n$ 不一定收敛。
+\end{solution}
+\end{questions}
 \end{exercises}
 
 \begin{probleme}{B}{Doob--Dynkin 引理：用简单函数的证明}
 本题不用单调类定理，重新证明定理~\ref{thm:random-variables:doob-dynkin}。设 $X:(\Omega,\cF)\to(S,\cS)$ 可测，$Y$ 是 $\sigma(X)$-可测的实值函数。
 \begin{questions}
 \item 设 $Y=\one_A$，$A\in\sigma(X)$。找出 $f$ 使 $Y=f\circ X$。
+\begin{solution}
+$A\in\sigma(X)$ 意味着 $A=X^{-1}(B)$，$B\in\cS$。令 $f=\one_B$，则 $f(X(\omega))=\one_B(X(\omega))=\one_{X^{-1}(B)}(\omega)=\one_A(\omega)$。
+\end{solution}
 \item 设 $Y=\sum_{i=1}^nc_i\one_{A_i}$ 是 $\sigma(X)$-可测简单函数，$A_i\in\sigma(X)$。找出 $f$。$f$ 是否唯一？在 $X(\Omega)$ 上是否唯一？
+\begin{solution}
+写 $A_i=X^{-1}(B_i)$，令 $f=\sum_ic_i\one_{B_i}$，由 B1) 与线性性 $f\circ X=Y$。
+
+$f$ 一般不唯一：$B_i$ 只在 $X(\Omega)$ 上被 $A_i$ 决定，在 $S\setminus X(\Omega)$ 上可以任意改动（只要保持可测）。比如 $S=\R$，$X\equiv0$，则 $\sigma(X)=\{\varnothing,\Omega\}$，$Y\equiv c$，任何满足 $f(0)=c$ 的 Borel 函数都可以。
+
+在 $X(\Omega)$ 上 $f$ 是唯一的：若 $f\circ X=g\circ X$，则对 $s=X(\omega)$，$f(s)=Y(\omega)=g(s)$。
+\end{solution}
 \item 设 $Y\geqslant0$。由定理~\ref{thm:random-variables:simple-approx} 取 $\sigma(X)$-可测简单函数 $Y_n\uparrow Y$，$Y_n=f_n\circ X$。说明不能直接令 $f=\lim f_n$，并说明问题出在 $S\setminus X(\Omega)$ 上。
+\begin{solution}
+在 $X(\Omega)$ 上，$f_n(X(\omega))=Y_n(\omega)\uparrow Y(\omega)$，极限存在且有限。但由 B2)，$f_n$ 在 $S\setminus X(\Omega)$ 上的值是随意的，比如可以是 $(-1)^n$ 或 $n$，这时 $\lim_nf_n$ 不存在或为 $\infty$，不能作为实值函数 $f$。
+\end{solution}
 \item 令 $f=\sup_nf_n\cdot\one_{\{\sup_nf_n<\infty\}}$。证明 $f$ 是 $\cS$-可测的实值函数，且 $Y=f\circ X$。
+\begin{solution}
+$\sup_nf_n$ 是 $S$ 上的广义实值可测函数（定理~\ref{thm:random-variables:limits}），$E=\{\sup_nf_n<\infty\}\in\cS$，在 $E$ 上 $\sup_nf_n$ 是实值的；在 $E^c$ 上令 $f=0$。由习题~\exref{ex:random-variables:A1} 的第 2 小问，$f$ 是 $\cS$-可测的实值函数。对 $s=X(\omega)$，$f_n(s)=Y_n(\omega)$ 递增趋于 $Y(\omega)<\infty$，所以 $\sup_nf_n(s)=Y(\omega)$，$s\in E$，$f(s)=Y(\omega)$。
+
+注意这里不必要求 $f_n$ 在 $S$ 上递增；在 $X(\Omega)$ 上它们自动递增，上确界就是极限。
+\end{solution}
 \item 对一般的 $Y$ 用 $Y=Y^+-Y^-$ 完成证明。
+\begin{solution}
+$Y^+=\max\{Y,0\}$ 与 $Y^-$ 是非负的 $\sigma(X)$-可测函数，由 B4)，$Y^+=g\circ X$，$Y^-=h\circ X$，$g,h$ 是 $\cS$-可测的实值函数。令 $f=g-h$，则 $Y=f\circ X$。
+\end{solution}
 \item 设 $S=\R$，$X$ 是随机变量。证明 $Y$ 是 $\sigma(X)$-可测的当且仅当：对任意 $\omega,\omega'$，$X(\omega)=X(\omega')$ 蕴含 $Y(\omega)=Y(\omega')$ 并且 $Y$ 是 $\cF$-可测的。这个说法对吗？若不对，给出反例并说明缺少了什么。
+\begin{solution}
+“只当”是对的：若 $Y=f(X)$，则 $X(\omega)=X(\omega')$ 时 $Y(\omega)=Y(\omega')$；$\sigma(X)\subseteq\cF$，$Y$ 当然 $\cF$-可测。
+
+“当”是错的。取 $\Omega=\R$，$\cF=2^\R$，$X(\omega)=\omega$。$X$ 是单射，所以第一个条件对任何 $Y$ 都成立；$\cF=2^\R$，所以任何 $Y$ 都是 $\cF$-可测的。但 $\sigma(X)=\cR$，取一个非 Borel 集 $V$（第~\ref{lec:set-systems} 讲作业 F 说明它存在），$Y=\one_V$ 不是 $\sigma(X)$-可测的。
+
+缺少的是：由第一个条件，可以在 $X(\Omega)$ 上定义 $f(X(\omega))=Y(\omega)$，但这个 $f$ 未必可测。$Y$ 的 $\cF$-可测性不能保证 $f$ 的 $\cS$-可测性，因为 $\cF$ 可能比 $\sigma(X)$ 大得多。
+\end{solution}
 \end{questions}
 \end{probleme}
 
@@ -430,10 +694,33 @@ f^\delta(x)=\sup\{f(y):\abs{y-x}<\delta\},\qquad f_\delta(x)=\inf\{f(y):\abs{y-x
 取值于 $\overline\R$。
 \begin{questions}
 \item 证明 $f^\delta$ 是下半连续的：对任意 $a$，$\{x:f^\delta(x)>a\}$ 是开集。同理 $f_\delta$ 上半连续。
+\begin{solution}
+设 $f^\delta(x)>a$。由上确界的定义，存在 $y$ 使 $\abs{y-x}<\delta$，$f(y)>a$。令 $r=\delta-\abs{y-x}>0$。若 $\abs{x'-x}<r$，则 $\abs{y-x'}\leqslant\abs{y-x}+\abs{x-x'}<\delta$，所以 $f^\delta(x')\geqslant f(y)>a$。于是以 $x$ 为心、$r$ 为半径的球含于 $\{f^\delta>a\}$，后者是开集。$f_\delta$ 同理：$\{f_\delta<a\}$ 是开集。
+\end{solution}
 \item 证明 $\delta\downarrow0$ 时，$f^\delta(x)$ 单调不增，$f_\delta(x)$ 单调不减，从而极限 $f^0(x)=\lim_{\delta\downarrow0}f^\delta(x)$ 与 $f_0(x)=\lim_{\delta\downarrow0}f_\delta(x)$ 存在，并且 $f^0=\lim_{n\to\infty}f^{1/n}$，$f_0=\lim_nf_{1/n}$。
+\begin{solution}
+$\delta'<\delta$ 时，半径 $\delta'$ 的球含于半径 $\delta$ 的球，较小集合上的上确界较小，所以 $f^{\delta'}(x)\leqslant f^\delta(x)$；下确界相反。单调函数在 $\delta\downarrow0$ 时的极限在 $\overline\R$ 中存在，并且等于沿任何一个趋于 $0$ 的递减数列（如 $\delta=\frac1n$）的极限。
+\end{solution}
 \item 由 C1)、C2) 与习题 A4 证明 $f^0$、$f_0$ 是（广义实值）Borel 函数。
+\begin{solution}
+由 C1)，$\{f^\delta\leqslant a\}$ 是闭集，从而对一切实数 $a$ 属于 $\cR^d$，由命题~\ref{prop:random-variables:extended}，$f^\delta$ 是广义实值 Borel 函数。（这正是习题 A4 的论证，只是现在函数可以取 $\pm\infty$。）由 C2)，$f^0=\inf_nf^{1/n}$，由定理~\ref{thm:random-variables:limits} 是广义实值 Borel 函数。同理 $f_0=\sup_nf_{1/n}$。
+\end{solution}
 \item 证明 $f$ 在 $x$ 连续，当且仅当 $f^0(x)=f_0(x)$（此时二者有限）。
+\begin{solution}
+总有 $f_\delta(x)\leqslant f(x)\leqslant f^\delta(x)$（$y=x$ 在球内），所以 $f_0(x)\leqslant f(x)\leqslant f^0(x)$。
+
+“$\Rightarrow$”：对 $\varepsilon>0$，取 $\delta$ 使 $\abs{y-x}<\delta$ 时 $\abs{f(y)-f(x)}<\varepsilon$，则 $f^\delta(x)\leqslant f(x)+\varepsilon$，$f_\delta(x)\geqslant f(x)-\varepsilon$，于是 $0\leqslant f^0(x)-f_0(x)\leqslant2\varepsilon$。$\varepsilon$ 任意，二者相等（都夹在有限数之间，有限）。
+
+“$\Leftarrow$”：若 $f^0(x)=f_0(x)$，则二者都等于 $f(x)$。对 $\varepsilon>0$，由极限的定义取 $\delta$ 使 $f^\delta(x)<f(x)+\varepsilon$，$f_\delta(x)>f(x)-\varepsilon$。于是 $\abs{y-x}<\delta$ 时 $f(x)-\varepsilon<f(y)<f(x)+\varepsilon$，$f$ 在 $x$ 连续。
+\end{solution}
 \item 由 C3)、C4) 与定理~\ref{thm:random-variables:limits} 的证明方法，证明 $\{x: f\ \text{在}\ x\ \text{处不连续}\}\in\cR^d$。
+\begin{solution}
+由 C4)，间断点集是 $\{f_0<f^0\}$（总有 $f_0\leqslant f^0$）。与定理~\ref{thm:random-variables:limits} 的证明相同，
+\[
+\{f_0<f^0\}=\bigcup_{q\in\Q}\bigl(\{f_0<q\}\cap\{f^0>q\}\bigr)\in\cR^d .
+\]
+这个结论的有趣之处在于 $f$ 本身可以不可测，它的间断点集却总是 Borel 集。由此还可以推出：任何函数的间断点集都是可数个闭集的并（$\{f^0-f_0\geqslant\frac1k\}$ 是闭集）。
+\end{solution}
 \end{questions}
 \end{probleme}
 
@@ -441,11 +728,33 @@ f^\delta(x)=\sup\{f(y):\abs{y-x}<\delta\},\qquad f_\delta(x)=\inf\{f(y):\abs{y-x
 令 $\cB_\ast$ 为满足下列两条的\emph{最小}函数类：(a) 一切连续函数 $\R\to\R$ 属于 $\cB_\ast$；(b) 若 $f_n\in\cB_\ast$ 且 $f_n\to f$ 逐点收敛（$f$ 实值），则 $f\in\cB_\ast$。（$\cB_\ast$ 称为 \term{Baire 函数类}。）本题证明 $\cB_\ast$ 恰好是全体 Borel 函数。
 \begin{questions}
 \item 说明满足 (a)(b) 的函数类的交仍满足 (a)(b)，从而 $\cB_\ast$ 有定义；并由习题 A7 证明 $\cB_\ast$ 中的函数都是 Borel 函数。
+\begin{solution}
+若每个类都含连续函数，交也含；若 $f_n$ 属于交，则属于每个类，极限 $f$ 属于每个类，从而属于交。全体函数 $\R\to\R$ 满足 (a)(b)，所以交非空，$\cB_\ast$ 是它们的交。Borel 函数的全体满足 (a)（定理~\ref{thm:random-variables:composition}(2)）与 (b)（习题 A7-1)），所以 $\cB_\ast\subseteq$ Borel 函数。
+\end{solution}
 \item 固定连续函数 $g$，令 $\cK_g=\{f\in\cB_\ast: f+g\in\cB_\ast\}$。证明 $\cK_g$ 满足 (a)(b)，从而 $\cK_g=\cB_\ast$。
+\begin{solution}
+(a)：$f$ 连续时 $f+g$ 连续，属于 $\cB_\ast$。(b)：若 $f_n\in\cK_g$，$f_n\to f$，则 $f\in\cB_\ast$，且 $f_n+g\in\cB_\ast$，$f_n+g\to f+g$，所以 $f+g\in\cB_\ast$，$f\in\cK_g$。由 $\cB_\ast$ 的最小性，$\cB_\ast\subseteq\cK_g\subseteq\cB_\ast$。
+\end{solution}
 \item 固定 $h\in\cB_\ast$，令 $\cK^h=\{f\in\cB_\ast: f+h\in\cB_\ast\}$。由 D2) 证明 $\cK^h$ 包含连续函数，再证明它满足 (b)。从而 $\cB_\ast$ 对加法封闭。同理证明对数乘封闭。
+\begin{solution}
+若 $f$ 连续，由 D2)（取 $g=f$），$h\in\cK_f$，即 $h+f\in\cB_\ast$，所以 $f\in\cK^h$。(b) 的验证与 D2) 相同。所以 $\cK^h=\cB_\ast$，即对一切 $f,h\in\cB_\ast$，$f+h\in\cB_\ast$。这又是“两次放大”：先让一个加数是连续的，再放开它。
+
+数乘：固定 $c$，$\{f\in\cB_\ast:cf\in\cB_\ast\}$ 含连续函数，对逐点极限封闭，所以是 $\cB_\ast$。
+\end{solution}
 \item 证明对 $a<b$，$\one_{(a,b]}$ 是一列连续函数的逐点极限，从而属于 $\cB_\ast$。
+\begin{solution}
+对 $n>\frac1{b-a}$，令 $\varphi_n$ 在 $(-\infty,a]$ 与 $[b+\frac1n,\infty)$ 上为 $0$，在 $[a+\frac1n,b]$ 上为 $1$，在 $[a,a+\frac1n]$ 与 $[b,b+\frac1n]$ 上线性连接。$\varphi_n$ 连续。逐点：$x\leqslant a$ 时 $\varphi_n(x)=0$；$a<x\leqslant b$ 时，$n$ 充分大使 $a+\frac1n\leqslant x$，$\varphi_n(x)=1$；$x>b$ 时，$n$ 充分大使 $b+\frac1n<x$，$\varphi_n(x)=0$。所以 $\varphi_n\to\one_{(a,b]}$。
+\end{solution}
 \item 由定理~\ref{thm:random-variables:monotone-class}（取 $\cP=\{(a,b]\}\cup\{\varnothing,\R\}$，注意 $\one_\R$ 连续）证明：一切有界 Borel 函数属于 $\cB_\ast$。
+\begin{solution}
+$\cP$ 是 $\pi$-类，含 $\R$，$\sigma(\cP)=\cR$。取 $\cH=\cB_\ast$，验证定理的三个条件：(1) $\one_\varnothing=0$、$\one_\R=1$ 连续，$\one_{(a,b]}\in\cB_\ast$（D4)）；(2) D3)；(3) 递增有界的极限是逐点极限，由 (b)。所以 $\cB_\ast$ 包含一切有界 $\cR$-可测函数。
+\end{solution}
 \item 对无界的 Borel 函数 $f$，考虑 $\max\{-n,\min\{f,n\}\}$，完成证明。
+\begin{solution}
+$f_n=\max\{-n,\min\{f,n\}\}$ 是有界 Borel 函数，由 D5) 属于 $\cB_\ast$；$n\geqslant\abs{f(x)}$ 时 $f_n(x)=f(x)$，所以 $f_n\to f$ 逐点，由 (b)，$f\in\cB_\ast$。结合 D1)，$\cB_\ast$ 恰好是 Borel 函数的全体。
+
+这个结论说明，Borel 函数正是从连续函数出发、反复取逐点极限所能得到的函数。比如 Dirichlet 函数 $\one_\Q=\lim_m\lim_n(\cos(m!\pi x))^{2n}$ 需要取两次极限。
+\end{solution}
 \end{questions}
 \end{probleme}
 
@@ -455,11 +764,42 @@ f^\delta(x)=\sup\{f(y):\abs{y-x}<\delta\},\qquad f_\delta(x)=\inf\{f(y):\abs{y-x
 设 $C$ 是 Cantor 集（习题~\exref{ex:extension:A4}）。定义 \term{Cantor 函数}（Cantor function）$c:[0,1]\to[0,1]$：若 $x=\sum_n\varepsilon_n3^{-n}\in C$，$\varepsilon_n\in\{0,2\}$，令 $c(x)=\sum_n(\varepsilon_n/2)2^{-n}$；在 $[0,1]\setminus C$ 的每个区间（去掉的开区间）上，令 $c$ 等于该区间端点处的公共值。
 \begin{questions}
 \item 证明 $c$ 定义合理（两个端点处的值相等），单调不减，连续，$c(0)=0$，$c(1)=1$。
+\begin{solution}
+\emph{在 $C$ 上定义合理。}由习题 A4-3) 的证明，$C$ 中每个点的 $\{0,2\}$-展开是唯一的。
+
+\emph{端点值相等。}第 $n$ 步去掉的开区间位于 $C_{n-1}$ 的某个区间 $[s,s+3^{-n+1}]$（$s=\sum_{k<n}\varepsilon_k3^{-k}$）的中间，是 $(s+3^{-n},s+2\cdot3^{-n})$。左端点 $s+3^{-n}=s+\sum_{k>n}2\cdot3^{-k}$ 的展开是 $\varepsilon_1\cdots\varepsilon_{n-1}0222\cdots$，右端点的展开是 $\varepsilon_1\cdots\varepsilon_{n-1}2000\cdots$。记 $t=\sum_{k<n}(\varepsilon_k/2)2^{-k}$，则
+\[
+c(\text{左端点})=t+\sum_{k>n}2^{-k}=t+2^{-n},\qquad c(\text{右端点})=t+2^{-n}.
+\]
+
+\emph{单调。}设 $x<y$ 都在 $C$ 中，第一个不同的数字在第 $k$ 位，则 $\varepsilon_k(x)=0$，$\varepsilon_k(y)=2$（否则 $x>y$），于是 $c(y)-c(x)\geqslant2^{-k}-\sum_{j>k}2^{-j}=0$。在去掉的区间上 $c$ 取端点的值，所以整体单调不减。
+
+\emph{连续。}$c$ 的值域包含 $[0,1]$：任给 $y=\sum_kb_k2^{-k}$（$b_k\in\{0,1\}$），$x=\sum_k2b_k3^{-k}\in C$ 满足 $c(x)=y$。单调函数若有跳跃，值域就会缺一段区间；$c$ 的值域是整个 $[0,1]$，所以没有跳跃，连续。
+
+$c(0)=0$（$0$ 的展开全为 $0$），$c(1)=1$（$1=\sum_k2\cdot3^{-k}$）。
+\end{solution}
 \item 令 $g(x)=x+c(x)$。证明 $g$ 是 $[0,1]$ 到 $[0,2]$ 的严格递增连续双射，其逆也连续。
+\begin{solution}
+$x$ 严格递增，$c$ 单调不减，和严格递增；两者连续，和连续。$g(0)=0$，$g(1)=2$，由介值定理 $g$ 取遍 $[0,2]$，严格递增给出单射。逆映射 $g^{-1}:[0,2]\to[0,1]$ 严格递增，值域是整个区间 $[0,1]$，与上一问同理没有跳跃，连续。
+\end{solution}
 \item 证明 $g$ 把 $[0,1]\setminus C$ 中的每个去掉的区间映为同样长度的区间，从而 $\lambda(g([0,1]\setminus C))=1$，$\lambda(g(C))=1$。
+\begin{solution}
+在去掉的区间 $(u,v)$ 上，$c\equiv c(u)$，所以 $g(x)=x+c(u)$，$g((u,v))=(u+c(u),v+c(u))$，长度 $v-u$。$[0,1]\setminus C$ 是可数个不交的去掉的开区间之并，总长度 $\lambda([0,1]\setminus C)=1-\lambda(C)=1$。$g$ 是单射，像也两两不交，所以 $\lambda(g([0,1]\setminus C))=\sum(v-u)=1$。$g$ 是双射，$g(C)=[0,2]\setminus g([0,1]\setminus C)$，$\lambda(g(C))=2-1=1$。（$g(C)$ 是紧集的连续像，是紧集，当然是 Borel 集。）
+\end{solution}
 \item 利用第~\ref{lec:extension-of-measures} 讲作业 D 的方法证明：$g(C)$ 含有一个不是 Lebesgue 可测的子集 $V'$。（提示：先证明任何 $\lambda^*(A)>0$ 的集合 $A$ 都含有不可测子集。）
+\begin{solution}
+\emph{引理。}若 $A\subseteq[0,1)$，$\lambda^*(A)>0$，则 $A$ 有不是 Lebesgue 可测的子集。设 $V$ 是第~\ref{lec:extension-of-measures} 讲作业 D 中的集合，令 $A_q=A\cap(q\oplus V)$，$q\in\Q\cap[0,1)$，则 $A=\bigcup_qA_q$（作业 D3)）。若每个 $A_q$ 都可测，我们断言 $\lambda(A_q)=0$：$E=A_q$ 可测且 $E\subseteq q\oplus V$，则 $E'=(1-q)\oplus E\subseteq V$ 可测（作业 D5) 的第一步），而 $\{r\oplus E':r\in\Q\cap[0,1)\}$ 两两不交（含于两两不交的 $r\oplus V$），测度都等于 $\lambda(E')$，并都含于 $[0,1)$，所以 $\sum_r\lambda(E')\leqslant1$，$\lambda(E')=0$，$\lambda(E)=0$。于是 $\lambda^*(A)\leqslant\sum_q\lambda(A_q)=0$，矛盾。
+
+\emph{应用。}$\lambda(g(C))=1$，所以 $g(C)\cap[0,1)$ 与 $g(C)\cap[1,2]$ 中有一个测度为正；后者平移 $-1$ 后含于 $[0,1]$，去掉一点不影响。对它用引理（平移回去不改变可测性，命题~\ref{prop:extension:lebesgue}(2) 与作业 C），得到 $g(C)$ 的不可测子集 $V'$。
+\end{solution}
 \item 令 $M=g^{-1}(V')\subseteq C$。证明 $M$ 是 Lebesgue 可测集（它是零外测度集的子集），但 $M$ 不是 Borel 集。（提示：若 $M$ 是 Borel 集，则 $g(M)=(g^{-1})^{-1}(M)$ 是连续函数下 Borel 集的原像。）
+\begin{solution}
+$M\subseteq C$，$\lambda^*(M)\leqslant\lambda(C)=0$，由定理~\ref{thm:extension:caratheodory}，$M$ 是 Lebesgue 可测的。若 $M$ 是 Borel 集，由于 $g^{-1}:[0,2]\to[0,1]$ 连续，$\{y:g^{-1}(y)\in M\}=g(M)=V'$ 是 Borel 集，从而 Lebesgue 可测，矛盾。
+\end{solution}
 \item 由此给出习题 A7 第二部分所要的例子。
+\begin{solution}
+见习题 A7-2) 的解答：$\varphi=\one_M$ 与 $h$（$g^{-1}$ 的连续延拓）都是 Lebesgue 可测的，而 $\varphi\circ h$ 在 $[0,2]$ 上是 $\one_{V'}$，不可测。
+\end{solution}
 \end{questions}
 \end{probleme}
 
@@ -469,8 +809,24 @@ f^\delta(x)=\sup\{f(y):\abs{y-x}<\delta\},\qquad f_\delta(x)=\inf\{f(y):\abs{y-x
 设 $(\Omega,\cF,\mu)$ 是有限测度空间，$X_n,X$ 是实值可测函数，$X_n\to X$ a.e.。本题证明 \term{Egorov 定理}：\emph{对任意 $\varepsilon>0$，存在 $A\in\cF$，$\mu(A^c)<\varepsilon$，使 $X_n\to X$ 在 $A$ 上一致成立。}
 \begin{questions}
 \item 对 $k,N\geqslant1$ 令 $E_{k,N}=\bigcup_{n\geqslant N}\{\abs{X_n-X}\geqslant1/k\}$。证明 $E_{k,N}\in\cF$，且对固定的 $k$，$N\to\infty$ 时 $E_{k,N}\downarrow E_k$，其中 $E_k\subseteq\{X_n\not\to X\}$。
+\begin{solution}
+$\abs{X_n-X}$ 可测，所以每个 $\{\abs{X_n-X}\geqslant\frac1k\}\in\cF$，可数并属于 $\cF$。$N$ 增大时并的范围缩小，$E_{k,N}$ 递减；$E_k=\bigcap_NE_{k,N}=\limsup_n\{\abs{X_n-X}\geqslant\frac1k\}$ 是“$\abs{X_n-X}\geqslant\frac1k$ 发生无穷多次”。在 $E_k$ 上 $X_n\not\to X$。
+\end{solution}
 \item 由测度的从上连续，对每个 $k$ 取 $N_k$ 使 $\mu(E_{k,N_k})<\varepsilon2^{-k}$。令 $A=\bigcap_kE_{k,N_k}^c$。证明 $\mu(A^c)<\varepsilon$。
+\begin{solution}
+$\mu(E_k)\leqslant\mu(X_n\not\to X)=0$。$\mu$ 有限，由从上连续 $\mu(E_{k,N})\downarrow\mu(E_k)=0$，所以 $N_k$ 存在。$A^c=\bigcup_kE_{k,N_k}$，由次可加性 $\mu(A^c)<\sum_k\varepsilon2^{-k}=\varepsilon$。
+\end{solution}
 \item 证明 $X_n\to X$ 在 $A$ 上一致成立。
+\begin{solution}
+设 $\omega\in A$。对每个 $k$，$\omega\notin E_{k,N_k}$，即对一切 $n\geqslant N_k$，$\abs{X_n(\omega)-X(\omega)}<\frac1k$。$N_k$ 与 $\omega$ 无关，所以 $n\geqslant N_k$ 时 $\sup_{\omega\in A}\abs{X_n(\omega)-X(\omega)}\leqslant\frac1k$。这就是一致收敛。
+\end{solution}
 \item 举例说明 $\mu$ 有限的条件不能去掉（考虑 $(\R,\cR,\lambda)$ 上的 $\one_{[n,n+1]}$），并说明结论不能加强为 $\mu(A^c)=0$（考虑 $([0,1],\lambda)$ 上的 $x^n$）。
+\begin{solution}
+\emph{无限测度。}$X_n=\one_{[n,n+1]}\to0$ 处处成立。设 $A$ 使 $X_n\to0$ 在 $A$ 上一致，则存在 $N$，$n\geqslant N$ 时 $\sup_A\one_{[n,n+1]}<\frac12$，即 $A\cap[n,n+1]=\varnothing$，于是 $A^c\supseteq[N,\infty)$，$\lambda(A^c)=\infty$。所以对 $\varepsilon=1$ 结论不成立。
+
+\emph{不能要求 $\mu(A^c)=0$。}$x^n\to0$ 对 $x\in[0,1)$ 成立。若 $\lambda(A^c)=0$，则 $A$ 在 $1$ 的任何左邻域 $(1-\delta,1)$ 中都有点（否则 $A^c$ 含一个正测度的区间），于是对每个 $n$，$\sup_{x\in A}x^n=1$，不趋于 $0$。
+
+Egorov 定理说的是：在有限测度空间上，几乎处处收敛“差不多”就是一致收敛。这在以后证明依概率收敛与几乎必然收敛的关系时会用到类似的想法。
+\end{solution}
 \end{questions}
 \end{probleme}
