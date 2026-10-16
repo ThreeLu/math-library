@@ -739,22 +739,27 @@ E\abs X^q\leqslant1+\sum_{n=1}^\infty P(\abs X^q\geqslant n)=1+\sum_{n=1}^\infty
 \emph{情形二：$EX_1^+=\infty$。}则 $EX_1=\infty$，而 $X_n\geqslant X_1$ 蕴含 $X_n^+\geqslant X_1^+$，$EX_n=\infty$ 对一切 $n$ 成立；同样 $EX=\infty$。结论成立。
 \end{solution}
 
-\item\label{ex:expectation:A3} （Chebyshev 不等式在什么意义下是最好的）(i) 设 $0<b\leqslant a$。构造随机变量 $X$，使 $EX^2=b^2$ 并且 $P(\abs X\geqslant a)=b^2/a^2$，从而 Chebyshev 不等式 $P(\abs X\geqslant a)\leqslant EX^2/a^2$ 中的等号可以成立。(ii) 另一方面，证明对任意给定的 $X$，若 $0<EX^2<\infty$，则 $\displaystyle\lim_{a\to\infty}\frac{a^2P(\abs X\geqslant a)}{EX^2}=0$。
+\item\label{ex:expectation:A3} （Chebyshev 不等式在什么意义下是最好的）
+\begin{questions}
+\item 设 $0<b\leqslant a$。构造随机变量 $X$，使 $EX^2=b^2$ 并且 $P(\abs X\geqslant a)=b^2/a^2$，从而 Chebyshev 不等式 $P(\abs X\geqslant a)\leqslant EX^2/a^2$ 中的等号可以成立。
 \begin{solution}
-(i) 思路：要使 Markov 不等式的证明中 $a^2\one_{\{\abs X\geqslant a\}}\leqslant X^2$ 处处取等号，$X$ 只能取 $0$ 与 $\pm a$。令
+思路：要使 Markov 不等式的证明中 $a^2\one_{\{\abs X\geqslant a\}}\leqslant X^2$ 处处取等号，$X$ 只能取 $0$ 与 $\pm a$。令
 \[
 P(X=a)=P(X=-a)=\frac{b^2}{2a^2},\qquad P(X=0)=1-\frac{b^2}{a^2}.
 \]
 由 $b\leqslant a$，这些数非负，和为 $1$，所以这是一个分布。由推论~\ref{cor:expectation:discrete}，$EX^2=a^2\cdot\frac{b^2}{a^2}=b^2$，而 $P(\abs X\geqslant a)=\frac{b^2}{a^2}=\frac{EX^2}{a^2}$。
-
-(ii) 思路：和\wegref{we:expectation:tP} 一样，只在事件 $\{\abs X\geqslant a\}$ 上估计。在这个事件上 $a^2\leqslant X^2$，所以
+\end{solution}
+\item 另一方面，证明对任意给定的 $X$，若 $0<EX^2<\infty$，则 $\displaystyle\lim_{a\to\infty}\frac{a^2P(\abs X\geqslant a)}{EX^2}=0$。
+\begin{solution}
+思路：和\wegref{we:expectation:tP} 一样，只在事件 $\{\abs X\geqslant a\}$ 上估计。在这个事件上 $a^2\leqslant X^2$，所以
 \[
 a^2P(\abs X\geqslant a)\leqslant E(X^2;\abs X\geqslant a).
 \]
 任取 $a_n\to\infty$，令 $Y_n=X^2\one_{\{\abs X\geqslant a_n\}}$。$0\leqslant Y_n\leqslant X^2$，$X^2$ 可积；$X$ 处处有限，所以 $n$ 充分大时 $a_n>\abs X$，$Y_n\to0$ 处处成立。由控制收敛定理，$EY_n\to0$。所以 $a^2P(\abs X\geqslant a)\to0$，再除以正数 $EX^2$ 即得。
 
-这说明：Chebyshev 不等式对“所有分布”是最好的，但对“每一个固定的分布”，当 $a$ 很大时它都远不是最好的。(i) 中达到等号的分布依赖于 $a$。
+这说明：Chebyshev 不等式对“所有分布”是最好的，但对“每一个固定的分布”，当 $a$ 很大时它都远不是最好的。A3-1) 中达到等号的分布依赖于 $a$。
 \end{solution}
+\end{questions}
 
 \item\label{ex:expectation:A4} （单侧 Chebyshev 不等式）设 $EY=0$，$\Var(Y)=\sigma^2<\infty$，$a>0$。证明
 \[
@@ -825,11 +830,15 @@ EY=E\bigl(Y\one_{\{Y>0\}}\bigr)\leqslant\bigl(EY^2\bigr)^{1/2}\bigl(E\one_{\{Y>0
 由 Heine 定理，两个极限都是 $0$。注意第二个结论中 $E(1/X;X>y)$ 本身可能随 $y\downarrow0$ 趋于无穷（比如 $X$ 在 $(0,1)$ 上均匀分布，$E(\frac1X;X>y)=\log\frac1y$），但乘以 $y$ 之后趋于零。
 \end{solution}
 
-\item\label{ex:expectation:A8} 设 $EX^2<\infty$。(i) 证明 $E(X-c)^2=\Var(X)+(EX-c)^2$，从而 $c\mapsto E(X-c)^2$ 在 $c=EX$ 处取最小值 $\Var(X)$。(ii) 设 $m$ 是 $X$ 的\term{中位数}（median），即 $P(X\leqslant m)\geqslant\frac12$，$P(X\geqslant m)\geqslant\frac12$。证明 $E\abs{X-c}\geqslant E\abs{X-m}$ 对一切 $c\in\R$ 成立。(iii) 证明中位数总是存在的。
+\item\label{ex:expectation:A8} 设 $EX^2<\infty$。
+\begin{questions}
+\item 证明 $E(X-c)^2=\Var(X)+(EX-c)^2$，从而 $c\mapsto E(X-c)^2$ 在 $c=EX$ 处取最小值 $\Var(X)$。
 \begin{solution}
-(i) 记 $\mu=EX$。$(X-c)^2=(X-\mu)^2+2(\mu-c)(X-\mu)+(\mu-c)^2$，取期望，中间一项为 $2(\mu-c)E(X-\mu)=0$，即得。
-
-(ii) 思路：比较 $\abs{X-c}$ 与 $\abs{X-m}$，按 $X$ 落在 $m$ 的哪一侧分情况估计差值。
+记 $\mu=EX$。$(X-c)^2=(X-\mu)^2+2(\mu-c)(X-\mu)+(\mu-c)^2$，取期望，中间一项为 $2(\mu-c)E(X-\mu)=0$，即得。
+\end{solution}
+\item 设 $m$ 是 $X$ 的\term{中位数}（median），即 $P(X\leqslant m)\geqslant\frac12$，$P(X\geqslant m)\geqslant\frac12$。证明 $E\abs{X-c}\geqslant E\abs{X-m}$ 对一切 $c\in\R$ 成立。
+\begin{solution}
+思路：比较 $\abs{X-c}$ 与 $\abs{X-m}$，按 $X$ 落在 $m$ 的哪一侧分情况估计差值。
 
 设 $c>m$。若 $x\leqslant m$，则 $x\leqslant m<c$，$\abs{x-c}-\abs{x-m}=(c-x)-(m-x)=c-m$。若 $x>m$，由三角不等式 $\abs{x-m}\leqslant\abs{x-c}+(c-m)$，即 $\abs{x-c}-\abs{x-m}\geqslant-(c-m)$。所以
 \[
@@ -843,31 +852,39 @@ E\abs{X-c}-E\abs{X-m}&\geqslant(c-m)\bigl(P(X\leqslant m)-P(X>m)\bigr)\\
 \end{aligned}
 \]
 $c<m$ 的情形对称：若 $x\geqslant m$，$\abs{x-c}-\abs{x-m}=m-c$；若 $x<m$，差值 $\geqslant-(m-c)$；于是差的期望 $\geqslant(m-c)(2P(X\geqslant m)-1)\geqslant0$。
-
-(iii) 设 $F$ 是 $X$ 的分布函数，取 $m=F^{-1}(\frac12)$（定义~\ref{def:distributions:quantile}）。由引理~\ref{lem:distributions:quantile}，$F^{-1}(\frac12)\leqslant m$ 蕴含 $\frac12\leqslant F(m)$，即 $P(X\leqslant m)\geqslant\frac12$。又对 $x<m$，$F^{-1}(\frac12)\leqslant x$ 不成立，所以 $F(x)<\frac12$；令 $x\uparrow m$，$P(X<m)=F(m-)\leqslant\frac12$，即 $P(X\geqslant m)\geqslant\frac12$。
 \end{solution}
+\item 证明中位数总是存在的。
+\begin{solution}
+设 $F$ 是 $X$ 的分布函数，取 $m=F^{-1}(\frac12)$（定义~\ref{def:distributions:quantile}）。由引理~\ref{lem:distributions:quantile}，$F^{-1}(\frac12)\leqslant m$ 蕴含 $\frac12\leqslant F(m)$，即 $P(X\leqslant m)\geqslant\frac12$。又对 $x<m$，$F^{-1}(\frac12)\leqslant x$ 不成立，所以 $F(x)<\frac12$；令 $x\uparrow m$，$P(X<m)=F(m-)\leqslant\frac12$，即 $P(X\geqslant m)\geqslant\frac12$。
+\end{solution}
+\end{questions}
 
 \item\label{ex:expectation:A9} 设 $a\leqslant X\leqslant b$。证明 $\Var(X)\leqslant\frac{(b-a)^2}4$，并说明等号何时成立。
 \begin{solution}
-由习题 A8(i)，$\Var(X)=\min_cE(X-c)^2\leqslant E\bigl(X-\frac{a+b}2\bigr)^2$。而 $a\leqslant X\leqslant b$ 蕴含 $\abs{X-\frac{a+b}2}\leqslant\frac{b-a}2$，所以 $\Var(X)\leqslant\frac{(b-a)^2}4$。
+由习题 A8-1)，$\Var(X)=\min_cE(X-c)^2\leqslant E\bigl(X-\frac{a+b}2\bigr)^2$。而 $a\leqslant X\leqslant b$ 蕴含 $\abs{X-\frac{a+b}2}\leqslant\frac{b-a}2$，所以 $\Var(X)\leqslant\frac{(b-a)^2}4$。
 
 等号成立当且仅当两个不等号都取等号：$EX=\frac{a+b}2$，并且 $\abs{X-\frac{a+b}2}=\frac{b-a}2$ a.s.（由命题~\ref{prop:expectation:basic}(4)，非负随机变量 $\frac{(b-a)^2}4-(X-\frac{a+b}2)^2$ 的期望为零当且仅当它几乎必然为零），即 $X$ 只取 $a,b$ 两个值，并且各以概率 $\frac12$ 取到。
 \end{solution}
 
-\item\label{ex:expectation:A10} 计算下列分布的期望与方差：(i) 区间 $[a,b]$ 上的均匀分布，密度 $\frac1{b-a}\one_{[a,b]}$；(ii) 参数为 $\lambda>0$ 的指数分布，密度 $\lambda e^{-\lambda x}\one_{(0,\infty)}(x)$。
+\item\label{ex:expectation:A10} 计算下列分布的期望与方差：
+\begin{questions}
+\item 区间 $[a,b]$ 上的均匀分布，密度 $\frac1{b-a}\one_{[a,b]}$；
 \begin{solution}
 都用推论~\ref{cor:expectation:density}，把期望化成 $\R$ 上的积分，再用 Riemann 积分计算（定理~\ref{thm:integration:riemann}）。
 
-(i) $EX=\frac1{b-a}\int_a^bx\dd x=\frac{b^2-a^2}{2(b-a)}=\frac{a+b}2$；$EX^2=\frac1{b-a}\int_a^bx^2\dd x=\frac{b^3-a^3}{3(b-a)}=\frac{a^2+ab+b^2}3$。于是
+$EX=\frac1{b-a}\int_a^bx\dd x=\frac{b^2-a^2}{2(b-a)}=\frac{a+b}2$；$EX^2=\frac1{b-a}\int_a^bx^2\dd x=\frac{b^3-a^3}{3(b-a)}=\frac{a^2+ab+b^2}3$。于是
 \[
 \begin{aligned}
 \Var(X)&=\frac{a^2+ab+b^2}3-\frac{(a+b)^2}4\\
 &=\frac{4a^2+4ab+4b^2-3a^2-6ab-3b^2}{12}=\frac{(b-a)^2}{12}.
 \end{aligned}
 \]
-
-(ii) 对 $k\geqslant0$，由单调收敛定理，$EX^k=\lim_N\int_0^Nx^k\lambda e^{-\lambda x}\dd x$。作换元 $u=\lambda x$，$\int_0^Nx^k\lambda e^{-\lambda x}\dd x=\lambda^{-k}\int_0^{\lambda N}u^ke^{-u}\dd u$，令 $N\to\infty$，由\wegref{we:integration:factorial}，$EX^k=\frac{k!}{\lambda^k}$。所以 $EX=\frac1\lambda$，$EX^2=\frac2{\lambda^2}$，$\Var(X)=\frac1{\lambda^2}$。
 \end{solution}
+\item 参数为 $\lambda>0$ 的指数分布，密度 $\lambda e^{-\lambda x}\one_{(0,\infty)}(x)$。
+\begin{solution}
+对 $k\geqslant0$，由单调收敛定理，$EX^k=\lim_N\int_0^Nx^k\lambda e^{-\lambda x}\dd x$。作换元 $u=\lambda x$，$\int_0^Nx^k\lambda e^{-\lambda x}\dd x=\lambda^{-k}\int_0^{\lambda N}u^ke^{-u}\dd u$，令 $N\to\infty$，由\wegref{we:integration:factorial}，$EX^k=\frac{k!}{\lambda^k}$。所以 $EX=\frac1\lambda$，$EX^2=\frac2{\lambda^2}$，$\Var(X)=\frac1{\lambda^2}$。
+\end{solution}
+\end{questions}
 \end{exercises}
 
 \begin{probleme}{B}{容斥原理与配对问题}

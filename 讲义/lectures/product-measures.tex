@@ -417,22 +417,29 @@ P(X_1\in B_1,\dots,X_n\in B_n)=P(B_1\times\cdots\times B_n)=\prod_{i=1}^n\mu_i(B
 \exercisepart{基本习题}
 
 \begin{exercises}{A}{课堂内容的补充}
-\item\label{ex:product:A1} （二重级数）设 $a_{m,n}$（$m,n\geqslant1$）是实数。(i) 若 $a_{m,n}\geqslant0$，证明 $\sum_m\sum_na_{m,n}=\sum_n\sum_ma_{m,n}$。(ii) 若 $\sum_m\sum_n\abs{a_{m,n}}<\infty$，证明同样的等式成立，并且两边都是有限数。(iii) 计算 $\sum_{m,n\geqslant1}\frac1{(m+n)^3}$，用 $\sum_k\frac1{k^2}$ 与 $\sum_k\frac1{k^3}$ 表示。
+\item\label{ex:product:A1} （二重级数）设 $a_{m,n}$（$m,n\geqslant1$）是实数。
+\begin{questions}
+\item 若 $a_{m,n}\geqslant0$，证明 $\sum_m\sum_na_{m,n}=\sum_n\sum_ma_{m,n}$。
 \begin{solution}
 思路：二重级数就是关于计数测度的乘积测度的积分。
 
 取 $S=T=\N$，$\mu=\nu$ 为计数测度，它是 $\sigma$-有限的（$\N=\bigcup_k\{1,\dots,k\}$）。$\cS\otimes\cT=2^{\N\times\N}$：每个单点 $\{(m,n)\}=\{m\}\times\{n\}$ 是可测矩形，而 $\N\times\N$ 的每个子集是可数个单点的并。所以任意 $f(m,n)=a_{m,n}$ 都是可测的。由第~\ref{lec:integration} 讲中计数测度的例子，关于计数测度的积分就是求和，于是 $\int_\N\bigl(\int_\N f(m,n)\,\nu(\dd n)\bigr)\mu(\dd m)=\sum_m\sum_na_{m,n}$。
 
-(i) 由 Tonelli 定理，两个累次和都等于 $\int f\dd(\mu\otimes\nu)$。
-
-(ii) 由 Tonelli 定理，$\int\abs f\dd(\mu\otimes\nu)=\sum_m\sum_n\abs{a_{m,n}}<\infty$，所以 $f$ 可积。由 Fubini 定理，两个累次和都等于 $\int f\dd(\mu\otimes\nu)$，是有限数。（Fubini 定理中“对几乎一切 $m$，内层级数绝对收敛”在计数测度下就是“对一切 $m$”，因为计数测度下只有空集是零测集。）
-
-(iii) 各项非负，由 (i) 可以按任何方式重排求和。按 $k=m+n$ 分组：对固定的 $k\geqslant2$，满足 $m+n=k$，$m,n\geqslant1$ 的 $(m,n)$ 有 $k-1$ 对。（这里把 $\N\times\N$ 分成不交的子集 $\{m+n=k\}$，用的是计数测度的可数可加性，也就是非负项级数可以任意分组。）所以
+由 Tonelli 定理，两个累次和都等于 $\int f\dd(\mu\otimes\nu)$。
+\end{solution}
+\item 若 $\sum_m\sum_n\abs{a_{m,n}}<\infty$，证明同样的等式成立，并且两边都是有限数。
+\begin{solution}
+由 Tonelli 定理，$\int\abs f\dd(\mu\otimes\nu)=\sum_m\sum_n\abs{a_{m,n}}<\infty$，所以 $f$ 可积。由 Fubini 定理，两个累次和都等于 $\int f\dd(\mu\otimes\nu)$，是有限数。（Fubini 定理中“对几乎一切 $m$，内层级数绝对收敛”在计数测度下就是“对一切 $m$”，因为计数测度下只有空集是零测集。）
+\end{solution}
+\item 计算 $\sum_{m,n\geqslant1}\frac1{(m+n)^3}$，用 $\sum_k\frac1{k^2}$ 与 $\sum_k\frac1{k^3}$ 表示。
+\begin{solution}
+各项非负，由 A1-1) 可以按任何方式重排求和。按 $k=m+n$ 分组：对固定的 $k\geqslant2$，满足 $m+n=k$，$m,n\geqslant1$ 的 $(m,n)$ 有 $k-1$ 对。（这里把 $\N\times\N$ 分成不交的子集 $\{m+n=k\}$，用的是计数测度的可数可加性，也就是非负项级数可以任意分组。）所以
 \[
 \sum_{m,n\geqslant1}\frac1{(m+n)^3}=\sum_{k\geqslant2}\frac{k-1}{k^3}=\sum_{k\geqslant2}\Bigl(\frac1{k^2}-\frac1{k^3}\Bigr)=\sum_{k\geqslant1}\frac1{k^2}-\sum_{k\geqslant1}\frac1{k^3}.
 \]
 （最后一步加上又减去 $k=1$ 的项 $1-1=0$；两个级数都收敛，可以拆开。）
 \end{solution}
+\end{questions}
 
 \item\label{ex:product:A2} 设 $\mu,\nu$ 是 $\sigma$-有限测度，$f$ 是 $\cS\otimes\cT$-可测的，并且 $\int_S\int_T\abs{f(s,t)}\,\nu(\dd t)\mu(\dd s)<\infty$。证明 $f$ 关于 $\mu\otimes\nu$ 可积，从而 Fubini 定理的结论成立。
 \begin{solution}
@@ -468,11 +475,15 @@ P(X_1\in B_1,\dots,X_n\in B_n)=P(B_1\times\cdots\times B_n)=\prod_{i=1}^n\mu_i(B
 下一讲我们会看到，这个等式就是“独立随机变量乘积的期望等于期望的乘积”。
 \end{solution}
 
-\item\label{ex:product:A5} (i) 证明 $EX^2=2\int_0^\infty tP(\abs X>t)\dd t$。(ii) 设 $N$ 取值于非负整数，证明 $\sum_{n\geqslant1}nP(N\geqslant n)=\frac12E[N(N+1)]$。
+\item\label{ex:product:A5} 
+\begin{questions}
+\item 证明 $EX^2=2\int_0^\infty tP(\abs X>t)\dd t$。
 \begin{solution}
-(i) 对 $\abs X$ 用定理~\ref{thm:product:tail-formula}(2)，$p=2$。
-
-(ii) 思路：和命题~\ref{prop:expectation:tail-sum} 一样，先对每个 $\omega$ 写出恒等式，再用 Tonelli 定理（这里是关于 $P$ 与计数测度的乘积）交换求和与期望。
+对 $\abs X$ 用定理~\ref{thm:product:tail-formula}(2)，$p=2$。
+\end{solution}
+\item 设 $N$ 取值于非负整数，证明 $\sum_{n\geqslant1}nP(N\geqslant n)=\frac12E[N(N+1)]$。
+\begin{solution}
+思路：和命题~\ref{prop:expectation:tail-sum} 一样，先对每个 $\omega$ 写出恒等式，再用 Tonelli 定理（这里是关于 $P$ 与计数测度的乘积）交换求和与期望。
 
 对非负整数 $k$，$\sum_{n\geqslant1}n\one_{\{k\geqslant n\}}=1+2+\cdots+k=\frac{k(k+1)}2$。所以逐点有 $\sum_{n\geqslant1}n\one_{\{N\geqslant n\}}=\frac{N(N+1)}2$。左边是非负函数的级数，由逐项积分（推论~\ref{cor:integration:series}），
 \[
@@ -480,6 +491,7 @@ P(X_1\in B_1,\dots,X_n\in B_n)=P(B_1\times\cdots\times B_n)=\prod_{i=1}^n\mu_i(B
 \]
 （逐项积分本身就是 Tonelli 定理对 $P\otimes$ 计数测度的特例。）
 \end{solution}
+\end{questions}
 
 \item\label{ex:product:A6} 用尾概率公式重新证明\wegref{we:expectation:tP}：若 $E\abs X<\infty$，则 $tP(\abs X>t)\to0$。（提示：$t\mapsto P(\abs X>t)$ 单调不增，比较 $\frac t2P(\abs X>t)$ 与 $\int_{t/2}^tP(\abs X>s)\dd s$。）
 \begin{solution}

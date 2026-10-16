@@ -776,23 +776,31 @@ $g_n-f_n\geqslant0$，$g_n-f_n\to g-f$。同样得到 $\int g-\int f\leqslant\in
 两式合起来，$\lim_n\int f_n\dd\mu=\int f\dd\mu$。控制收敛定理是 $g_n=g$ 的特例。
 \end{solution}
 
-\item\label{ex:integration:A14} （Scheffé 引理）设 $f_n,f\geqslant0$ 可积，$f_n\to f$ a.e.，并且 $\int f_n\dd\mu\to\int f\dd\mu$。证明 $\int\abs{f_n-f}\dd\mu\to0$。特别地，若 $f_n,f$ 都是概率密度（非负，积分为 $1$），并且 $f_n\to f$ a.e.，则 $\int\abs{f_n-f}\dd x\to0$。
+\item\label{ex:integration:A14} （Scheffé 引理）设 $f_n,f\geqslant0$ 可积，$f_n\to f$ a.e.，并且 $\int f_n\dd\mu\to\int f\dd\mu$。
+\begin{questions}
+\item 证明 $\int(f-f_n)^+\dd\mu\to0$。
 \begin{solution}
 思路：$f-f_n$ 的正部被 $f$ 控制，可以用控制收敛定理；负部用总积分的条件来处理。
 
 记 $(f-f_n)^+=\max\{f-f_n,0\}$，$(f-f_n)^-=\max\{f_n-f,0\}$。
 
-\emph{正部。}由于 $f_n\geqslant0$，$f-f_n\leqslant f$，所以 $0\leqslant(f-f_n)^+\leqslant f$。又 $(f-f_n)^+\to0$ a.e.（$x\mapsto\max\{x,0\}$ 连续）。$f$ 可积，由控制收敛定理，$\int(f-f_n)^+\dd\mu\to0$。
-
-\emph{负部。}$f-f_n=(f-f_n)^+-(f-f_n)^-$，积分得
+由于 $f_n\geqslant0$，$f-f_n\leqslant f$，所以 $0\leqslant(f-f_n)^+\leqslant f$。又 $(f-f_n)^+\to0$ a.e.（$x\mapsto\max\{x,0\}$ 连续）。$f$ 可积，由控制收敛定理，$\int(f-f_n)^+\dd\mu\to0$。
+\end{solution}
+\item 证明 $\int\abs{f_n-f}\dd\mu\to0$。特别地，若 $f_n,f$ 都是概率密度，并且 $f_n\to f$ a.e.，则 $\int\abs{f_n-f}\dd x\to0$。
+\begin{solution}
+记号同 A14-1)。由 A14-1)，正部的积分趋于零；下面处理负部。$f-f_n=(f-f_n)^+-(f-f_n)^-$，积分得
 \[
-\int(f-f_n)^-\dd\mu=\int(f-f_n)^+\dd\mu-\int f\dd\mu+\int f_n\dd\mu\to0-\int f\dd\mu+\int f\dd\mu=0 .
+\begin{aligned}
+\int(f-f_n)^-\dd\mu&=\int(f-f_n)^+\dd\mu-\int f\dd\mu+\int f_n\dd\mu\\
+&\to0-\int f\dd\mu+\int f\dd\mu=0 .
+\end{aligned}
 \]
 
 于是 $\int\abs{f_n-f}\dd\mu=\int(f-f_n)^+\dd\mu+\int(f-f_n)^-\dd\mu\to0$。
 
 这个结论在概率论中的意义是：若随机变量 $X_n$ 的密度 $f_n$ 几乎处处收敛到 $X$ 的密度 $f$，则对一切 Borel 集 $B$，$\abs{P(X_n\in B)-P(X\in B)}=\abs{\int_B(f_n-f)\dd x}\leqslant\int\abs{f_n-f}\dd x\to0$，并且这个收敛关于 $B$ 是一致的。
 \end{solution}
+\end{questions}
 
 \item\label{ex:integration:A15} （积分的绝对连续性）设 $g$ 可积。证明：对任意 $\varepsilon>0$，存在 $\delta>0$，使得只要 $A\in\cF$，$\mu(A)<\delta$，就有 $\int_A\abs g\dd\mu<\varepsilon$。
 \begin{solution}
