@@ -189,6 +189,28 @@
 % 引用不编号的例子：\egref{标签} 排作“第 N 页的例子”并带链接；\egref[文字]{标签} 自定文字
 \NewDocumentCommand{\egref}{o m}{\hyperref[#2]{\IfValueTF{#1}{#1}{第~\pageref*{#2}~页的例子}}}
 
+% 例题（不编号，排作“例题.”），后面紧跟 solution 环境给出解答；
+% 引用例题：\wegref{标签} 排作“第 N 页的例题”
+\newtheorem*{workedexample}{例题}
+\AtBeginEnvironment{workedexample}{\phantomsection}
+\NewDocumentCommand{\wegref}{o m}{\hyperref[#2]{\IfValueTF{#1}{#1}{第~\pageref*{#2}~页的例题}}}
+
+% 解答：左侧绿色细线、浅底色的可跨页方框，小号楷体“解答:”起头。
+% 用于例题之后与作业每道题（每一小问）之后。
+% 在导言区或主文件中写 \showsolutionsfalse 可以隐去全部解答，编出自测用的版本。
+\newif\ifshowsolutions \showsolutionstrue
+\newtcolorbox{yp@solutionbox}{
+  breakable, enhanced, frame hidden, boxrule=0pt, arc=0pt,
+  colback=ypgreen!4,
+  borderline west={1.2pt}{0pt}{ypgreen!70},
+  left=2.2mm, right=1.2mm, top=.8mm, bottom=.8mm,
+  before skip=.8ex plus .2ex, after skip=1.2ex plus .3ex,
+  parbox=false, before upper={\parindent=2em}}
+\NewDocumentEnvironment{solution}{O{解答} +b}{%
+  \ifshowsolutions
+    \begin{yp@solutionbox}\normalfont\noindent{\small\itshape #1:}\ \ignorespaces#2\hfill$\square$\end{yp@solutionbox}%
+  \fi}{}
+
 % 附录内的定义、命题、引理、定理、推论另起编号，排作“定理 A.1”；
 % 在附录的 \section 之后使用，不影响正文各讲的连续编号。
 \newcommand{\appendixstatements}{%

@@ -56,6 +56,10 @@ xelatex -output-directory=build 高等概率论.tex   # 两遍
 % ---- 不编号的段落（楷体）----
 \begin{example}[可选标题]\label{ex:slug:xxx} 例子 \end{example}   % 排作“例子.”，与于品一致
 \egref{ex:slug:xxx}                             % 引用不编号的例子：“第 N 页的例子”
+\begin{workedexample}[可选标题]\label{we:slug:xxx} 题目 \end{workedexample}   % 例题，排作“例题.”
+\begin{solution} 完整解答 \end{solution}       % 解答：绿色细线方框，“解答:”起头，可跨页
+\wegref{we:slug:xxx}                            % 引用例题：“第 N 页的例题”
+\showsolutionsfalse                             % 写在主文件导言区：隐去全部解答，编自测版
 \begin{remark} 注记 \end{remark}
 \begin{practice} 练习 \end{practice}
 \begin{question} 问题 \end{question}
@@ -72,6 +76,7 @@ xelatex -output-directory=build 高等概率论.tex   # 两遍
 \exercisepart{基本习题}
 \begin{exercises}{A}{课堂内容的补充}                % 习题 A：……，题号 A1) A2) ...
   \item\label{ex:slug:A1} ...                        % \exref{ex:slug:A1} 得到“A1)”
+  \begin{solution} 每道题、每一小问后面紧跟解答 \end{solution}
 \end{exercises}
 \begin{probleme}{B}{Kolmogorov 三级数定理}           % 法式大题，题号 B1) B2) ...
   引导语
@@ -101,4 +106,4 @@ xelatex -output-directory=build 高等概率论.tex   # 两遍
 
 ## 于品作业的三部分
 
-**基本习题**（习题 A 课堂内容的补充；习题 B、C…… 法式大题），**思考题**（问题的字母接着往下排，难题加 *），**课外知识**（课堂之外的一个完整结果，同样用法式大题）。作业不附答案。
+**基本习题**（习题 A 课堂内容的补充；习题 B、C…… 法式大题），**思考题**（问题的字母接着往下排，难题加 *），**课外知识**（课堂之外的一个完整结果，同样用法式大题）。每道题（法式大题的每一小问）后面紧跟详细解答（`solution` 环境）。
