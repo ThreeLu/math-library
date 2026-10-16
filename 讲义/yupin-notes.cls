@@ -248,7 +248,7 @@
 \newcommand{\yp@hwheader}[1]{高等概率论，作业 #1}
 \newcommand{\homeworkheader}[1]{\renewcommand{\yp@hwheader}[1]{#1}}
 % 作业说明文字；可在导言区用 \homeworkrules{……} 修改
-\newcommand{\yp@hwrules}{作业供课后自学使用，不提交。法式大题请按顺序完成：后一问可以直接使用前面各问的结论。}
+\newcommand{\yp@hwrules}{作业供课后自学使用，不提交。每道题与每个小问后面紧跟解答，建议先自己想几分钟再读。法式大题请按顺序完成：后一问可以直接使用前面各问的结论。}
 \newcommand{\homeworkrules}[1]{\renewcommand{\yp@hwrules}{#1}}
 
 \newtcolorbox{hwbox}[1]{

@@ -11,6 +11,17 @@
 
 这一讲还要回答数学分析中的一个问题。我们知道，若 $F$ 在 $[a,b]$ 上连续可微，则 Newton--Leibniz 公式 $F(b)-F(a)=\int_a^bF'(x)\dd x$ 成立。有了 Lebesgue 积分，自然要问这个公式对什么样的 $F$ 成立。Cantor 函数给出了一个反例：它连续，几乎处处可导且导数为零，但 $F(1)-F(0)=1$。我们会看到，使 Newton--Leibniz 公式成立的恰好是\emph{绝对连续函数}，而函数的绝对连续与测度的绝对连续本质上是同一件事。
 
+\topic{本讲用到的前文结果}
+
+\begin{enumerate}
+\item 测度的连续性与上极限（定理~\ref{thm:measures:basic}、命题~\ref{prop:measures:fatou-sets}）；测度的非负线性组合与限制仍是测度（\egref{ex:measures:combination}）。
+\item Lebesgue--Stieltjes 测度的存在唯一性（定理~\ref{thm:extension:lebesgue-stieltjes}）以及 Lebesgue 测度作为外测度的构造（命题~\ref{prop:extension:induced-outer}）。
+\item 分布函数的跳跃与原子（定理~\ref{thm:distributions:df-properties}）；Cantor 集与 Cantor 分布（\egref{ex:distributions:cantor}）。
+\item 积分的性质：单调收敛定理（定理~\ref{thm:integration:mct}），逐项积分（推论~\ref{cor:integration:series}），不定积分是测度（推论~\ref{cor:integration:indefinite}），$\int f\dd\mu=0\iff f=0$ a.e.（命题~\ref{prop:integration:markov}），四步法。
+\end{enumerate}
+
+我们先看全讲的路线。第一节说明“有密度”推出“绝对连续”；第二节定义绝对连续与奇异，给出例子；第三、四节证明反方向（Radon--Nikodym 定理），这是全讲最长的证明，第一遍可以只读结论；第五节把结论用到 $\R$ 上的分布；第六节讨论函数的绝对连续性。
+
 \topic{由密度给出的测度}
 
 \begin{proposition}\label{prop:ac:density-measure}
@@ -103,6 +114,23 @@ X=\sum_{n=1}^\infty\frac{2\xi_n}{3^n}.
 所以 $X$ 的分布没有原子，不是离散的；它与 Lebesgue 测度奇异，也没有密度（由下面的命题~\ref{prop:ac:ac-and-singular}）。第~\ref{lec:distributions} 讲作业 B 证明了它恰好就是 Cantor 分布。这个构造的直观是：第一枚硬币决定 $X$ 落在 $[0,1/3]$ 还是 $[2/3,1]$，第二枚硬币决定落在所选区间的左三分之一还是右三分之一，如此下去。每一步都把质量平分给两个更小的区间，而中间的三分之一永远分不到质量，于是全部质量被挤进了 Cantor 集。
 \end{example}
 
+\begin{workedexample}\label{we:ac:likelihood}
+把一枚硬币抛 $n$ 次，$\Omega=\{0,1\}^n$，$\cF=2^\Omega$。模型 $\mu$ 认为硬币公平：$\mu(\{\omega\})=2^{-n}$；模型 $\nu$ 认为正面的概率是 $p\in(0,1)$：$\nu(\{\omega\})=p^{s(\omega)}(1-p)^{n-s(\omega)}$，其中 $s(\omega)=\omega_1+\cdots+\omega_n$。证明 $\mu\sim\nu$，并求 $h=\dd\nu/\dd\mu$。若观察到 $n=10$ 次中有 $8$ 次正面，$p=0.6$，$h$ 等于多少？
+\end{workedexample}
+\begin{solution}
+两个模型下每个单点的概率都为正，所以一个集合的概率为零当且仅当它是空集，两个测度等价。
+
+$\Omega$ 有限，所有集合都是单点的不交并。若 $h$ 是密度，则对单点 $\nu(\{\omega\})=\int_{\{\omega\}}h\dd\mu=h(\omega)\mu(\{\omega\})$，所以只能
+\[
+h(\omega)=\frac{\nu(\{\omega\})}{\mu(\{\omega\})}=(2p)^{s(\omega)}\bigl(2(1-p)\bigr)^{n-s(\omega)} .
+\]
+反过来，这个 $h$ 满足 $\int_Eh\dd\mu=\sum_{\omega\in E}h(\omega)\mu(\{\omega\})=\nu(E)$，确实是密度。
+
+$n=10$，$s=8$，$p=0.6$：$h=1.2^8\times0.8^2\approx4.30\times0.64\approx2.75$。
+
+在统计中，$h$ 称为\term{似然比}（likelihood ratio）：观察到的结果在模型 $\nu$ 下的概率是在模型 $\mu$ 下的 $2.75$ 倍，这是倾向于 $\nu$ 的证据。Radon--Nikodym 导数就是似然比在一般测度空间上的推广。注意 $h$ 只依赖于正面的次数 $s(\omega)$，这是以后“充分统计量”概念的雏形。
+\end{solution}
+
 \begin{proposition}\label{prop:ac:ac-and-singular}
 若 $\nu\ll\mu$ 且 $\nu\perp\mu$，则 $\nu=0$。
 \end{proposition}
@@ -167,7 +195,7 @@ $\nu(A)=\int_A\abs f\dd\mu$ 是有限测度（命题~\ref{prop:ac:density-measur
 \begin{lemma}\label{lem:ac:negative-subset}
 设 $\alpha$ 是有限符号测度，$E\in\cF$，$\alpha(E)<0$。则存在负集 $F\subseteq E$，使 $\alpha(F)\leqslant\alpha(E)<0$。
 \end{lemma}
-\begin{proof}
+\begin{proof}[证明★]
 我们的想法是从 $E$ 中一块一块地挖掉 $\alpha$ 值为正的部分，每次尽量挖一块大的。挖掉正的部分只会让 $\alpha$ 值变得更小，而挖掉的总量是有限的，所以最后剩下的就是负集。
 
 若 $E$ 是负集，取 $F=E$ 即可。否则，$E$ 有 $\alpha$ 值为正的可测子集，令 $n_1$ 为使得存在可测 $E_1\subseteq E$、$\alpha(E_1)\geqslant1/n_1$ 的最小正整数，并取这样的 $E_1$。归纳地，设 $E_1,\dots,E_{k-1}$ 已经取定，令 $F_k=E\setminus(E_1\cup\cdots\cup E_{k-1})$。若 $F_k$ 是负集，取 $F=F_k$，由于 $E$ 是 $F_k$ 与 $E_1,\dots,E_{k-1}$ 的不交并，$\alpha(F)=\alpha(E)-\sum_{j<k}\alpha(E_j)\leqslant\alpha(E)$，证明结束。否则，令 $n_k$ 为使得存在可测 $E_k\subseteq F_k$、$\alpha(E_k)\geqslant1/n_k$ 的最小正整数，并取这样的 $E_k$。
@@ -182,7 +210,7 @@ $\nu(A)=\int_A\abs f\dd\mu$ 是有限测度（命题~\ref{prop:ac:density-measur
 \begin{theorem}[Hahn 分解]\label{thm:ac:hahn}
 设 $\alpha$ 是有限符号测度。则存在 $\Omega^+,\Omega^-\in\cF$，$\Omega^+\cap\Omega^-=\varnothing$，$\Omega^+\cup\Omega^-=\Omega$，使 $\Omega^+$ 是正集，$\Omega^-$ 是负集。
 \end{theorem}
-\begin{proof}
+\begin{proof}[证明★]
 令 $c=\inf\{\alpha(B):B\ \text{是负集}\}$。空集是负集，所以 $c\leqslant0$。取负集 $B_i$ 使 $\alpha(B_i)\to c$，令 $\Omega^-=\bigcup_iB_i$，由引理~\ref{lem:ac:positive-sets}，它是负集，所以 $\alpha(\Omega^-)\geqslant c$。另一方面，$\Omega^-\setminus B_i$ 是负集 $\Omega^-$ 的子集，$\alpha(\Omega^-\setminus B_i)\leqslant0$，所以 $\alpha(\Omega^-)=\alpha(B_i)+\alpha(\Omega^-\setminus B_i)\leqslant\alpha(B_i)$，令 $i\to\infty$ 得 $\alpha(\Omega^-)\leqslant c$。于是 $\alpha(\Omega^-)=c$，特别地 $c$ 是有限的实数。
 
 令 $\Omega^+=(\Omega^-)^c$。若 $\Omega^+$ 不是正集，则存在可测 $E\subseteq\Omega^+$ 使 $\alpha(E)<0$。由引理~\ref{lem:ac:negative-subset}，存在负集 $F\subseteq E$，$\alpha(F)<0$。由引理~\ref{lem:ac:positive-sets}，$\Omega^-\cup F$ 是负集，而 $\alpha(\Omega^-\cup F)=\alpha(\Omega^-)+\alpha(F)<c$，与 $c$ 的定义矛盾。
@@ -209,6 +237,10 @@ A_n=\{g>h\}\cap\{g\leqslant n\}\cap E_n,\qquad B_n=\{g=\infty\}\cap\{h\leqslant 
 在 $B_n$ 上，$\int_{B_n}h\dd\mu\leqslant n\mu(E_n)<\infty$，而 $\int_{B_n}g\dd\mu=\infty\cdot\mu(B_n)$（推论~\ref{cor:integration:nonnegative-simple}）。二者相等，只能 $\mu(B_n)=0$。所以 $\mu(\{g>h\})\leqslant\sum_n(\mu(A_n)+\mu(B_n))=0$。
 \end{proof}
 
+\begin{remark}[证明思路]
+先设 $\mu,\nu$ 都有限。在一切“不超过 $\nu$”的密度 $g$（即 $\int_Eg\dd\mu\leqslant\nu(E)$ 对一切 $E$ 成立）中，取积分最大的一个 $h$；令 $\nu_s=\nu-\int h\dd\mu$。若 $\nu_s$ 不与 $\mu$ 奇异，就能找到一个 $\mu$ 测度为正的集合，在那里 $\nu_s\geqslant\frac1k\mu$（用 Hahn 分解找），把 $h$ 在那里加上 $\frac1k$，得到一个积分更大的“不超过 $\nu$”的密度，矛盾。一般的 $\sigma$-有限情形把空间切成可数块，每块上用有限的情形，再拼起来。第一遍阅读可以跳过证明，只记住结论。
+\end{remark}
+
 \begin{theorem}[Lebesgue 分解]\label{thm:ac:lebesgue-decomposition}
 设 $\mu,\nu$ 是 $(\Omega,\cF)$ 上的 $\sigma$-有限测度。则存在可测函数 $h:\Omega\to[0,\infty)$ 与测度 $\nu_s$，使 $\nu_s\perp\mu$，并且
 \[
@@ -216,7 +248,7 @@ A_n=\{g>h\}\cap\{g\leqslant n\}\cap E_n,\qquad B_n=\{g=\infty\}\cap\{h\leqslant 
 \]
 记 $\nu_r(E)=\int_Eh\dd\mu$，则 $\nu=\nu_r+\nu_s$，$\nu_r\ll\mu$，$\nu_s\perp\mu$，并且这样的分解是唯一的：若另有 $\nu=\nu_r'+\nu_s'$，$\nu_r'(E)=\int_Eh'\dd\mu$，$\nu_s'\perp\mu$，则 $\nu_s'=\nu_s$，$h'=h$ $\mu$-a.e.
 \end{theorem}
-\begin{proof}
+\begin{proof}[证明★]
 \emph{第一步：$\mu,\nu$ 都是有限测度。}令
 \[
 \cG=\Bigl\{g:\Omega\to[0,\infty]\ \text{可测}:\ \int_Eg\dd\mu\leqslant\nu(E)\ \text{对一切}\ E\in\cF\Bigr\}.
@@ -307,6 +339,25 @@ $\R$ 上的概率测度 $\mu$ 有密度（即存在非负 Borel 函数 $f$ 使 $
 \begin{proof}
 必要性是\egref{ex:ac:examples} 的 (1)。充分性：$\lambda$ 是 $\sigma$-有限的，$\mu$ 是有限的，由 Radon--Nikodym 定理即得。唯一性是引理~\ref{lem:ac:density-unique}。
 \end{proof}
+
+\begin{workedexample}\label{we:ac:mixed-decomposition}
+设 $U$ 服从 $(0,1)$ 上的均匀分布，$X=\min\{U,\frac12\}$（第~\ref{lec:distributions} 讲的例题，第~\pageref{we:distributions:mixed} 页）。写出 $\mu_X$ 的分解 $\mu_d+\mu_{ac}+\mu_{sc}$；并说明 $\mu_X$ 关于测度 $\rho=\lambda+\delta_{1/2}$ 有密度，求出这个密度。
+\end{workedexample}
+\begin{solution}
+由那里的计算，$\mu_X$ 只有一个原子 $\frac12$，质量 $\frac12$；在 $(0,\frac12)$ 上分布函数是 $x$。所以
+\[
+\mu_d=\tfrac12\delta_{1/2},\qquad\mu_{ac}(B)=\int_B\one_{(0,1/2)}\dd\lambda,\qquad\mu_{sc}=0 .
+\]
+验证：$\mu_d+\mu_{ac}$ 与 $\mu_X$ 的分布函数相同（$x<\frac12$ 时都是 $\max\{x,0\}$，$x\geqslant\frac12$ 时都是 $1$），由推论~\ref{cor:measures:distribution-function} 二者相等；由定理~\ref{thm:ac:decomposition-distributions} 的唯一性，这就是那个分解。
+
+关于 $\rho=\lambda+\delta_{1/2}$：若 $\rho(A)=0$，则 $\lambda(A)=0$ 且 $\frac12\notin A$，于是 $\mu_X(A)=\frac12\delta_{1/2}(A)+\int_A\one_{(0,1/2)}\dd\lambda=0$。所以 $\mu_X\ll\rho$。令 $h=\one_{(0,1/2)}+\frac12\one_{\{1/2\}}$。由第~\ref{lec:integration} 讲的例题（第~\pageref{we:integration:four-step} 页），
+\[
+\int_Bh\dd\rho=\int_Bh\dd\lambda+\int_Bh\dd\delta_{1/2}=\int_B\one_{(0,1/2)}\dd\lambda+\tfrac12\one_B(\tfrac12)=\mu_X(B),
+\]
+其中用了 $\lambda(\{\frac12\})=0$。所以 $\dd\mu_X/\dd\rho=h$。
+
+这个例题说明：混合型的分布关于 Lebesgue 测度没有密度，但只要换一个参照测度（把它的原子也放进参照测度里），它就有密度。在统计中处理“有正概率为零、其余连续”的数据时，正是这样做的。
+\end{solution}
 
 所以绝对连续型的随机变量一定有密度函数，并且“有密度”这个性质可以只通过零测集来检验：只要对每个 Lebesgue 零测集 $N$ 都有 $P(X\in N)=0$ 就行了。我们提醒同学们注意术语：初等概率论中常把有密度的随机变量叫做“连续型随机变量”，但在测度论中，“连续”只是说分布函数连续，即没有原子。Cantor 分布是连续的，但不是绝对连续的。
 
@@ -424,6 +475,16 @@ F(b)-F(a)=\int_a^bF'(x)\dd x .
 设 $X$ 服从 $(0,1)$ 上的均匀分布，$Y=X^2$。$Y$ 的分布函数是 $F_Y(y)=P(X\leqslant\sqrt y)=\sqrt y$（$0\leqslant y\leqslant1$），在 $y<0$ 时为 $0$，在 $y>1$ 时为 $1$。在 $[0,1]$ 上，$\sqrt y=\int_{[0,y]}\frac1{2\sqrt t}\dd t$（由第~\ref{lec:integration} 讲，在 $[\varepsilon,y]$ 上用 Newton--Leibniz 公式，再用单调收敛定理令 $\varepsilon\downarrow0$），所以由定理~\ref{thm:ac:stieltjes-ac}，$Y$ 有密度 $f_Y(y)=\frac1{2\sqrt y}\one_{(0,1)}(y)$。注意 $F_Y$ 在 $[0,1]$ 上绝对连续但不是 Lipschitz 的，它的导数在 $0$ 附近无界。实际计算密度时，我们总是这样做：先求分布函数，验证它是某个函数的积分（通常是逐段求导再用 Newton--Leibniz 公式），这个函数就是密度。
 \end{example}
 
+\topic{本讲小结}
+
+\begin{enumerate}
+\item 由非负函数 $f$ 给出的测度 $\dd\nu=f\dd\mu$ 满足 $\int g\dd\nu=\int gf\dd\mu$（命题~\ref{prop:ac:density-measure}）。离散分布与有密度的分布都是这种形式，只是参照测度不同。
+\item $\nu\ll\mu$：$\mu$ 的零测集也是 $\nu$ 的零测集；$\nu\perp\mu$：两者生活在不交的集合上。对有限的 $\nu$，$\nu\ll\mu$ 等价于 $\varepsilon$-$\delta$ 形式的连续性（命题~\ref{prop:ac:epsilon-delta}）。
+\item Radon--Nikodym 定理：对 $\sigma$-有限测度，$\nu\ll\mu$ 当且仅当 $\nu$ 关于 $\mu$ 有密度 $\dd\nu/\dd\mu$，密度几乎处处唯一（定理~\ref{thm:ac:radon-nikodym}）。更一般地有 Lebesgue 分解（定理~\ref{thm:ac:lebesgue-decomposition}）。证明用到 Hahn 分解。以后讲条件期望时，它的存在性就由这个定理得到。
+\item $\R$ 上的概率分布唯一地分解为离散、绝对连续、奇异连续三部分（定理~\ref{thm:ac:decomposition-distributions}）。“有密度”“分布关于 $\lambda$ 绝对连续”“分布函数绝对连续”三者等价（定理~\ref{thm:ac:stieltjes-ac}）。
+\item 绝对连续函数恰好是使 Newton--Leibniz 公式成立的函数（定理~\ref{thm:ac:newton-leibniz}）；Cantor 函数连续但不绝对连续。
+\end{enumerate}
+
 % =====================================================================
 \homework{有界变差函数与 Jordan 分解，全变差距离，Lebesgue 微分定理}[有界变差函数，全变差距离，Lebesgue 微分定理]
 \label{hw:absolute-continuity}
@@ -431,23 +492,142 @@ F(b)-F(a)=\int_a^bF'(x)\dd x .
 \exercisepart{基本习题}
 
 \begin{exercises}{A}{课堂内容的补充}
-\item 设 $\mu$ 是 $\sigma$-有限测度，$\nu_1,\nu_2\ll\mu$ 也是 $\sigma$-有限的。证明 $\nu_1+\nu_2\ll\mu$，并且 $\dfrac{\dd(\nu_1+\nu_2)}{\dd\mu}=\dfrac{\dd\nu_1}{\dd\mu}+\dfrac{\dd\nu_2}{\dd\mu}$ a.e.
-\item （链式法则）设 $\pi,\nu,\mu$ 是 $\sigma$-有限测度，$\pi\ll\nu\ll\mu$。证明 $\pi\ll\mu$，并且 $\dfrac{\dd\pi}{\dd\mu}=\dfrac{\dd\pi}{\dd\nu}\cdot\dfrac{\dd\nu}{\dd\mu}$ $\mu$-a.e.（提示：命题~\ref{prop:ac:density-measure}。）
-\item 设 $\mu\sim\nu$，都是 $\sigma$-有限的。证明 $\dfrac{\dd\nu}{\dd\mu}>0$ $\mu$-a.e.，并且 $\dfrac{\dd\mu}{\dd\nu}=\Bigl(\dfrac{\dd\nu}{\dd\mu}\Bigr)^{-1}$ a.e.
-\item 设 $\mu_1\ll\mu_2$，$\mu_2\perp\nu$。证明 $\mu_1\perp\nu$。又证明：若 $\nu_1\perp\mu$，$\nu_2\perp\mu$，则 $\nu_1+\nu_2\perp\mu$。
+\item\label{ex:ac:A1} 设 $\mu$ 是 $\sigma$-有限测度，$\nu_1,\nu_2\ll\mu$ 也是 $\sigma$-有限的。证明 $\nu_1+\nu_2\ll\mu$，并且 $\dfrac{\dd(\nu_1+\nu_2)}{\dd\mu}=\dfrac{\dd\nu_1}{\dd\mu}+\dfrac{\dd\nu_2}{\dd\mu}$ a.e.
+\begin{solution}
+若 $\mu(A)=0$，则 $\nu_1(A)=\nu_2(A)=0$，所以 $(\nu_1+\nu_2)(A)=0$。记 $h_i=\dd\nu_i/\dd\mu$（Radon--Nikodym 定理）。由线性性，$(\nu_1+\nu_2)(E)=\int_Eh_1\dd\mu+\int_Eh_2\dd\mu=\int_E(h_1+h_2)\dd\mu$。所以 $h_1+h_2$ 是 $\nu_1+\nu_2$ 关于 $\mu$ 的一个密度，由密度的唯一性（引理~\ref{lem:ac:density-unique}），它与 $\dd(\nu_1+\nu_2)/\dd\mu$ 几乎处处相等。（$\nu_1+\nu_2$ 是 $\sigma$-有限的：取两个使 $\nu_1$、$\nu_2$ 分别有限的递增列，交起来即可。）
+\end{solution}
+
+\item\label{ex:ac:A2} （链式法则）设 $\pi,\nu,\mu$ 是 $\sigma$-有限测度，$\pi\ll\nu\ll\mu$。证明 $\pi\ll\mu$，并且 $\dfrac{\dd\pi}{\dd\mu}=\dfrac{\dd\pi}{\dd\nu}\cdot\dfrac{\dd\nu}{\dd\mu}$ $\mu$-a.e.（提示：命题~\ref{prop:ac:density-measure}。）
+\begin{solution}
+$\mu(A)=0\Rightarrow\nu(A)=0\Rightarrow\pi(A)=0$，所以 $\pi\ll\mu$。记 $f=\dd\nu/\dd\mu$，$g=\dd\pi/\dd\nu$。对 $E\in\cF$，把命题~\ref{prop:ac:density-measure} 用于非负函数 $g\one_E$ 与 $\dd\nu=f\dd\mu$：
+\[
+\pi(E)=\int g\one_E\dd\nu=\int g\one_Ef\dd\mu=\int_Egf\dd\mu .
+\]
+所以 $gf$ 是 $\pi$ 关于 $\mu$ 的密度，由唯一性即得。记号 $\frac{\dd\pi}{\dd\mu}=\frac{\dd\pi}{\dd\nu}\frac{\dd\nu}{\dd\mu}$ 就像分数约分一样，这是 Radon--Nikodym 导数的记号方便之处。
+\end{solution}
+
+\item\label{ex:ac:A3} 设 $\mu\sim\nu$，都是 $\sigma$-有限的。证明 $\dfrac{\dd\nu}{\dd\mu}>0$ $\mu$-a.e.，并且 $\dfrac{\dd\mu}{\dd\nu}=\Bigl(\dfrac{\dd\nu}{\dd\mu}\Bigr)^{-1}$ a.e.
+\begin{solution}
+记 $h=\dd\nu/\dd\mu$，$Z=\{h=0\}$。$\nu(Z)=\int_Zh\dd\mu=0$，又 $\mu\ll\nu$，所以 $\mu(Z)=0$，即 $h>0$ $\mu$-a.e.
+
+令 $k=\one_{Z^c}/h$（在 $Z$ 上为 $0$）。对 $E\in\cF$，由命题~\ref{prop:ac:density-measure}，
+\[
+\int_Ek\dd\nu=\int\one_Ek\,h\dd\mu=\int\one_{E\cap Z^c}\dd\mu=\mu(E\cap Z^c)=\mu(E).
+\]
+所以 $k$ 是 $\mu$ 关于 $\nu$ 的密度，$\dd\mu/\dd\nu=1/h$（在 $Z^c$ 上，而 $Z$ 是 $\mu$、$\nu$ 的零测集）。
+\end{solution}
+
+\item\label{ex:ac:A4} 绝对连续与奇异的组合。
+\begin{questions}
+\item 设 $\mu_1\ll\mu_2$，$\mu_2\perp\nu$。证明 $\mu_1\perp\nu$。
+\begin{solution}
+取 $A$ 使 $\mu_2(A)=0$，$\nu(A^c)=0$。由 $\mu_1\ll\mu_2$，$\mu_1(A)=0$。同一个 $A$ 说明 $\mu_1\perp\nu$。
+\end{solution}
+\item 证明：若 $\nu_1\perp\mu$，$\nu_2\perp\mu$，则 $\nu_1+\nu_2\perp\mu$。
+\begin{solution}
+取 $A_i$ 使 $\mu(A_i)=0$，$\nu_i(A_i^c)=0$。令 $A=A_1\cup A_2$，$\mu(A)=0$，$A^c\subseteq A_i^c$，所以 $(\nu_1+\nu_2)(A^c)\leqslant\nu_1(A_1^c)+\nu_2(A_2^c)=0$。可数个的情形同理。
+\end{solution}
+\end{questions}
+
 \item\label{ex:ac:A5} 设 $\Omega$ 可数，$\cF=2^\Omega$，$\mu,\nu$ 是有限测度。证明 $\nu\ll\mu$ 当且仅当 $\{\omega:\mu(\{\omega\})=0\}\subseteq\{\omega:\nu(\{\omega\})=0\}$，并求 $\dd\nu/\dd\mu$。
-\item 设 $\mu_m$ 是 $N(m,1)$ 分布，即密度为 $\varphi(x-m)$。证明 $\mu_m\sim\mu_0$，并且 $\dfrac{\dd\mu_m}{\dd\mu_0}(x)=e^{mx-m^2/2}$。又设 $\mu_U$ 是 $[0,1]$ 上的均匀分布，求 $\dd\mu_U/\dd\mu_0$，并说明 $\mu_0\not\ll\mu_U$。
-\item 设 $\alpha$ 是有限符号测度，$\Omega=\Omega^+\cup\Omega^-$ 是 Hahn 分解。
+\begin{solution}
+“$\Rightarrow$”：取 $A=\{\omega\}$。“$\Leftarrow$”：若 $\mu(A)=0$，则 $A$ 中每一点 $\mu(\{\omega\})=0$，从而 $\nu(\{\omega\})=0$，$\nu(A)=\sum_{\omega\in A}\nu(\{\omega\})=0$。
+
+令 $h(\omega)=\nu(\{\omega\})/\mu(\{\omega\})$（$\mu(\{\omega\})>0$），$h(\omega)=0$（否则）。$\mu=\sum_\omega\mu(\{\omega\})\delta_\omega$，由第~\ref{lec:integration} 讲习题~\exref{ex:integration:A2}，
+\[
+\int_Eh\dd\mu=\sum_{\omega\in E}h(\omega)\mu(\{\omega\})=\sum_{\omega\in E,\ \mu(\{\omega\})>0}\nu(\{\omega\})=\nu(E),
+\]
+最后一步用了 $\mu(\{\omega\})=0$ 的点 $\nu(\{\omega\})=0$。这正是“导数是质量之比”的直观。
+\end{solution}
+
+\item\label{ex:ac:A6} 正态分布与均匀分布的 Radon--Nikodym 导数。
+\begin{questions}
+\item 设 $\mu_m$ 是 $N(m,1)$ 分布，即密度为 $\varphi(x-m)$。证明 $\mu_m\sim\mu_0$，并且 $\dfrac{\dd\mu_m}{\dd\mu_0}(x)=e^{mx-m^2/2}$。
+\begin{solution}
+两个密度处处为正，由\egref{ex:ac:examples} 的 (2) 的论证，$\mu_m\sim\lambda\sim\mu_0$。令 $h(x)=e^{mx-m^2/2}$，则 $h(x)\varphi(x)=\frac1{\sqrt{2\pi}}e^{-x^2/2+mx-m^2/2}=\varphi(x-m)$。由命题~\ref{prop:ac:density-measure}（$\dd\mu_0=\varphi\dd\lambda$），
+\[
+\int_Eh\dd\mu_0=\int_Eh\varphi\dd\lambda=\int_E\varphi(x-m)\dd x=\mu_m(E).
+\]
+这个导数在统计与随机分析中很重要：它说明把正态分布平移 $m$，只需用 $e^{mx-m^2/2}$ 重新加权。以后的 Girsanov 定理就是它在 Brown 运动上的推广。
+\end{solution}
+\item 又设 $\mu_U$ 是 $[0,1]$ 上的均匀分布，求 $\dd\mu_U/\dd\mu_0$，并说明 $\mu_0\not\ll\mu_U$。
+\begin{solution}
+令 $h=\one_{[0,1]}/\varphi$，则 $\int_Eh\dd\mu_0=\int_E\one_{[0,1]}\dd\lambda=\mu_U(E)$，所以 $\dd\mu_U/\dd\mu_0=\one_{[0,1]}/\varphi$。另一方面 $\mu_U((1,2))=0$ 而 $\mu_0((1,2))>0$，所以 $\mu_0\not\ll\mu_U$。
+\end{solution}
+\end{questions}
+
+\item\label{ex:ac:A7} 设 $\alpha$ 是有限符号测度，$\Omega=\Omega^+\cup\Omega^-$ 是 Hahn 分解。
 \begin{questions}
 \item 证明 $\alpha^+(E)=\alpha(E\cap\Omega^+)$，$\alpha^-(E)=-\alpha(E\cap\Omega^-)$ 是有限测度，$\alpha=\alpha^+-\alpha^-$，且 $\alpha^+\perp\alpha^-$。（这称为 \term{Jordan 分解}。）
+\begin{solution}
+$\Omega^+$ 是正集，所以 $\alpha^+(E)\geqslant0$；若 $E_n$ 两两不交，则 $E_n\cap\Omega^+$ 两两不交，由 $\alpha$ 的可数可加性 $\alpha^+$ 可数可加；取值有限。$\alpha^-$ 同理。$E=(E\cap\Omega^+)\cup(E\cap\Omega^-)$，所以 $\alpha(E)=\alpha^+(E)-\alpha^-(E)$。$\alpha^+(\Omega^-)=0$，$\alpha^-(\Omega^+)=0$，取 $A=\Omega^-$ 即得 $\alpha^+\perp\alpha^-$。
+\end{solution}
 \item 证明 $\alpha^+(E)=\sup\{\alpha(F):F\subseteq E,\ F\in\cF\}$，从而 $\alpha^\pm$ 不依赖于 Hahn 分解的选取。
+\begin{solution}
+对可测的 $F\subseteq E$，$\alpha(F)=\alpha^+(F)-\alpha^-(F)\leqslant\alpha^+(F)\leqslant\alpha^+(E)$。取 $F=E\cap\Omega^+$ 等号成立。右边只依赖于 $\alpha$，所以 $\alpha^+$ 不依赖于 Hahn 分解；$\alpha^-=\alpha^+-\alpha$ 也一样。
+\end{solution}
 \item 设 $\Omega=\Omega_1^+\cup\Omega_1^-$ 是另一个 Hahn 分解。证明 $\Omega^+\cap\Omega_1^-$ 的每个可测子集的 $\alpha$ 值都是 $0$。
+\begin{solution}
+设 $B\subseteq\Omega^+\cap\Omega_1^-$ 可测。$B\subseteq\Omega^+$ 是正集的子集，$\alpha(B)\geqslant0$；$B\subseteq\Omega_1^-$，$\alpha(B)\leqslant0$。所以 $\alpha(B)=0$。这说明 Hahn 分解在“相差一个 $\alpha$-零集”的意义下唯一。
+\end{solution}
 \item 对 $\alpha(A)=\int_Af\dd\mu$，求 $\alpha^+$、$\alpha^-$ 与 $\alpha^++\alpha^-$。
+\begin{solution}
+$\Omega^+=\{f\geqslant0\}$，$\Omega^-=\{f<0\}$ 是 Hahn 分解。于是 $\alpha^+(E)=\int_{E\cap\{f\geqslant0\}}f\dd\mu=\int_Ef^+\dd\mu$，$\alpha^-(E)=\int_Ef^-\dd\mu$，$(\alpha^++\alpha^-)(E)=\int_E\abs f\dd\mu$。$\abs\alpha=\alpha^++\alpha^-$ 称为 $\alpha$ 的\term{全变差测度}。
+\end{solution}
 \end{questions}
-\item 证明 $[a,b]$ 上两个绝对连续函数的和与积都是绝对连续的。证明 $\sqrt x$ 在 $[0,1]$ 上绝对连续，但不是 Lipschitz 的。
-\item 令 $F(x)=x\sin(1/x)$（$0<x\leqslant1$），$F(0)=0$。证明 $F$ 在 $[0,1]$ 上连续，但不是绝对连续的。（提示：在 $x_k=1/((k+\frac12)\pi)$ 处，$\abs{F(x_k)}=x_k$；考虑区间 $(x_{k+1},x_k)$，并用第~\ref{lec:integration} 讲习题 A9 的想法。）
-\item 设 $X$ 服从 $(0,1)$ 上的均匀分布。求 $-\log X$、$X^3$、$\tan(\pi(X-\frac12))$ 的分布函数，验证它们绝对连续，并求出密度。
-\item 在\egref{ex:ac:cantor-coins} 中，令 $Y=\sum_n\xi_n2^{-n}$。证明 $Y$ 服从 $[0,1]$ 上的均匀分布，而 $X$ 服从 Cantor 分布。$Y$ 与 $X$ 是同一串硬币的函数，一个的分布绝对连续，另一个的分布奇异。二者之间有什么函数关系？（与第~\ref{lec:random-variables} 讲思考题 E 中的 Cantor 函数比较。）
+
+\item\label{ex:ac:A8} 绝对连续函数的例子。
+\begin{questions}
+\item 证明 $[a,b]$ 上两个绝对连续函数的和与积都是绝对连续的。
+\begin{solution}
+设 $F,G$ 绝对连续，给定 $\varepsilon$，分别取 $\delta_F,\delta_G$。
+
+\emph{和。}取 $\delta=\min\{\delta_F(\varepsilon/2),\delta_G(\varepsilon/2)\}$，则 $\sum_i\abs{(F+G)(b_i)-(F+G)(a_i)}\leqslant\sum_i\abs{F(b_i)-F(a_i)}+\sum_i\abs{G(b_i)-G(a_i)}<\varepsilon$。
+
+\emph{积。}绝对连续函数连续，在 $[a,b]$ 上有界，设 $\abs F,\abs G\leqslant M$（$M>0$）。由
+\[
+\abs{F(b_i)G(b_i)-F(a_i)G(a_i)}\leqslant\abs{F(b_i)}\abs{G(b_i)-G(a_i)}+\abs{G(a_i)}\abs{F(b_i)-F(a_i)},
+\]
+取 $\delta=\min\{\delta_F(\frac\varepsilon{2M}),\delta_G(\frac\varepsilon{2M})\}$，总和小于 $M\cdot\frac\varepsilon{2M}\cdot2=\varepsilon$。
+\end{solution}
+\item 证明 $\sqrt x$ 在 $[0,1]$ 上绝对连续，但不是 Lipschitz 的。
+\begin{solution}
+由本讲最后一个例子，$\sqrt x=\int_{[0,x]}\frac1{2\sqrt t}\dd t$，$\frac1{2\sqrt t}$ 在 $[0,1]$ 上可积（第~\ref{lec:integration} 讲习题~\exref{ex:integration:A10}），由定理~\ref{thm:ac:newton-leibniz}(1)，$\sqrt x$ 绝对连续。不是 Lipschitz 的：$\frac{\sqrt h-\sqrt0}{h}=h^{-1/2}\to\infty$（$h\downarrow0$）。
+\end{solution}
+\end{questions}
+
+\item\label{ex:ac:A9} 令 $F(x)=x\sin(1/x)$（$0<x\leqslant1$），$F(0)=0$。证明 $F$ 在 $[0,1]$ 上连续，但不是绝对连续的。（提示：在 $x_k=1/((k+\frac12)\pi)$ 处，$\abs{F(x_k)}=x_k$；考虑区间 $(x_{k+1},x_k)$，并用第~\ref{lec:integration} 讲习题 A9 的想法。）
+\begin{solution}
+\emph{连续。}在 $(0,1]$ 上是连续函数的复合与乘积；在 $0$ 处，$\abs{F(x)}\leqslant x\to0$。
+
+\emph{不绝对连续。}$\sin((k+\frac12)\pi)=(-1)^k$，所以 $F(x_k)=(-1)^kx_k$，相邻两点的值异号，
+\[
+\abs{F(x_k)-F(x_{k+1})}=x_k+x_{k+1}\geqslant x_k=\frac1{(k+\frac12)\pi}.
+\]
+区间 $(x_{k+1},x_k)$（$k\geqslant N$）两两不交，总长度 $\sum_{k\geqslant N}(x_k-x_{k+1})=x_N$。给定任意 $\delta>0$，取 $N$ 使 $x_N<\delta$；由于 $\sum_k\frac1{(k+\frac12)\pi}=\infty$，再取 $K$ 使 $\sum_{k=N}^K\frac1{(k+\frac12)\pi}>1$。有限个区间 $(x_{k+1},x_k)$，$N\leqslant k\leqslant K$，总长度小于 $\delta$，而 $F$ 在其上的总增量大于 $1$。所以对 $\varepsilon=1$ 找不到 $\delta$。
+
+事实上 $F$ 在 $[0,1]$ 上不是有界变差的（作业 B），这比不绝对连续更强。
+\end{solution}
+
+\item\label{ex:ac:A10} 设 $X$ 服从 $(0,1)$ 上的均匀分布。求 $-\log X$、$X^3$、$\tan(\pi(X-\frac12))$ 的分布函数，验证它们绝对连续，并求出密度。
+\begin{solution}
+都按“先求分布函数，再写成积分”的方法（本讲最后一个例子）。
+
+\emph{$-\log X$。}对 $y\geqslant0$，$P(-\log X\leqslant y)=P(X\geqslant e^{-y})=1-e^{-y}$；$y<0$ 时为 $0$。$1-e^{-y}=\int_{[0,y]}e^{-t}\dd t$，由定理~\ref{thm:ac:stieltjes-ac}，密度是 $e^{-y}\one_{(0,\infty)}(y)$，即参数为 $1$ 的指数分布。
+
+\emph{$X^3$。}对 $0\leqslant y\leqslant1$，$P(X^3\leqslant y)=P(X\leqslant y^{1/3})=y^{1/3}$。在 $[\varepsilon,y]$ 上用 Newton--Leibniz 公式，再由单调收敛定理令 $\varepsilon\downarrow0$，$y^{1/3}=\int_{[0,y]}\frac13t^{-2/3}\dd t$。密度是 $\frac13y^{-2/3}\one_{(0,1)}(y)$（在 $0$ 附近无界但可积）。
+
+\emph{$T=\tan(\pi(X-\frac12))$。}$x\mapsto\tan(\pi(x-\frac12))$ 是 $(0,1)$ 到 $\R$ 的严格递增双射，逆为 $y\mapsto\frac12+\frac1\pi\arctan y$。所以 $P(T\leqslant y)=\frac12+\frac1\pi\arctan y=\int_{-\infty}^y\frac{\dd t}{\pi(1+t^2)}$（反常积分，由单调收敛定理也是 Lebesgue 积分）。密度 $\frac1{\pi(1+y^2)}$，这是 \term{Cauchy 分布}。
+\end{solution}
+
+\item\label{ex:ac:A11} 在\egref{ex:ac:cantor-coins} 中，令 $Y=\sum_n\xi_n2^{-n}$。证明 $Y$ 服从 $[0,1]$ 上的均匀分布，而 $X$ 服从 Cantor 分布。$Y$ 与 $X$ 是同一串硬币的函数，一个的分布绝对连续，另一个的分布奇异。二者之间有什么函数关系？（与第~\ref{lec:random-variables} 讲思考题 E 中的 Cantor 函数比较。）
+\begin{solution}
+$Y$ 均匀分布是定理~\ref{thm:distributions:coins-to-uniform}；$X$ 服从 Cantor 分布是第~\ref{lec:distributions} 讲作业 B4)。
+
+函数关系：由第~\ref{lec:distributions} 讲作业 B6)，Cantor 函数 $F$ 在 $x=\sum_n\varepsilon_n3^{-n}\in C$ 处的值是 $\sum_n(\varepsilon_n/2)2^{-n}$。取 $\varepsilon_n=2\xi_n$，得 $F(X)=\sum_n\xi_n2^{-n}=Y$，对每个 $\omega$ 成立。所以 $Y=F(X)$：Cantor 函数把奇异的 $X$ 变成了均匀的 $Y$。这是 $F(X)$ 服从均匀分布（第~\ref{lec:distributions} 讲习题 A2，$F$ 连续）的一个具体例子。反过来，$X$ 也是 $Y$ 的函数（把二进制各位读成三进制各位再乘 $2$），这个函数在二进有理点处要约定取哪种展开，但这只影响一个零概率事件。
+
+这个例子说明，“绝对连续”与“奇异”不是随机试验本身的性质，而是所观察的那个量的性质：同一串硬币，换一种方式读数，分布的类型就变了。
+\end{solution}
 \end{exercises}
 
 \begin{probleme}{B}{有界变差函数，绝对连续函数的分解}
@@ -458,12 +638,39 @@ V_F[x,y]=\sup\Bigl\{\sum_{k=1}^n\abs{F(t_k)-F(t_{k-1})}:\ x=t_0<t_1<\cdots<t_n=y
 称为 $F$ 在 $[x,y]$ 上的\term{全变差}（total variation），约定 $V_F[x,x]=0$。若 $V_F[a,b]<\infty$，称 $F$ 是\term{有界变差函数}（function of bounded variation）。
 \begin{questions}
 \item 证明加细分割不会减小和式 $\sum_k\abs{F(t_k)-F(t_{k-1})}$。由此证明 $V_F[x,z]=V_F[x,y]+V_F[y,z]$（$x\leqslant y\leqslant z$）。
+\begin{solution}
+\emph{加细。}在 $t_{k-1}<t_k$ 之间插入一点 $s$，由三角不等式 $\abs{F(t_k)-F(t_{k-1})}\leqslant\abs{F(t_k)-F(s)}+\abs{F(s)-F(t_{k-1})}$，和式不减。插入有限个点就是反复插入一个点。
+
+\emph{可加性。}“$\leqslant$”：任取 $[x,z]$ 的分割，插入 $y$（和式不减），它分成 $[x,y]$ 与 $[y,z]$ 的分割，和式不超过 $V_F[x,y]+V_F[y,z]$；对分割取上确界。“$\geqslant$”：任取 $[x,y]$ 与 $[y,z]$ 的分割，拼起来是 $[x,z]$ 的分割，所以两个和式之和不超过 $V_F[x,z]$；对两个分割分别取上确界。（$x=y$ 或 $y=z$ 时由约定显然。）
+\end{solution}
 \item 证明单调函数是有界变差的，并求 $V_F[a,b]$。又证明 Lipschitz 函数是有界变差的。
+\begin{solution}
+$F$ 单调不减时，每个和式都是 $\sum_k(F(t_k)-F(t_{k-1}))=F(b)-F(a)$，所以 $V_F[a,b]=F(b)-F(a)$；单调不增时为 $F(a)-F(b)$。Lipschitz：$\sum_k\abs{F(t_k)-F(t_{k-1})}\leqslant L\sum_k(t_k-t_{k-1})=L(b-a)$。
+\end{solution}
 \item 设 $F$ 绝对连续，取 $\varepsilon=1$ 对应的 $\delta$。把 $[a,b]$ 分成 $N$ 个长度小于 $\delta$ 的小区间，证明 $V_F[a,b]\leqslant N$。
+\begin{solution}
+设 $a=s_0<s_1<\cdots<s_N=b$，$s_j-s_{j-1}<\delta$。对 $[s_{j-1},s_j]$ 的任何分割，它的小区间（取开区间）两两不交，总长度 $<\delta$，由绝对连续性和式 $<1$。所以 $V_F[s_{j-1},s_j]\leqslant1$。由 B1) 的可加性，$V_F[a,b]=\sum_jV_F[s_{j-1},s_j]\leqslant N$。
+\end{solution}
 \item 令 $V(x)=V_F[a,x]$。证明 $V$ 与 $V-F$ 都单调不减。于是有界变差函数是两个单调不减函数之差。
+\begin{solution}
+设 $x<y$。由 B1)，$V(y)-V(x)=V_F[x,y]\geqslant0$。又取最粗的分割 $x<y$，$V_F[x,y]\geqslant\abs{F(y)-F(x)}\geqslant F(y)-F(x)$，所以 $(V-F)(y)-(V-F)(x)=V_F[x,y]-(F(y)-F(x))\geqslant0$。于是 $F=V-(V-F)$。
+\end{solution}
 \item 设 $F$ 绝对连续，$\varepsilon,\delta$ 如定义。设 $(a_i,b_i)$ 两两不交，$\sum_i(b_i-a_i)<\delta$。对每个 $i$ 取 $[a_i,b_i]$ 的分割，说明所有这些分割的小区间合起来仍然两两不交、总长度小于 $\delta$，从而 $\sum_iV_F[a_i,b_i]\leqslant\varepsilon$。由此证明 $V$ 绝对连续，进而 $V-F$ 绝对连续。
+\begin{solution}
+各个 $[a_i,b_i]$ 的分割的小开区间都含于相应的 $(a_i,b_i)$，而这些 $(a_i,b_i)$ 两两不交，所以全部小区间两两不交，总长度 $\sum_i(b_i-a_i)<\delta$。由绝对连续性，$\sum_i\sum_k\abs{\Delta F}<\varepsilon$。对每个 $i$ 的分割分别取上确界（各个 $i$ 的分割可以独立地选），得 $\sum_iV_F[a_i,b_i]\leqslant\varepsilon$。由 B1)，$V(b_i)-V(a_i)=V_F[a_i,b_i]$，所以 $\sum_i\abs{V(b_i)-V(a_i)}\leqslant\varepsilon$，$V$ 绝对连续（把 $\varepsilon$ 换成 $\varepsilon/2$ 即得严格不等式）。由习题 A8-1)，$V-F$ 也绝对连续。
+\end{solution}
 \item 结论：绝对连续函数是两个单调不减的绝对连续函数之差。这就完成了定理~\ref{thm:ac:newton-leibniz}(2) 的证明。
+\begin{solution}
+由 B3)，$V$ 有限；由 B4)、B5)，$F=V-(V-F)$，$V$ 与 $V-F$ 都单调不减且绝对连续。定理~\ref{thm:ac:newton-leibniz}(2) 的证明中对单调不减的情形已经找到了 $g$，对两部分分别用，再相减即可。
+\end{solution}
 \item 设 $F(x)=F(a)+\int_{[a,x]}g\dd\lambda$。证明 $V_F[a,b]\leqslant\int_{[a,b]}\abs g\dd\lambda$。（事实上等号成立，这需要课外知识 F。）
+\begin{solution}
+对任何分割，
+\[
+\sum_k\abs{F(t_k)-F(t_{k-1})}=\sum_k\Bigl|\int_{(t_{k-1},t_k]}g\dd\lambda\Bigr|\leqslant\sum_k\int_{(t_{k-1},t_k]}\abs g\dd\lambda=\int_{(a,b]}\abs g\dd\lambda,
+\]
+用了定理~\ref{thm:integration:integrable}(6) 与 $(t_{k-1},t_k]$ 两两不交。取上确界即得。
+\end{solution}
 \end{questions}
 \end{probleme}
 
@@ -475,14 +682,48 @@ d_{TV}(\mu,\nu)=\sup_{A\in\cF}\abs{\mu(A)-\nu(A)}.
 这推广了第~\ref{lec:distributions} 讲作业 C 中离散情形的定义。
 \begin{questions}
 \item 令 $\rho=\mu+\nu$。证明 $\mu,\nu\ll\rho$，并且 $f=\dd\mu/\dd\rho$、$g=\dd\nu/\dd\rho$ 可以取为取值于 $[0,1]$ 的函数。
+\begin{solution}
+$\mu\leqslant\rho$，所以 $\rho(A)=0\Rightarrow\mu(A)=0$。$\rho$ 有限，由 Radon--Nikodym 定理得 $f$。令 $E=\{f>1\}$，则 $\int_E(f-1)\dd\rho=\mu(E)-\rho(E)\leqslant0$，而 $f-1>0$ 在 $E$ 上，由命题~\ref{prop:integration:markov}(2)，$\rho(E)=0$。把 $f$ 在 $E$ 上改成 $1$ 不改变它作为密度的性质。$g$ 同理。
+\end{solution}
 \item 证明 $\mu(A)-\nu(A)=\int_A(f-g)\dd\rho$，并由此证明上确界在 $A=\{f>g\}$ 处取到，且
 \[
 d_{TV}(\mu,\nu)=\int(f-g)^+\dd\rho=\frac12\int\abs{f-g}\dd\rho=1-\int\min\{f,g\}\dd\rho .
 \]
+\begin{solution}
+$\mu(A)-\nu(A)=\int_Af\dd\rho-\int_Ag\dd\rho=\int_A(f-g)\dd\rho$（都有限）。于是
+\[
+\mu(A)-\nu(A)\leqslant\int_A(f-g)^+\dd\rho\leqslant\int(f-g)^+\dd\rho,
+\]
+在 $A=\{f>g\}$ 处等号成立。同理 $\nu(A)-\mu(A)\leqslant\int(g-f)^+\dd\rho$。又 $\int(f-g)\dd\rho=1-1=0$，所以 $\int(f-g)^+=\int(g-f)^+=\frac12\int\abs{f-g}$。因此 $d_{TV}=\int(f-g)^+\dd\rho$。最后 $(f-g)^+=f-\min\{f,g\}$，积分得 $1-\int\min\{f,g\}\dd\rho$。
+\end{solution}
 \item 证明 $d_{TV}(\mu,\nu)=1$ 当且仅当 $\mu\perp\nu$。
+\begin{solution}
+“$\Leftarrow$”：取 $A$ 使 $\mu(A)=0$，$\nu(A^c)=0$，则 $\abs{\mu(A^c)-\nu(A^c)}=1$；而总有 $d_{TV}\leqslant1$。
+
+“$\Rightarrow$”：由 C2)，上确界在 $A=\{f>g\}$ 处取到：$\mu(A)-\nu(A)=1$。两个概率都在 $[0,1]$ 中，只能 $\mu(A)=1$，$\nu(A)=0$。于是 $\nu(A)=0$，$\mu(A^c)=0$，$\mu\perp\nu$。
+\end{solution}
 \item 若 $\mu,\nu$ 关于某个 $\sigma$-有限测度 $\eta$ 分别有密度 $p,q$，证明 $d_{TV}(\mu,\nu)=\frac12\int\abs{p-q}\dd\eta$。（提示：链式法则。）说明当 $\eta$ 是计数测度时，这就是第~\ref{lec:distributions} 讲作业 C1) 的公式。
+\begin{solution}
+$\rho=\mu+\nu$ 关于 $\eta$ 有密度 $p+q$（习题 A1），$\mu\ll\rho\ll\eta$。由链式法则（习题 A2），$p=\frac{\dd\mu}{\dd\eta}=f\cdot(p+q)$ $\eta$-a.e.，同理 $q=g(p+q)$。由命题~\ref{prop:ac:density-measure}，
+\[
+\int\abs{f-g}\dd\rho=\int\abs{f-g}(p+q)\dd\eta=\int\abs{p-q}\dd\eta .
+\]
+由 C2) 即得。$\eta$ 是可数集 $D$ 上的计数测度时，$p(x)=\mu(\{x\})$，$q(x)=\nu(\{x\})$（习题 A5），公式就是 $\frac12\sum_x\abs{\mu(x)-\nu(x)}$。
+\end{solution}
 \item 计算 $d_{TV}(N(0,1),N(m,1))$，用 $\Phi$ 表示。
+\begin{solution}
+取 $\eta=\lambda$，$p=\varphi$，$q=\varphi(\cdot-m)$，不妨 $m>0$。$\varphi(x)>\varphi(x-m)\iff x^2<(x-m)^2\iff x<\frac m2$。由 C2)，
+\[
+d_{TV}=\int_{-\infty}^{m/2}\bigl(\varphi(x)-\varphi(x-m)\bigr)\dd x=\Phi(\tfrac m2)-\Phi(-\tfrac m2)=2\Phi(\tfrac m2)-1 .
+\]
+$m<0$ 时把 $m$ 换成 $\abs m$。$m\to0$ 时它趋于 $0$，$m\to\infty$ 时趋于 $1$。
+\end{solution}
 \item 设 $\mu$ 是 $[0,1]$ 上的均匀分布，$\nu_n$ 是在 $\{1/n,2/n,\dots,n/n\}$ 上的均匀分布。计算 $d_{TV}(\mu,\nu_n)$。尽管 $\nu_n$ 在直观上越来越接近 $\mu$，全变差距离却不趋于零。这说明什么？（以后的弱收敛会给出另一种“接近”的概念。）
+\begin{solution}
+$\nu_n$ 集中在有限集 $D_n$ 上，$\mu(D_n)=0$，所以 $\nu_n\perp\mu$，由 C3)，$d_{TV}(\mu,\nu_n)=1$ 对一切 $n$ 成立。
+
+这说明全变差距离太“苛刻”：它要求两个分布对\emph{每个}集合给出接近的概率，包括像 $D_n$ 这样的“细”集合。而直观上的接近只要求对区间这样的“粗”集合给出接近的概率：$\nu_n((-\infty,x])=\lfloor nx\rfloor/n\to x$。第~\ref{lec:convergence} 讲的依分布收敛正是这种较弱的接近，在那里 $\nu_n\Rightarrow\mu$。
+\end{solution}
 \end{questions}
 \end{probleme}
 
@@ -491,8 +732,33 @@ d_{TV}(\mu,\nu)=\int(f-g)^+\dd\rho=\frac12\int\abs{f-g}\dd\rho=1-\int\min\{f,g\}
 \begin{probleme}[问题]{D}{Radon--Nikodym 导数可以取 \texorpdfstring{$\infty$}{∞} 吗}
 \begin{questions}
 \item 在 $(\R,\cR)$ 上令 $\nu(A)=\infty\cdot\lambda(A)$（即 $\lambda(A)>0$ 时为 $\infty$，否则为 $0$）。证明 $\nu$ 是测度，$\nu\ll\lambda$，但 $\nu$ 不是 $\sigma$-有限的。是否存在取有限值的 $h$ 使 $\nu(E)=\int_Eh\dd\lambda$？取值于 $[0,\infty]$ 的 $h$ 呢？
+\begin{solution}
+\emph{测度。}设 $A_n$ 两两不交。若某个 $\lambda(A_n)>0$，则 $\lambda(\bigcup A_n)>0$，两边都是 $\infty$；否则 $\lambda(\bigcup A_n)=0$，两边都是 $0$。$\nu\ll\lambda$ 由定义显然。
+
+\emph{非 $\sigma$-有限。}$\nu(A)<\infty$ 当且仅当 $\lambda(A)=0$；可数个 $\lambda$-零测集之并是零测集，不能是 $\R$。
+
+\emph{有限值的 $h$ 不存在。}若 $h$ 取有限值，令 $E_k=\{h\leqslant k\}\cap[-k,k]$，则 $\nu(E_k)=\int_{E_k}h\dd\lambda\leqslant2k^2<\infty$，所以 $\lambda(E_k)=0$。但 $E_k\uparrow\R$（$h$ 有限），$\lambda(\R)=0$，矛盾。
+
+\emph{$[0,\infty]$ 值的 $h$ 存在：}$h\equiv\infty$，$\int_E\infty\dd\lambda=\infty\cdot\lambda(E)=\nu(E)$（推论~\ref{cor:integration:nonnegative-simple}，约定 $0\cdot\infty=0$）。
+\end{solution}
 \item 说明定理~\ref{thm:ac:radon-nikodym} 中 $\nu$ 的 $\sigma$-有限性用在了证明的哪一步。
+\begin{solution}
+用在 Lebesgue 分解（定理~\ref{thm:ac:lebesgue-decomposition}）的证明中。第一步要求 $\nu$ 有限：$\kappa\leqslant\nu(\Omega)<\infty$，从而 $h$ 可以取有限值，$\nu_s=\nu-\nu_r$ 的减法有意义，并且 (d) 中由 $\kappa\geqslant\kappa+\frac1k\mu(P_k)$ 推出 $\mu(P_k)=0$ 需要 $\kappa<\infty$。第二步把空间切成使 $\nu$ 有限的小块，正是用 $\nu$ 的 $\sigma$-有限性。D1) 的例子说明，去掉这个条件，密度只能取 $\infty$ 值。
+\end{solution}
 \item 设 $\mu$ 是 $\sigma$-有限的，$\nu\ll\mu$ 是任意测度。证明存在 $h:\Omega\to[0,\infty]$ 使 $\nu(E)=\int_Eh\dd\mu$。（提示：先找出一个集合 $\Omega_\infty$，它的每个可测子集的 $\nu$ 值为 $0$ 或 $\infty$，并且 $\Omega_\infty^c$ 上 $\nu$ 是 $\sigma$-有限的。）
+\begin{solution}
+\emph{第一步：换成有限测度。}取 $\Omega$ 的可数划分 $E_n$，$\mu(E_n)<\infty$，令 $\mu'(A)=\sum_n2^{-n}\frac{\mu(A\cap E_n)}{1+\mu(E_n)}$。$\mu'$ 是有限测度，并且 $\mu'(A)=0\iff\mu(A)=0$。
+
+\emph{第二步：找 $\Omega_\infty$。}令 $\cC$ 为使 $\nu$ 限制在 $A$ 上是 $\sigma$-有限的 $A\in\cF$ 的全体（即 $A$ 是可数个 $\nu$ 测度有限的集合之并）。$\cC$ 对可数并封闭。令 $s=\sup\{\mu'(A):A\in\cC\}\leqslant\mu'(\Omega)<\infty$，取 $A_n\in\cC$ 使 $\mu'(A_n)\to s$，$A^*=\bigcup_nA_n\in\cC$，$\mu'(A^*)=s$。令 $\Omega_\infty=(A^*)^c$。
+
+\emph{第三步：$\Omega_\infty$ 上的 $0$-$\infty$ 律。}设 $B\subseteq\Omega_\infty$ 可测。若 $\nu(B)<\infty$，则 $A^*\cup B\in\cC$，$\mu'(A^*\cup B)=s+\mu'(B)\leqslant s$，所以 $\mu'(B)=0$，$\mu(B)=0$，由 $\nu\ll\mu$，$\nu(B)=0$。所以 $\Omega_\infty$ 的可测子集的 $\nu$ 值只能是 $0$ 或 $\infty$；并且 $\nu(B)=0\iff\mu(B)=0$（若 $\mu(B)>0$，则 $\nu(B)$ 不能有限，否则 $\mu(B)=0$）。
+
+\emph{第四步：拼起来。}在 $A^*$ 上，$\nu$ 与 $\mu$ 都是 $\sigma$-有限的，$\nu\ll\mu$，由 Radon--Nikodym 定理（用于限制在 $A^*$ 上的测度）得 $h_1$。令 $h=h_1$ 于 $A^*$，$h=\infty$ 于 $\Omega_\infty$。则
+\[
+\int_Eh\dd\mu=\int_{E\cap A^*}h_1\dd\mu+\infty\cdot\mu(E\cap\Omega_\infty)=\nu(E\cap A^*)+\nu(E\cap\Omega_\infty)=\nu(E),
+\]
+第二个等号的后一项用了第三步的 $0$-$\infty$ 律与 $\nu(B)=0\iff\mu(B)=0$。
+\end{solution}
 \end{questions}
 \end{probleme}
 
@@ -504,10 +770,25 @@ Cantor 函数在去掉的区间上是常数。本题构造一个严格递增的�
 其中 $B-q=\{b-q:b\in B\}$。
 \begin{questions}
 \item 证明 $\mu$ 是概率测度，没有原子。
+\begin{solution}
+$B-q_n$ 是 Borel 集，平移保持不交与可数并，所以 $B\mapsto\mu_C(B-q_n)$ 是概率测度。权重 $2^{-n}$ 之和为 $1$，由\egref{ex:measures:combination}，$\mu$ 是概率测度。$\mu(\{x\})=\sum_n2^{-n}\mu_C(\{x-q_n\})=0$，因为 Cantor 分布没有原子。
+\end{solution}
 \item 证明 $\mu$ 集中在 $\bigcup_n(C+q_n)$ 上，从而 $\mu\perp\lambda$。
+\begin{solution}
+令 $S=\bigcup_m(C+q_m)$。对每个 $n$，$S-q_n\supseteq C$，所以 $\mu_C(S-q_n)=1$，$\mu(S)=\sum_n2^{-n}=1$。另一方面 $\lambda(C+q_m)=\lambda(C)=0$（平移不变性），$\lambda(S)=0$。取 $A=S$，$\lambda(A)=0$，$\mu(A^c)=0$。
+\end{solution}
 \item 证明：若开区间 $I$ 含有 $C$ 中的一点，则 $\mu_C(I)>0$。（提示：$I$ 包含某个 $C_n$ 的一个区间。）
+\begin{solution}
+设 $c\in C\cap I$，$I=(c-r_1,c+r_2)$，$r_1,r_2>0$。对每个 $n$，$c$ 属于 $C_n$ 的某个区间 $J_n$，长度 $3^{-n}$。取 $n$ 使 $3^{-n}<\min\{r_1,r_2\}$，则 $J_n\subseteq[c-3^{-n},c+3^{-n}]\subseteq I$。由第~\ref{lec:distributions} 讲作业 B2)，$\mu_C(J_n)=2^{-n}>0$。
+\end{solution}
 \item 证明 $\mu$ 的分布函数严格递增。
+\begin{solution}
+设 $x<y$。$0\in C$；在区间 $(x,y)$ 中取有理数 $q_n$，则 $I=(x,y)-q_n=(x-q_n,y-q_n)$ 含有 $0\in C$。由 E3)，$\mu_C((x,y)-q_n)>0$，所以 $F(y)-F(x)\geqslant\mu((x,y))\geqslant2^{-n}\mu_C((x,y)-q_n)>0$。
+\end{solution}
 \item 由此说明：分布函数严格递增、连续，都不能保证分布有密度。
+\begin{solution}
+$\mu$ 的分布函数连续（E1)）、严格递增（E4)），而 $\mu\perp\lambda$（E2)）。若它有密度，则 $\mu\ll\lambda$，由命题~\ref{prop:ac:ac-and-singular}，$\mu=0$，矛盾。所以“有密度”是一个比“连续”“严格递增”微妙得多的性质，它只能用绝对连续来刻画（定理~\ref{thm:ac:stieltjes-ac}）。
+\end{solution}
 \end{questions}
 \end{probleme}
 
@@ -517,13 +798,52 @@ Cantor 函数在去掉的区间上是常数。本题构造一个严格递增的�
 本题证明：\emph{若 $g$ 在 $\R$ 上关于 $\lambda$ 可积，则对 $\lambda$-a.e. 的 $x$，$\frac1h\int_{(x,x+h]}g\dd\lambda\to g(x)$（$h\downarrow0$），并且对 $h<0$，$\frac1{\abs h}\int_{(x+h,x]}g\dd\lambda\to g(x)$。}由此完成定理~\ref{thm:ac:newton-leibniz}(3) 的证明（$[a,b]$ 上的可积函数在 $[a,b]$ 之外补为零）。
 \begin{questions}
 \item （Vitali 覆盖引理）设 $I_1,\dots,I_m$ 是有限个有界开区间。证明可以从中选出两两不交的 $I_{k_1},\dots,I_{k_r}$，使 $\lambda(\bigcup_kI_k)\leqslant3\sum_j\lambda(I_{k_j})$。（提示：每次选剩下的区间中最长的一个，去掉与它相交的区间；与它相交且不比它长的区间都包含于把它放大三倍的区间中。）
+\begin{solution}
+按提示选取：第一步选最长的 $I_{k_1}$，去掉一切与它相交的区间（包括它自己）；在剩下的区间中再选最长的，如此下去，有限步后结束。选出的区间两两不交（每次都去掉了与已选区间相交的）。每个 $I_k$ 都在某一步被去掉，设它与当时选出的 $I_{k_j}$ 相交，并且 $\lambda(I_k)\leqslant\lambda(I_{k_j})$（$I_{k_j}$ 是当时最长的）。记 $3I_{k_j}$ 为与 $I_{k_j}$ 同心、长度三倍的区间，则 $I_k\subseteq3I_{k_j}$：$I_k$ 与 $I_{k_j}$ 相交且不比它长，所以 $I_k$ 的点到 $I_{k_j}$ 中心的距离小于 $\frac12\lambda(I_{k_j})+\lambda(I_k)\leqslant\frac32\lambda(I_{k_j})$。于是 $\bigcup_kI_k\subseteq\bigcup_j3I_{k_j}$，$\lambda(\bigcup_kI_k)\leqslant3\sum_j\lambda(I_{k_j})$。
+\end{solution}
 \item 定义\term{极大函数} $Mg(x)=\sup_{r>0}\frac1{2r}\int_{(x-r,x+r)}\abs g\dd\lambda$。证明对每个 $r>0$，$x\mapsto\int_{(x-r,x+r)}\abs g\dd\lambda$ 连续（提示：推论~\ref{cor:ac:integral-ac}），从而对 $t>0$，$\{Mg>t\}$ 是开集。
+\begin{solution}
+记 $\Phi_r(x)=\int_{(x-r,x+r)}\abs g\dd\lambda$。$\abs{\Phi_r(x)-\Phi_r(x')}\leqslant\int_{D}\abs g\dd\lambda$，其中 $D$ 是两个区间的对称差，$\lambda(D)\leqslant2\abs{x-x'}$。由推论~\ref{cor:ac:integral-ac}，对 $\varepsilon>0$ 取 $\delta$，$\abs{x-x'}<\delta/2$ 时 $\abs{\Phi_r(x)-\Phi_r(x')}<\varepsilon$。所以 $\Phi_r$ 连续。$\{Mg>t\}=\bigcup_{r>0}\{x:\Phi_r(x)>2rt\}$ 是开集的并，是开集（从而 $Mg$ 是 Borel 函数）。
+\end{solution}
 \item 证明：对任意开集 $U$，$\lambda(U)=\sup\{\lambda(K):K\subseteq U\ \text{紧}\}$。（提示：$U$ 是可数个开区间的并，用从下连续。）
+\begin{solution}
+若 $U=\R$，取 $K_n=[-n,n]$。否则令 $K_n=\{x\in[-n,n]:\ \inf_{y\notin U}\abs{x-y}\geqslant\frac1n\}$，它是有界闭集（到闭集 $U^c$ 的距离是连续函数），从而是紧集，$K_n\subseteq U$，并且 $K_n\uparrow U$（$U$ 是开集，每点到 $U^c$ 的距离为正）。由从下连续 $\lambda(K_n)\uparrow\lambda(U)$。
+\end{solution}
 \item （极大不等式）证明 $\lambda(\{Mg>t\})\leqslant\frac3t\int\abs g\dd\lambda$。（提示：对紧集 $K\subseteq\{Mg>t\}$，每一点 $x\in K$ 有一个区间 $(x-r_x,x+r_x)$，其上 $\abs g$ 的平均值大于 $t$；取有限子覆盖，再用 F1)。）
+\begin{solution}
+设 $K\subseteq\{Mg>t\}$ 紧。对 $x\in K$，按 $Mg$ 的定义取 $r_x>0$ 使 $\int_{(x-r_x,x+r_x)}\abs g>2r_xt=t\lambda((x-r_x,x+r_x))$。这些开区间覆盖 $K$，取有限子覆盖 $I_1,\dots,I_m$，再由 F1) 取不交的 $I_{k_1},\dots,I_{k_r}$。于是
+\[
+\lambda(K)\leqslant\lambda\Bigl(\bigcup_kI_k\Bigr)\leqslant3\sum_j\lambda(I_{k_j})<\frac3t\sum_j\int_{I_{k_j}}\abs g\dd\lambda\leqslant\frac3t\int\abs g\dd\lambda .
+\]
+由 F2)、F3)（$\{Mg>t\}$ 是开集），对 $K$ 取上确界即得。
+\end{solution}
 \item 证明对任意 $\varepsilon>0$，存在在某个有界区间之外为零的连续函数 $k$，使 $\int\abs{g-k}\dd\lambda<\varepsilon$。（提示：第~\ref{lec:integration} 讲作业 F1)、F2)，再把阶梯函数的“角”磨圆。）
+\begin{solution}
+这就是第~\ref{lec:integration} 讲作业 F6)。
+\end{solution}
 \item 令 $\Theta g(x)=\limsup_{h\to0}\bigl|\frac1h\int_{(x,x+h]}g\dd\lambda-g(x)\bigr|$（$h<0$ 时积分理解为 $-\int_{(x+h,x]}$）。证明对 F5) 中的 $k$，$\Theta g(x)\leqslant2M(g-k)(x)+\abs{g(x)-k(x)}$。
+\begin{solution}
+设 $h>0$（$h<0$ 同理）。写
+\[
+\frac1h\int_{(x,x+h]}g-g(x)=\frac1h\int_{(x,x+h]}(g-k)+\Bigl(\frac1h\int_{(x,x+h]}k-k(x)\Bigr)+\bigl(k(x)-g(x)\bigr).
+\]
+第一项：单点测度为零，$(x,x+h]$ 可换成 $(x,x+h)\subseteq(x-h,x+h)$，所以绝对值不超过 $\frac1h\int_{(x-h,x+h)}\abs{g-k}\leqslant2M(g-k)(x)$。第二项：$k$ 连续，与定理~\ref{thm:ac:newton-leibniz}(3) 的证明相同，它在 $h\to0$ 时趋于 $0$。第三项是常数。取上极限即得。
+\end{solution}
 \item 由 F4)、F6) 与 Markov 不等式，证明对任意 $t>0$ 与 $\varepsilon>0$，集合 $\{\Theta g>t\}$ 包含于一个 Lebesgue 测度不超过 $(12/t+2/t)\varepsilon$ 的 Borel 集中。由此证明 $\{\Theta g>0\}$ 包含于一个 Lebesgue 零测集，即 $\Theta g=0$ a.e.
+\begin{solution}
+由 F6)，若 $\Theta g(x)>t$，则 $2M(g-k)(x)>\frac t2$ 或 $\abs{g(x)-k(x)}>\frac t2$。所以
+\[
+\{\Theta g>t\}\subseteq\{M(g-k)>\tfrac t4\}\cup\{\abs{g-k}>\tfrac t2\}=:B_\varepsilon .
+\]
+$B_\varepsilon$ 是 Borel 集（前者开，后者是可测函数的上水平集）。由 F4) 与 Markov 不等式，$\lambda(B_\varepsilon)\leqslant\frac{12}t\varepsilon+\frac2t\varepsilon$。取 $\varepsilon=\frac1j$，$N_t=\bigcap_jB_{1/j}$ 是 Borel 零测集，包含 $\{\Theta g>t\}$。于是 $\{\Theta g>0\}=\bigcup_m\{\Theta g>\frac1m\}\subseteq\bigcup_mN_{1/m}$，是零测集的子集。（$\Theta g$ 本身是否可测，我们没有去验证，这个论证也不需要。）
+\end{solution}
 \item 设 $F$ 是 $[a,b]$ 上的绝对连续函数，$g$ 如定理~\ref{thm:ac:newton-leibniz}(2)。证明 $F'=g$ a.e.，从而 $F(b)-F(a)=\int_a^bF'(x)\dd x$。
+\begin{solution}
+把 $g$ 在 $[a,b]$ 之外补为零，它在 $\R$ 上可积。对 $x\in(a,b)$ 与充分小的 $h$，$\frac{F(x+h)-F(x)}h=\frac1h\int_{(x,x+h]}g\dd\lambda$（$h<0$ 时按 F6) 的约定）。由 F7)，除去一个零测集，$\Theta g(x)=0$，即这个差商收敛到 $g(x)$，所以 $F'(x)$ 存在且等于 $g(x)$。$F'$ 在零测集之外有定义并等于 $g$，于是 $F(b)-F(a)=\int_{[a,b]}g\dd\lambda=\int_a^bF'(x)\dd x$。
+\end{solution}
 \item 应用：设随机变量 $X$ 的分布函数 $F$ 绝对连续。证明 $F'$ 几乎处处存在，并且 $F'$ 就是 $X$ 的密度。
+\begin{solution}
+由定理~\ref{thm:ac:stieltjes-ac}，$X$ 有密度 $g$，$F(y)-F(x)=\int_{(x,y]}g$。在每个 $[-n,n]$ 上用 F8)，$F'=g$ a.e. 于 $[-n,n]$；可数个零测集之并是零测集，所以 $F'=g$ a.e. 于 $\R$。由密度的唯一性（定理~\ref{thm:ac:ac-density}），$F'$（在零测集上任意补充定义）就是 $X$ 的密度。这为“密度是分布函数的导数”这句初等概率论中的话提供了严格的依据。
+\end{solution}
 \end{questions}
 \end{probleme}
