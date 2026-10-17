@@ -1,0 +1,752 @@
+% !TEX root = ../高等概率论.tex
+% =====================================================================
+%  乘积测度：截口测度的可测性，乘积测度的构造与唯一性，Tonelli 定理与 Fubini 定理，
+%  反例，Lebesgue 测度是乘积测度，期望的尾概率公式，有限个空间的乘积
+% =====================================================================
+\lecture{截口测度的可测性，乘积测度的存在与唯一性，Tonelli 定理与 Fubini 定理，条件不能去掉的反例，平面 Lebesgue 测度是乘积测度，图像下方的面积与期望的尾概率公式，Gauss 积分，有限个测度空间的乘积}
+\label{lec:product-measures}
+
+我们从中学就知道的一个事实说起。平面区域 $E$ 的面积，可以这样计算：用竖直的直线 $x=s$ 去截 $E$，截出的线段长度记为 $\ell(s)$，那么面积等于 $\int\ell(s)\dd s$。这就是祖暅原理（Cavalieri 原理）。用横的直线去截，同样可以算面积。两种算法应该给出同一个结果。数学分析中的二重积分化为累次积分，以及交换积分次序，说的都是这件事。
+
+在概率论中，这件事同样基本。比如掷两颗骰子，第一颗的结果是 $s$，第二颗是 $t$。“两颗骰子独立”的意思是 $P(\text{第一颗}=s,\ \text{第二颗}=t)=P(\text{第一颗}=s)P(\text{第二颗}=t)$。在 $\{1,\dots,6\}^2$ 上，这个概率由两个“一维”的概率相乘得到。一般地，给定两个概率空间（两个随机试验），怎样构造一个概率空间来描述“独立地做这两个试验”？答案是\emph{乘积测度}：在乘积空间上，要求矩形 $A\times B$ 的测度等于 $A$ 的测度乘以 $B$ 的测度。这一讲证明这样的测度存在并且唯一，然后证明 Fubini 定理：关于乘积测度的积分可以化为累次积分，并且可以交换次序。下一讲，乘积测度将成为独立性的数学模型。
+
+\topic{本讲用到的前文结果}
+
+\begin{enumerate}
+\item 乘积 $\sigma$-代数（定义~\ref{def:random-variables:product}）：$\cS\otimes\cT=\sigma(\{A\times B:A\in\cS,B\in\cT\})$。可测矩形的全体是 $\pi$-类。$\cR^2=\cR\otimes\cR$（命题~\ref{prop:random-variables:Rd-product}）。
+\item 截口（定理~\ref{thm:random-variables:sections}）：若 $E\in\cS\otimes\cT$，则对每个 $s\in S$，截口 $E_s=\{t:(s,t)\in E\}\in\cT$；对每个 $t$，$E^t=\{s:(s,t)\in E\}\in\cS$。若 $f$ 是 $\cS\otimes\cT$-可测的，则 $t\mapsto f(s,t)$ 是 $\cT$-可测的，$s\mapsto f(s,t)$ 是 $\cS$-可测的。
+\item $\pi$-$\lambda$ 定理（定理~\ref{thm:set-systems:pi-lambda}）：若 $\pi$-类 $\cP$ 包含于 $\lambda$-类 $\cL$，则 $\sigma(\cP)\subseteq\cL$。$\lambda$-类的定义：含全空间；对真差封闭（$A\subseteq B$ 都在其中，则 $B\setminus A$ 在其中）；对单调递增的并封闭（定义~\ref{def:set-systems:lambda}）。
+\item 测度的唯一性（定理~\ref{thm:measures:uniqueness}）：两个测度在一个 $\pi$-类 $\cP$ 上相等，并且存在 $E_n\in\cP$，$E_n\uparrow\Omega$，测度有限，则它们在 $\sigma(\cP)$ 上相等。
+\item 测度的从下连续性：$A_n\uparrow A$ 蕴含 $\mu(A_n)\uparrow\mu(A)$（命题~\ref{prop:measures:additivity-continuity}）。
+\item 单调收敛定理（定理~\ref{thm:integration:mct}），非负函数的逐项积分（推论~\ref{cor:integration:series}），简单函数逼近（定理~\ref{thm:random-variables:simple-approx}）。
+\item $\R^d$ 上的 Lebesgue 测度 $\lambda_d$（定理~\ref{thm:extension:Rd}）：$\cR^d$ 上唯一的测度，使矩形 $\prod_i(a_i,b_i]$ 的测度是 $\prod_i(b_i-a_i)$。
+\end{enumerate}
+
+\emph{本讲约定：}$(S,\cS,\mu)$ 与 $(T,\cT,\nu)$ 是两个 $\sigma$-有限测度空间。$\sigma$-有限的意思是存在 $S_k\in\cS$，$S_k\uparrow S$，$\mu(S_k)<\infty$；$T_k$ 同样。概率测度当然是 $\sigma$-有限的，$\R$ 上的 Lebesgue 测度与可数集上的计数测度也是。积分中出现 $0\cdot\infty$ 时约定为 $0$。
+
+\topic{截口测度的可测性}
+
+按照开头的想法，我们要定义
+\[
+(\mu\otimes\nu)(E)=\int_S\nu(E_s)\,\mu(\dd s),
+\]
+也就是“用竖线去截，截出的长度再积分”。由定理~\ref{thm:random-variables:sections}，每个截口 $E_s$ 属于 $\cT$，所以 $\nu(E_s)$ 有意义。可是要对 $s$ 积分，还需要知道 $s\mapsto\nu(E_s)$ 是可测函数。这是第一个要解决的问题。
+
+\begin{example}[截口测度是什么样的函数]\label{ex:product:section-function}
+(1) 若 $E=A\times B$ 是可测矩形，则 $E_s=B$（$s\in A$），$E_s=\varnothing$（$s\notin A$），于是 $\nu(E_s)=\nu(B)\one_A(s)$。这是一个简单函数（若 $\nu(B)=\infty$，它取值 $0$ 与 $\infty$）。
+
+(2) 若 $E$ 是两个不交矩形的并，$\nu(E_s)$ 就是两个这样的函数之和。
+
+(3) 若 $E=\{(s,t)\in[0,1]^2:t\leqslant s\}$ 是三角形，$\nu=\lambda$，则 $\lambda(E_s)=\lambda([0,s])=s$（$0\leqslant s\leqslant1$），是连续函数。$\int_0^1s\dd s=\frac12$，正是三角形的面积。
+
+一般的 $E\in\cS\otimes\cT$ 可以非常复杂，我们没有办法直接写出 $\nu(E_s)$。这时就要用 $\pi$-$\lambda$ 定理：先对矩形验证，再说明“使结论成立的集合”构成 $\lambda$-类。
+\end{example}
+
+\begin{lemma}\label{lem:product:section-measurable}
+设 $\nu$ 是 $\sigma$-有限测度，$E\in\cS\otimes\cT$。则 $s\mapsto\nu(E_s)$ 是 $S$ 上取值于 $[0,\infty]$ 的 $\cS$-可测函数。
+\end{lemma}
+
+\begin{remark}[证明思路]
+令 $\cL$ 为使结论成立的集合 $E$ 的全体。由\egref{ex:product:section-function}，$\cL$ 包含一切可测矩形，而可测矩形构成生成 $\cS\otimes\cT$ 的 $\pi$-类。所以只要证明 $\cL$ 是 $\lambda$-类。困难在于真差：$\nu((F\setminus E)_s)=\nu(F_s)-\nu(E_s)$ 只有在 $\nu(E_s)<\infty$ 时才对，否则会出现 $\infty-\infty$。所以我们先对有限的 $\nu$ 证明，再用 $\sigma$-有限性逼近。这里也可以看出，为什么一个“好集合”的族不一定是 $\sigma$-代数（它对一般的差不封闭：$\nu$ 不满足 $\nu(F\setminus E)=\nu(F)-\nu(E)$，除非 $E\subseteq F$），却往往是 $\lambda$-类。
+\end{remark}
+
+\begin{proof}
+\emph{第一步：$\nu$ 是有限测度的情形。}令
+\[
+\cL=\{E\in\cS\otimes\cT:\ s\mapsto\nu(E_s)\ \text{是}\ \cS\text{-可测的}\}.
+\]
+我们验证 $\cL$ 是 $\lambda$-类。
+\begin{itemize}
+\item $S\times T\in\cL$：$(S\times T)_s=T$，$\nu(T)$ 是常数，常函数可测。
+\item 真差：设 $E,F\in\cL$，$E\subseteq F$。则 $E_s\subseteq F_s$，$(F\setminus E)_s=F_s\setminus E_s$（$t\in(F\setminus E)_s$ 当且仅当 $(s,t)\in F$ 且 $(s,t)\notin E$）。$\nu$ 有限，所以 $\nu((F\setminus E)_s)=\nu(F_s)-\nu(E_s)$，是两个可测函数之差，可测。
+\item 单调递增的并：设 $E_n\in\cL$，$E_n\uparrow E$。则对每个 $s$，$(E_n)_s\uparrow E_s$，由测度的从下连续性，$\nu((E_n)_s)\uparrow\nu(E_s)$。可测函数列的极限可测（定理~\ref{thm:random-variables:limits}），所以 $E\in\cL$。
+\end{itemize}
+由\egref{ex:product:section-function}(1)，$\cL$ 包含一切可测矩形（函数 $\nu(B)\one_A$ 可测）。可测矩形构成 $\pi$-类，生成 $\cS\otimes\cT$。由 $\pi$-$\lambda$ 定理，$\cS\otimes\cT\subseteq\cL$。
+
+\emph{第二步：$\nu$ 是 $\sigma$-有限的情形。}取 $T_k\in\cT$，$T_k\uparrow T$，$\nu(T_k)<\infty$。令 $\nu_k(B)=\nu(B\cap T_k)$，$B\in\cT$，它是有限测度。由第一步，$s\mapsto\nu_k(E_s)=\nu(E_s\cap T_k)$ 可测。由于 $E_s\cap T_k\uparrow E_s$，由从下连续性，$\nu(E_s\cap T_k)\uparrow\nu(E_s)$。所以 $s\mapsto\nu(E_s)$ 是可测函数列的极限，可测。
+\end{proof}
+
+由对称性（交换 $S$ 与 $T$ 的地位），若 $\mu$ 是 $\sigma$-有限的，则 $t\mapsto\mu(E^t)$ 是 $\cT$-可测的。
+
+\topic{乘积测度}
+
+\begin{theorem}[乘积测度]\label{thm:product:product-measure}
+设 $\mu,\nu$ 是 $\sigma$-有限测度。对 $E\in\cS\otimes\cT$，令
+\[
+\pi(E)=\int_S\nu(E_s)\,\mu(\dd s).
+\]
+则
+\begin{enumerate}
+\item $\pi$ 是 $(S\times T,\cS\otimes\cT)$ 上的测度，并且对一切 $A\in\cS$，$B\in\cT$，
+\[
+\pi(A\times B)=\mu(A)\nu(B);
+\]
+\item 满足 (1) 中矩形公式的测度是唯一的；
+\item 对一切 $E\in\cS\otimes\cT$，$\pi(E)=\int_T\mu(E^t)\,\nu(\dd t)$。
+\end{enumerate}
+$\pi$ 称为 $\mu$ 与 $\nu$ 的\term{乘积测度}（product measure），记作 $\mu\otimes\nu$（也常写作 $\mu\times\nu$）。
+\end{theorem}
+\begin{proof}
+由引理~\ref{lem:product:section-measurable}，$s\mapsto\nu(E_s)$ 是非负可测函数，$\pi(E)\in[0,\infty]$ 有定义。
+
+\emph{(1) $\pi$ 是测度。}$\varnothing_s=\varnothing$，所以 $\pi(\varnothing)=\int0\dd\mu=0$。设 $E_1,E_2,\dots\in\cS\otimes\cT$ 两两不交，$E=\bigcup_nE_n$。对每个 $s$，截口 $(E_n)_s$ 两两不交（若 $t$ 同时属于 $(E_n)_s$ 与 $(E_m)_s$，则 $(s,t)\in E_n\cap E_m$），并且 $E_s=\bigcup_n(E_n)_s$。由 $\nu$ 的可数可加性，$\nu(E_s)=\sum_n\nu((E_n)_s)$。由非负函数的逐项积分（推论~\ref{cor:integration:series}），
+\[
+\pi(E)=\int_S\sum_n\nu((E_n)_s)\,\mu(\dd s)=\sum_n\int_S\nu((E_n)_s)\,\mu(\dd s)=\sum_n\pi(E_n).
+\]
+
+\emph{矩形公式。}由\egref{ex:product:section-function}(1)，$\nu((A\times B)_s)=\nu(B)\one_A(s)$。若 $\nu(B)<\infty$，$\int\nu(B)\one_A\dd\mu=\nu(B)\mu(A)$。若 $\nu(B)=\infty$，则 $\infty\cdot\one_A=\lim_nn\one_A$（单调递增），由单调收敛定理，积分为 $\lim_nn\mu(A)$，等于 $\infty$（若 $\mu(A)>0$）或 $0$（若 $\mu(A)=0$），这正是约定 $0\cdot\infty=0$ 下的 $\mu(A)\nu(B)$。
+
+\emph{(2) 唯一性。}设 $\pi'$ 是另一个满足矩形公式的测度。可测矩形的全体 $\cP$ 是 $\pi$-类，$\sigma(\cP)=\cS\otimes\cT$。取 $S_k\uparrow S$，$T_k\uparrow T$，测度有限，则 $S_k\times T_k\in\cP$，$S_k\times T_k\uparrow S\times T$（任一 $(s,t)$，当 $k$ 充分大时 $s\in S_k$ 且 $t\in T_k$），并且 $\pi(S_k\times T_k)=\mu(S_k)\nu(T_k)<\infty$。$\pi$ 与 $\pi'$ 在 $\cP$ 上相等，由唯一性定理（定理~\ref{thm:measures:uniqueness}），$\pi=\pi'$。
+
+\emph{(3) 另一个积分次序。}令 $\pi'(E)=\int_T\mu(E^t)\,\nu(\dd t)$。交换 $S$ 与 $T$ 的地位，(1) 的证明说明 $\pi'$ 是 $\cS\otimes\cT$ 上的测度，并且 $\pi'(A\times B)=\nu(B)\mu(A)$。由 (2)，$\pi'=\pi$。
+\end{proof}
+
+\begin{remark}
+(3) 就是开头说的“用竖线截与用横线截，算出的面积一样”。它的证明并没有比较两个积分，而是说两边都是满足矩形公式的测度，而这样的测度只有一个。这个“用唯一性证明相等”的手法，我们在第~\ref{lec:measures} 讲已经见过，以后还会多次用到。
+\end{remark}
+
+\begin{example}[有限集合上的乘积测度]\label{ex:product:finite}
+设 $S=\{1,\dots,6\}$，$T=\{1,\dots,6\}$，$\mu=\nu$ 是均匀分布。对单点集 $\{(s,t)\}=\{s\}\times\{t\}$，$(\mu\otimes\nu)(\{(s,t)\})=\frac16\cdot\frac16=\frac1{36}$。所以 $\mu\otimes\nu$ 就是 $36$ 个结果上的均匀分布，这正是“独立地掷两颗均匀骰子”的模型。一般地，若 $\mu,\nu$ 是可数集上的测度，则 $(\mu\otimes\nu)(\{(s,t)\})=\mu(\{s\})\nu(\{t\})$，乘积测度由这些值决定（每个集合是可数个单点的不交并）。
+\end{example}
+
+\begin{example}[平面 Lebesgue 测度是乘积测度]\label{ex:product:lebesgue}
+取 $S=T=\R$，$\mu=\nu=\lambda$。由命题~\ref{prop:random-variables:Rd-product}，$\cR\otimes\cR=\cR^2$，所以 $\lambda\otimes\lambda$ 是 $(\R^2,\cR^2)$ 上的测度，并且对矩形，
+\[
+(\lambda\otimes\lambda)\bigl((a_1,b_1]\times(a_2,b_2]\bigr)=(b_1-a_1)(b_2-a_2).
+\]
+由定理~\ref{thm:extension:Rd} 中的唯一性，$\lambda\otimes\lambda=\lambda_2$。于是对平面 Borel 集 $E$，
+\[
+\lambda_2(E)=\int_\R\lambda(E_s)\dd s=\int_\R\lambda(E^t)\dd t .
+\]
+这就是祖暅原理的严格表述。比如单位圆盘 $D=\{s^2+t^2\leqslant1\}$ 是闭集，属于 $\cR^2$，截口 $D_s=[-\sqrt{1-s^2},\sqrt{1-s^2}]$（$\abs s\leqslant1$），于是 $\lambda_2(D)=\int_{-1}^12\sqrt{1-s^2}\dd s=\pi$。
+\end{example}
+
+\begin{example}[零测集的刻画]\label{ex:product:null}
+由定理~\ref{thm:product:product-measure}，$(\mu\otimes\nu)(E)=0$ 当且仅当 $\int\nu(E_s)\,\mu(\dd s)=0$，由命题~\ref{prop:integration:markov}(2)，当且仅当对 $\mu$-几乎一切 $s$，$\nu(E_s)=0$。比如平面上的直线 $\{(s,t):t=as+b\}$ 的每个竖直截口是单点，Lebesgue 测度为零，所以直线是 $\lambda_2$-零测集。又如 $E=\{(s,t):s-t\in\Q\}$：每个截口 $E_s=s-\Q$ 是可数集，所以 $\lambda_2(E)=0$。
+\end{example}
+
+\topic{Tonelli 定理与 Fubini 定理}
+
+有了乘积测度，我们来证明积分可以化成累次积分。分两种情形：非负函数（Tonelli 定理），可积函数（Fubini 定理）。
+
+\begin{theorem}[Tonelli 定理]\label{thm:product:tonelli}
+设 $\mu,\nu$ 是 $\sigma$-有限测度，$f:S\times T\to[0,\infty]$ 是 $\cS\otimes\cT$-可测的。则
+\begin{enumerate}
+\item 对每个 $s\in S$，$t\mapsto f(s,t)$ 是 $\cT$-可测的；对每个 $t\in T$，$s\mapsto f(s,t)$ 是 $\cS$-可测的；
+\item $s\mapsto\int_Tf(s,t)\,\nu(\dd t)$ 是 $\cS$-可测的，$t\mapsto\int_Sf(s,t)\,\mu(\dd s)$ 是 $\cT$-可测的（都取值于 $[0,\infty]$）；
+\item
+\[
+\int_S\Bigl(\int_Tf(s,t)\,\nu(\dd t)\Bigr)\mu(\dd s)=\int_{S\times T}f\dd(\mu\otimes\nu)=\int_T\Bigl(\int_Sf(s,t)\,\mu(\dd s)\Bigr)\nu(\dd t).
+\]
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}[证明思路]
+又是四步法。(1) 是前面已经证明的截口可测性。对示性函数 $f=\one_E$，内层积分是 $\nu(E_s)$，(2)(3) 就是引理~\ref{lem:product:section-measurable} 与定理~\ref{thm:product:product-measure}。对简单函数用线性性。对非负函数，用简单函数从下逼近，内层与外层各用一次单调收敛定理。我们只证明第一个等号，第二个由对称性得到。
+\end{remark}
+
+\begin{proof}
+(1) 是定理~\ref{thm:random-variables:sections}。记 $I_f(s)=\int_Tf(s,t)\,\nu(\dd t)$，由 (1)，它对每个 $s$ 有定义。要证明 $I_f$ 可测，并且 $\int_SI_f\dd\mu=\int f\dd(\mu\otimes\nu)$。
+
+\emph{第一步：$f=\one_E$，$E\in\cS\otimes\cT$。}$f(s,t)=\one_E(s,t)=\one_{E_s}(t)$，所以 $I_f(s)=\nu(E_s)$。由引理~\ref{lem:product:section-measurable}，它可测；由定理~\ref{thm:product:product-measure}，$\int_SI_f\dd\mu=(\mu\otimes\nu)(E)=\int\one_E\dd(\mu\otimes\nu)$。
+
+\emph{第二步：非负简单函数 $f=\sum_{i=1}^mc_i\one_{E_i}$，$c_i\geqslant0$。}对每个 $s$，由积分的线性性（定理~\ref{thm:integration:linear-nonnegative}），$I_f(s)=\sum_ic_iI_{\one_{E_i}}(s)$，是可测函数的非负线性组合，可测。再用一次线性性与第一步，
+\[
+\int_SI_f\dd\mu=\sum_ic_i\int_SI_{\one_{E_i}}\dd\mu=\sum_ic_i(\mu\otimes\nu)(E_i)=\int f\dd(\mu\otimes\nu).
+\]
+
+\emph{第三步：一般的非负可测 $f$。}由定理~\ref{thm:random-variables:simple-approx}，取非负简单函数 $f_n\uparrow f$（逐点）。固定 $s$，$t\mapsto f_n(s,t)$ 单调递增地收敛到 $t\mapsto f(s,t)$，由单调收敛定理（对测度 $\nu$），$I_{f_n}(s)\uparrow I_f(s)$。于是 $I_f$ 是可测函数列 $I_{f_n}$ 的极限，可测。再由单调收敛定理（对测度 $\mu$，用于 $I_{f_n}\uparrow I_f$）与第二步，以及单调收敛定理（对测度 $\mu\otimes\nu$，用于 $f_n\uparrow f$），
+\[
+\int_SI_f\dd\mu=\lim_n\int_SI_{f_n}\dd\mu=\lim_n\int f_n\dd(\mu\otimes\nu)=\int f\dd(\mu\otimes\nu).\qedhere
+\]
+\end{proof}
+
+对非负函数，Tonelli 定理不需要任何可积性的条件：三个量要么都是同一个有限数，要么都是 $\infty$。所以\emph{非负函数的积分次序总可以交换}。对于变号的函数，需要可积性。
+
+\begin{theorem}[Fubini 定理]\label{thm:product:fubini}
+设 $\mu,\nu$ 是 $\sigma$-有限测度，$f:S\times T\to\R$ 是 $\cS\otimes\cT$-可测的，并且关于 $\mu\otimes\nu$ 可积：$\int\abs f\dd(\mu\otimes\nu)<\infty$。则
+\begin{enumerate}
+\item 对 $\mu$-几乎一切 $s$，$t\mapsto f(s,t)$ 关于 $\nu$ 可积；
+\item 令 $I(s)=\int_Tf(s,t)\,\nu(\dd t)$（在 (1) 中的例外零测集上令 $I(s)=0$），则 $I$ 关于 $\mu$ 可积，并且
+\[
+\int_SI\dd\mu=\int_{S\times T}f\dd(\mu\otimes\nu);
+\]
+\item 交换 $S$ 与 $T$ 的地位，同样的结论成立。特别地
+\[
+\int_S\Bigl(\int_Tf(s,t)\,\nu(\dd t)\Bigr)\mu(\dd s)=\int_{S\times T}f\dd(\mu\otimes\nu)=\int_T\Bigl(\int_Sf(s,t)\,\mu(\dd s)\Bigr)\nu(\dd t).
+\]
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+\emph{第一步：例外集。}对 $\abs f$ 用 Tonelli 定理：$J(s)=\int_T\abs{f(s,t)}\,\nu(\dd t)$ 是可测函数，并且 $\int_SJ\dd\mu=\int\abs f\dd(\mu\otimes\nu)<\infty$。所以 $J<\infty$ $\mu$-a.e.（命题~\ref{prop:integration:markov}(3)）。令 $N=\{s:J(s)=\infty\}$，它属于 $\cS$，$\mu(N)=0$。对 $s\notin N$，$t\mapsto f(s,t)$ 关于 $\nu$ 可积，这就是 (1)。
+
+\emph{第二步：拆成正部与负部。}$f^+$ 与 $f^-$ 是非负的 $\cS\otimes\cT$-可测函数，并且 $f^\pm\leqslant\abs f$。对它们用 Tonelli 定理：$I^\pm(s)=\int_Tf^\pm(s,t)\,\nu(\dd t)$ 是可测函数，$\int_SI^\pm\dd\mu=\int f^\pm\dd(\mu\otimes\nu)\leqslant\int\abs f\dd(\mu\otimes\nu)<\infty$。对 $s\notin N$，$I^\pm(s)\leqslant J(s)<\infty$，并且
+\[
+I(s)=\int_Tf(s,t)\,\nu(\dd t)=I^+(s)-I^-(s).
+\]
+所以 $I=(I^+-I^-)\one_{N^c}$ 是可测函数（在 $N$ 上取 $0$），$\abs I\leqslant I^++I^-$ 可积。
+
+\emph{第三步：积分。}由于 $\mu(N)=0$，$I=I^+-I^-$ $\mu$-a.e.，由定理~\ref{thm:integration:integrable}，
+\[
+\int_SI\dd\mu=\int_SI^+\dd\mu-\int_SI^-\dd\mu=\int f^+\dd(\mu\otimes\nu)-\int f^-\dd(\mu\otimes\nu)=\int f\dd(\mu\otimes\nu).
+\]
+(3) 由对称性得到。
+\end{proof}
+
+\begin{remark}[怎样使用 Fubini 定理]
+在实际问题中，我们几乎总是按下面的步骤使用这两个定理，同学们应该熟记：
+\begin{enumerate}
+\item 验证 $f$ 是 $\cS\otimes\cT$-可测的（通常 $f$ 是连续函数、可测函数的复合、示性函数之类，这一步不难，但不能省略）。
+\item 对 $\abs f$ 用 Tonelli 定理，按\emph{方便计算的那个次序}算出累次积分 $\int\!\!\int\abs f$。若它有限，则 $f$ 可积。
+\item 对 $f$ 用 Fubini 定理，以任意次序计算。
+\end{enumerate}
+若 $f\geqslant0$，第二步就已经得到了结论。第二步说明，判断 $f$ 是否关于乘积测度可积，并不需要计算二重积分，只要算一个累次积分。
+\end{remark}
+
+\topic{条件不能去掉的反例}
+
+Fubini 定理有三个条件：$f$ 可积，测度 $\sigma$-有限，$f$ 关于乘积 $\sigma$-代数可测。下面的例子说明前两个条件都不能去掉。
+
+\begin{example}[不可积时，两个累次积分可以不同]\label{ex:product:double-series}
+取 $S=T=\N$，$\mu=\nu$ 为计数测度，$\cS=\cT=2^\N$。这时关于 $\mu\otimes\nu$ 的积分就是二重级数（\egref{ex:product:finite}）。令
+\[
+f(m,m)=1,\qquad f(m+1,m)=-1\quad(m\geqslant1),\qquad\text{其余}\ f(m,n)=0 .
+\]
+写成矩阵（第 $m$ 行第 $n$ 列是 $f(m,n)$）：
+\[
+\begin{pmatrix}1&0&0&0&\cdots\\-1&1&0&0&\cdots\\0&-1&1&0&\cdots\\0&0&-1&1&\cdots\\\vdots&&&&\ddots\end{pmatrix}.
+\]
+先对每一行求和：第一行和为 $1$，其余各行和为 $0$，再相加得 $1$。先对每一列求和：每一列恰有一个 $1$ 与一个 $-1$，和为 $0$，再相加得 $0$。两个累次和不相等。由 Fubini 定理，$f$ 关于 $\mu\otimes\nu$ 不可积，这也可以直接看出来：$\sum_{m,n}\abs{f(m,n)}=\infty$。
+\end{example}
+
+\begin{example}[连续函数的例子]\label{ex:product:exp-counterexample}
+取 $S=(0,1)$，$T=(1,\infty)$，都带 Lebesgue 测度，$f(s,t)=e^{-st}-2e^{-2st}$，它是连续函数，从而是 Borel 函数。
+
+先对 $t$ 积分：对固定的 $s\in(0,1)$，$\int_1^\infty e^{-st}\dd t=\frac{e^{-s}}s$，$\int_1^\infty2e^{-2st}\dd t=\frac{e^{-2s}}s$（两个积分都有限），所以
+\[
+\int_1^\infty f(s,t)\dd t=\frac{e^{-s}-e^{-2s}}s>0,\qquad\int_0^1\int_1^\infty f(s,t)\dd t\dd s>0 .
+\]
+先对 $s$ 积分：对固定的 $t>1$，$\int_0^1e^{-st}\dd s=\frac{1-e^{-t}}t$，$\int_0^12e^{-2st}\dd s=\frac{1-e^{-2t}}t$，所以
+\[
+\int_0^1f(s,t)\dd s=\frac{e^{-2t}-e^{-t}}t<0,\qquad\int_1^\infty\int_0^1f(s,t)\dd s\dd t<0 .
+\]
+（这两个外层积分都是有限的：第一个被积函数在 $(0,1)$ 上有界（$s\to0$ 时趋于 $1$），第二个不超过 $e^{-t}/t\leqslant e^{-t}$。）两个累次积分符号相反。所以 $f$ 在 $(0,1)\times(1,\infty)$ 上不可积。
+\end{example}
+
+\begin{example}[$\sigma$-有限性不能去掉]\label{ex:product:not-sigma-finite}
+取 $S=T=(0,1)$，$\cS=\cT=\cR\cap(0,1)$，$\mu=\lambda$，$\nu$ 为计数测度（$\nu(B)$ 是 $B$ 中元素的个数）。$\nu$ 不是 $\sigma$-有限的：$(0,1)$ 不可数，不能写成可数个有限集的并。令 $D=\{(s,s):0<s<1\}$ 为对角线，它是闭集（在 $(0,1)^2$ 中），属于 $\cR^2\cap(0,1)^2=\cS\otimes\cT$。$f=\one_D$。
+\begin{itemize}
+\item 先对 $t$（计数测度）积分：$D_s=\{s\}$，$\nu(D_s)=1$，再对 $s$ 积分得 $\lambda((0,1))=1$。
+\item 先对 $s$（Lebesgue 测度）积分：$D^t=\{t\}$，$\lambda(D^t)=0$，再对 $t$ 积分得 $0$。
+\end{itemize}
+两个累次积分不相等，尽管 $f\geqslant0$。这里出问题的是乘积测度的构造：两种“截法”给出的两个测度在矩形上都等于 $\lambda(A)\nu(B)$，但由于缺少 $\sigma$-有限性，唯一性定理不能用，它们在 $D$ 上不相等。
+\end{example}
+
+\begin{remark}[可测性的条件★]
+第三个条件，$f$ 关于 $\cS\otimes\cT$ 可测，也不能换成“每个截口都可测”。W.\ Sierpiński 在连续统假设下构造了 $[0,1]^2$ 的一个子集 $E$，它的每个竖直截口是可数集，每个水平截口的补集是可数集，于是 $\int\lambda(E_s)\dd s=0$，$\int\lambda(E^t)\dd t=1$。这个集合当然不属于 $\cR^2$。由于这个例子依赖于集合论的公理，我们不再细说。
+\end{remark}
+
+\topic{图像下方的面积与期望的尾概率公式}
+
+Tonelli 定理的一个重要应用，是把积分写成“横条”的积分。我们先看几何的说法，再翻译成概率。
+
+\begin{proposition}[图像下方的面积]\label{prop:product:area-under-graph}
+设 $f:S\to[0,\infty]$ 是 $\cS$-可测的。令 $G=\{(s,y)\in S\times\R:0\leqslant y<f(s)\}$。则 $G\in\cS\otimes\cR$，并且
+\[
+\int_Sf\dd\mu=(\mu\otimes\lambda)(G)=\int_{[0,\infty)}\mu(\{f>y\})\dd y .
+\]
+\end{proposition}
+\begin{proof}
+\emph{可测性。}我们断言
+\[
+\{(s,y):y<f(s)\}=\bigcup_{q\in\Q}\bigl(\{s:f(s)>q\}\times(-\infty,q)\bigr).
+\]
+若 $y<f(s)$，取有理数 $q$ 使 $y<q<f(s)$，则 $(s,y)$ 属于右边第 $q$ 项；反之若 $f(s)>q>y$，则 $y<f(s)$。右边是可数个可测矩形的并，属于 $\cS\otimes\cR$。再与可测矩形 $S\times[0,\infty)$ 相交，得 $G\in\cS\otimes\cR$。
+
+\emph{竖着截。}$G_s=[0,f(s))$（$f(s)=\infty$ 时为 $[0,\infty)$），$\lambda(G_s)=f(s)$。由定理~\ref{thm:product:product-measure}，$(\mu\otimes\lambda)(G)=\int\lambda(G_s)\,\mu(\dd s)=\int f\dd\mu$。
+
+\emph{横着截。}对 $y\geqslant0$，$G^y=\{s:f(s)>y\}$；对 $y<0$，$G^y=\varnothing$。由定理~\ref{thm:product:product-measure}(3)，$(\mu\otimes\lambda)(G)=\int_{[0,\infty)}\mu(\{f>y\})\dd y$。
+\end{proof}
+
+这正是 Lebesgue 当初定义积分的想法：分割值域，而不是分割定义域。把它用于概率空间，就得到期望的尾概率公式。
+
+\begin{theorem}[期望的尾概率公式]\label{thm:product:tail-formula}
+\begin{enumerate}
+\item 设 $X\geqslant0$。则 $EX=\int_0^\infty P(X>t)\dd t$。
+\item 设 $X\geqslant0$，$p>0$。则 $EX^p=\int_0^\infty pt^{p-1}P(X>t)\dd t$。
+\item 设 $X$ 可积，$F$ 是它的分布函数。则 $EX=\int_0^\infty(1-F(t))\dd t-\int_{-\infty}^0F(t)\dd t$。
+\end{enumerate}
+（这里的积分都是关于 Lebesgue 测度的；被积函数是单调函数，所以是 Borel 函数。）
+\end{theorem}
+\begin{proof}
+(1) 是命题~\ref{prop:product:area-under-graph}，取 $(S,\cS,\mu)=(\Omega,\cF,P)$，$f=X$；右边 $\int_{[0,\infty)}$ 与 $\int_{(0,\infty)}$ 相差一个单点，单点的 Lebesgue 测度为零。
+
+(2) \emph{思路：}把 $X^p$ 写成一个关于 $t$ 的积分，$X^p=\int_0^Xpt^{p-1}\dd t$，再交换期望与这个积分的次序。
+
+对 $x\in[0,\infty]$，$\int_{(0,\infty)}pt^{p-1}\one_{\{t<x\}}\dd t=\int_0^xpt^{p-1}\dd t=x^p$（$x<\infty$ 时是 Riemann 积分，$x=\infty$ 时由单调收敛定理两边都是 $\infty$）。所以
+\[
+X(\omega)^p=\int_{(0,\infty)}pt^{p-1}\one_{\{t<X(\omega)\}}\dd t .
+\]
+函数 $h(\omega,t)=pt^{p-1}\one_G(\omega,t)$，$G=\{(\omega,t):t<X(\omega)\}$，在 $\Omega\times(0,\infty)$ 上关于 $\cF\otimes\cR$ 可测：$G$ 可测，理由与命题~\ref{prop:product:area-under-graph} 的证明一样；$(\omega,t)\mapsto pt^{p-1}$ 是连续函数与投影的复合。$h\geqslant0$，由 Tonelli 定理（对 $P$ 与 $\lambda$），
+\[
+EX^p=\int_\Omega\int_{(0,\infty)}h(\omega,t)\dd t\,P(\dd\omega)=\int_{(0,\infty)}pt^{p-1}\int_\Omega\one_{\{X>t\}}\dd P\dd t=\int_0^\infty pt^{p-1}P(X>t)\dd t .
+\]
+
+(3) 同样的想法。对实数 $x$，
+\[
+x^+=\int_{(0,\infty)}\one_{\{x>t\}}\dd t,\qquad x^-=\int_{(-\infty,0]}\one_{\{x\leqslant s\}}\dd s .
+\]
+第一个式子：$x>0$ 时右边是 $\lambda((0,x))=x$，$x\leqslant0$ 时右边是 $0$。第二个式子：$x<0$ 时 $\{s\leqslant0:x\leqslant s\}=[x,0]$，长度为 $-x=x^-$；$x>0$ 时这个集合是空集；$x=0$ 时它是 $\{0\}$，长度为 $0$。集合 $\{(\omega,s):X(\omega)\leqslant s\}$ 是 $\{(\omega,s):s<X(\omega)\}$ 的补集，同上可测。由 Tonelli 定理，
+\[
+\begin{aligned}
+EX^+&=\int_0^\infty P(X>t)\dd t=\int_0^\infty(1-F(t))\dd t,\\
+EX^-&=\int_{(-\infty,0]}P(X\leqslant s)\dd s=\int_{-\infty}^0F(s)\dd s .
+\end{aligned}
+\]
+$X$ 可积，两项都有限，相减即得。
+\end{proof}
+
+这个定理改进了上一讲的命题~\ref{prop:expectation:tail-sum}：那里的和 $\sum_nP(X\geqslant n)$ 是这里的积分 $\int_0^\infty P(X>t)\dd t$ 的“Riemann 和”。由 (2)，$p$ 阶矩有限当且仅当 $\int_0^\infty t^{p-1}P(\abs X>t)\dd t<\infty$，这就把上一讲\wegref{we:expectation:moments-tails} 中“矩与尾概率”的关系说得更准确了。
+
+\begin{example}
+(1) 参数为 $\lambda$ 的指数分布：$P(X>t)=e^{-\lambda t}$（$t\geqslant0$），$EX=\int_0^\infty e^{-\lambda t}\dd t=\frac1\lambda$，$EX^2=\int_0^\infty2te^{-\lambda t}\dd t=\frac2{\lambda^2}$。与上一讲习题 A10 的结果一致，但这次不需要知道密度。
+
+(2) $[0,1]$ 上的均匀分布：$P(X>t)=1-t$（$0\leqslant t\leqslant1$），$EX=\int_0^1(1-t)\dd t=\frac12$。
+
+(3) 设 $X_1,\dots,X_n$ 是随机变量，$P(X_i>t)=e^{-t}$（$t\geqslant0$），$M=\min_iX_i$。若对一切 $t\geqslant0$，$P(X_1>t,\dots,X_n>t)=e^{-nt}$（下一讲会知道，$X_i$ 独立时正是如此），则 $P(M>t)=e^{-nt}$，$EM=\frac1n$。
+\end{example}
+
+\begin{workedexample}\label{we:product:shift-integral}
+设 $F$ 是分布函数，$c>0$。证明 $\displaystyle\int_\R\bigl(F(x+c)-F(x)\bigr)\dd x=c$。
+\end{workedexample}
+\begin{solution}
+\emph{思路。}被积函数 $F(x+c)-F(x)=\mu((x,x+c])$ 是一个概率，把它写成关于分布 $\mu$ 的积分，就得到一个二重积分，交换次序后里面变成区间的长度。
+
+设 $\mu$ 是 $F$ 对应的 Lebesgue--Stieltjes 测度（定理~\ref{thm:extension:lebesgue-stieltjes}），$\mu((a,b])=F(b)-F(a)$，$\mu(\R)=\lim_{n}(F(n)-F(-n))=1$。则
+\[
+F(x+c)-F(x)=\mu((x,x+c])=\int_\R\one_{\{x<y\leqslant x+c\}}\,\mu(\dd y).
+\]
+令 $E=\{(x,y)\in\R^2:x<y\leqslant x+c\}$。函数 $(x,y)\mapsto y-x$ 连续，$E=\{(x,y):0<y-x\leqslant c\}$ 是 Borel 集的原像，属于 $\cR^2=\cR\otimes\cR$。$\one_E\geqslant0$，由 Tonelli 定理（对测度 $\lambda$ 与 $\mu$），
+\[
+\int_\R\bigl(F(x+c)-F(x)\bigr)\dd x=\int_\R\int_\R\one_E(x,y)\,\mu(\dd y)\dd x=\int_\R\int_\R\one_E(x,y)\dd x\,\mu(\dd y).
+\]
+对固定的 $y$，$\{x:(x,y)\in E\}=\{x:y-c\leqslant x<y\}=[y-c,y)$，长度为 $c$。所以右边等于 $\int_\R c\,\mu(\dd y)=c\mu(\R)=c$。
+
+\emph{注。}直观上，$F(x+c)-F(x)$ 是“$X$ 落在长度为 $c$ 的窗口 $(x,x+c]$ 中的概率”；让窗口扫过整条直线，$X$ 的每一个可能取值都恰好被窗口盖住长度 $c$ 那么久。
+\end{solution}
+
+\begin{workedexample}[Gauss 积分]\label{we:product:gauss}
+证明 $\displaystyle\int_0^\infty e^{-x^2}\dd x=\frac{\sqrt\pi}2$，从而 $\int_\R\frac1{\sqrt{2\pi}}e^{-x^2/2}\dd x=1$。
+\end{workedexample}
+\begin{solution}
+\emph{思路。}数学分析中通常用极坐标计算 $\bigl(\int e^{-x^2}\bigr)^2$。我们没有建立二维的换元公式，所以换一个办法：选一个巧妙的非负函数，按两种次序积分，每种次序都只需要一维的换元。
+
+令 $I=\int_0^\infty e^{-x^2}\dd x$。由 $e^{-x^2}\leqslant e^{-x+1}$（因为 $x^2-x+1>0$），$I<\infty$。在 $(0,\infty)^2$ 上令
+\[
+f(x,y)=ye^{-(1+x^2)y^2}.
+\]
+它连续且非负，由 Tonelli 定理可以按任意次序积分。
+
+\emph{先对 $y$ 积分。}固定 $x$，记 $a=1+x^2$。$\frac{\dd}{\dd y}\bigl(-\frac1{2a}e^{-ay^2}\bigr)=ye^{-ay^2}$，所以 $\int_0^\infty ye^{-ay^2}\dd y=\frac1{2a}=\frac1{2(1+x^2)}$。再对 $x$ 积分，$\int_0^\infty\frac{\dd x}{2(1+x^2)}=\frac12\cdot\frac\pi2=\frac\pi4$。
+
+\emph{先对 $x$ 积分。}固定 $y>0$，$f(x,y)=e^{-y^2}\cdot ye^{-x^2y^2}$。作换元 $u=xy$（$y$ 固定，在 $[0,N]$ 上用 Riemann 积分的换元公式，再令 $N\to\infty$）：$\int_0^\infty ye^{-x^2y^2}\dd x=\int_0^\infty e^{-u^2}\dd u=I$。所以内层积分是 $Ie^{-y^2}$，再对 $y$ 积分得 $I\cdot I=I^2$。
+
+由 Tonelli 定理，两种次序的结果相等：$I^2=\frac\pi4$，$I=\frac{\sqrt\pi}2$。最后，$e^{-x^2}$ 是偶函数，$\int_\R e^{-x^2}\dd x=\sqrt\pi$；换元 $x=u/\sqrt2$，$\int_\R e^{-u^2/2}\dd u=\sqrt2\sqrt\pi=\sqrt{2\pi}$。
+\end{solution}
+
+\topic{有限个测度空间的乘积}
+
+两个空间的结论可以推广到有限多个。设 $(S_i,\cS_i,\mu_i)$，$i=1,\dots,n$，是 $\sigma$-有限测度空间。乘积 $\sigma$-代数 $\cS_1\otimes\cdots\otimes\cS_n$ 是由可测矩形 $A_1\times\cdots\times A_n$（$A_i\in\cS_i$）生成的 $\sigma$-代数。我们先说明乘积 $\sigma$-代数可以“分步”构造。
+
+\begin{lemma}[乘积 $\sigma$-代数的结合律]\label{lem:product:associativity}
+把 $S_1\times\cdots\times S_n$ 与 $(S_1\times\cdots\times S_{n-1})\times S_n$ 看成同一个集合（$(s_1,\dots,s_n)$ 对应于 $((s_1,\dots,s_{n-1}),s_n)$）。则
+\[
+\cS_1\otimes\cdots\otimes\cS_n=(\cS_1\otimes\cdots\otimes\cS_{n-1})\otimes\cS_n .
+\]
+\end{lemma}
+\begin{proof}
+记左边为 $\cA$，右边为 $\cB$。
+
+$\cA\subseteq\cB$：每个生成元 $A_1\times\cdots\times A_n=(A_1\times\cdots\times A_{n-1})\times A_n$，而 $A_1\times\cdots\times A_{n-1}\in\cS_1\otimes\cdots\otimes\cS_{n-1}$，所以它是 $\cB$ 的可测矩形。
+
+$\cB\subseteq\cA$：只需证明 $\cB$ 的每个生成元 $E\times A_n$（$E\in\cS_1\otimes\cdots\otimes\cS_{n-1}$，$A_n\in\cS_n$）属于 $\cA$。固定 $A_n$，令 $\cG=\{E\in\cS_1\otimes\cdots\otimes\cS_{n-1}:E\times A_n\in\cA\}$。$\cG$ 包含一切 $A_1\times\cdots\times A_{n-1}$。$\cG$ 是 $\sigma$-代数：$S_1\times\cdots\times S_{n-1}\in\cG$；若 $E\in\cG$，则 $E^c\times A_n=(S_1\times\cdots\times S_{n-1}\times A_n)\setminus(E\times A_n)\in\cA$；若 $E_k\in\cG$，则 $(\bigcup_kE_k)\times A_n=\bigcup_k(E_k\times A_n)\in\cA$。所以 $\cG=\cS_1\otimes\cdots\otimes\cS_{n-1}$。
+\end{proof}
+
+\begin{theorem}[有限个测度的乘积]\label{thm:product:finite-product}
+设 $(S_i,\cS_i,\mu_i)$，$i=1,\dots,n$，是 $\sigma$-有限测度空间。则 $\cS_1\otimes\cdots\otimes\cS_n$ 上存在唯一的测度 $\mu_1\otimes\cdots\otimes\mu_n$，使
+\[
+(\mu_1\otimes\cdots\otimes\mu_n)(A_1\times\cdots\times A_n)=\prod_{i=1}^n\mu_i(A_i)\qquad(A_i\in\cS_i).
+\]
+它是 $\sigma$-有限的。对非负的或可积的可测函数 $f$，$\int f\dd(\mu_1\otimes\cdots\otimes\mu_n)$ 可以写成 $n$ 重累次积分，并且积分次序可以任意交换。
+\end{theorem}
+\begin{proof}
+对 $n$ 归纳。$n=2$ 是定理~\ref{thm:product:product-measure}。设 $\pi_{n-1}=\mu_1\otimes\cdots\otimes\mu_{n-1}$ 已经构造好，是 $\sigma$-有限的（取 $S_{i,k}\uparrow S_i$，则 $\prod_iS_{i,k}\uparrow\prod_iS_i$，测度有限）。由引理~\ref{lem:product:associativity}，$\pi_n=\pi_{n-1}\otimes\mu_n$ 是 $\cS_1\otimes\cdots\otimes\cS_n$ 上的测度，并且
+\[
+\pi_n(A_1\times\cdots\times A_n)=\pi_{n-1}(A_1\times\cdots\times A_{n-1})\mu_n(A_n)=\prod_{i=1}^n\mu_i(A_i).
+\]
+唯一性：可测矩形构成 $\pi$-类，生成 $\cS_1\otimes\cdots\otimes\cS_n$，并且 $\prod_iS_{i,k}\uparrow\prod_iS_i$，测度有限，由唯一性定理即得。累次积分：由 Tonelli 定理与 Fubini 定理，$\int f\dd\pi_n=\int\bigl(\int f\dd\pi_{n-1}\bigr)\dd\mu_n$，再对内层用归纳假设。交换次序：对 $\{1,\dots,n\}$ 的任一排列，同样的构造（按那个顺序逐个相乘）给出一个满足矩形公式的测度，由唯一性，它就是 $\pi_n$。
+\end{proof}
+
+\begin{example}[$d$ 维 Lebesgue 测度]
+由命题~\ref{prop:random-variables:Rd-product} 与定理~\ref{thm:extension:Rd} 的唯一性，$\lambda_d=\lambda\otimes\cdots\otimes\lambda$（$d$ 个）。所以 $\R^d$ 上的积分可以化成 $d$ 重累次积分，次序任意（对非负函数，或者对可积函数）。这就是数学分析中重积分化为累次积分的定理，现在对一切 Borel 可测、Lebesgue 可积的函数成立。
+\end{example}
+
+\begin{example}[$n$ 次独立试验的模型]\label{ex:product:independent-trials}
+设 $\mu_1,\dots,\mu_n$ 是 $\R$ 上的概率测度。在 $(\R^n,\cR^n,P)$ 上，$P=\mu_1\otimes\cdots\otimes\mu_n$，令 $X_i(x_1,\dots,x_n)=x_i$ 为第 $i$ 个坐标。则对 Borel 集 $B_1,\dots,B_n$，
+\[
+P(X_1\in B_1,\dots,X_n\in B_n)=P(B_1\times\cdots\times B_n)=\prod_{i=1}^n\mu_i(B_i)=\prod_{i=1}^nP(X_i\in B_i).
+\]
+特别地，$X_i$ 的分布是 $\mu_i$（取 $B_j=\R$，$j\neq i$）。“联合概率等于各自概率的乘积”，这就是下一讲要定义的独立性。所以乘积测度给出了“$n$ 个独立的、分布分别为 $\mu_i$ 的随机变量”的一个具体构造。
+\end{example}
+
+\topic{本讲小结}
+
+\begin{enumerate}
+\item 对 $E\in\cS\otimes\cT$，截口测度 $s\mapsto\nu(E_s)$ 可测（引理~\ref{lem:product:section-measurable}），证明用的是 $\pi$-$\lambda$ 定理，并且要先对有限测度证明。
+\item 乘积测度 $(\mu\otimes\nu)(E)=\int\nu(E_s)\,\mu(\dd s)$ 是唯一满足 $(\mu\otimes\nu)(A\times B)=\mu(A)\nu(B)$ 的测度；两种截法给出同一个测度，理由是唯一性（定理~\ref{thm:product:product-measure}）。
+\item Tonelli 定理：非负可测函数的积分可以化为累次积分，次序任意，无需任何可积性条件。Fubini 定理：可积函数同样如此。使用时先对 $\abs f$ 用 Tonelli 定理验证可积性。
+\item 反例：不可积时两个累次积分可以不同（二重级数、$e^{-st}-2e^{-2st}$）；不是 $\sigma$-有限时也可以不同（计数测度与对角线）。
+\item 应用：$\lambda_2=\lambda\otimes\lambda$（祖暅原理）；$\int f\dd\mu=\int_0^\infty\mu(f>y)\dd y$，即 $EX=\int_0^\infty P(X>t)\dd t$；Gauss 积分。
+\item 有限个概率测度的乘积给出了 $n$ 个独立随机变量的模型。下一讲从这里出发讨论独立性。
+\end{enumerate}
+
+% =====================================================================
+\homework{Dirichlet 积分，Lebesgue--Stieltjes 积分的分部积分公式，Beta 函数与 Gamma 函数，单位球的体积}[Dirichlet 积分，分部积分，Beta 函数，单位球的体积]
+\label{hw:product-measures}
+
+\exercisepart{基本习题}
+
+\begin{exercises}{A}{课堂内容的补充}
+\item\label{ex:product:A1} （二重级数）设 $a_{m,n}$（$m,n\geqslant1$）是实数。
+\begin{questions}
+\item 若 $a_{m,n}\geqslant0$，证明 $\sum_m\sum_na_{m,n}=\sum_n\sum_ma_{m,n}$。
+\begin{solution}
+思路：二重级数就是关于计数测度的乘积测度的积分。
+
+取 $S=T=\N$，$\mu=\nu$ 为计数测度，它是 $\sigma$-有限的（$\N=\bigcup_k\{1,\dots,k\}$）。$\cS\otimes\cT=2^{\N\times\N}$：每个单点 $\{(m,n)\}=\{m\}\times\{n\}$ 是可测矩形，而 $\N\times\N$ 的每个子集是可数个单点的并。所以任意 $f(m,n)=a_{m,n}$ 都是可测的。由第~\ref{lec:integration} 讲中计数测度的例子，关于计数测度的积分就是求和，于是 $\int_\N\bigl(\int_\N f(m,n)\,\nu(\dd n)\bigr)\mu(\dd m)=\sum_m\sum_na_{m,n}$。
+
+由 Tonelli 定理，两个累次和都等于 $\int f\dd(\mu\otimes\nu)$。
+\end{solution}
+\item 若 $\sum_m\sum_n\abs{a_{m,n}}<\infty$，证明同样的等式成立，并且两边都是有限数。
+\begin{solution}
+由 Tonelli 定理，$\int\abs f\dd(\mu\otimes\nu)=\sum_m\sum_n\abs{a_{m,n}}<\infty$，所以 $f$ 可积。由 Fubini 定理，两个累次和都等于 $\int f\dd(\mu\otimes\nu)$，是有限数。（Fubini 定理中“对几乎一切 $m$，内层级数绝对收敛”在计数测度下就是“对一切 $m$”，因为计数测度下只有空集是零测集。）
+\end{solution}
+\item 计算 $\sum_{m,n\geqslant1}\frac1{(m+n)^3}$，用 $\sum_k\frac1{k^2}$ 与 $\sum_k\frac1{k^3}$ 表示。
+\begin{solution}
+各项非负，由 A1-1) 可以按任何方式重排求和。按 $k=m+n$ 分组：对固定的 $k\geqslant2$，满足 $m+n=k$，$m,n\geqslant1$ 的 $(m,n)$ 有 $k-1$ 对。（这里把 $\N\times\N$ 分成不交的子集 $\{m+n=k\}$，用的是计数测度的可数可加性，也就是非负项级数可以任意分组。）所以
+\[
+\sum_{m,n\geqslant1}\frac1{(m+n)^3}=\sum_{k\geqslant2}\frac{k-1}{k^3}=\sum_{k\geqslant2}\Bigl(\frac1{k^2}-\frac1{k^3}\Bigr)=\sum_{k\geqslant1}\frac1{k^2}-\sum_{k\geqslant1}\frac1{k^3}.
+\]
+（最后一步加上又减去 $k=1$ 的项 $1-1=0$；两个级数都收敛，可以拆开。）
+\end{solution}
+\end{questions}
+
+\item\label{ex:product:A2} 设 $\mu,\nu$ 是 $\sigma$-有限测度，$f$ 是 $\cS\otimes\cT$-可测的，并且 $\int_S\int_T\abs{f(s,t)}\,\nu(\dd t)\mu(\dd s)<\infty$。证明 $f$ 关于 $\mu\otimes\nu$ 可积，从而 Fubini 定理的结论成立。
+\begin{solution}
+由 Tonelli 定理（用于非负函数 $\abs f$），
+\[
+\int\abs f\dd(\mu\otimes\nu)=\int_S\int_T\abs{f(s,t)}\,\nu(\dd t)\mu(\dd s)<\infty .
+\]
+所以 $f$ 可积，Fubini 定理适用。这就是正文中“怎样使用 Fubini 定理”的第二步。
+\end{solution}
+
+\item\label{ex:product:A3} 设 $g:\R\to\R$ 是 Borel 函数。证明 $g$ 的图像 $\Gamma=\{(s,t):t=g(s)\}$ 属于 $\cR^2$，并且 $\lambda_2(\Gamma)=0$。
+\begin{solution}
+\emph{可测性。}映射 $(s,t)\mapsto(g(s),t)$ 的两个分量分别是 $g\circ\pi_1$ 与 $\pi_2$（$\pi_1,\pi_2$ 是坐标投影），都是 $\cR^2$-可测的，所以 $h(s,t)=t-g(s)$ 是 $\cR^2$-可测函数（推论~\ref{cor:random-variables:arithmetic}）。$\Gamma=h^{-1}(\{0\})\in\cR^2$。
+
+\emph{测度。}对每个 $s$，竖直截口 $\Gamma_s=\{g(s)\}$ 是单点，$\lambda(\Gamma_s)=0$。由\egref{ex:product:lebesgue}，$\lambda_2(\Gamma)=\int\lambda(\Gamma_s)\dd s=0$。
+\end{solution}
+
+\item\label{ex:product:A4} 设 $f$ 关于 $\mu$ 可积，$g$ 关于 $\nu$ 可积，$h(s,t)=f(s)g(t)$。证明 $h$ 关于 $\mu\otimes\nu$ 可积，并且 $\int h\dd(\mu\otimes\nu)=\int f\dd\mu\int g\dd\nu$。
+\begin{solution}
+\emph{可测性。}$f\circ\pi_S$ 与 $g\circ\pi_T$ 是 $\cS\otimes\cT$-可测的（投影可测，定理~\ref{thm:random-variables:product-map} 的证明），它们的乘积可测。
+
+\emph{可积性。}由 Tonelli 定理，
+\[
+\begin{aligned}
+\int\abs h\dd(\mu\otimes\nu)&=\int_S\Bigl(\int_T\abs{f(s)}\abs{g(t)}\,\nu(\dd t)\Bigr)\mu(\dd s)\\
+&=\int_S\abs{f(s)}\Bigl(\int_T\abs g\dd\nu\Bigr)\mu(\dd s)=\int\abs f\dd\mu\int\abs g\dd\nu<\infty .
+\end{aligned}
+\]
+（内层积分中 $\abs{f(s)}$ 是常数，可以提出来。）
+
+\emph{积分。}由 Fubini 定理，同样的计算去掉绝对值，得 $\int h\dd(\mu\otimes\nu)=\int_Sf(s)\bigl(\int_Tg\dd\nu\bigr)\mu(\dd s)=\int f\dd\mu\int g\dd\nu$。
+
+下一讲我们会看到，这个等式就是“独立随机变量乘积的期望等于期望的乘积”。
+\end{solution}
+
+\item\label{ex:product:A5} 
+\begin{questions}
+\item 证明 $EX^2=2\int_0^\infty tP(\abs X>t)\dd t$。
+\begin{solution}
+对 $\abs X$ 用定理~\ref{thm:product:tail-formula}(2)，$p=2$。
+\end{solution}
+\item 设 $N$ 取值于非负整数，证明 $\sum_{n\geqslant1}nP(N\geqslant n)=\frac12E[N(N+1)]$。
+\begin{solution}
+思路：和命题~\ref{prop:expectation:tail-sum} 一样，先对每个 $\omega$ 写出恒等式，再用 Tonelli 定理（这里是关于 $P$ 与计数测度的乘积）交换求和与期望。
+
+对非负整数 $k$，$\sum_{n\geqslant1}n\one_{\{k\geqslant n\}}=1+2+\cdots+k=\frac{k(k+1)}2$。所以逐点有 $\sum_{n\geqslant1}n\one_{\{N\geqslant n\}}=\frac{N(N+1)}2$。左边是非负函数的级数，由逐项积分（推论~\ref{cor:integration:series}），
+\[
+\sum_{n\geqslant1}nP(N\geqslant n)=E\sum_{n\geqslant1}n\one_{\{N\geqslant n\}}=\frac12E[N(N+1)].
+\]
+（逐项积分本身就是 Tonelli 定理对 $P\otimes$ 计数测度的特例。）
+\end{solution}
+\end{questions}
+
+\item\label{ex:product:A6} 用尾概率公式重新证明\wegref{we:expectation:tP}：若 $E\abs X<\infty$，则 $tP(\abs X>t)\to0$。（提示：$t\mapsto P(\abs X>t)$ 单调不增，比较 $\frac t2P(\abs X>t)$ 与 $\int_{t/2}^tP(\abs X>s)\dd s$。）
+\begin{solution}
+令 $G(s)=P(\abs X>s)$，单调不增。对 $s\in[t/2,t]$，$G(s)\geqslant G(t)$，所以
+\[
+\frac t2G(t)\leqslant\int_{t/2}^tG(s)\dd s\leqslant\int_{t/2}^\infty G(s)\dd s .
+\]
+由定理~\ref{thm:product:tail-formula}(1)，$\int_0^\infty G(s)\dd s=E\abs X<\infty$。由单调收敛定理（或控制收敛定理），$\int_{t/2}^\infty G(s)\dd s=\int_0^\infty G(s)\one_{\{s\geqslant t/2\}}\dd s\to0$（$t\to\infty$）：被积函数被可积的 $G$ 控制，并且逐点趋于 $0$。所以 $tG(t)\to0$。
+
+这个证明与\wegref{we:expectation:tP} 的证明想法一样：都是把 $tP(\abs X>t)$ 用“$\abs X$ 的期望中来自大值的部分”来控制。区别在于这里在“值域”上做，那里在“样本空间”上做。
+\end{solution}
+
+\item\label{ex:product:A7} （Frullani 积分）设 $0<a<b$。证明 $\displaystyle\int_0^\infty\frac{e^{-at}-e^{-bt}}t\dd t=\log\frac ba$。
+\begin{solution}
+思路：被积函数可以写成一个积分，$\frac{e^{-at}-e^{-bt}}t=\int_a^be^{-xt}\dd x$，然后交换积分次序。
+
+对 $t>0$，$\int_a^be^{-xt}\dd x=\bigl[-\frac{e^{-xt}}t\bigr]_{x=a}^{x=b}=\frac{e^{-at}-e^{-bt}}t$。函数 $(x,t)\mapsto e^{-xt}$ 在 $[a,b]\times(0,\infty)$ 上连续、非负，由 Tonelli 定理，
+\[
+\int_0^\infty\frac{e^{-at}-e^{-bt}}t\dd t=\int_0^\infty\int_a^be^{-xt}\dd x\dd t=\int_a^b\int_0^\infty e^{-xt}\dd t\dd x=\int_a^b\frac{\dd x}x=\log\frac ba .
+\]
+注意：被积函数在 $t\to0$ 时趋于 $b-a$，在 $t\to\infty$ 时指数衰减，所以积分本身是有限的；Tonelli 定理不需要事先知道这一点。
+\end{solution}
+\end{exercises}
+
+\begin{probleme}{B}{Dirichlet 积分}
+第~\ref{lec:integration} 讲指出，$\frac{\sin x}x$ 在 $(0,\infty)$ 上不是 Lebesgue 可积的，但反常积分 $\int_0^\infty\frac{\sin x}x\dd x$ 收敛。本题用 Fubini 定理算出它的值，并给出收敛速度：
+\[
+\Bigl\lvert\int_0^a\frac{\sin x}x\dd x-\frac\pi2\Bigr\rvert\leqslant\frac2a\qquad(a\geqslant1).
+\]
+固定 $a>0$，在 $(0,a)\times(0,\infty)$ 上令 $f(x,y)=e^{-xy}\sin x$。
+\begin{questions}
+\item 证明 $f$ 关于 $\lambda_2=\lambda\otimes\lambda$ 可积。
+\begin{solution}
+$f$ 连续，是 Borel 函数。由 Tonelli 定理（先对 $y$ 积分），
+\[
+\int\abs f\dd\lambda_2=\int_0^a\abs{\sin x}\Bigl(\int_0^\infty e^{-xy}\dd y\Bigr)\dd x=\int_0^a\frac{\abs{\sin x}}x\dd x\leqslant\int_0^a1\dd x=a<\infty,
+\]
+其中用到 $\int_0^\infty e^{-xy}\dd y=\frac1x$（$x>0$）与 $\abs{\sin x}\leqslant x$（$x>0$）。
+\end{solution}
+
+\item 先对 $y$ 积分，证明 $\int_0^a\int_0^\infty f(x,y)\dd y\dd x=\int_0^a\frac{\sin x}x\dd x$。
+\begin{solution}
+对固定的 $x\in(0,a)$，$\int_0^\infty e^{-xy}\sin x\dd y=\sin x\cdot\frac1x$。再对 $x$ 积分即得。（$\frac{\sin x}x$ 在 $(0,a)$ 上有界连续，Lebesgue 积分等于 Riemann 积分。）
+\end{solution}
+
+\item 对 $y>0$，验证 $\frac{\dd}{\dd x}\Bigl(-\frac{e^{-xy}(y\sin x+\cos x)}{1+y^2}\Bigr)=e^{-xy}\sin x$，从而
+\[
+\int_0^ae^{-xy}\sin x\dd x=\frac{1-e^{-ay}(y\sin a+\cos a)}{1+y^2}.
+\]
+\begin{solution}
+求导：
+\[
+\begin{aligned}
+\frac{\dd}{\dd x}\bigl[-e^{-xy}(y\sin x+\cos x)\bigr]&=ye^{-xy}(y\sin x+\cos x)-e^{-xy}(y\cos x-\sin x)\\
+&=e^{-xy}(y^2+1)\sin x .
+\end{aligned}
+\]
+除以 $1+y^2$ 即得第一个式子。由 Newton--Leibniz 公式，
+\[
+\int_0^ae^{-xy}\sin x\dd x=-\frac{e^{-ay}(y\sin a+\cos a)}{1+y^2}+\frac{e^0(0+1)}{1+y^2}=\frac{1-e^{-ay}(y\sin a+\cos a)}{1+y^2}.
+\]
+\end{solution}
+
+\item 由 Fubini 定理证明
+\[
+\int_0^a\frac{\sin x}x\dd x=\frac\pi2-\cos a\int_0^\infty\frac{e^{-ay}}{1+y^2}\dd y-\sin a\int_0^\infty\frac{ye^{-ay}}{1+y^2}\dd y .
+\]
+\begin{solution}
+由 B1，$f$ 可积，由 Fubini 定理两种次序的累次积分相等。由 B3，先对 $x$ 积分得 $\frac{1-e^{-ay}(y\sin a+\cos a)}{1+y^2}$，再对 $y$ 积分。这三项分别可积：$\frac1{1+y^2}$，$\frac{e^{-ay}}{1+y^2}\leqslant e^{-ay}$，$\frac{ye^{-ay}}{1+y^2}\leqslant e^{-ay}$（因为 $\frac y{1+y^2}\leqslant\frac12\leqslant1$）。由线性性，
+\[
+\begin{aligned}
+\int_0^\infty\frac{1-e^{-ay}(y\sin a+\cos a)}{1+y^2}\dd y&=\int_0^\infty\frac{\dd y}{1+y^2}-\cos a\int_0^\infty\frac{e^{-ay}}{1+y^2}\dd y\\
+&\qquad-\sin a\int_0^\infty\frac{ye^{-ay}}{1+y^2}\dd y,
+\end{aligned}
+\]
+第一项是 $\frac\pi2$。再由 B2 即得。
+\end{solution}
+
+\item 证明 $a\geqslant1$ 时 $\abs{\int_0^a\frac{\sin x}x\dd x-\frac\pi2}\leqslant\frac2a$，从而 $\lim_{a\to\infty}\int_0^a\frac{\sin x}x\dd x=\frac\pi2$。
+\begin{solution}
+把 B4 中两个积分的分母 $1+y^2$ 换成 $1$，积分只会变大：
+\[
+\begin{aligned}
+\Bigl\lvert\int_0^a\frac{\sin x}x\dd x-\frac\pi2\Bigr\rvert&\leqslant\abs{\cos a}\int_0^\infty e^{-ay}\dd y+\abs{\sin a}\int_0^\infty ye^{-ay}\dd y\\
+&\leqslant\frac1a+\frac1{a^2}\leqslant\frac2a,
+\end{aligned}
+\]
+其中 $\int_0^\infty ye^{-ay}\dd y=\frac1{a^2}$（分部积分，或第~\ref{lec:expectation} 讲习题 A10 中指数分布的期望），最后一步用到 $a\geqslant1$。令 $a\to\infty$ 即得。
+
+\emph{注。}这个例子很有意思：$\frac{\sin x}x$ 本身不是 Lebesgue 可积的，可是我们把它放到二维，乘上一个衰减因子 $e^{-xy}$，就得到一个可积函数，从而可以用 Fubini 定理。
+\end{solution}
+\end{questions}
+\end{probleme}
+
+\begin{probleme}{C}{Lebesgue--Stieltjes 积分的分部积分公式}
+设 $F,G$ 是 Stieltjes 测度函数（单调不减、右连续），$\mu,\nu$ 是对应的 Lebesgue--Stieltjes 测度：$\mu((x,y])=F(y)-F(x)$，$\nu((x,y])=G(y)-G(x)$。记 $\int_{(a,b]}h(y)\dd G(y)=\int_{(a,b]}h\dd\nu$。本题证明：对 $a<b$，
+\[
+\int_{(a,b]}F(y)\dd G(y)+\int_{(a,b]}G(y)\dd F(y)=F(b)G(b)-F(a)G(a)+\sum_{x\in(a,b]}\mu(\{x\})\nu(\{x\}).
+\]
+与数学分析中的分部积分公式相比，多出的和式来自 $F$ 与 $G$ 的公共跳跃点。
+\begin{questions}
+\item 令 $E_1=\{(x,y):a<x\leqslant y\leqslant b\}$。证明 $\int_{(a,b]}\bigl(F(y)-F(a)\bigr)\dd G(y)=(\mu\otimes\nu)(E_1)$。
+\begin{solution}
+$E_1$ 是闭集与半开区域的交，可以写成 $\{(x,y):a<x\leqslant b,\ a<y\leqslant b,\ y-x\geqslant0\}$，是 Borel 集。$\mu,\nu$ 是 $\sigma$-有限的（$\mu((-n,n])=F(n)-F(-n)<\infty$）。用定理~\ref{thm:product:product-measure}(3)，按横截口计算：对 $y\in(a,b]$，$E_1^y=\{x:(x,y)\in E_1\}=(a,y]$，$\mu(E_1^y)=F(y)-F(a)$；对 $y\notin(a,b]$，$E_1^y=\varnothing$。所以 $(\mu\otimes\nu)(E_1)=\int_{(a,b]}(F(y)-F(a))\,\nu(\dd y)$。
+\end{solution}
+
+\item 令 $E_2=\{(x,y):a<y\leqslant x\leqslant b\}$。同样证明 $\int_{(a,b]}\bigl(G(x)-G(a)\bigr)\dd F(x)=(\mu\otimes\nu)(E_2)$。
+\begin{solution}
+按竖截口计算：对 $x\in(a,b]$，$(E_2)_x=\{y:a<y\leqslant x\}=(a,x]$，$\nu((E_2)_x)=G(x)-G(a)$；$x\notin(a,b]$ 时截口为空。由定理~\ref{thm:product:product-measure}(1)，$(\mu\otimes\nu)(E_2)=\int_{(a,b]}(G(x)-G(a))\,\mu(\dd x)$。
+\end{solution}
+
+\item 证明 $E_1\cup E_2=(a,b]^2$，$E_1\cap E_2=\Delta=\{(x,x):a<x\leqslant b\}$，并且 $(\mu\otimes\nu)(\Delta)=\sum_{x\in(a,b]}\mu(\{x\})\nu(\{x\})$（和式中只有可数个非零项）。
+\begin{solution}
+\emph{集合关系。}$(x,y)\in(a,b]^2$ 时，$x\leqslant y$ 与 $y\leqslant x$ 至少有一个成立，所以 $E_1\cup E_2=(a,b]^2$；两者同时成立当且仅当 $x=y$，所以 $E_1\cap E_2=\Delta$。
+
+\emph{对角线的测度。}按竖截口：$\Delta_x=\{x\}$（$x\in(a,b]$），$\nu(\Delta_x)=\nu(\{x\})=G(x)-G(x-)$。所以 $(\mu\otimes\nu)(\Delta)=\int_{(a,b]}\nu(\{x\})\,\mu(\dd x)$。函数 $x\mapsto\nu(\{x\})$ 只在 $G$ 的间断点处非零，而间断点集 $D$ 至多可数（命题~\ref{prop:distributions:jumps}）。于是 $\nu(\{x\})=\sum_{z\in D}\nu(\{z\})\one_{\{z\}}(x)$，由逐项积分，
+\[
+\int_{(a,b]}\nu(\{x\})\,\mu(\dd x)=\sum_{z\in D\cap(a,b]}\nu(\{z\})\mu(\{z\})=\sum_{x\in(a,b]}\mu(\{x\})\nu(\{x\}).
+\]
+（最后的和式中，$x\notin D$ 的项为零。）
+\end{solution}
+
+\item 由 C1--C3 与 $(\mu\otimes\nu)((a,b]^2)=(F(b)-F(a))(G(b)-G(a))$ 证明分部积分公式。
+\begin{solution}
+由 C3 与测度的可加性，$(\mu\otimes\nu)(E_1)+(\mu\otimes\nu)(E_2)=(\mu\otimes\nu)(E_1\cup E_2)+(\mu\otimes\nu)(E_1\cap E_2)$（这是 $\one_{E_1}+\one_{E_2}=\one_{E_1\cup E_2}+\one_{E_1\cap E_2}$ 积分的结果，各项都有限）。代入 C1、C2：
+\[
+\begin{aligned}
+&\int_{(a,b]}F\dd G-F(a)\bigl(G(b)-G(a)\bigr)+\int_{(a,b]}G\dd F-G(a)\bigl(F(b)-F(a)\bigr)\\
+&\qquad=\bigl(F(b)-F(a)\bigr)\bigl(G(b)-G(a)\bigr)+\Sigma,
+\end{aligned}
+\]
+其中 $\Sigma=\sum_{x\in(a,b]}\mu(\{x\})\nu(\{x\})$。（这里拆开积分用到 $F,G$ 在 $(a,b]$ 上有界，从而可积。）把右边展开，移项：
+\[
+\begin{aligned}
+\int_{(a,b]}F\dd G+\int_{(a,b]}G\dd F&=F(b)G(b)-F(b)G(a)-F(a)G(b)+F(a)G(a)\\
+&\qquad+F(a)G(b)-F(a)G(a)+G(a)F(b)-G(a)F(a)+\Sigma\\
+&=F(b)G(b)-F(a)G(a)+\Sigma .
+\end{aligned}
+\]
+\end{solution}
+
+\item 设 $F=G$ 连续。证明 $\int_{(a,b]}2F(y)\dd F(y)=F(b)^2-F(a)^2$。又取 $F=G=\one_{[0,\infty)}$，$a<0<b$，直接计算两边，说明公式中的和式不能去掉。
+\begin{solution}
+$F$ 连续，$\mu(\{x\})=F(x)-F(x-)=0$，和式为零；两个积分相同，公式变成 $2\int F\dd F=F(b)^2-F(a)^2$。
+
+$F=\one_{[0,\infty)}$ 对应的测度是 $\delta_0$。$\int_{(a,b]}F\dd F=F(0)=1$，所以左边是 $2$。右边：$F(b)G(b)-F(a)G(a)=1-0=1$，和式 $=\mu(\{0\})\nu(\{0\})=1$，共 $2$。若去掉和式，右边是 $1\neq2$。
+\end{solution}
+
+\item 设随机变量 $X$ 的分布函数 $F$ 连续。证明 $EF(X)=\frac12$。
+\begin{solution}
+由变量替换公式，$EF(X)=\int_\R F\dd\mu=\lim_n\int_{(-n,n]}F\dd F$（单调收敛定理，$F\geqslant0$）。由 C5，$\int_{(-n,n]}F\dd F=\frac12(F(n)^2-F(-n)^2)\to\frac12(1-0)=\frac12$。
+
+（这与第~\ref{lec:distributions} 讲习题~\exref{ex:distributions:A1} 一致：$F$ 连续时 $F(X)$ 服从 $[0,1]$ 上的均匀分布，期望为 $\frac12$。）
+\end{solution}
+\end{questions}
+\end{probleme}
+
+\thinkingpart
+
+\begin{probleme}[问题]{D}{Beta 函数与 Gamma 函数}
+对 $a>0$，令 $\Gamma(a)=\int_0^\infty x^{a-1}e^{-x}\dd x$；对 $a,b>0$，令 $B(a,b)=\int_0^1u^{a-1}(1-u)^{b-1}\dd u$。本题证明 $\Gamma(a)\Gamma(b)=\Gamma(a+b)B(a,b)$。数学分析中的通常证明要用二维的换元公式，这里只用 Tonelli 定理与一维的换元。
+\begin{questions}
+\item 证明 $\Gamma(a)<\infty$，$B(a,b)<\infty$，并且 $\Gamma(a+1)=a\Gamma(a)$，$\Gamma(1)=1$。
+\begin{solution}
+\emph{$\Gamma(a)<\infty$。}分成 $(0,1]$ 与 $(1,\infty)$。在 $(0,1]$ 上，$x^{a-1}e^{-x}\leqslant x^{a-1}$，而 $\int_0^1x^{a-1}\dd x=\frac1a$（由单调收敛定理，$\int_\varepsilon^1x^{a-1}\dd x=\frac{1-\varepsilon^a}a\to\frac1a$）。在 $(1,\infty)$ 上，$x^{a-1}e^{-x/2}$ 连续并且在 $x\to\infty$ 时趋于零，所以有界，设上界为 $C$，则 $x^{a-1}e^{-x}\leqslant Ce^{-x/2}$，积分有限。
+
+\emph{$B(a,b)<\infty$。}在 $(0,\frac12]$ 上 $(1-u)^{b-1}\leqslant\max\{1,2^{1-b}\}$，被积函数不超过常数乘 $u^{a-1}$；在 $[\frac12,1)$ 上同理不超过常数乘 $(1-u)^{b-1}$。两者积分都有限。
+
+\emph{递推。}在 $[\varepsilon,N]$ 上分部积分：$\int_\varepsilon^Nx^ae^{-x}\dd x=\bigl[-x^ae^{-x}\bigr]_\varepsilon^N+a\int_\varepsilon^Nx^{a-1}e^{-x}\dd x$。令 $\varepsilon\to0$，$N\to\infty$，边界项趋于 $0$，由单调收敛定理得 $\Gamma(a+1)=a\Gamma(a)$。$\Gamma(1)=\int_0^\infty e^{-x}\dd x=1$。
+\end{solution}
+
+\item 证明 $\Gamma(a)\Gamma(b)=\int_0^\infty\int_0^\infty x^{a-1}y^{b-1}e^{-(x+y)}\dd y\dd x$。
+\begin{solution}
+这是习题 A4（或者直接用 Tonelli 定理，被积函数非负）：$x^{a-1}e^{-x}\cdot y^{b-1}e^{-y}$ 是两个可积函数的乘积，对 $y$ 的内层积分是 $x^{a-1}e^{-x}\Gamma(b)$，再对 $x$ 积分得 $\Gamma(a)\Gamma(b)$。
+\end{solution}
+
+\item 对固定的 $x>0$，用换元 $t=x+y$ 证明
+\[
+\int_0^\infty y^{b-1}e^{-(x+y)}\dd y=\int_0^\infty\one_{\{t>x\}}(t-x)^{b-1}e^{-t}\dd t .
+\]
+\begin{solution}
+在 $[\varepsilon,N]$ 上用 Riemann 积分的换元公式（$t=x+y$，$\dd t=\dd y$）：$\int_\varepsilon^Ny^{b-1}e^{-(x+y)}\dd y=\int_{x+\varepsilon}^{x+N}(t-x)^{b-1}e^{-t}\dd t$。令 $\varepsilon\to0$，$N\to\infty$，两边被积函数非负，由单调收敛定理即得（右边成为 $\int_x^\infty$，也就是 $\int_0^\infty\one_{\{t>x\}}\cdots$）。
+\end{solution}
+
+\item 用 Tonelli 定理交换次序，再对内层积分作换元 $x=tu$，证明 $\Gamma(a)\Gamma(b)=\Gamma(a+b)B(a,b)$。
+\begin{solution}
+由 D2、D3，$\Gamma(a)\Gamma(b)=\int_0^\infty\int_0^\infty g(x,t)\dd t\dd x$，其中 $g(x,t)=x^{a-1}(t-x)^{b-1}e^{-t}\one_{\{0<x<t\}}$。$g$ 非负，并且是 Borel 函数（集合 $\{0<x<t\}$ 是开集，在其上 $g$ 连续，在其外 $g=0$）。由 Tonelli 定理，
+\[
+\Gamma(a)\Gamma(b)=\int_0^\infty e^{-t}\Bigl(\int_0^tx^{a-1}(t-x)^{b-1}\dd x\Bigr)\dd t .
+\]
+对固定的 $t>0$，内层积分作换元 $x=tu$（同 D3，在 $[\varepsilon,t-\varepsilon]$ 上换元后取极限），$\dd x=t\dd u$：
+\[
+\int_0^tx^{a-1}(t-x)^{b-1}\dd x=\int_0^1t^{a-1}u^{a-1}t^{b-1}(1-u)^{b-1}t\dd u=t^{a+b-1}B(a,b).
+\]
+所以 $\Gamma(a)\Gamma(b)=B(a,b)\int_0^\infty t^{a+b-1}e^{-t}\dd t=B(a,b)\Gamma(a+b)$。
+\end{solution}
+
+\item 证明 $\Gamma(\frac12)=\sqrt\pi$，并由 D4 验证 $B(\frac12,\frac12)=\pi$；再直接计算 $B(\frac12,\frac12)=\int_0^1\frac{\dd u}{\sqrt{u(1-u)}}$ 加以核对。
+\begin{solution}
+$\Gamma(\frac12)=\int_0^\infty x^{-1/2}e^{-x}\dd x$，换元 $x=s^2$（$\dd x=2s\dd s$）得 $2\int_0^\infty e^{-s^2}\dd s=2\cdot\frac{\sqrt\pi}2=\sqrt\pi$（\wegref{we:product:gauss}）。由 D4 与 $\Gamma(1)=1$，$B(\frac12,\frac12)=\Gamma(\frac12)^2/\Gamma(1)=\pi$。
+
+直接计算：换元 $u=\sin^2\theta$，$\theta\in(0,\frac\pi2)$，$\dd u=2\sin\theta\cos\theta\dd\theta$，$\sqrt{u(1-u)}=\sin\theta\cos\theta$，所以积分等于 $\int_0^{\pi/2}2\dd\theta=\pi$。两者一致。
+\end{solution}
+\end{questions}
+\end{probleme}
+
+\exercisepart{课外知识：单位球的体积}
+
+\begin{probleme}{E}{$d$ 维单位球的体积}
+记 $B_d=\{x\in\R^d:x_1^2+\cdots+x_d^2\leqslant1\}$，$V_d=\lambda_d(B_d)$。本题证明
+\[
+V_d=\frac{\pi^{d/2}}{\Gamma(\frac d2+1)}.
+\]
+于是 $V_1=2$，$V_2=\pi$，$V_3=\frac43\pi$，并且 $V_d\to0$（$d\to\infty$）。
+\begin{questions}
+\item 设 $r>0$。证明对一切 $A\in\cR^d$，$rA=\{ra:a\in A\}\in\cR^d$，并且 $\lambda_d(rA)=r^d\lambda_d(A)$。
+\begin{solution}
+\emph{可测性。}映射 $h(x)=x/r$ 是 $\R^d\to\R^d$ 的连续映射，从而是 Borel 可测的，而 $rA=h^{-1}(A)$，所以 $rA\in\cR^d$。
+
+\emph{测度。}令 $\rho(A)=\lambda_d(rA)=\lambda_d(h^{-1}(A))$，这是 $\lambda_d$ 在 $h$ 下的像测度，是 $\cR^d$ 上的测度（与第~\ref{lec:distributions} 讲中分布是测度的证明相同：$h^{-1}$ 保持不交并）。对矩形 $A=\prod_i(a_i,b_i]$，$rA=\prod_i(ra_i,rb_i]$，$\rho(A)=\prod_ir(b_i-a_i)=r^d\lambda_d(A)$。所以 $\rho$ 与 $r^d\lambda_d$ 在矩形构成的 $\pi$-类上相等；取 $E_n=(-n,n]^d\uparrow\R^d$，测度有限。由唯一性定理，二者在 $\cR^d$ 上相等。
+\end{solution}
+
+\item 证明 $V_d=V_{d-1}\int_{-1}^1(1-s^2)^{(d-1)/2}\dd s$（$d\geqslant2$）。
+\begin{solution}
+由定理~\ref{thm:product:finite-product} 与引理~\ref{lem:product:associativity}，$\lambda_d=\lambda_{d-1}\otimes\lambda$，其中把 $x\in\R^d$ 写成 $(x',s)$，$x'\in\R^{d-1}$，$s=x_d$。$B_d$ 是闭集，属于 $\cR^d$。按最后一个坐标截（定理~\ref{thm:product:product-measure}(3)）：对 $\abs s\leqslant1$，
+\[
+(B_d)^s=\{x':\abs{x'}^2\leqslant1-s^2\}=\sqrt{1-s^2}\,B_{d-1},
+\]
+对 $\abs s>1$，截口是空集。由 E1，$\lambda_{d-1}((B_d)^s)=(1-s^2)^{(d-1)/2}V_{d-1}$（$\abs s=1$ 时截口是单点 $\{0\}$，测度为零，公式仍对）。所以 $V_d=\int_{-1}^1(1-s^2)^{(d-1)/2}V_{d-1}\dd s$。
+\end{solution}
+
+\item 证明 $\int_{-1}^1(1-s^2)^{(d-1)/2}\dd s=B\bigl(\frac12,\frac{d+1}2\bigr)$。
+\begin{solution}
+被积函数是偶函数，积分等于 $2\int_0^1(1-s^2)^{(d-1)/2}\dd s$。作换元 $u=s^2$，$s=u^{1/2}$，$\dd s=\frac12u^{-1/2}\dd u$（在 $[\varepsilon,1]$ 上换元，再令 $\varepsilon\to0$）：
+\[
+2\int_0^1(1-s^2)^{(d-1)/2}\dd s=\int_0^1u^{-1/2}(1-u)^{(d-1)/2}\dd u=B\Bigl(\frac12,\frac{d+1}2\Bigr).
+\]
+\end{solution}
+
+\item 由 D4、D5 与归纳法证明 $V_d=\frac{\pi^{d/2}}{\Gamma(\frac d2+1)}$。
+\begin{solution}
+由 E2、E3 与 D4，
+\[
+V_d=V_{d-1}B\Bigl(\frac12,\frac{d+1}2\Bigr)=V_{d-1}\frac{\Gamma(\frac12)\Gamma(\frac{d+1}2)}{\Gamma(\frac d2+1)}=V_{d-1}\frac{\sqrt\pi\,\Gamma(\frac{d+1}2)}{\Gamma(\frac d2+1)}.
+\]
+$d=1$：$V_1=\lambda([-1,1])=2$，而 $\frac{\pi^{1/2}}{\Gamma(3/2)}=\frac{\sqrt\pi}{\frac12\Gamma(\frac12)}=2$（用 D1 的递推与 D5）。设公式对 $d-1$ 成立，即 $V_{d-1}=\frac{\pi^{(d-1)/2}}{\Gamma(\frac{d+1}2)}$，代入上式，$\Gamma(\frac{d+1}2)$ 消去，得 $V_d=\frac{\pi^{d/2}}{\Gamma(\frac d2+1)}$。
+\end{solution}
+
+\item 计算 $V_2$，$V_3$，并证明 $V_d\to0$。
+\begin{solution}
+$V_2=\frac\pi{\Gamma(2)}=\pi$（$\Gamma(2)=1\cdot\Gamma(1)=1$）。$V_3=\frac{\pi^{3/2}}{\Gamma(5/2)}=\frac{\pi^{3/2}}{\frac32\cdot\frac12\sqrt\pi}=\frac43\pi$。
+
+$V_d\to0$：由 E4 的递推，$V_d=V_{d-2}\cdot\frac{\pi}{d/2}=\frac{2\pi}dV_{d-2}$（因为 $\Gamma(\frac d2+1)=\frac d2\Gamma(\frac d2)$）。当 $d>4\pi$ 时比值 $\frac{2\pi}d<\frac12$，所以 $V_d$ 沿奇数与偶数下标都至少以几何速度趋于零。
+
+\emph{注。}高维的单位球体积趋于零，而单位立方体 $[-1,1]^d$ 的体积是 $2^d$。这说明在高维空间中，“球”只占“立方体”中很小的一部分，立方体的体积主要集中在角上。
+\end{solution}
+\end{questions}
+\end{probleme}

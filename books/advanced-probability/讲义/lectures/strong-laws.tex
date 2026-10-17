@@ -1,0 +1,394 @@
+% !TEX root = ../高等概率论.tex
+% =====================================================================
+%  强大数定律：Etemadi 的证明，期望为无穷的情形，更新理论，Glivenko–Cantelli，Shannon 定理
+% =====================================================================
+\lecture{强大数定律（Etemadi 的证明），期望为正无穷时的强大数定律，更新理论，Glivenko--Cantelli 定理，Shannon 定理与熵}
+\label{lec:strong-laws}
+
+我们终于可以证明这门课的第一个大定理了。把一枚硬币无穷次地抛下去，正面的频率几乎必然趋于 $\frac12$；更一般地，对 i.i.d.\ 的随机变量，只要期望有限，样本平均就几乎必然收敛到期望。这就是 Kolmogorov 的\term{强大数定律}（strong law of large numbers）。
+
+前两讲已经为它做好了全部准备。第~\ref{lec:borel-cantelli} 讲证明了：若 $EX_1^4<\infty$，则 $S_n/n\to\mu$ a.s.（定理~\ref{thm:borel-cantelli:fourth-moment}）；反过来，若 $E\abs{X_1}=\infty$，则 $S_n/n$ 几乎必然不收敛到有限的数（定理~\ref{thm:borel-cantelli:necessity}）。所以真正要做的，是把四阶矩的条件一直减弱到 $E\abs{X_1}<\infty$。我们将看到，这只需要把已经学过的三个技巧组合起来：
+\begin{enumerate}
+\item \emph{截断}（第~\ref{lec:weak-laws} 讲）：把 $X_k$ 换成 $Y_k=X_k\one_{\{\abs{X_k}\leqslant k\}}$，它有二阶矩；
+\item \emph{第一 Borel--Cantelli 引理}：$X_k\neq Y_k$ 只发生有限次；
+\item \emph{子列加单调夹逼}（定理~\ref{thm:borel-cantelli:pairwise}）：二阶矩的估计不可求和，就只在一个几何增长的子列 $k(n)=\lfloor\alpha^n\rfloor$ 上估计，再用单调性控制中间的项。
+\end{enumerate}
+这个证明是 N.\ Etemadi 在 1981 年给出的，它只用到两两独立，比 Kolmogorov 原来的证明（下一讲）简单得多。
+
+\topic{本讲用到的前文结果}
+
+\begin{enumerate}
+\item 两两不相关的随机变量方差可加（定理~\ref{thm:weak-laws:variance-sum}）；两两独立且平方可积的随机变量两两不相关（定理~\ref{thm:independence:expectation} 用于两个随机变量）；独立（两两独立）随机变量的函数仍独立（两两独立）。
+\item 尾概率公式（定理~\ref{thm:product:tail-formula}）：$E\abs X=\int_0^\infty P(\abs X>y)\dd y$，$EY^2=\int_0^\infty2yP(\abs Y>y)\dd y$。
+\item 第一 Borel--Cantelli 引理（定理~\ref{thm:borel-cantelli:first}）；几乎必然收敛的刻画（引理~\ref{lem:convergence:as-criterion}）。
+\item 强大数定律需要有限的期望（定理~\ref{thm:borel-cantelli:necessity}）。
+\item Tonelli 定理：非负二重级数（以及级数与积分）可以交换次序（定理~\ref{thm:product:tonelli}，或第~\ref{lec:integration} 讲的逐项积分）。
+\item 控制收敛定理、单调收敛定理。
+\item 经验分布函数 $F_n$ 的定义（命题~\ref{prop:random-variables:empirical}），以及第~\ref{lec:weak-laws} 讲作业 F（Glivenko--Cantelli 定理的依概率形式）中的分点 $x_j=F^{-1}(j/k)$。
+\end{enumerate}
+
+\topic{强大数定律}
+
+\begin{theorem}[强大数定律]\label{thm:strong-laws:slln}
+设 $X_1,X_2,\dots$ 两两独立、同分布，$E\abs{X_1}<\infty$，$\mu=EX_1$，$S_n=X_1+\cdots+X_n$。则 $n\to\infty$ 时 $S_n/n\to\mu$ a.s.
+\end{theorem}
+
+结合定理~\ref{thm:borel-cantelli:necessity}：对 i.i.d.\ 序列，$S_n/n$ 几乎必然收敛到一个有限的数，当且仅当 $E\abs{X_1}<\infty$，此时极限是 $EX_1$。
+
+\begin{remark}[证明思路]
+证明分四步。
+\begin{enumerate}
+\item 截断：令 $Y_k=X_k\one_{\{\abs{X_k}\leqslant k\}}$，$T_n=Y_1+\cdots+Y_n$。由 $E\abs{X_1}<\infty$ 与第一 Borel--Cantelli 引理，只有有限个 $k$ 使 $X_k\neq Y_k$，所以只需证 $T_n/n\to\mu$（引理~\ref{lem:strong-laws:truncation}）。
+\item 方差的估计：$\sum_k\Var(Y_k)/k^2<\infty$（引理~\ref{lem:strong-laws:variance}）。这是一个只用到分布的计算。
+\item 不妨设 $X_k\geqslant0$（分别对正部、负部证明）。在子列 $k(n)=\lfloor\alpha^n\rfloor$（$\alpha>1$）上，Chebyshev 估计可以求和，由第一步、第二步与第一 Borel--Cantelli 引理，$T_{k(n)}/k(n)\to\mu$ a.s.
+\item $X_k\geqslant0$ 时 $T_m$ 关于 $m$ 单调，用它夹住 $k(n)\leqslant m<k(n+1)$ 之间的 $T_m/m$；令 $\alpha\downarrow1$。
+\end{enumerate}
+\end{remark}
+
+\begin{lemma}\label{lem:strong-laws:truncation}
+在定理~\ref{thm:strong-laws:slln} 的假设下，令 $Y_k=X_k\one_{\{\abs{X_k}\leqslant k\}}$，$T_n=Y_1+\cdots+Y_n$。若 $T_n/n\to\mu$ a.s.，则 $S_n/n\to\mu$ a.s.
+\end{lemma}
+\begin{proof}
+函数 $y\mapsto P(\abs{X_1}>y)$ 单调不增，所以 $P(\abs{X_1}>k)\leqslant\int_{k-1}^kP(\abs{X_1}>y)\dd y$。由同分布与尾概率公式，
+\[
+\sum_{k=1}^\infty P(\abs{X_k}>k)=\sum_{k=1}^\infty P(\abs{X_1}>k)\leqslant\int_0^\infty P(\abs{X_1}>y)\dd y=E\abs{X_1}<\infty .
+\]
+由第一 Borel--Cantelli 引理，$P(X_k\neq Y_k\ \text{i.o.})=0$。对这个零概率事件之外的 $\omega$，只有有限个 $k$ 使 $X_k(\omega)\neq Y_k(\omega)$，所以 $R(\omega)=\sum_k\abs{X_k(\omega)-Y_k(\omega)}<\infty$，并且 $\abs{S_n(\omega)-T_n(\omega)}\leqslant R(\omega)$ 对一切 $n$ 成立。于是 $\abs{S_n/n-T_n/n}\leqslant R/n\to0$。
+\end{proof}
+
+\begin{lemma}\label{lem:strong-laws:sum-bound}
+对 $y\geqslant0$，$2y\sum_{k>y}k^{-2}\leqslant4$。
+\end{lemma}
+\begin{proof}
+对 $m\geqslant2$，比较 $k^{-2}$ 与 $\int_{k-1}^kx^{-2}\dd x$，得 $\sum_{k\geqslant m}k^{-2}\leqslant\int_{m-1}^\infty x^{-2}\dd x=\frac1{m-1}$。
+
+若 $y\geqslant1$，和从 $k=\lfloor y\rfloor+1\geqslant2$ 开始，所以 $2y\sum_{k>y}k^{-2}\leqslant\frac{2y}{\lfloor y\rfloor}\leqslant4$，这里用了 $y\geqslant1$ 时 $y<\lfloor y\rfloor+1\leqslant2\lfloor y\rfloor$。
+
+若 $0\leqslant y<1$，$2y\sum_{k>y}k^{-2}\leqslant2\sum_{k\geqslant1}k^{-2}\leqslant2(1+\sum_{k\geqslant2}k^{-2})\leqslant2(1+1)=4$。
+\end{proof}
+
+\begin{lemma}\label{lem:strong-laws:variance}
+在引理~\ref{lem:strong-laws:truncation} 的记号下，$\sum_{k=1}^\infty\frac{\Var(Y_k)}{k^2}\leqslant\sum_{k=1}^\infty\frac{EY_k^2}{k^2}\leqslant4E\abs{X_1}<\infty$。
+\end{lemma}
+\begin{proof}
+$\Var(Y_k)\leqslant EY_k^2$。由尾概率公式（$p=2$），并注意 $y\geqslant k$ 时 $P(\abs{Y_k}>y)=0$，$y<k$ 时 $P(\abs{Y_k}>y)\leqslant P(\abs{X_1}>y)$，
+\[
+EY_k^2=\int_0^\infty2yP(\abs{Y_k}>y)\dd y\leqslant\int_0^\infty\one_{\{y<k\}}2yP(\abs{X_1}>y)\dd y .
+\]
+各项非负，由逐项积分（关于 $k$ 的求和是关于 $\N$ 上计数测度的积分，Tonelli 定理），
+\[
+\sum_{k=1}^\infty\frac{EY_k^2}{k^2}\leqslant\int_0^\infty\Bigl(\sum_{k>y}\frac1{k^2}\Bigr)2yP(\abs{X_1}>y)\dd y\leqslant4\int_0^\infty P(\abs{X_1}>y)\dd y=4E\abs{X_1},
+\]
+其中用了引理~\ref{lem:strong-laws:sum-bound}。
+\end{proof}
+
+\begin{proof}[定理~\ref{thm:strong-laws:slln} 的证明]
+\emph{第一步：化为非负的情形。}$X_k^+$（$k\geqslant1$）两两独立、同分布，$EX_1^+<\infty$；$X_k^-$ 也一样。若对它们分别证明了 $\frac1n\sum_{k\leqslant n}X_k^\pm\to EX_1^\pm$ a.s.，相减即得结论。所以下面设 $X_k\geqslant0$。此时 $Y_k\geqslant0$，$T_n$ 关于 $n$ 单调不减。由引理~\ref{lem:strong-laws:truncation}，只需证 $T_n/n\to\mu$ a.s.
+
+\emph{第二步：子列上的估计。}固定 $\alpha>1$，令 $k(n)=\lfloor\alpha^n\rfloor$。$Y_k$ 是两两独立的随机变量的函数，两两独立，有界从而平方可积，两两不相关。由 Chebyshev 不等式与方差的可加性，对 $\varepsilon>0$，
+\[
+\sum_{n=1}^\infty P\bigl(\abs{T_{k(n)}-ET_{k(n)}}>\varepsilon k(n)\bigr)\leqslant\frac1{\varepsilon^2}\sum_{n=1}^\infty\frac{\Var(T_{k(n)})}{k(n)^2}=\frac1{\varepsilon^2}\sum_{n=1}^\infty\frac1{k(n)^2}\sum_{m=1}^{k(n)}\Var(Y_m).
+\]
+交换两个非负求和的次序（Tonelli），右边等于 $\frac1{\varepsilon^2}\sum_{m=1}^\infty\Var(Y_m)\sum_{n:\,k(n)\geqslant m}k(n)^{-2}$。由于 $\lfloor\alpha^n\rfloor\geqslant\alpha^n/2$（$n\geqslant1$），并且 $k(n)\geqslant m$ 蕴含 $\alpha^n\geqslant m$，对几何级数求和（首项不超过 $m^{-2}$）：
+\[
+\sum_{n:\,k(n)\geqslant m}k(n)^{-2}\leqslant4\sum_{n:\,\alpha^n\geqslant m}\alpha^{-2n}\leqslant\frac4{1-\alpha^{-2}}\cdot\frac1{m^2}.
+\]
+所以由引理~\ref{lem:strong-laws:variance}，
+\[
+\sum_{n=1}^\infty P\bigl(\abs{T_{k(n)}-ET_{k(n)}}>\varepsilon k(n)\bigr)\leqslant\frac4{\varepsilon^2(1-\alpha^{-2})}\sum_{m=1}^\infty\frac{\Var(Y_m)}{m^2}<\infty .
+\]
+由第一 Borel--Cantelli 引理与引理~\ref{lem:convergence:as-criterion}（$\varepsilon$ 取遍 $\frac1j$），$(T_{k(n)}-ET_{k(n)})/k(n)\to0$ a.s.
+
+\emph{第三步：期望。}由控制收敛定理（$Y_k$ 的分布与 $X_1\one_{\{X_1\leqslant k\}}$ 相同，后者被 $X_1$ 控制，逐点趋于 $X_1$），$EY_k\to\mu$。于是 Cesàro 平均 $\frac1nET_n=\frac1n\sum_{k\leqslant n}EY_k\to\mu$，特别地 $ET_{k(n)}/k(n)\to\mu$。结合第二步，$T_{k(n)}/k(n)\to\mu$ a.s.
+
+\emph{第四步：夹逼。}对 $k(n)\leqslant m<k(n+1)$，由 $T$ 单调不减，
+\[
+\frac{T_{k(n)}}{k(n+1)}\leqslant\frac{T_m}m\leqslant\frac{T_{k(n+1)}}{k(n)} .
+\]
+由 $k(n+1)/k(n)\to\alpha$，在第三步的概率为 $1$ 的事件上，
+\[
+\frac1\alpha\mu\leqslant\liminf_{m\to\infty}\frac{T_m}m\leqslant\limsup_{m\to\infty}\frac{T_m}m\leqslant\alpha\mu .
+\]
+取 $\alpha=1+\frac1j$，$j=1,2,\dots$，可数个概率为 $1$ 的事件之交概率为 $1$，在其上 $T_m/m\to\mu$。
+\end{proof}
+
+\begin{remark}
+这个证明中有两个值得体会的地方。第一，截断的水平 $k$ 随 $k$ 增长，而不是像弱大数定律那样随 $n$ 增长：每个 $X_k$ 只被截断一次，这样 $T_n$ 才是一个固定序列的部分和，才能谈几乎必然收敛。第二，子列 $\lfloor\alpha^n\rfloor$ 增长得足够快，使 Chebyshev 估计可求和；又增长得足够慢（相邻两项之比趋于 $\alpha$，而 $\alpha$ 可以任意接近 $1$），使单调性能够夹住中间的项。第~\ref{lec:borel-cantelli} 讲定理~\ref{thm:borel-cantelli:pairwise} 的证明中，子列 $n_k$ 的选择也是这样的折中。
+\end{remark}
+
+\begin{example}[概率的频率解释]\label{ex:strong-laws:frequency}
+设一个随机试验独立地重复进行，$A$ 是一个事件，$\xi_k=\one\{\text{第}\ k\ \text{次试验中}\ A\ \text{发生}\}$。$\xi_k$ 是 i.i.d.，$E\xi_1=P(A)$。由强大数定律，
+\[
+\frac{\xi_1+\cdots+\xi_n}n\to P(A)\quad\text{a.s.}
+\]
+即 $A$ 发生的频率几乎必然收敛到它的概率。这就是初等概率论中“概率是频率的极限”这句话的精确含义。注意顺序：我们先用测度论定义了概率，再证明了频率收敛到它；而不是用频率的极限来定义概率。后者在逻辑上有困难，因为“频率收敛”本身需要一个概率模型来陈述。Borel 正规数定理（定理~\ref{thm:independence:borel-normal}）是 $A=\{\text{二进制数字为}\ 1\}$ 的特例。
+\end{example}
+
+下面的定理说明，只要期望有定义（即使是 $+\infty$），强大数定律仍然成立。
+
+\begin{theorem}\label{thm:strong-laws:infinite-mean}
+设 $X_1,X_2,\dots$ 是 i.i.d.，$EX_1^+=\infty$，$EX_1^-<\infty$。则 $S_n/n\to\infty$ a.s.
+\end{theorem}
+\begin{proof}
+设 $M>0$，令 $X_i^M=\min\{X_i,M\}$。它们 i.i.d.，$\abs{X_i^M}\leqslant M+X_i^-$，所以 $E\abs{X_1^M}<\infty$。由强大数定律，$S_n^M/n\to EX_1^M$ a.s.，其中 $S_n^M=X_1^M+\cdots+X_n^M$。$X_i\geqslant X_i^M$，所以
+\[
+\liminf_{n\to\infty}\frac{S_n}n\geqslant\lim_{n\to\infty}\frac{S_n^M}n=EX_1^M\quad\text{a.s.}
+\]
+$M\uparrow\infty$ 时，$(X_1^M)^+=\min\{X_1^+,M\}\uparrow X_1^+$，由单调收敛定理 $E(X_1^M)^+\uparrow EX_1^+=\infty$；而 $(X_1^M)^-=X_1^-$（$M>0$）。所以 $EX_1^M\uparrow\infty$。取 $M=1,2,\dots$，可数个概率为 $1$ 的事件之交上，$\liminf S_n/n\geqslant EX_1^M$ 对一切 $M$ 成立，即 $S_n/n\to\infty$。
+\end{proof}
+
+例如，St.\ Petersburg 游戏中 $S_n/n\to\infty$ a.s.，这与第~\ref{lec:weak-laws} 讲中 $S_n/(n\log_2n)\toP1$ 是一致的。
+
+\topic{更新理论}
+
+\begin{example}[更新过程]\label{ex:strong-laws:renewal}
+设 $X_1,X_2,\dots$ 是 i.i.d.，$0<X_i<\infty$。令 $T_n=X_1+\cdots+X_n$（$T_0=0$），把 $T_n$ 想成某件事第 $n$ 次发生的时刻。比如一位勤快的管理员，灯泡一烧坏就立刻换上新的：时刻 $0$ 装上第一个灯泡，$X_i$ 是第 $i$ 个灯泡的寿命，$T_n$ 是第 $n$ 个灯泡烧坏的时刻，
+\[
+N_t=\sup\{n:\ T_n\leqslant t\}
+\]
+是到时刻 $t$ 为止烧坏的灯泡数。$\{N_t:t\geqslant0\}$ 称为\term{更新过程}（renewal process）。
+\end{example}
+
+\begin{theorem}[更新定理]\label{thm:strong-laws:renewal}
+在\egref{ex:strong-laws:renewal} 中，设 $EX_1=\mu\leqslant\infty$。则 $t\to\infty$ 时 $N_t/t\to1/\mu$ a.s.（约定 $1/\infty=0$）。
+\end{theorem}
+\begin{proof}
+\emph{第一步：$T_n/n\to\mu$ a.s.}$\mu<\infty$ 时这是强大数定律；$\mu=\infty$ 时这是定理~\ref{thm:strong-laws:infinite-mean}（$X_i^-=0$）。
+
+\emph{第二步：$N_t$ 的性质。}$N_t$ 关于 $t$ 单调不减。由第一步，$T_n\to\infty$ a.s.，所以对这样的 $\omega$，$\{n:T_n\leqslant t\}$ 是有限集，$N_t<\infty$；又每个 $T_n<\infty$，所以 $t\geqslant T_n$ 时 $N_t\geqslant n$，即 $N_t\uparrow\infty$（$t\to\infty$）。由定义，$T_{N_t}\leqslant t<T_{N_t+1}$。
+
+\emph{第三步：夹逼。}$t\geqslant T_1$ 时 $N_t\geqslant1$，除以 $N_t$：
+\[
+\frac{T_{N_t}}{N_t}\leqslant\frac t{N_t}<\frac{T_{N_t+1}}{N_t+1}\cdot\frac{N_t+1}{N_t}.
+\]
+在第一步的概率为 $1$ 的事件上，$T_n(\omega)/n\to\mu$，而 $N_t(\omega)\to\infty$，所以 $T_{N_t}/N_t\to\mu$，$T_{N_t+1}/(N_t+1)\to\mu$，$(N_t+1)/N_t\to1$。于是 $t/N_t\to\mu$，即 $N_t/t\to1/\mu$。
+\end{proof}
+
+直观上，平均每个灯泡用 $\mu$ 小时，所以单位时间内大约换 $1/\mu$ 个。
+
+\begin{remark}[随机下标]
+上面的证明用到了一个一般的事实：若 $Y_n\to Y_\infty$ a.s.，$N(t)\to\infty$ a.s.，则 $Y_{N(t)}\to Y_\infty$ a.s.。这对依概率收敛不成立。例如，设 $Y_n\in\{0,1\}$ 独立，$P(Y_n=1)=a_n\to0$，$\sum_na_n=\infty$，则 $Y_n\toP0$；但令 $N(n)=\inf\{m\geqslant n:Y_m=1\}$（由第二 Borel--Cantelli 引理，几乎必然有限且趋于无穷），则 $Y_{N(n)}=1$ 恒成立。这又一次说明，几乎必然收敛是关于每条“样本路径”的性质，所以经得起随机的时间变换；依概率收敛只是关于每个固定时刻的分布的性质。
+\end{remark}
+
+\topic{Glivenko--Cantelli 定理}
+
+设 $X_1,X_2,\dots$ 是 i.i.d.，分布函数为 $F$。经验分布函数 $F_n(x)=\frac1n\sum_{m=1}^n\one_{\{X_m\leqslant x\}}$ 是前 $n$ 个观测值中不超过 $x$ 的比例。第~\ref{lec:random-variables} 讲证明了 $D_n=\sup_x\abs{F_n(x)-F(x)}$ 是随机变量，第~\ref{lec:weak-laws} 讲作业 F 证明了 $D_n\toP0$。现在把它加强为几乎必然收敛。
+
+\begin{theorem}[Glivenko--Cantelli 定理]\label{thm:strong-laws:glivenko-cantelli}
+$\sup_x\abs{F_n(x)-F(x)}\to0$ a.s.
+\end{theorem}
+\begin{proof}
+\emph{第一步：逐点收敛。}固定 $x$。$\one_{\{X_m\leqslant x\}}$ 是 i.i.d.，期望 $F(x)$，由强大数定律 $F_n(x)\to F(x)$ a.s.。同样，$\one_{\{X_m<x\}}$ 的期望是 $F(x-)$，所以 $F_n(x-)=\frac1n\sum_m\one_{\{X_m<x\}}\to F(x-)$ a.s.
+
+\emph{第二步：有限个分点。}固定 $k$，令 $x_{0,k}=-\infty$，$x_{k,k}=+\infty$，$x_{j,k}=F^{-1}(j/k)=\inf\{y:F(y)\geqslant j/k\}$（$1\leqslant j\leqslant k-1$），约定 $F(-\infty)=F_n(-\infty)=0$，$F(\infty-)=F_n(\infty-)=1$。与第~\ref{lec:weak-laws} 讲作业 F2) 相同，$F(x_{j,k}-)-F(x_{j-1,k})\leqslant\frac1k$。由第一步，存在概率为 $1$ 的事件 $\Omega_k$ 与 $N_k(\omega)$，使 $\omega\in\Omega_k$、$n\geqslant N_k(\omega)$ 时
+\[
+\abs{F_n(x_{j,k})-F(x_{j,k})}<\tfrac1k,\qquad\abs{F_n(x_{j,k}-)-F(x_{j,k}-)}<\tfrac1k,\qquad0\leqslant j\leqslant k
+\]
+（有限个几乎必然收敛的序列；$j=0,k$ 时两边恒相等）。
+
+\emph{第三步：夹逼。}设 $\omega\in\Omega_k$，$n\geqslant N_k(\omega)$，$x\in[x_{j-1,k},x_{j,k})$。由 $F_n,F$ 单调，
+\[
+\begin{aligned}
+F_n(x)&\leqslant F_n(x_{j,k}-)\leqslant F(x_{j,k}-)+\tfrac1k\leqslant F(x_{j-1,k})+\tfrac2k\leqslant F(x)+\tfrac2k,\\
+F_n(x)&\geqslant F_n(x_{j-1,k})\geqslant F(x_{j-1,k})-\tfrac1k\geqslant F(x_{j,k}-)-\tfrac2k\geqslant F(x)-\tfrac2k .
+\end{aligned}
+\]
+所以 $\sup_x\abs{F_n(x)-F(x)}\leqslant\frac2k$。在 $\bigcap_k\Omega_k$ 上（概率为 $1$），$\limsup_nD_n\leqslant\frac2k$ 对一切 $k$ 成立，即 $D_n\to0$。
+\end{proof}
+
+如果 $F$ 连续，证明更简单：单调函数列逐点收敛到一个连续的、有界的单调函数时，收敛自动是一致的。$F$ 有跳跃时，才需要同时考虑 $F_n(x-)$。
+
+\topic{Shannon 定理}
+
+\begin{workedexample}[Shannon 定理，渐近等分性]\label{we:strong-laws:shannon}
+设 $X_1,X_2,\dots$ 独立，取值于字母表 $\{1,\dots,r\}$，$P(X_i=k)=p(k)>0$。把 $X_1,X_2,\dots$ 想成一个信息源依次发出的字母（在 i.i.d.\ 的情形，这就是一只在打字机上乱敲的猴子）。令
+\[
+\pi_n(\omega)=p(X_1(\omega))\cdots p(X_n(\omega))
+\]
+为我们观察到的前 $n$ 个字母这一结果出现的概率。证明
+\[
+-\frac1n\log\pi_n\to H\equiv-\sum_{k=1}^rp(k)\log p(k)\quad\text{a.s.},
+\]
+并由此证明对任意 $\varepsilon>0$，$P\bigl(e^{-n(H+\varepsilon)}\leqslant\pi_n\leqslant e^{-n(H-\varepsilon)}\bigr)\to1$。
+\end{workedexample}
+\begin{solution}
+$-\log\pi_n=\sum_{i=1}^n\bigl(-\log p(X_i)\bigr)$。$Z_i=-\log p(X_i)$ 是独立随机变量的函数，i.i.d.，只取有限个值，所以可积，
+\[
+EZ_1=\sum_{k=1}^rP(X_1=k)\bigl(-\log p(k)\bigr)=-\sum_kp(k)\log p(k)=H .
+\]
+由强大数定律，$-\frac1n\log\pi_n=\frac1n\sum_iZ_i\to H$ a.s.
+
+几乎必然收敛蕴含依概率收敛（定理~\ref{thm:convergence:as-implies-p}），所以 $P\bigl(\abs{-\frac1n\log\pi_n-H}\leqslant\varepsilon\bigr)\to1$；而 $\abs{-\frac1n\log\pi_n-H}\leqslant\varepsilon$ 就是 $e^{-n(H+\varepsilon)}\leqslant\pi_n\leqslant e^{-n(H-\varepsilon)}$。
+
+$H$ 称为信息源的\term{熵}（entropy），它衡量信息源有多“随机”。这个结论称为\term{渐近等分性}（asymptotic equipartition property）：$n$ 很大时，几乎可以肯定，我们观察到的那个长度为 $n$ 的字母串的概率大约是 $e^{-nH}$。所以“典型的”字母串大约有 $e^{nH}$ 个（课外知识 E），它们几乎等可能；而全部字母串有 $r^n=e^{n\log r}$ 个，$H\leqslant\log r$（第~\ref{lec:expectation} 讲作业 C），等号仅在均匀分布时成立。这正是数据压缩的原理：只需给典型的字母串编号，每个字母大约用 $H/\log2$ 个比特就够了。
+\end{solution}
+
+\topic{本讲小结}
+
+\begin{enumerate}
+\item 强大数定律（定理~\ref{thm:strong-laws:slln}）：两两独立、同分布、$E\abs{X_1}<\infty$，则 $S_n/n\to EX_1$ a.s.。结合上一讲的定理~\ref{thm:borel-cantelli:necessity}，对 i.i.d.\ 序列，$E\abs{X_1}<\infty$ 是 $S_n/n$ 几乎必然收敛的充要条件。$EX_1=+\infty$（而 $EX_1^-<\infty$）时，$S_n/n\to\infty$ a.s.
+\item Etemadi 的证明 = 截断（每个 $X_k$ 在水平 $k$ 处截断）+ 第一 Borel--Cantelli 引理 + 方差估计 $\sum\Var(Y_k)/k^2\leqslant4E\abs{X_1}$ + 几何子列 $\lfloor\alpha^n\rfloor$ + 单调夹逼。
+\item 应用：频率收敛到概率；更新定理 $N_t/t\to1/\mu$；Glivenko--Cantelli 定理（经验分布函数几乎必然一致收敛）；Shannon 定理（$-\frac1n\log\pi_n\to H$）。
+\item 几乎必然收敛经得起随机的时间变换 $Y_{N(t)}$，依概率收敛则不然。
+\item 下一讲给出强大数定律的第二个证明（随机级数与 Kronecker 引理），它还给出收敛的速度。
+\end{enumerate}
+
+% =====================================================================
+\homework{更新报酬定理，投资问题，强大数定律的逆，典型序列的个数}[更新报酬定理，投资问题，强大数定律的逆，典型序列]
+\label{hw:strong-laws}
+
+\exercisepart{基本习题}
+
+\begin{exercises}{A}{课堂内容的补充}
+\item\label{ex:strong-laws:A1} 设 $X_0=(1,0)\in\R^2$，归纳地令 $X_{n+1}$ 是在以原点为中心、半径为 $\abs{X_n}$ 的圆盘中均匀随机地选取的点，即 $X_{n+1}/\abs{X_n}$ 在单位圆盘上均匀分布，并且与 $X_1,\dots,X_n$ 独立。证明 $\frac1n\log\abs{X_n}\to c$ a.s.，并求 $c$。
+\begin{solution}
+令 $U_{n+1}=\abs{X_{n+1}}/\abs{X_n}$，它是单位圆盘上均匀分布的点到原点的距离。按假设 $U_1,U_2,\dots$ i.i.d.。对 $0\leqslant r\leqslant1$，$P(U_1\leqslant r)=\frac{\pi r^2}\pi=r^2$，所以 $U_1$ 有密度 $2r\one_{(0,1)}(r)$。
+
+$\abs{X_n}=U_1U_2\cdots U_n$，$\log\abs{X_n}=\sum_{i=1}^n\log U_i$。
+\[
+E\log U_1=\int_0^1(\log r)\,2r\dd r=\Bigl[r^2\log r\Bigr]_0^1-\int_0^1r\dd r=-\frac12,
+\]
+（分部积分；$r^2\log r\to0$，$r\to0$），并且 $E\abs{\log U_1}=\frac12<\infty$。由强大数定律，$\frac1n\log\abs{X_n}\to-\frac12$ a.s.，即 $\abs{X_n}$ 大约像 $e^{-n/2}$ 那样衰减。
+
+注意 $E\abs{X_n}=(EU_1)^n=(\frac23)^n$，而 $\frac23>e^{-1/2}\approx0.61$。“期望的增长率”与“几乎必然的增长率”不同，这是乘积型随机过程的一个普遍现象，下一题的投资问题中也会看到。
+\end{solution}
+
+\item\label{ex:strong-laws:A2} （样本方差的强相合性）设 $X_1,X_2,\dots$ 是 i.i.d.，$EX_1^2<\infty$。证明 $s_n^2=\frac1n\sum_{i\leqslant n}(X_i-\bar X_n)^2\to\Var(X_1)$ a.s.
+\begin{solution}
+与第~\ref{lec:weak-laws} 讲习题~\exref{ex:weak-laws:A7} 相同：$s_n^2=\frac1n\sum_iX_i^2-\bar X_n^2$。由强大数定律，$\frac1n\sum_iX_i^2\to EX_1^2$ a.s.，$\bar X_n\to EX_1$ a.s.；在两个概率为 $1$ 的事件之交上，按数列的运算法则 $s_n^2\to EX_1^2-(EX_1)^2$。几乎必然收敛的运算比依概率收敛简单：直接用数列极限的性质即可。
+\end{solution}
+
+\item\label{ex:strong-laws:A3} （Monte Carlo 积分的强相合性）设 $f$ 在 $[0,1]$ 上可积，$U_i$ 是 i.i.d.\ 的 $[0,1]$ 均匀随机变量。证明 $\frac1n\sum_{i\leqslant n}f(U_i)\to\int_0^1f(x)\dd x$ a.s.。这说明：除了一个概率为零的例外，用\emph{任何}一串随机数做 Monte Carlo 积分，都会收敛到正确的值。
+\begin{solution}
+$f(U_i)$ i.i.d.，$E\abs{f(U_1)}=\int_0^1\abs f<\infty$，$Ef(U_1)=\int_0^1f$，由强大数定律。
+\end{solution}
+
+\item\label{ex:strong-laws:A4} 设 $X_1,X_2,\dots$ 是 i.i.d.，$EX_1=\mu>0$（$\mu$ 可以是 $+\infty$，此时要求 $EX_1^-<\infty$）。证明 $S_n\to\infty$ a.s.。若 $\mu=0$ 且 $E\abs{X_1}<\infty$，能否推出 $S_n$ 几乎必然有界？
+\begin{solution}
+由强大数定律（或定理~\ref{thm:strong-laws:infinite-mean}），$S_n/n\to\mu>0$ a.s.，所以 $n$ 充分大时 $S_n>\frac{\min\{\mu,1\}}2n\to\infty$。
+
+$\mu=0$ 时不能。比如 $P(X_1=\pm1)=\frac12$，强大数定律只给出 $S_n/n\to0$，而 $S_n$ 本身是简单随机游走，它会在 $0$ 附近上下摆动，摆动的幅度越来越大（以后学习常返性时会证明 $\limsup S_n=+\infty$，$\liminf S_n=-\infty$ a.s.）。所以强大数定律只告诉我们 $S_n=o(n)$，关于 $S_n$ 本身的行为还需要更精细的工具。
+\end{solution}
+
+\item\label{ex:strong-laws:A5} 设 $X_1,X_2,\dots$ 两两独立、同分布，$E\abs{X_1}<\infty$。证明 $\frac1n\max_{k\leqslant n}\abs{X_k}\to0$ a.s.，并由此再证明一次引理~\ref{lem:strong-laws:truncation} 中的 $\sum_kP(\abs{X_k}>k)<\infty$ 的必要性：若 $E\abs{X_1}=\infty$，强大数定律的结论必定失败。
+\begin{solution}
+由引理~\ref{lem:strong-laws:truncation} 的证明（对 $\abs{X_k}/\varepsilon$ 用），$\sum_kP(\abs{X_k}>k\varepsilon)<\infty$，由第一 Borel--Cantelli 引理，几乎必然地 $\abs{X_k}\leqslant k\varepsilon$ 对充分大的 $k$ 成立，即 $\abs{X_k}/k\to0$ a.s.（$\varepsilon$ 取遍 $\frac1j$）。与第~\ref{lec:borel-cantelli} 讲作业 B2) 相同，由 $a_k/k\to0$ 推出 $\max_{k\leqslant n}a_k/n\to0$。
+
+另一方面，若 $S_n/n\to\mu$ 有限，则 $X_n/n=S_n/n-\frac{n-1}n\cdot\frac{S_{n-1}}{n-1}\to0$；而 $E\abs{X_1}=\infty$ 时由第二 Borel--Cantelli 引理（需要独立性）$\abs{X_n}\geqslant n$ 无穷多次。这就是定理~\ref{thm:borel-cantelli:necessity} 的证明。
+\end{solution}
+
+\item\label{ex:strong-laws:A6} （相邻乘积的平均）设 $X_1,X_2,\dots$ 是 i.i.d.，$E\abs{X_1}<\infty$，$\mu=EX_1$。证明 $\frac1n\sum_{k=1}^nX_kX_{k+1}\to\mu^2$ a.s.。（$X_kX_{k+1}$ 不独立：相邻两项共用一个 $X_{k+1}$。）
+\begin{solution}
+思路：把相邻乘积分成奇数项与偶数项两组，每一组内部是 i.i.d.\ 的。
+
+令 $U_j=X_{2j-1}X_{2j}$，$V_j=X_{2j}X_{2j+1}$（$j\geqslant1$）。$U_1,U_2,\dots$ 分别是不相交的随机变量组 $(X_1,X_2),(X_3,X_4),\dots$ 的同一个函数，由分组定理它们独立，并且同分布；同理 $V_j$ i.i.d.。由独立性，$E\abs{U_1}=E\abs{X_1}E\abs{X_2}<\infty$，$EU_1=\mu^2$；$V_1$ 同样。由强大数定律，$\frac1m\sum_{j\leqslant m}U_j\to\mu^2$，$\frac1m\sum_{j\leqslant m}V_j\to\mu^2$ a.s.
+
+$\sum_{k=1}^{2m}X_kX_{k+1}=\sum_{j\leqslant m}U_j+\sum_{j\leqslant m}V_j$，所以 $\frac1{2m}\sum_{k\leqslant2m}X_kX_{k+1}\to\mu^2$ a.s.。对奇数 $n=2m+1$，多出的一项是 $X_{2m+1}X_{2m+2}=U_{m+1}$，而 $U_{m+1}/m\to0$ a.s.（由 $\frac1m\sum_{j\leqslant m}U_j$ 收敛，与定理~\ref{thm:borel-cantelli:necessity} 证明的第二步相同）。所以整个序列收敛到 $\mu^2$。
+
+这种“相距足够远就独立”的序列称为 $1$-相依序列。把它拆成若干个 i.i.d.\ 的子序列，是处理有限相依序列的标准方法。
+\end{solution}
+\end{exercises}
+
+\begin{probleme}{B}{更新报酬定理与懒惰的管理员}
+设 $(X_1,R_1),(X_2,R_2),\dots$ 是 i.i.d.\ 的随机向量，$X_i>0$，$EX_1=\mu<\infty$，$E\abs{R_1}<\infty$。令 $T_n=X_1+\cdots+X_n$，$N_t=\sup\{n:T_n\leqslant t\}$。把 $X_i$ 想成第 $i$ 个周期的长度，$R_i$ 想成第 $i$ 个周期中得到的报酬（$R_i$ 与 $X_i$ 可以相关）。
+\begin{questions}
+\item 证明 $\frac1t\sum_{i=1}^{N_t}R_i\to\frac{ER_1}{\mu}$ a.s.
+\begin{solution}
+由更新定理，$N_t/t\to1/\mu$ a.s.，特别地 $N_t\to\infty$。由强大数定律，$\frac1n\sum_{i\leqslant n}R_i\to ER_1$ a.s.；由随机下标的注记，$\frac1{N_t}\sum_{i\leqslant N_t}R_i\to ER_1$ a.s.。相乘：$\frac1t\sum_{i\leqslant N_t}R_i=\frac{N_t}t\cdot\frac1{N_t}\sum_{i\leqslant N_t}R_i\to\frac{ER_1}\mu$。（$t$ 很小时 $N_t$ 可能为 $0$，约定空和为 $0$，不影响极限。）
+\end{solution}
+\item 设 $R_i\geqslant0$，并且第 $i$ 个周期中到时刻 $t$ 为止已得到的报酬不超过 $R_i$。令 $R(t)$ 为 $[0,t]$ 中得到的总报酬，它满足 $\sum_{i\leqslant N_t}R_i\leqslant R(t)\leqslant\sum_{i\leqslant N_t+1}R_i$。证明 $R(t)/t\to ER_1/\mu$ a.s.
+\begin{solution}
+下界由 B1)。上界：$\frac1t\sum_{i\leqslant N_t+1}R_i=\frac{N_t+1}t\cdot\frac1{N_t+1}\sum_{i\leqslant N_t+1}R_i\to\frac1\mu\cdot ER_1$，理由同 B1)。夹逼即得。
+\end{solution}
+\item （懒惰的管理员）第 $i$ 个灯泡亮 $X_i'$ 小时后烧坏，管理员过了 $Y_i$ 小时才换上新的。$X_i',Y_i$ 都是正的，相互独立，$X_i'$ 同分布于 $F$，$Y_i$ 同分布于 $G$，都有有限的期望。令 $R_t$ 为 $[0,t]$ 中有灯亮着的总时间。证明 $R_t/t\to\frac{EX_1'}{EX_1'+EY_1}$ a.s.
+\begin{solution}
+取周期 $X_i=X_i'+Y_i$（亮加暗），报酬 $R_i=X_i'$（这个周期中亮着的时间）。$(X_i,R_i)$ i.i.d.（由分组定理，不同的 $i$ 用到的是不相交的随机变量组），$X_i>0$，$EX_1=EX_1'+EY_1<\infty$。在一个周期内到时刻 $t$ 为止亮着的时间不超过 $X_i'$，所以 B2) 的条件满足，$R_t/t\to\frac{EX_1'}{EX_1'+EY_1}$。
+
+直观上，长时间看，灯亮着的时间比例等于一个周期中亮着的平均时间除以周期的平均长度。这个比例与 $F$、$G$ 的具体形状无关，只依赖于两个期望。
+\end{solution}
+\end{questions}
+\end{probleme}
+
+\begin{probleme}{C}{投资问题}
+每年年初，你可以用 $1$ 元买债券，年底它值 $a$ 元（$a>0$ 是常数）；也可以买股票，年底它值一个随机的数 $V\geqslant0$ 元。若每年总把财富的固定比例 $p\in[0,1]$ 投入债券，其余投入股票，则第 $n+1$ 年末的财富为 $W_{n+1}=(ap+(1-p)V_n)W_n$，$W_0=1$。设 $V_1,V_2,\dots$ 是 i.i.d.，$EV_n^2<\infty$，$E(V_n^{-2})<\infty$。
+\begin{questions}
+\item 证明 $\frac1n\log W_n\to c(p)$ a.s.，并写出 $c(p)$。
+\begin{solution}
+$\log W_n=\sum_{i=1}^n\log\bigl(ap+(1-p)V_i\bigr)$，各项 i.i.d.。只需验证可积性。对 $p\in(0,1]$，$ap\leqslant ap+(1-p)V\leqslant a+V$，所以 $\abs{\log(ap+(1-p)V)}\leqslant\abs{\log(ap)}+\log(1+a)+V$（用 $\log x\leqslant x$ 等），可积。对 $p=0$，是 $\log V$，由 $\abs{\log v}\leqslant v^2+v^{-2}$（$v>0$）与假设可积（$EV^{-2}<\infty$ 蕴含 $V>0$ a.s.）。由强大数定律，
+\[
+\frac1n\log W_n\to c(p)=E\log\bigl(ap+(1-p)V_1\bigr)\quad\text{a.s.}
+\]
+所以 $W_n\approx e^{nc(p)}$，$c(p)$ 是财富的长期增长率。
+\end{solution}
+\item 证明 $c(p)$ 是 $[0,1]$ 上的凹函数。
+\begin{solution}
+对每个 $\omega$，$p\mapsto ap+(1-p)V(\omega)$ 是仿射函数，$\log$ 是凹函数，复合是凹函数：对 $\lambda\in[0,1]$，$\log(a(\lambda p+(1-\lambda)q)+\cdots)\geqslant\lambda\log(ap+\cdots)+(1-\lambda)\log(aq+\cdots)$。取期望保持不等式，所以 $c$ 凹。
+\end{solution}
+\item 计算 $c'(0)$ 与 $c'(1)$，并给出使最优的 $p$ 落在 $(0,1)$ 中的条件。
+\begin{solution}
+\emph{求导。}$\frac{\partial}{\partial p}\log(ap+(1-p)V)=\frac{a-V}{ap+(1-p)V}$。为了在期望号下求导（第~\ref{lec:integration} 讲定理~\ref{thm:integration:differentiation}），需要一个可积的控制函数：在 $p\in[0,\frac12]$ 上，分母 $\geqslant\frac12V$，导数的绝对值不超过 $\frac{2(a+V)}V=\frac{2a}V+2$；在 $p\in[\frac12,1]$ 上，分母 $\geqslant\frac a2$，不超过 $\frac{2(a+V)}a$。$E\frac1V\leqslant(EV^{-2})^{1/2}<\infty$，$EV<\infty$，两者都可积。所以
+\[
+c'(p)=E\frac{a-V}{ap+(1-p)V},\qquad c'(0)=aE\frac1V-1,\qquad c'(1)=1-\frac{EV}a .
+\]
+\emph{最优点。}$c$ 是凹的，$c'$ 单调不增。最大值点在 $(0,1)$ 中，当且仅当 $c'(0)>0>c'(1)$，即
+\[
+E\frac1V>\frac1a\qquad\text{且}\qquad EV>a .
+\]
+第二个条件说股票的平均收益比债券高（否则全买债券更好）；第一个条件说股票“有足够的风险”，全买股票的长期增长率不是最好的。由 Jensen 不等式 $E\frac1V\geqslant\frac1{EV}$，两个条件可以同时成立。
+\end{solution}
+\item 设 $P(V=1)=P(V=4)=\frac12$。求最优的 $p$（作为 $a$ 的函数）。
+\begin{solution}
+$c(p)=\frac12\log(ap+1-p)+\frac12\log(ap+4-4p)$。令
+\[
+c'(p)=\frac12\cdot\frac{a-1}{1+p(a-1)}+\frac12\cdot\frac{a-4}{4+p(a-4)}=0,
+\]
+通分得 $(a-1)(4+p(a-4))+(a-4)(1+p(a-1))=0$，即 $5a-8+2p(a-1)(a-4)=0$，
+\[
+p^*=\frac{5a-8}{2(a-1)(4-a)} .
+\]
+由 C3)，$p^*\in(0,1)$ 当且仅当 $E\frac1V=\frac58>\frac1a$ 且 $EV=\frac52>a$，即 $\frac85<a<\frac52$。$a\leqslant\frac85$ 时最优是 $p=0$（全买股票），$a\geqslant\frac52$ 时最优是 $p=1$（全买债券）。例如 $a=2$ 时 $p^*=\frac12$：债券的收益 $2$ 低于股票的平均收益 $2.5$，可是最优策略仍然是一半一半。原因是我们最大化的是“几乎必然的增长率”$E\log(\cdot)$，而不是“期望的增长率”$\log E(\cdot)$，前者惩罚波动。这就是投资中的 Kelly 准则。
+\end{solution}
+\end{questions}
+\end{probleme}
+
+\thinkingpart
+
+\begin{probleme}[问题]{D}{强大数定律的逆}
+设 $X_1,X_2,\dots$ 是 i.i.d.
+\begin{questions}
+\item 若 $S_n/n\to c$ a.s.，$c$ 是有限的常数，证明 $E\abs{X_1}<\infty$，并且 $c=EX_1$。
+\begin{solution}
+由定理~\ref{thm:borel-cantelli:necessity}，若 $E\abs{X_1}=\infty$，则 $S_n/n$ 几乎必然不收敛到有限的数，矛盾。所以 $E\abs{X_1}<\infty$，由强大数定律 $S_n/n\to EX_1$ a.s.，极限唯一，$c=EX_1$。
+\end{solution}
+\item 若 $S_n/n\to+\infty$ a.s.，证明 $E\abs{X_1}=\infty$，并且 $EX_1^+=\infty$。
+\begin{solution}
+若 $E\abs{X_1}<\infty$，由强大数定律 $S_n/n\to EX_1$ 有限，矛盾。所以 $E\abs{X_1}=\infty$。再设 $EX_1^+<\infty$（从而 $EX_1^-=\infty$）：把定理~\ref{thm:strong-laws:infinite-mean} 用于 $-X_i$（$E(-X_1)^+=EX_1^-=\infty$，$E(-X_1)^-=EX_1^+<\infty$），得 $S_n/n\to-\infty$ a.s.，矛盾。所以 $EX_1^+=\infty$。
+
+注意反过来的问题，即 $EX_1^+=EX_1^-=\infty$ 时 $S_n/n$ 怎样，要复杂得多：取决于两个尾巴哪一个更重，并且可能 $\limsup S_n/n=+\infty$、$\liminf S_n/n=-\infty$ 同时成立。下一讲的 Feller 定理给出了部分回答。
+\end{solution}
+\end{questions}
+\end{probleme}
+
+\exercisepart{课外知识：典型序列的个数}
+
+\begin{probleme}{E}{Shannon 定理与数据压缩}
+沿用例题（第~\pageref{we:strong-laws:shannon} 页）的记号。固定 $\varepsilon>0$，称长度为 $n$ 的字母串 $x=(x_1,\dots,x_n)\in\{1,\dots,r\}^n$ 是\term{典型的}，若 $e^{-n(H+\varepsilon)}\leqslant p(x_1)\cdots p(x_n)\leqslant e^{-n(H-\varepsilon)}$。记典型字母串的全体为 $\cT_n$。
+\begin{questions}
+\item 证明 $P\bigl((X_1,\dots,X_n)\in\cT_n\bigr)\to1$。
+\begin{solution}
+这就是例题的第二个结论。
+\end{solution}
+\item 证明 $\abs{\cT_n}\leqslant e^{n(H+\varepsilon)}$。
+\begin{solution}
+每个典型字母串的概率不小于 $e^{-n(H+\varepsilon)}$，而它们的概率之和不超过 $1$：$1\geqslant\sum_{x\in\cT_n}P((X_1,\dots,X_n)=x)\geqslant\abs{\cT_n}e^{-n(H+\varepsilon)}$。
+\end{solution}
+\item 证明 $n$ 充分大时 $\abs{\cT_n}\geqslant(1-\varepsilon)e^{n(H-\varepsilon)}$。
+\begin{solution}
+由 E1)，$n$ 充分大时 $P((X_1,\dots,X_n)\in\cT_n)\geqslant1-\varepsilon$；每个典型字母串的概率不超过 $e^{-n(H-\varepsilon)}$。所以 $1-\varepsilon\leqslant\abs{\cT_n}e^{-n(H-\varepsilon)}$。
+\end{solution}
+\item 解释这个结论与数据压缩的关系。
+\begin{solution}
+典型字母串大约有 $e^{nH}$ 个，并且它们合起来几乎占了全部的概率。若只给典型的字母串编号，需要大约 $\log_2e^{nH}=nH/\log2$ 个比特，平均每个字母 $H/\log2$ 个比特；非典型的字母串（概率趋于零）可以用任意的方式另外编码。反过来，由 E3)，任何几乎无损的编码都不可能用得更少。所以熵 $H$ 是数据压缩的极限。例如英文字母若各字母等可能，需要 $\log_226\approx4.7$ 个比特；由于字母频率不均匀，熵更小，可以压缩。这个定理是 Shannon 在 1948 年创立信息论时的核心结论之一，而它的证明只是强大数定律。
+\end{solution}
+\end{questions}
+\end{probleme}

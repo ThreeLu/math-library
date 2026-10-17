@@ -1,0 +1,6 @@
+讲义/build/*
+!讲义/build/高等概率论.pdf
+*.synctex.gz
+.DS_Store
+# 参考书籍体积大且可重新获取，不进版本库
+参考书籍/**/*.pdf

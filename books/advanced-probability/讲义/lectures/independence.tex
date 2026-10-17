@@ -1,0 +1,1033 @@
+% !TEX root = ../高等概率论.tex
+% =====================================================================
+%  独立性：事件、σ-代数、随机变量的独立性，π-类判别法，分组定理，联合分布与乘积测度，
+%  乘积的期望，卷积，独立序列的构造，Kolmogorov 扩张定理，Rényi 记录定理，Borel 正规数定理
+% =====================================================================
+\lecture{事件的独立性，两两独立与相互独立，$\sigma$-代数与随机变量的独立性，用 $\pi$-类判别独立性，分组定理，联合分布是乘积测度，乘积的期望与和的方差，独立和的分布与卷积，独立随机变量序列的构造，Kolmogorov 扩张定理，Rényi 记录定理，Borel 正规数定理}
+\label{lec:independence}
+
+测度论到这里告一段落，概率论从独立性开始。前面九讲中的几乎每一个概念，测度、可测函数、积分、乘积测度，在分析中都有，概率论只是给它们换了名字。独立性却是概率论自己的概念，它没有分析中的对应物；概率论之所以成为一门独立的学科，主要就是因为这个概念。
+
+直观上，两个事件独立，是说知道其中一个是否发生，不改变我们对另一个的判断。比如掷两颗骰子，知道第一颗是 $6$，并不影响第二颗是 $6$ 的可能性。用条件概率写出来，就是 $P(B\mid A)=P(B)$，也就是 $P(A\cap B)=P(A)P(B)$。这一讲从这个等式出发，把独立性推广到 $\sigma$-代数与随机变量，然后讨论怎样判断独立性、独立随机变量的联合分布与期望、怎样构造无穷多个独立随机变量。最后是课堂上讲的两个例子：Rényi 的记录定理与 Borel 的正规数定理。后者是第一个强大数定律，它说几乎每一个实数的二进制展开中，$0$ 与 $1$ 各占一半。
+
+\topic{本讲用到的前文结果}
+
+\begin{enumerate}
+\item 由随机变量生成的 $\sigma$-代数（定义~\ref{def:random-variables:sigma-X}，命题~\ref{prop:random-variables:sigma-generators}）：$\sigma(X)=\{\{X\in B\}:B\in\cR\}$，它是使 $X$ 可测的最小 $\sigma$-代数；$\sigma(X)$ 由 $\{X\leqslant x\}$（$x\in\R$）生成。对 Borel 函数 $f$，$f(X)$ 是 $\sigma(X)$-可测的。
+\item $\pi$-$\lambda$ 定理（定理~\ref{thm:set-systems:pi-lambda}）与唯一性定理（定理~\ref{thm:measures:uniqueness-finite}）：两个概率测度在一个 $\pi$-类上相等，就在它生成的 $\sigma$-代数上相等。
+\item 测度的连续性（命题~\ref{prop:measures:additivity-continuity}）：$A_n\uparrow A$ 蕴含 $P(A_n)\uparrow P(A)$。
+\item 乘积测度（定理~\ref{thm:product:finite-product}）与 Tonelli--Fubini 定理（定理~\ref{thm:product:tonelli}，定理~\ref{thm:product:fubini}）；$n$ 次独立试验的模型（\egref{ex:product:independent-trials}）。
+\item 变量替换公式（定理~\ref{thm:expectation:change-of-variables}）：$Eh(X)=\int h\dd\mu_X$，对随机向量同样成立。
+\item 方差的计算（命题~\ref{prop:expectation:variance}）：$\Var(\sum X_i)=\sum\Var(X_i)+2\sum_{i<j}\Cov(X_i,X_j)$；Chebyshev 不等式（推论~\ref{cor:expectation:chebyshev}），Markov 不等式（定理~\ref{thm:expectation:markov}）。
+\item 第一 Borel--Cantelli 引理（定理~\ref{thm:expectation:borel-cantelli}）：$\sum P(A_n)<\infty$ 蕴含几乎必然只有有限个 $A_n$ 发生。
+\item 二进制展开（命题~\ref{prop:distributions:binary-digits}）：在 $([0,1),\lambda)$ 上，$\xi_n(\omega)$ 为 $\omega$ 的第 $n$ 位二进制数字，则 $P(\xi_1=a_1,\dots,\xi_n=a_n)=2^{-n}$。公平硬币给出均匀分布（定理~\ref{thm:distributions:coins-to-uniform}）。分位数变换（定义~\ref{def:distributions:quantile}，引理~\ref{lem:distributions:quantile}）：$F^{-1}(u)\leqslant x\iff u\leqslant F(x)$。
+\item ★节用到：半代数 $\cS_n$ 与它生成的代数 $\overline{\cS_n}$（\egref{ex:extension:Sd}，引理~\ref{lem:extension:algebra-from-semialgebra}）；Carathéodory 延拓定理（定理~\ref{thm:extension:main}）：代数上的测度可以延拓到它生成的 $\sigma$-代数上。
+\end{enumerate}
+
+\emph{本讲约定：}$(\Omega,\cF,P)$ 是概率空间，所说的 $\sigma$-代数都是 $\cF$ 的子 $\sigma$-代数。
+
+\topic{事件的独立性}
+
+\begin{definition}[两个事件的独立性]\label{def:independence:two-events}
+若 $P(A\cap B)=P(A)P(B)$，称事件 $A$ 与 $B$ \term{独立}（independent）。
+\end{definition}
+
+\begin{example}\label{ex:independence:two-events}
+(1) 掷两颗均匀骰子，$\Omega=\{1,\dots,6\}^2$，均匀分布。$A=\{\text{第一颗是}\ 6\}$，$B=\{\text{第二颗是偶数}\}$。$P(A)=\frac16$，$P(B)=\frac12$，$A\cap B$ 含 $3$ 个结果，$P(A\cap B)=\frac3{36}=\frac1{12}=P(A)P(B)$，独立。这是我们期望的：两颗骰子互不影响。
+
+(2) 同一个空间中，$A=\{\text{第一颗是}\ 6\}$，$C=\{\text{两颗之和是}\ 7\}$。$P(C)=\frac6{36}=\frac16$，$A\cap C=\{(6,1)\}$，$P(A\cap C)=\frac1{36}=P(A)P(C)$，也独立！这不太符合直观：和是 $7$ 似乎与第一颗的点数有关。可是不论第一颗是几，第二颗恰好凑成 $7$ 的可能性都是 $\frac16$，所以知道第一颗是 $6$ 确实不改变和为 $7$ 的概率。若把 $C$ 换成 $\{\text{和是}\ 12\}$，则 $P(A\cap C)=\frac1{36}\neq\frac16\cdot\frac1{36}$，不独立。独立性是一个数量关系，不能只凭“有没有关系”的感觉来判断。
+
+(3) 在 $([0,1),\lambda)$ 上，$A=[0,\frac12)$，$B=[\frac14,\frac34)$。$P(A\cap B)=\lambda([\frac14,\frac12))=\frac14=P(A)P(B)$，独立。用二进制展开来看，$A=\{\xi_1=0\}$，$B=\{\xi_1\neq\xi_2\}$：第一位是 $0$，并不影响第二位与第一位是否相同。
+
+(4) 若 $P(A)>0$，$P(B)>0$，并且 $A\cap B=\varnothing$，则 $A,B$ 不独立：$P(A\cap B)=0<P(A)P(B)$。初学者常把“独立”与“互不相容”混为一谈，其实二者几乎相反：互不相容的两个事件，一个发生了，另一个就一定不发生，这是很强的依赖关系。
+\end{example}
+
+三个或更多的事件，只要求两两之间的等式是不够的。
+
+\begin{definition}[多个事件的独立性]\label{def:independence:events}
+称事件 $A_1,\dots,A_n$ \term{相互独立}（mutually independent），简称独立，若对 $\{1,\dots,n\}$ 的任意子集 $I$，
+\[
+P\Bigl(\bigcap_{i\in I}A_i\Bigr)=\prod_{i\in I}P(A_i).
+\]
+若只对一切 $\abs I=2$ 的子集成立，称它们\term{两两独立}（pairwise independent）。一族（可能无穷多个）事件称为独立的，若其中任意有限个都独立。
+\end{definition}
+
+对 $n=3$，定义要求四个等式：$P(A_1A_2)=P(A_1)P(A_2)$，$P(A_1A_3)=P(A_1)P(A_3)$，$P(A_2A_3)=P(A_2)P(A_3)$，$P(A_1A_2A_3)=P(A_1)P(A_2)P(A_3)$。下面的例子说明前三个推不出第四个。
+
+\begin{example}[两两独立但不相互独立]\label{ex:independence:pairwise}
+抛两枚公平硬币，$\Omega=\{HH,HT,TH,TT\}$，均匀分布。令 $A=\{\text{第一枚正面}\}$，$B=\{\text{第二枚正面}\}$，$C=\{\text{两枚相同}\}$。则 $P(A)=P(B)=P(C)=\frac12$，并且
+\[
+P(A\cap B)=P(\{HH\})=\tfrac14,\quad P(A\cap C)=P(\{HH\})=\tfrac14,\quad P(B\cap C)=P(\{HH\})=\tfrac14,
+\]
+所以两两独立。但 $P(A\cap B\cap C)=\frac14\neq\frac18$。直观上，任何两个事件合起来都决定了第三个：知道 $A$ 与 $B$ 是否发生，就知道 $C$ 是否发生。
+\end{example}
+
+\begin{proposition}[补事件保持独立性]\label{prop:independence:complements}
+设 $A_1,\dots,A_n$ 独立。则把其中任意几个换成它们的补集，所得的事件仍然独立。
+\end{proposition}
+\begin{proof}
+只需证明把 $A_1$ 换成 $A_1^c$ 的情形，其余的情形重复使用这一步即可。记 $B_1=A_1^c$，$B_i=A_i$（$i\geqslant2$）。设 $I\subseteq\{1,\dots,n\}$。若 $1\notin I$，等式就是原来的等式。若 $1\in I$，令 $J=I\setminus\{1\}$，$C=\bigcap_{i\in J}A_i$（$J=\varnothing$ 时 $C=\Omega$）。由 $C=(A_1\cap C)\cup(A_1^c\cap C)$（不交并），
+\[
+P(A_1^c\cap C)=P(C)-P(A_1\cap C)=\prod_{i\in J}P(A_i)-P(A_1)\prod_{i\in J}P(A_i)=P(A_1^c)\prod_{i\in J}P(A_i).\qedhere
+\]
+\end{proof}
+
+\topic{\texorpdfstring{$\sigma$}{σ}-代数与随机变量的独立性}
+
+一个事件 $A$ 是否发生，是一个“是或否”的信息。一个随机变量 $X$ 的值，则包含了许多这样的信息：对每个 Borel 集 $B$，$X$ 是否落在 $B$ 中。第~\ref{lec:set-systems} 讲说过，$\sigma$-代数可以理解为信息，$\sigma(X)$ 就是“知道 $X$ 的值”所对应的信息。所以最一般的定义是关于 $\sigma$-代数的。
+
+\begin{definition}[$\sigma$-代数与随机变量的独立性]\label{def:independence:sigma}
+\begin{enumerate}
+\item 称 $\sigma$-代数 $\cF_1,\dots,\cF_n$ 独立，若对任意 $A_i\in\cF_i$（$i=1,\dots,n$），
+\[
+P(A_1\cap\cdots\cap A_n)=P(A_1)\cdots P(A_n).
+\]
+\item 称随机变量 $X_1,\dots,X_n$ 独立，若 $\sigma(X_1),\dots,\sigma(X_n)$ 独立，即对任意 Borel 集 $B_1,\dots,B_n$，
+\[
+P(X_1\in B_1,\dots,X_n\in B_n)=\prod_{i=1}^nP(X_i\in B_i).
+\]
+\item 一族（可能无穷多个）$\sigma$-代数或随机变量称为独立的，若其中任意有限个都独立。
+\end{enumerate}
+\end{definition}
+
+我们解释几点。
+
+(a) 在 (1) 中我们只要求“全部 $n$ 个”的乘积公式，而不像定义~\ref{def:independence:events} 那样要求对每个子集 $I$ 成立。这是因为 $\Omega$ 属于每个 $\cF_i$：对子集 $I$，取 $A_i=\Omega$（$i\notin I$），就得到 $I$ 上的乘积公式。同样的理由说明：独立的 $\sigma$-代数中任取几个，仍然独立。
+
+(b) 事件 $A$ 生成的 $\sigma$-代数是 $\sigma(A)=\{\varnothing,A,A^c,\Omega\}$。由命题~\ref{prop:independence:complements}，事件 $A_1,\dots,A_n$ 独立，当且仅当 $\sigma(A_1),\dots,\sigma(A_n)$ 独立，也当且仅当示性函数 $\one_{A_1},\dots,\one_{A_n}$ 独立（$\sigma(\one_A)=\sigma(A)$）。所以三个定义是相容的。
+
+(c) 若 $X_1,\dots,X_n$ 独立，$f_1,\dots,f_n$ 是 Borel 函数，则 $f_1(X_1),\dots,f_n(X_n)$ 独立。这因为 $\{f_i(X_i)\in B\}=\{X_i\in f_i^{-1}(B)\}$，所以 $\sigma(f_i(X_i))\subseteq\sigma(X_i)$；而独立的 $\sigma$-代数的子 $\sigma$-代数当然仍然独立。直观上，从独立的信息中各自提取出的部分信息仍然独立。
+
+\begin{example}[常数与一切独立]\label{ex:independence:constant}
+若 $X=c$ 是常数，则 $\sigma(X)=\{\varnothing,\Omega\}$，它与任何 $\sigma$-代数独立：$P(\varnothing\cap A)=0=P(\varnothing)P(A)$，$P(\Omega\cap A)=P(A)=P(\Omega)P(A)$。更一般地，若 $P(A)\in\{0,1\}$，则 $A$ 与任何事件独立。反过来，若 $A$ 与自己独立，则 $P(A)=P(A)^2$，$P(A)\in\{0,1\}$。以后的 Kolmogorov $0$-$1$ 律就是用这个想法证明的：先证明某个事件与自己独立。
+\end{example}
+
+\topic{用 \texorpdfstring{$\pi$}{π}-类判别独立性}
+
+按定义验证 $X$ 与 $Y$ 独立，要对一切 Borel 集 $B_1,B_2$ 验证乘积公式，Borel 集太多了，没法一个一个验证。下面的定理说，只要在生成 $\sigma$-代数的 $\pi$-类上验证就够了。这是 $\pi$-$\lambda$ 定理最重要的应用之一。
+
+\begin{definition}\label{def:independence:collections}
+设 $\cA_1,\dots,\cA_n\subseteq\cF$ 是集合族。若对任意 $A_i\in\cA_i$ 与任意 $I\subseteq\{1,\dots,n\}$，$P(\bigcap_{i\in I}A_i)=\prod_{i\in I}P(A_i)$，称 $\cA_1,\dots,\cA_n$ 独立。若每个 $\cA_i$ 都含有 $\Omega$，这等价于只对 $I=\{1,\dots,n\}$ 要求等式（理由同上面的 (a)）。
+\end{definition}
+
+\begin{theorem}[用 $\pi$-类判别独立性]\label{thm:independence:pi-systems}
+设 $\cA_1,\dots,\cA_n$ 独立，并且每个 $\cA_i$ 都是 $\pi$-类。则 $\sigma(\cA_1),\dots,\sigma(\cA_n)$ 独立。
+\end{theorem}
+
+\begin{remark}[证明思路]
+一次只把一个 $\cA_i$ 扩大成 $\sigma(\cA_i)$。固定 $A_2,\dots,A_n$，令 $F=A_2\cap\cdots\cap A_n$，考虑“与 $F$ 满足乘积公式的集合”$\cL=\{A:P(A\cap F)=P(A)P(F)\}$。$\cL$ 包含 $\cA_1$，并且是 $\lambda$-类（这里要用到 $\lambda$-类只要求对真差封闭，而 $P$ 对真差是可减的）。由 $\pi$-$\lambda$ 定理，$\cL\supseteq\sigma(\cA_1)$。然后对 $\cA_2,\dots,\cA_n$ 依次重复。注意 $\cL$ 一般不是 $\sigma$-代数，所以这里非用 $\pi$-$\lambda$ 定理不可。
+\end{remark}
+
+\begin{proof}
+\emph{第一步：不妨设每个 $\cA_i$ 含有 $\Omega$。}令 $\bar\cA_i=\cA_i\cup\{\Omega\}$，它仍是 $\pi$-类（$A\cap\Omega=A$），并且 $\sigma(\bar\cA_i)=\sigma(\cA_i)$。$\bar\cA_1,\dots,\bar\cA_n$ 仍然独立：在乘积公式中，取到 $\Omega$ 的那些下标可以去掉，于是等式化为 $\cA_i$ 的某个子集上的乘积公式。
+
+\emph{第二步：把 $\cA_1$ 换成 $\sigma(\cA_1)$。}固定 $A_i\in\cA_i$（$i=2,\dots,n$），令 $F=A_2\cap\cdots\cap A_n$，
+\[
+\cL=\{A\in\cF:P(A\cap F)=P(A)P(F)\}.
+\]
+由独立性，$\cA_1\subseteq\cL$。验证 $\cL$ 是 $\lambda$-类：
+\begin{itemize}
+\item $\Omega\in\cL$：$P(\Omega\cap F)=P(F)=P(\Omega)P(F)$。
+\item 真差：设 $A,B\in\cL$，$A\subseteq B$。则 $(B\setminus A)\cap F=(B\cap F)\setminus(A\cap F)$，且 $A\cap F\subseteq B\cap F$，于是
+\[
+P((B\setminus A)\cap F)=P(B\cap F)-P(A\cap F)=P(B)P(F)-P(A)P(F)=P(B\setminus A)P(F).
+\]
+\item 单调递增的并：设 $B_k\in\cL$，$B_k\uparrow B$。则 $B_k\cap F\uparrow B\cap F$，由测度的连续性，$P(B\cap F)=\lim_kP(B_k\cap F)=\lim_kP(B_k)P(F)=P(B)P(F)$。
+\end{itemize}
+由 $\pi$-$\lambda$ 定理，$\sigma(\cA_1)\subseteq\cL$。这说明：对任意 $A_1\in\sigma(\cA_1)$ 与 $A_i\in\cA_i$（$i\geqslant2$），$P(A_1\cap\cdots\cap A_n)=P(A_1)P(A_2\cap\cdots\cap A_n)=\prod_iP(A_i)$，最后一步用了 $\cA_2,\dots,\cA_n$ 的独立性。由于每个族都含有 $\Omega$，这就是说 $\sigma(\cA_1),\cA_2,\dots,\cA_n$ 独立。
+
+\emph{第三步：依次扩大。}独立性的定义与族的排列顺序无关。对 $\cA_2,\sigma(\cA_1),\cA_3,\dots,\cA_n$ 用第二步，得 $\sigma(\cA_2),\sigma(\cA_1),\cA_3,\dots,\cA_n$ 独立。如此进行 $n$ 次，即得结论。
+\end{proof}
+
+\begin{corollary}[用分布函数判别独立性]\label{cor:independence:df}
+随机变量 $X_1,\dots,X_n$ 独立，当且仅当对一切 $x_1,\dots,x_n\in\R$，
+\[
+P(X_1\leqslant x_1,\dots,X_n\leqslant x_n)=\prod_{i=1}^nP(X_i\leqslant x_i).
+\]
+\end{corollary}
+\begin{proof}
+必要性：取 $B_i=(-\infty,x_i]$。充分性：令 $\cA_i=\{\{X_i\leqslant x\}:x\in\R\}\cup\{\Omega\}$。$\{X_i\leqslant x\}\cap\{X_i\leqslant y\}=\{X_i\leqslant\min\{x,y\}\}$，所以 $\cA_i$ 是 $\pi$-类，并且 $\sigma(\cA_i)=\sigma(X_i)$（命题~\ref{prop:random-variables:sigma-generators}）。要验证 $\cA_1,\dots,\cA_n$ 独立，即对 $A_i\in\cA_i$ 验证 $P(\bigcap_iA_i)=\prod_iP(A_i)$。若某些 $A_i=\Omega$，相当于在假设的等式中令对应的 $x_i\to\infty$：由测度的连续性，$\{X_i\leqslant m\}\uparrow\Omega$（$m\to\infty$），两边取极限即得。由定理~\ref{thm:independence:pi-systems}，$\sigma(X_1),\dots,\sigma(X_n)$ 独立。
+\end{proof}
+
+\begin{corollary}[离散型随机变量的独立性]\label{cor:independence:discrete}
+设 $X_i$ 取值于可数集 $D_i$。则 $X_1,\dots,X_n$ 独立，当且仅当对一切 $a_i\in D_i$，
+\[
+P(X_1=a_1,\dots,X_n=a_n)=\prod_{i=1}^nP(X_i=a_i).
+\]
+\end{corollary}
+\begin{proof}
+必要性：取 $B_i=\{a_i\}$。充分性：对 Borel 集 $B_i$，事件 $\{X_1\in B_1,\dots,X_n\in B_n\}$ 是可数个两两不交的事件 $\{X_1=a_1,\dots,X_n=a_n\}$（$a_i\in B_i\cap D_i$）的并（在概率为 $1$ 的事件 $\bigcap_i\{X_i\in D_i\}$ 上）。由可数可加性，
+\[
+\begin{aligned}
+P(X_1\in B_1,\dots,X_n\in B_n)&=\sum_{a_1\in B_1\cap D_1}\cdots\sum_{a_n\in B_n\cap D_n}\prod_iP(X_i=a_i)\\
+&=\prod_i\sum_{a_i\in B_i\cap D_i}P(X_i=a_i)=\prod_iP(X_i\in B_i).
+\end{aligned}
+\]
+（非负项的多重级数可以任意交换次序与分解，第~\ref{lec:product-measures} 讲习题 A1。）
+\end{proof}
+
+\begin{example}[二进制数字是独立的公平硬币]\label{ex:independence:binary-digits}
+在 $([0,1),\cR,\lambda)$ 上，设 $\xi_n(\omega)$ 是 $\omega$ 的第 $n$ 位二进制数字。由命题~\ref{prop:distributions:binary-digits}，对 $a_i\in\{0,1\}$，$P(\xi_1=a_1,\dots,\xi_n=a_n)=2^{-n}$。对 $a_2,\dots,a_n$ 求和，得 $P(\xi_1=a_1)=2^{n-1}\cdot2^{-n}=\frac12$；同理每个 $P(\xi_i=a_i)=\frac12$。所以 $P(\xi_1=a_1,\dots,\xi_n=a_n)=\prod_iP(\xi_i=a_i)$，由推论~\ref{cor:independence:discrete}，$\xi_1,\dots,\xi_n$ 独立。$n$ 是任意的，而任意有限个 $\xi_i$ 都包含在某个 $\xi_1,\dots,\xi_n$ 中，所以 $\xi_1,\xi_2,\dots$ 是独立的，每个都以概率 $\frac12$ 取 $0$ 与 $1$。
+
+这个例子很重要：它说明“无穷次独立地抛一枚公平硬币”可以在 $[0,1)$ 上用 Lebesgue 测度来实现。在一个点 $\omega$ 处，硬币的结果就是 $\omega$ 的二进制展开。
+\end{example}
+
+\begin{remark}[为什么要求 $\pi$-类]
+定理~\ref{thm:independence:pi-systems} 中 $\pi$-类的条件不能去掉：本讲作业习题~\exref{ex:independence:A9} 给出两个独立的集合族，它们生成的 $\sigma$-代数却不独立。原因是：两个集合各自与 $F$ 满足乘积公式，它们的交未必如此。
+\end{remark}
+
+\topic{分组定理}
+
+设 $X_1,X_2,X_3,X_4$ 独立。直观上，$X_1+X_2$ 与 $X_3X_4$ 应该独立：前者只用到前两个变量的信息，后者只用到后两个。下面的定理把这个直观严格化：独立的 $\sigma$-代数分成不相交的组，各组生成的 $\sigma$-代数仍然独立。
+
+\begin{theorem}[分组定理]\label{thm:independence:grouping}
+设 $\{\cF_j:j\in J\}$ 是一族独立的 $\sigma$-代数（$J$ 是任意指标集），$J_1,\dots,J_n$ 是 $J$ 的两两不交的子集。令 $\cG_i=\sigma\bigl(\bigcup_{j\in J_i}\cF_j\bigr)$。则 $\cG_1,\dots,\cG_n$ 独立。
+\end{theorem}
+\begin{proof}
+令 $\cA_i$ 为形如 $\bigcap_{j\in K}A_j$ 的集合的全体，其中 $K$ 是 $J_i$ 的有限子集（可以是空集，这时交为 $\Omega$），$A_j\in\cF_j$。
+
+\emph{$\cA_i$ 是含有 $\Omega$ 的 $\pi$-类，并且 $\sigma(\cA_i)=\cG_i$。}两个这样的有限交再相交，仍是这样的有限交（若同一个 $j$ 出现两次，$A_j\cap A_j'\in\cF_j$ 合并成一项）。每个 $\cF_j$（$j\in J_i$）都包含在 $\cA_i$ 中（取 $K=\{j\}$），所以 $\sigma(\cA_i)\supseteq\cG_i$；反之 $\cA_i\subseteq\cG_i$，因为 $\cG_i$ 是 $\sigma$-代数，对有限交封闭。
+
+\emph{$\cA_1,\dots,\cA_n$ 独立。}设 $B_i=\bigcap_{j\in K_i}A_j\in\cA_i$。由于 $J_i$ 两两不交，$K_1,\dots,K_n$ 两两不交，$\bigcap_iB_i$ 是 $\{A_j:j\in K_1\cup\cdots\cup K_n\}$ 的交，其中每个 $j$ 只出现一次。由 $\{\cF_j\}$ 的独立性（用于有限个指标 $K_1\cup\cdots\cup K_n$），
+\[
+P\Bigl(\bigcap_{i=1}^nB_i\Bigr)=\prod_{i=1}^n\prod_{j\in K_i}P(A_j)=\prod_{i=1}^nP(B_i),
+\]
+最后一步对每个 $i$ 再用一次独立性。由定理~\ref{thm:independence:pi-systems}，$\cG_1,\dots,\cG_n$ 独立。
+\end{proof}
+
+\begin{corollary}[不交分组上的函数]\label{cor:independence:functions}
+设 $X_{i,j}$（$1\leqslant i\leqslant n$，$1\leqslant j\leqslant m(i)$）独立，$f_i:\R^{m(i)}\to\R$ 是 Borel 函数。则 $f_1(X_{1,1},\dots,X_{1,m(1)}),\dots,f_n(X_{n,1},\dots,X_{n,m(n)})$ 独立。
+\end{corollary}
+\begin{proof}
+令 $\cG_i=\sigma(X_{i,1},\dots,X_{i,m(i)})=\sigma\bigl(\bigcup_j\sigma(X_{i,j})\bigr)$。由分组定理，$\cG_1,\dots,\cG_n$ 独立。随机向量 $(X_{i,1},\dots,X_{i,m(i)})$ 是 $\cG_i/\cR^{m(i)}$-可测的（定理~\ref{thm:random-variables:vector}），所以 $Y_i=f_i(X_{i,1},\dots,X_{i,m(i)})$ 是 $\cG_i$-可测的，$\sigma(Y_i)\subseteq\cG_i$。子 $\sigma$-代数仍然独立。
+\end{proof}
+
+\begin{example}\label{ex:independence:grouping-examples}
+设 $X_1,X_2,\dots$ 独立，$S_k=X_1+\cdots+X_k$。
+\begin{enumerate}
+\item $X_1+X_2$ 与 $X_3X_4$ 独立；$\max\{X_1,X_2,X_3\}$ 与 $X_4$ 独立。
+\item 对 $m<n$，$S_m$ 与 $S_n-S_m=X_{m+1}+\cdots+X_n$ 独立。更进一步，$(S_1,\dots,S_m)$ 的任何函数，比如 $\max_{k\leqslant m}S_k$ 或 $\one\{\max_{k\leqslant m}S_k>x\}$，都与 $S_n-S_m$ 独立。这在以后证明 Kolmogorov 极大不等式时要用到。
+\item 下面的例子说明“不交”是必要的。设 $X_1,X_2$ 独立，都以概率 $\frac12$ 取 $\pm1$。$Y=X_1X_2$ 也以概率 $\frac12$ 取 $\pm1$，并且 $Y$ 与 $X_1$ 独立，$Y$ 与 $X_2$ 独立（验证：$P(Y=1,X_1=1)=P(X_2=1,X_1=1)=\frac14$，其余三种情形同理）。可是 $Y$ 与 $(X_1,X_2)$ 不独立：$Y$ 就是 $(X_1,X_2)$ 的函数。$X_1,X_2,Y$ 两两独立但不相互独立，这是\egref{ex:independence:pairwise} 的另一种写法。
+\end{enumerate}
+\end{example}
+
+\topic{联合分布与期望}
+
+独立性是关于联合分布的性质。下面的定理把它和上一讲的乘积测度联系起来：独立，就是联合分布等于边缘分布的乘积测度。
+
+\begin{theorem}[独立与乘积测度]\label{thm:independence:product-measure}
+设 $X_1,\dots,X_n$ 是随机变量，$X_i$ 的分布为 $\mu_i$。则 $X_1,\dots,X_n$ 独立，当且仅当随机向量 $(X_1,\dots,X_n)$ 的分布是 $\mu_1\otimes\cdots\otimes\mu_n$。
+\end{theorem}
+\begin{proof}
+记 $\mu$ 为 $(X_1,\dots,X_n)$ 的分布，即 $\mu(B)=P((X_1,\dots,X_n)\in B)$，$B\in\cR^n$。对可测矩形，
+\[
+\begin{aligned}
+\mu(B_1\times\cdots\times B_n)&=P(X_1\in B_1,\dots,X_n\in B_n),\\
+(\mu_1\otimes\cdots\otimes\mu_n)(B_1\times\cdots\times B_n)&=\prod_iP(X_i\in B_i).
+\end{aligned}
+\]
+所以 $X_i$ 独立，当且仅当这两个概率测度在可测矩形上相等。可测矩形构成 $\pi$-类，生成 $\cR^n$（命题~\ref{prop:random-variables:Rd-product}），由唯一性定理，这又当且仅当 $\mu=\mu_1\otimes\cdots\otimes\mu_n$。
+\end{proof}
+
+这个定理有两方面的用处。一方面，\egref{ex:product:independent-trials} 告诉我们：给定 $n$ 个分布，乘积测度空间上的坐标函数就是 $n$ 个独立的、具有这些分布的随机变量。另一方面，关于独立随机变量的计算可以交给 Fubini 定理。
+
+\begin{theorem}[独立随机变量的期望]\label{thm:independence:expectation}
+设 $X,Y$ 独立，分布分别为 $\mu,\nu$。
+\begin{enumerate}
+\item 若 $h:\R^2\to\R$ 是 Borel 函数，$h\geqslant0$ 或 $E\abs{h(X,Y)}<\infty$，则
+\[
+Eh(X,Y)=\int_\R\int_\R h(x,y)\,\mu(\dd x)\nu(\dd y).
+\]
+\item 若 $f,g$ 是 Borel 函数，$f,g\geqslant0$，或者 $E\abs{f(X)}<\infty$ 且 $E\abs{g(Y)}<\infty$，则 $E\abs{f(X)g(Y)}<\infty$（后一情形），并且
+\[
+E[f(X)g(Y)]=Ef(X)\cdot Eg(Y).
+\]
+\item 若 $X_1,\dots,X_n$ 独立，并且都非负或者都可积，则 $E(X_1\cdots X_n)=EX_1\cdots EX_n$。
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+(1) 由变量替换公式（对随机向量 $(X,Y)$ 用），$Eh(X,Y)=\int_{\R^2}h\dd\mu_{(X,Y)}$。由定理~\ref{thm:independence:product-measure}，$\mu_{(X,Y)}=\mu\otimes\nu$。再由 Tonelli 定理（$h\geqslant0$）或 Fubini 定理（$h$ 可积）化为累次积分。
+
+(2) 先设 $f,g\geqslant0$。由 (1)，
+\[
+\begin{aligned}
+E[f(X)g(Y)]&=\int\int f(x)g(y)\,\mu(\dd x)\nu(\dd y)=\int g(y)\Bigl(\int f\dd\mu\Bigr)\nu(\dd y)\\
+&=\int f\dd\mu\int g\dd\nu=Ef(X)Eg(Y),
+\end{aligned}
+\]
+最后一步是变量替换公式。一般情形：对 $\abs f,\abs g$ 用刚证明的结论，$E\abs{f(X)g(Y)}=E\abs{f(X)}E\abs{g(Y)}<\infty$，于是 $h(x,y)=f(x)g(y)$ 关于 $\mu\otimes\nu$ 可积，由 (1) 与 Fubini 定理，同样的计算成立。
+
+(3) 对 $n$ 归纳。由推论~\ref{cor:independence:functions}，$X_1$ 与 $Y=X_2\cdots X_n$ 独立。非负的情形：由 (2) 与归纳假设，$E(X_1Y)=EX_1EY=EX_1\cdots EX_n$。可积的情形：先对 $\abs{X_i}$ 用非负的情形，$E\abs Y=\prod_{i\geqslant2}E\abs{X_i}<\infty$，所以 $Y$ 可积；再由 (2)，$E(X_1Y)=EX_1EY$，对 $EY$ 用归纳假设。
+\end{proof}
+
+\begin{corollary}[独立和的方差]\label{cor:independence:variance}
+若 $X_1,\dots,X_n$ 独立，$EX_i^2<\infty$，则它们两两不相关，并且 $\Var(X_1+\cdots+X_n)=\Var(X_1)+\cdots+\Var(X_n)$。
+\end{corollary}
+\begin{proof}
+对 $i\neq j$，$X_i-EX_i$ 与 $X_j-EX_j$ 独立（(c)：独立随机变量的函数），都可积，由定理~\ref{thm:independence:expectation}(2)，$\Cov(X_i,X_j)=E(X_i-EX_i)E(X_j-EX_j)=0$。再由命题~\ref{prop:expectation:variance}(4)。
+\end{proof}
+
+\begin{example}[二项分布的方差]
+设 $\xi_1,\dots,\xi_n$ 独立，$P(\xi_i=1)=p$，$P(\xi_i=0)=1-p$，$S=\xi_1+\cdots+\xi_n$。由推论~\ref{cor:independence:discrete}，$P(S=k)=\binom nkp^k(1-p)^{n-k}$（$S=k$ 是 $\binom nk$ 个形如 $\{\xi_1=a_1,\dots,\xi_n=a_n\}$、$\sum a_i=k$ 的不交事件之并，每个的概率是 $p^k(1-p)^{n-k}$），即 $S$ 服从二项分布。由推论~\ref{cor:independence:variance}，$\Var(S)=n\Var(\xi_1)=np(1-p)$。与第~\ref{lec:expectation} 讲作业 E1 中直接的组合计算相比，这个算法简单得多。
+\end{example}
+
+\begin{example}[不相关但不独立]\label{ex:independence:uncorrelated}
+独立蕴含不相关，反过来不对。设 $X$ 服从标准正态分布，$Y=X^2$。由对称性，$EX=0$，$EX^3=0$（$x^3\phi(x)$ 是可积的奇函数），所以 $\Cov(X,Y)=EX^3-EX\cdot EX^2=0$，不相关。但 $X$ 与 $Y$ 显然不独立：$Y$ 是 $X$ 的函数。具体地，$P(\abs X\leqslant1,Y\leqslant1)=P(\abs X\leqslant1)$，而 $P(\abs X\leqslant1)P(Y\leqslant1)=P(\abs X\leqslant1)^2<P(\abs X\leqslant1)$（因为 $0<P(\abs X\leqslant1)<1$）。不相关只说明二者之间没有“线性”的关系，而这里的关系是二次的。
+\end{example}
+
+\begin{example}[有密度的情形]\label{ex:independence:density}
+设随机向量 $(X_1,\dots,X_n)$ 有密度 $f$，即 $P((X_1,\dots,X_n)\in B)=\int_Bf\dd\lambda_n$。若 $f(x_1,\dots,x_n)=g_1(x_1)\cdots g_n(x_n)$，$g_i\geqslant0$ 是 Borel 函数，则 $X_1,\dots,X_n$ 独立。事实上，由 Tonelli 定理，对 Borel 集 $B_i$，
+\[
+P(X_1\in B_1,\dots,X_n\in B_n)=\int_{B_1\times\cdots\times B_n}\prod_ig_i(x_i)\dd x=\prod_{i=1}^n\int_{B_i}g_i\dd\lambda .
+\]
+取 $B_j=\R$（$j\neq i$），得 $P(X_i\in B_i)=c_i\int_{B_i}g_i\dd\lambda$，其中 $c_i=\prod_{j\neq i}\int g_j\dd\lambda$；而取一切 $B_j=\R$ 得 $\prod_j\int g_j\dd\lambda=1$。于是 $\prod_iP(X_i\in B_i)=\bigl(\prod_ic_i\bigr)\prod_i\int_{B_i}g_i=\prod_i\int_{B_i}g_i$（因为 $\prod_ic_i=\bigl(\prod_j\int g_j\bigr)^{n-1}=1$），与上式相等。比如 $[0,1]^2$ 上的均匀分布（密度 $\one_{[0,1]}(x)\one_{[0,1]}(y)$）的两个坐标独立，而单位圆盘上的均匀分布（密度 $\frac1\pi\one\{x^2+y^2\leqslant1\}$，不能分解）的两个坐标不独立。
+\end{example}
+
+\topic{独立和的分布：卷积}
+
+独立随机变量的和是概率论的中心对象，大数定律与中心极限定理都是关于它的。这一节求两个独立随机变量之和的分布。我们先说明 Lebesgue 积分的平移不变性。
+
+\begin{lemma}[积分的平移不变性]\label{lem:independence:translation}
+设 $h:\R\to[0,\infty]$ 是 Borel 函数，$c\in\R$。则 $\int h(x+c)\dd x=\int h(x)\dd x$。对可积的 $h$ 同样成立。
+\end{lemma}
+\begin{proof}
+四步法。$h=\one_A$ 时，$h(x+c)=\one_{A-c}(x)$，由 Lebesgue 测度的平移不变性（命题~\ref{prop:extension:lebesgue}(2)），$\int\one_{A-c}\dd\lambda=\lambda(A-c)=\lambda(A)$。由线性性推到非负简单函数；对一般的非负 $h$ 取简单函数 $h_n\uparrow h$，则 $h_n(\cdot+c)\uparrow h(\cdot+c)$，两边用单调收敛定理。可积的情形拆成正部与负部。
+\end{proof}
+
+\begin{theorem}[卷积公式]\label{thm:independence:convolution}
+设 $X,Y$ 独立，分布函数分别为 $F,G$，分布分别为 $\mu,\nu$。
+\begin{enumerate}
+\item $P(X+Y\leqslant z)=\int_\R F(z-y)\dd G(y)$，记作 $(F*G)(z)$，称为 $F$ 与 $G$ 的\term{卷积}（convolution）。
+\item 若 $X$ 有密度 $f$，则 $X+Y$ 有密度 $h(z)=\int_\R f(z-y)\dd G(y)$。若 $Y$ 也有密度 $g$，则 $h(z)=\int_\R f(z-y)g(y)\dd y$。
+\item 若 $X,Y$ 取值于整数，则 $P(X+Y=n)=\sum_{m\in\Z}P(X=n-m)P(Y=m)$。
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+(1) 令 $h(x,y)=\one\{x+y\leqslant z\}$，它是闭集 $\{(x,y):x+y\leqslant z\}$ 的示性函数，是 Borel 函数。由定理~\ref{thm:independence:expectation}(1)（先对 $x$ 积分），
+\[
+P(X+Y\leqslant z)=Eh(X,Y)=\int_\R\Bigl(\int_\R\one\{x\leqslant z-y\}\,\mu(\dd x)\Bigr)\nu(\dd y)=\int_\R F(z-y)\,\nu(\dd y).
+\]
+
+(2) 由 (1)，$F(z-y)=\int_{(-\infty,z-y]}f(x)\dd x$。对固定的 $y$，作平移 $x=u-y$（引理~\ref{lem:independence:translation}，用于函数 $u\mapsto f(u-y)\one\{u\leqslant z\}$）：$F(z-y)=\int_{(-\infty,z]}f(u-y)\dd u$。于是由 Tonelli 定理（函数 $(u,y)\mapsto f(u-y)\one\{u\leqslant z\}$ 非负，Borel 可测），
+\[
+\begin{aligned}
+P(X+Y\leqslant z)&=\int_\R\int_{(-\infty,z]}f(u-y)\dd u\,\nu(\dd y)\\
+&=\int_{(-\infty,z]}\Bigl(\int_\R f(u-y)\,\nu(\dd y)\Bigr)\dd u=\int_{(-\infty,z]}h(u)\dd u .
+\end{aligned}
+\]
+这说明 $X+Y$ 的分布函数是 $h$ 的积分，$h$ 就是它的密度。（取 $z\to\infty$，$\int h=1$，所以 $h$ 几乎处处有限。）若 $Y$ 有密度 $g$，由推论~\ref{cor:expectation:density}，$\int f(u-y)\,\nu(\dd y)=\int f(u-y)g(y)\dd y$。
+
+(3) $\{X+Y=n\}$ 是不交并 $\bigcup_m\{X=n-m,Y=m\}$，由可数可加性与独立性即得。
+\end{proof}
+
+\begin{example}[两个均匀分布之和]\label{ex:independence:triangle}
+设 $X,Y$ 独立，都服从 $[0,1]$ 上的均匀分布，$f=g=\one_{[0,1]}$。则 $X+Y$ 的密度为
+\[
+h(z)=\int_\R\one_{[0,1]}(z-y)\one_{[0,1]}(y)\dd y=\lambda\bigl([0,1]\cap[z-1,z]\bigr)=\begin{cases}z,&0\leqslant z\leqslant1,\\2-z,&1<z\leqslant2,\\0,&\text{其他}.\end{cases}
+\]
+这是一个“三角形”密度。两个“平坦”的分布相加，得到一个在中间有峰的分布。加的项越多，峰越明显，形状越接近正态曲线，这就是中心极限定理。
+\end{example}
+
+\begin{example}[Poisson 分布的可加性]\label{ex:independence:poisson-sum}
+设 $X,Y$ 独立，分别服从参数为 $\lambda,\mu$ 的 Poisson 分布。由定理~\ref{thm:independence:convolution}(3) 与二项式定理，对 $n\geqslant0$，
+\[
+P(X+Y=n)=\sum_{m=0}^ne^{-\lambda}\frac{\lambda^{n-m}}{(n-m)!}e^{-\mu}\frac{\mu^m}{m!}=\frac{e^{-(\lambda+\mu)}}{n!}\sum_{m=0}^n\binom nm\lambda^{n-m}\mu^m=e^{-(\lambda+\mu)}\frac{(\lambda+\mu)^n}{n!}.
+\]
+所以 $X+Y$ 服从参数为 $\lambda+\mu$ 的 Poisson 分布。
+\end{example}
+
+\begin{example}[指数分布之和与 Gamma 分布]\label{ex:independence:gamma}
+参数为 $(\alpha,\lambda)$ 的 \term{Gamma 分布}的密度是 $\frac{\lambda^\alpha}{\Gamma(\alpha)}x^{\alpha-1}e^{-\lambda x}\one_{(0,\infty)}(x)$；$\alpha=1$ 时就是参数为 $\lambda$ 的指数分布。设 $X,Y$ 独立，分别服从 $(\alpha,\lambda)$ 与 $(\beta,\lambda)$ 的 Gamma 分布。对 $z>0$，由卷积公式，
+\[
+h(z)=\int_0^z\frac{\lambda^\alpha}{\Gamma(\alpha)}(z-y)^{\alpha-1}e^{-\lambda(z-y)}\frac{\lambda^\beta}{\Gamma(\beta)}y^{\beta-1}e^{-\lambda y}\dd y=\frac{\lambda^{\alpha+\beta}e^{-\lambda z}}{\Gamma(\alpha)\Gamma(\beta)}\int_0^z(z-y)^{\alpha-1}y^{\beta-1}\dd y .
+\]
+换元 $y=zu$，积分等于 $z^{\alpha+\beta-1}B(\beta,\alpha)$，而由第~\ref{lec:product-measures} 讲问题 D，$B(\beta,\alpha)=\frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha+\beta)}$。所以 $h(z)=\frac{\lambda^{\alpha+\beta}}{\Gamma(\alpha+\beta)}z^{\alpha+\beta-1}e^{-\lambda z}$，$X+Y$ 服从 $(\alpha+\beta,\lambda)$ 的 Gamma 分布。由归纳法，$n$ 个独立的参数为 $\lambda$ 的指数随机变量之和服从 $(n,\lambda)$ 的 Gamma 分布。
+\end{example}
+
+\topic{独立随机变量序列的构造}
+
+大数定律讨论的是无穷多个独立随机变量 $X_1,X_2,\dots$。可是这样的随机变量存在吗？有限个的时候，\egref{ex:product:independent-trials} 用乘积测度构造出来了。无穷个的时候，需要在一个概率空间上同时安排无穷多个独立的随机变量。下面用二进制展开给出一个具体的构造。
+
+\begin{theorem}[独立随机变量序列的存在性]\label{thm:independence:existence}
+设 $\mu_1,\mu_2,\dots$ 是 $\R$ 上的概率测度。则存在概率空间以及其上的独立随机变量 $X_1,X_2,\dots$，使 $X_k$ 的分布是 $\mu_k$。事实上，可以取概率空间为 $([0,1),\cR\cap[0,1),\lambda)$。
+\end{theorem}
+
+\begin{remark}[证明思路]
+三步。第一步，$[0,1)$ 上的二进制数字 $\xi_1,\xi_2,\dots$ 是独立的公平硬币（\egref{ex:independence:binary-digits}）。第二步，把这一列硬币分成无穷多个互不相交的无穷子列（就像把自然数按某种方式排成一张无穷的表），每个子列拼成一个均匀分布的随机数 $U_k$。由分组定理，$U_1,U_2,\dots$ 独立。第三步，用分位数变换把 $U_k$ 变成分布为 $\mu_k$ 的随机变量。
+\end{remark}
+
+\begin{proof}
+\emph{第一步：把硬币分组。}取一个双射 $\N\times\N\to\N$，$(k,m)\mapsto n(k,m)$（例如按对角线顺序编号：$(1,1),(1,2),(2,1),(1,3),(2,2),(3,1),\dots$）。对每个 $k$，令
+\[
+U_k=\sum_{m=1}^\infty\xi_{n(k,m)}2^{-m}.
+\]
+它是部分和 $\sum_{m\leqslant M}\xi_{n(k,m)}2^{-m}$ 的单调极限，是随机变量，并且是 $\cG_k=\sigma(\xi_{n(k,m)}:m\geqslant1)$-可测的。对不同的 $k$，下标集 $J_k=\{n(k,m):m\geqslant1\}$ 两两不交。由\egref{ex:independence:binary-digits}，$\sigma(\xi_1),\sigma(\xi_2),\dots$ 独立，由分组定理（定理~\ref{thm:independence:grouping}），$\cG_1,\cG_2,\dots$ 中任意有限个独立，所以 $U_1,U_2,\dots$ 独立。
+
+\emph{第二步：每个 $U_k$ 服从均匀分布。}固定 $k$，记 $\eta_m=\xi_{n(k,m)}$。$\eta_1,\eta_2,\dots$ 是独立的，每个以概率 $\frac12$ 取 $0,1$，所以 $P(\eta_1=a_1,\dots,\eta_M=a_M)=\prod_mP(\eta_m=a_m)=2^{-M}$。这正是定理~\ref{thm:distributions:coins-to-uniform} 的条件，所以 $U_k=\sum_m\eta_m2^{-m}$ 服从 $[0,1]$ 上的均匀分布。
+
+\emph{第三步：分位数变换。}设 $G_k$ 是 $\mu_k$ 的分布函数，$G_k^{-1}$ 是它的分位数函数。令 $X_k=G_k^{-1}(U_k)$（在零概率事件 $\{U_k\in\{0,1\}\}$ 上令 $X_k=0$）。由引理~\ref{lem:distributions:quantile}，对 $u\in(0,1)$，$G_k^{-1}(u)\leqslant x$ 当且仅当 $u\leqslant G_k(x)$，所以
+\[
+P(X_k\leqslant x)=P(U_k\leqslant G_k(x))=G_k(x),
+\]
+即 $X_k$ 的分布是 $\mu_k$（分布函数决定分布）。$X_k$ 是 $U_k$ 的 Borel 函数（$G_k^{-1}$ 单调），由独立随机变量的函数仍然独立，$X_1,X_2,\dots$ 独立。
+\end{proof}
+
+\begin{remark}
+特别地，对任意分布 $\mu$，存在独立同分布（i.i.d.）的随机变量序列 $X_1,X_2,\dots$，分布都是 $\mu$。以后讨论大数定律、中心极限定理时，我们总是默认这样的序列存在。另一种构造是下一节的 Kolmogorov 扩张定理：在 $\R^\N$ 上直接构造“无穷乘积测度”。那个构造更一般（不要求独立），但证明更长。
+\end{remark}
+
+\topic{Kolmogorov 扩张定理★}
+
+上一个定理只能构造\emph{独立}的随机变量序列。以后我们还要构造很多不独立的序列，比如 Markov 链。在那里，我们事先知道的是每个 $(X_1,\dots,X_n)$ 的联合分布，要找一个概率空间，使其上的 $X_1,X_2,\dots$ 恰好有这些有限维分布。这一节在实数列的空间上直接构造这样的概率测度。第一遍阅读可以跳过这一节，只需要承认定理~\ref{thm:independence:kolmogorov} 的结论。
+
+令 $\R^\N=\{\omega=(\omega_1,\omega_2,\dots):\omega_i\in\R\}$ 为一切实数列组成的集合，$X_i(\omega)=\omega_i$ 为第 $i$ 个坐标。形如
+\[
+\{\omega:\omega_i\in(a_i,b_i],\ 1\leqslant i\leqslant n\}\qquad(n\geqslant1,\ -\infty\leqslant a_i<b_i\leqslant\infty)
+\]
+的集合称为\term{有限维矩形}（finite-dimensional rectangle），它们生成的 $\sigma$-代数记作 $\cR^\N$，称为\term{乘积 $\sigma$-代数}（product $\sigma$-field）。（与前面一样，$(a,\infty]$ 表示 $(a,\infty)$。）
+
+对 $n\geqslant1$ 与 $A\subseteq\R^n$，记
+\[
+[A]_n=\{\omega\in\R^\N:(\omega_1,\dots,\omega_n)\in A\}=A\times\R\times\R\times\cdots,
+\]
+称为以 $A$ 为底的\term{柱集}（cylinder set）。有限维矩形就是以 $\R^n$ 中矩形为底的柱集。一个柱集只限制前 $n$ 个坐标，其余坐标随意。注意 $[A]_n=[A\times\R]_{n+1}$：同一个柱集可以把底写在不同的维数中。
+
+\begin{example}[$\cR^\N$ 中的集合]\label{ex:independence:RN-sets}
+$\cR^\N=\sigma(X_1,X_2,\dots)$：一方面每个 $X_i$ 是 $\cR^\N$-可测的，因为 $\{X_i\leqslant x\}=[\R^{i-1}\times(-\infty,x]]_i$ 是有限维矩形；另一方面有限维矩形 $\bigcap_{i\leqslant n}\{X_i\in(a_i,b_i]\}$ 属于 $\sigma(X_1,X_2,\dots)$。所以下面这些我们关心的集合都属于 $\cR^\N$：
+\[
+\{\omega:\omega_n\to0\},\qquad\Bigl\{\omega:\sup_n\omega_n\leqslant1\Bigr\},\qquad\Bigl\{\omega:\frac{\omega_1+\cdots+\omega_n}n\to\frac12\Bigr\}.
+\]
+它们分别是 $\bigcap_k\bigcup_N\bigcap_{n\geqslant N}\{\abs{X_n}\leqslant\frac1k\}$，$\bigcap_n\{X_n\leqslant1\}$，以及第~\ref{lec:set-systems} 讲中处理过的那类集合（\wegref{we:set-systems:slln-event}）。这与抛硬币的例子完全一样：$\R^\N$ 上的一个概率测度，就是“一个无穷随机序列”的完整描述。
+\end{example}
+
+设 $X_1,X_2,\dots$ 是任意一个概率空间上的随机变量，$\mu_n$ 是随机向量 $(X_1,\dots,X_n)$ 的分布。由于 $\{(X_1,\dots,X_n,X_{n+1})\in A\times\R\}=\{(X_1,\dots,X_n)\in A\}$，必须有
+\begin{equation}\label{eq:independence:consistent}
+\mu_{n+1}\bigl((a_1,b_1]\times\cdots\times(a_n,b_n]\times\R\bigr)=\mu_n\bigl((a_1,b_1]\times\cdots\times(a_n,b_n]\bigr).
+\end{equation}
+满足 \eqref{eq:independence:consistent} 的一列概率测度 $\mu_n$（$\mu_n$ 定义在 $(\R^n,\cR^n)$ 上）称为\term{相容的}（consistent）。Kolmogorov 扩张定理说，这个显然必要的条件也是充分的。
+
+\begin{theorem}[Kolmogorov 扩张定理]\label{thm:independence:kolmogorov}
+设 $\mu_n$ 是 $(\R^n,\cR^n)$ 上的概率测度，$n=1,2,\dots$，并且相容。则 $(\R^\N,\cR^\N)$ 上存在唯一的概率测度 $P$，使
+\[
+P\bigl(\omega:\omega_i\in(a_i,b_i],\ 1\leqslant i\leqslant n\bigr)=\mu_n\bigl((a_1,b_1]\times\cdots\times(a_n,b_n]\bigr)
+\]
+对一切 $n$ 与一切矩形成立。于是在概率空间 $(\R^\N,\cR^\N,P)$ 上，坐标 $X_1,X_2,\dots$ 的有限维分布恰好是 $\mu_n$。
+\end{theorem}
+
+\begin{example}[独立序列]\label{ex:independence:kolmogorov-product}
+设 $\nu_1,\nu_2,\dots$ 是 $\R$ 上的概率测度，$\mu_n=\nu_1\otimes\cdots\otimes\nu_n$（定理~\ref{thm:product:finite-product}）。则
+\[
+\mu_{n+1}\Bigl(\prod_{i\leqslant n}(a_i,b_i]\times\R\Bigr)=\prod_{i\leqslant n}\nu_i((a_i,b_i])\cdot\nu_{n+1}(\R)=\mu_n\Bigl(\prod_{i\leqslant n}(a_i,b_i]\Bigr),
+\]
+相容性成立。由定理~\ref{thm:independence:kolmogorov}，得到 $\R^\N$ 上的概率测度 $P$，在它下面 $(X_1,\dots,X_n)$ 的分布是 $\nu_1\otimes\cdots\otimes\nu_n$，由定理~\ref{thm:independence:product-measure}，$X_1,\dots,X_n$ 独立，$X_i$ 的分布是 $\nu_i$。这就重新证明了定理~\ref{thm:independence:existence}。$P$ 称为无穷乘积测度，记作 $\bigotimes_i\nu_i$。
+\end{example}
+
+\begin{example}[一个不独立的序列]\label{ex:independence:kolmogorov-polya}
+对 $x=(x_1,\dots,x_n)\in\{0,1\}^n$，记 $k=x_1+\cdots+x_n$，令
+\[
+\mu_n(\{x\})=\int_0^1p^k(1-p)^{n-k}\dd p=\frac{k!\,(n-k)!}{(n+1)!},
+\]
+$\mu_n$ 是集中在 $\{0,1\}^n$ 上的离散测度。（积分是 Beta 函数 $B(k+1,n-k+1)$，由第~\ref{lec:product-measures} 讲问题 D 得到右边的值。）直观上，这是先随机选一枚硬币，它出现正面的概率 $p$ 在 $[0,1]$ 上均匀分布，再用这枚硬币抛 $n$ 次。
+
+\emph{$\mu_n$ 是概率测度，并且相容。}对 $x\in\{0,1\}^n$，$\mu_{n+1}(\{(x,0)\})+\mu_{n+1}(\{(x,1)\})=\int_0^1p^k(1-p)^{n-k}\bigl((1-p)+p\bigr)\dd p=\mu_n(\{x\})$。对矩形 $R\subseteq\R^n$，$R\times\R$ 中 $\{0,1\}^{n+1}$ 的点恰好是 $(x,0),(x,1)$，$x\in R\cap\{0,1\}^n$，所以 $\mu_{n+1}(R\times\R)=\mu_n(R)$。取 $R=\R^n$ 并归纳，$\mu_n(\R^n)=\mu_1(\R)=\int_0^1(1-p)\dd p+\int_0^1p\dd p=1$。
+
+于是由定理~\ref{thm:independence:kolmogorov}，存在取值于 $\{0,1\}$ 的随机变量序列 $X_1,X_2,\dots$，以 $\mu_n$ 为有限维分布。$P(X_1=1)=\frac12$，而 $P(X_1=X_2=1)=\int_0^1p^2\dd p=\frac13\neq\frac14$，所以 $X_1,X_2$ 不独立：第一次出现正面，说明选到的硬币偏向正面，第二次也更可能是正面。这个序列也可以由 Pólya 坛子得到：坛中开始有一红一白两个球，每次随机摸一个，记下颜色，放回并再放入一个同色的球，$X_n=1$ 表示第 $n$ 次摸到红球。
+\end{example}
+
+\begin{remark}[证明思路]
+按照第~\ref{lec:extension-of-measures} 讲的路线，先在“底为有限个矩形之并”的柱集组成的代数上定义 $P$，它显然是有限可加的；全部困难在于可数可加性，而可数可加性等价于：若这样的柱集 $B_n\downarrow\varnothing$，则 $P(B_n)\to0$。我们用反证法。若 $P(B_n)\geqslant\delta>0$，就在每个 $B_n$ 的底中取一个紧集，使 $P$ 只损失一点点；由紧性与对角线方法，在一切 $B_n$ 中找到同一个点 $\theta$，与 $\bigcap_nB_n=\varnothing$ 矛盾。这和 Lebesgue--Stieltjes 测度的构造（定理~\ref{thm:extension:lebesgue-stieltjes}）一样，可数可加性来自紧性；不同的是这里的空间是无穷维的，所以要用对角线方法逐个坐标地取收敛子列。
+\end{remark}
+
+\begin{proof}
+记 $\cS_n$ 为 $\R^n$ 中左开右闭矩形（连同空集）组成的半代数（\egref{ex:extension:Sd}），$\overline{\cS_n}$ 为 $\cS_n$ 中有限个两两不交集合之并的全体，它是代数（引理~\ref{lem:extension:algebra-from-semialgebra}）。
+
+\emph{第一步：柱集的代数与有限可加性。}令
+\[
+\cA=\bigl\{[A]_n:\ n\geqslant1,\ A\in\overline{\cS_n}\bigr\}.
+\]
+\begin{itemize}
+\item \emph{换维数。}若 $A\in\overline{\cS_n}$，$m>n$，则 $A\times\R^{m-n}\in\overline{\cS_m}$（每个矩形乘以 $(-\infty,\infty]^{m-n}$ 仍是矩形），并且 $[A]_n=[A\times\R^{m-n}]_m$。所以 $\cA$ 中有限个集合总可以写成同一个维数 $m$ 的柱集。
+\item \emph{底由柱集决定。}若 $[A]_m=[B]_m$，$A,B\subseteq\R^m$，则 $A=B$：对 $x\in\R^m$，令 $\omega=(x,0,0,\dots)$，则 $x\in A\iff\omega\in[A]_m\iff\omega\in[B]_m\iff x\in B$。
+\item \emph{$\cA$ 是代数。}$\R^\N=[\R]_1\in\cA$。写成同一维数后，$[A]_m^c=[A^c]_m$，$[A]_m\cap[B]_m=[A\cap B]_m$，而 $\overline{\cS_m}$ 是代数。
+\item \emph{相容性对 $\overline{\cS_n}$ 成立。}$A\in\overline{\cS_n}$ 是有限个不交矩形之并，对每个矩形用 \eqref{eq:independence:consistent}，再用 $\mu_n$，$\mu_{n+1}$ 的有限可加性，得 $\mu_{n+1}(A\times\R)=\mu_n(A)$。归纳得 $\mu_m(A\times\R^{m-n})=\mu_n(A)$（$m>n$）。
+\item \emph{定义 $P$。}对 $[A]_n\in\cA$ 令 $P([A]_n)=\mu_n(A)$。定义合理：若 $[A]_n=[B]_m$，$n\leqslant m$，则 $[A\times\R^{m-n}]_m=[B]_m$，由底的唯一性 $B=A\times\R^{m-n}$，于是 $\mu_m(B)=\mu_n(A)$。
+\item \emph{有限可加。}设 $C_1,C_2\in\cA$ 不交，写成 $C_j=[A_j]_m$，则 $[A_1\cap A_2]_m=C_1\cap C_2=\varnothing$，由底的唯一性 $A_1\cap A_2=\varnothing$，所以 $P(C_1\cup C_2)=\mu_m(A_1\cup A_2)=\mu_m(A_1)+\mu_m(A_2)=P(C_1)+P(C_2)$。
+\end{itemize}
+于是 $P$ 在代数 $\cA$ 上有限可加，从而单调、有限次可加，$P(\R^\N)=1$，$P(\varnothing)=0$。
+
+\emph{第二步：化为“在空集处连续”。}我们断言：若 $B_n\in\cA$，$B_n\downarrow\varnothing$，则 $P(B_n)\to0$。先承认这个断言，说明定理成立。设 $C\in\cA$ 是可数个两两不交的 $C_i\in\cA$ 的并。令 $B_n=C\setminus\bigcup_{i\leqslant n}C_i\in\cA$，则 $B_n\downarrow\varnothing$，由有限可加性
+\[
+P(C)=\sum_{i=1}^nP(C_i)+P(B_n)\to\sum_{i=1}^\infty P(C_i).
+\]
+所以 $P$ 是代数 $\cA$ 上的测度。由 Carathéodory 延拓定理（定理~\ref{thm:extension:main}），$P$ 延拓为 $\sigma(\cA)$ 上的概率测度。$\cA$ 中的集合是有限维矩形的有限并，而 $\cA$ 包含一切有限维矩形，所以 $\sigma(\cA)=\cR^\N$。唯一性：有限维矩形连同空集组成 $\pi$-类（两个有限维矩形写成同一维数后，交集还是有限维矩形或空集），它生成 $\cR^\N$，由唯一性定理（定理~\ref{thm:measures:uniqueness-finite}），满足要求的概率测度至多一个。
+
+\emph{第三步：准备工作。}下面证明断言。设 $B_n\in\cA$，$B_n\downarrow\varnothing$。$P(B_n)$ 单调不增，设它的极限为 $\delta$，用反证法，假设 $\delta>0$，于是 $P(B_n)\geqslant\delta$ 对一切 $n$ 成立。写 $B_n=[B_n^*]_{k_n}$，$B_n^*\in\overline{\cS_{k_n}}$。由换维数，可以把 $k_n$ 换成更大的数，所以不妨设 $k_1<k_2<\cdots$，从而 $k_n\geqslant n$。对 $\omega\in\R^\N$，记 $\pi_n(\omega)=(\omega_1,\dots,\omega_{k_n})$。
+
+\emph{第四步：用紧集从内部逼近。}我们说明：对每个 $n$，存在 $C_n=[C_n^*]_{k_n}\in\cA$，使 $C_n^*$ 的闭包 $K_n$ 是紧集，$K_n\subseteq B_n^*$，并且 $P(B_n\setminus C_n)\leqslant\delta/2^{n+1}$。
+
+先看一个矩形 $R=\prod_{i\leqslant k}(a_i,b_i]\subseteq\R^k$。对 $j\geqslant1$，令 $a_i^{(j)}=a_i+\frac1j$（$a_i$ 有限时）或 $-j$（$a_i=-\infty$ 时），$b_i^{(j)}=b_i$（$b_i$ 有限时）或 $j$（$b_i=\infty$ 时），$R_j=\prod_i(a_i^{(j)},b_i^{(j)}]$（$a_i^{(j)}\geqslant b_i^{(j)}$ 时理解为空集）。$j$ 增大时每个坐标区间 $(a_i^{(j)},b_i^{(j)}]$ 单调增大到 $(a_i,b_i]$，所以 $R_j\uparrow R$（若 $x\in R$，每个坐标 $x_i$ 在 $j\geqslant j_i$ 时属于第 $i$ 个区间，取 $j\geqslant\max_ij_i$ 即可）。由测度的连续性，$\mu_k(R\setminus R_j)\to0$。而 $R_j$ 的闭包 $\prod_i[a_i^{(j)},b_i^{(j)}]$ 是有界闭集，即紧集（Heine--Borel 定理），并且包含于 $R$（因为 $a_i^{(j)}>a_i$，$b_i^{(j)}\leqslant b_i$，$b_i^{(j)}<\infty$）。
+
+$B_n^*=R^1+\cdots+R^L$ 是有限个不交矩形的并。取 $j$ 充分大，使 $\mu_{k_n}(R^l\setminus R^l_j)\leqslant\delta/(L2^{n+1})$ 对 $l=1,\dots,L$ 都成立，令 $C_n^*=\bigcup_lR^l_j$。它属于 $\overline{\cS_{k_n}}$（不交矩形之并），闭包 $K_n=\bigcup_l\overline{R^l_j}$ 是有限个紧集之并，是紧集，并且 $K_n\subseteq B_n^*$。最后 $P(B_n\setminus C_n)=\mu_{k_n}(B_n^*\setminus C_n^*)\leqslant\sum_l\mu_{k_n}(R^l\setminus R^l_j)\leqslant\delta/2^{n+1}$。
+
+\emph{第五步：$D_n=C_1\cap\cdots\cap C_n$ 非空。}$D_n\in\cA$。若 $\omega\in B_n\setminus D_n$，则存在 $j\leqslant n$ 使 $\omega\notin C_j$，而 $\omega\in B_n\subseteq B_j$，所以 $B_n\setminus D_n\subseteq\bigcup_{j\leqslant n}(B_j\setminus C_j)$。由有限次可加性，
+\[
+P(B_n\setminus D_n)\leqslant\sum_{j\leqslant n}\frac\delta{2^{j+1}}<\frac\delta2,\qquad P(D_n)=P(B_n)-P(B_n\setminus D_n)>\frac\delta2>0
+\]
+（$D_n\subseteq B_n$）。所以 $D_n\neq\varnothing$，取 $\omega^{(n)}\in D_n$。由于 $D_m\subseteq D_n\subseteq C_n$（$m\geqslant n$），
+\begin{equation}\label{eq:independence:kolmogorov-compact}
+\pi_n(\omega^{(m)})\in C_n^*\subseteq K_n\qquad\text{对一切}\ m\geqslant n .
+\end{equation}
+
+\emph{第六步：对角线方法。}由 \eqref{eq:independence:kolmogorov-compact} 与 $k_i\geqslant i$，对每个坐标 $i$，当 $m\geqslant i$ 时 $\omega^{(m)}_i$ 是 $\pi_i(\omega^{(m)})\in K_i$ 的第 $i$ 个坐标，而 $K_i$ 有界，所以实数列 $(\omega^{(m)}_i)_{m\geqslant i}$ 有界。令 $N_0=\N$。若无穷集 $N_{i-1}\subseteq\N$ 已经取定，由 Bolzano--Weierstrass 定理，有界数列 $(\omega^{(m)}_i)_{m\in N_{i-1},m\geqslant i}$ 有收敛子列，即存在无穷集 $N_i\subseteq N_{i-1}$ 与实数 $\theta_i$，使 $m\in N_i$，$m\to\infty$ 时 $\omega^{(m)}_i\to\theta_i$。这样得到 $N_0\supseteq N_1\supseteq N_2\supseteq\cdots$ 与 $\theta=(\theta_1,\theta_2,\dots)\in\R^\N$。再取 $m_1<m_2<\cdots$，$m_j\in N_j$（$N_j$ 是无穷集，总可以取到比 $m_{j-1}$ 大的元素）。对每个 $i$，$j\geqslant i$ 时 $m_j\in N_j\subseteq N_i$，所以 $j\to\infty$ 时 $\omega^{(m_j)}_i\to\theta_i$。
+
+\emph{第七步：得出矛盾。}固定 $n$。由第六步，$j\to\infty$ 时 $\pi_n(\omega^{(m_j)})\to\pi_n(\theta)$（$\R^{k_n}$ 中按坐标收敛）。当 $j\geqslant n$ 时 $m_j\geqslant j\geqslant n$，由 \eqref{eq:independence:kolmogorov-compact}，$\pi_n(\omega^{(m_j)})\in K_n$。$K_n$ 是闭集，所以 $\pi_n(\theta)\in K_n\subseteq B_n^*$，即 $\theta\in B_n$。这对一切 $n$ 成立，于是 $\theta\in\bigcap_nB_n=\varnothing$，矛盾。所以 $\delta=0$，断言成立。
+\end{proof}
+
+\begin{remark}[取值于其他空间的序列]
+以后有时需要取值于其他可测空间 $(S,\cS)$ 的随机变量序列，比如取值于可数集的 Markov 链。Kolmogorov 扩张定理对任意的可测空间并不成立，有反例。不过对于下面这类空间，它可以直接由实数情形得到。若存在单射 $\varphi:S\to\R$，使 $\varphi$ 是 $\cS/\cR$-可测的，并且 $\varphi(S)\in\cR$，$\varphi^{-1}:\varphi(S)\to S$ 也是可测的，就称 $(S,\cS)$ 是\term{好的}（nice，也称标准 Borel 空间）：这时用 $\varphi$ 把 $S$ 上的测度搬到 $\R$ 上，在 $\R^\N$ 上构造，再用 $\varphi^{-1}$ 搬回来。可数集（带全部子集的 $\sigma$-代数）显然是好的。可以证明 $\R^d$，以及更一般的完备可分度量空间的 Borel 子集，都是好的，证明的第一步是把度量 $\rho$ 换成有界的度量 $\rho/(1+\rho)$（本讲习题 A13），我们不再细说。
+\end{remark}
+
+\topic{Rényi 记录定理}
+
+设 $X_1,X_2,\dots$ 是 i.i.d. 的随机变量，可以想象成一位运动员每年的成绩。若 $X_k>\max_{j<k}X_j$，称第 $k$ 年创造了\term{记录}（record）。第一年总是记录。直观上，记录会越来越难打破。一个自然的问题是：前 $n$ 年平均有多少个记录？记录会不会在某年之后再也不出现？A.\ Rényi 发现了一个出人意料的事实：各年是否创造记录，这些事件是\emph{相互独立}的，并且与 $X_k$ 的分布无关。
+
+设 $X_k$ 的分布函数 $F$ 是连续的（这保证不会出现成绩相同的情况）。令
+\[
+A_1=\Omega,\qquad A_k=\Bigl\{X_k>\max_{1\leqslant j<k}X_j\Bigr\}\quad(k\geqslant2).
+\]
+
+\begin{theorem}[Rényi 记录定理]\label{thm:independence:records}
+设 $X_1,X_2,\dots$ 是 i.i.d. 的随机变量，分布函数连续。则事件 $A_1,A_2,\dots$ 独立，并且 $P(A_k)=\frac1k$。
+\end{theorem}
+
+\begin{remark}[证明思路]
+先看 $P(A_k)=\frac1k$ 为什么对：$X_1,\dots,X_k$ 地位对称，它们中的最大者等可能地是其中任何一个，所以 $X_k$ 是最大者的概率是 $\frac1k$。为了证明独立性，我们看得更细一些：对每个 $k$，记 $R_k$ 为 $X_k$ 在 $X_1,\dots,X_k$ 中的排名（从小到大数，$R_k=k$ 就是创造记录）。我们将证明 $R_1,\dots,R_n$ 独立，$R_k$ 在 $\{1,\dots,k\}$ 上均匀分布。证明分三步：（1）出现相同值的概率为零；（2）由对称性，$X_1,\dots,X_n$ 的 $n!$ 种大小顺序等可能；（3）大小顺序与排名向量 $(R_1,\dots,R_n)$ 一一对应。
+\end{remark}
+
+\begin{proof}
+设 $\mu$ 是 $X_k$ 的分布，由 $F$ 连续，$\mu(\{x\})=F(x)-F(x-)=0$ 对一切 $x$ 成立。固定 $n$。
+
+\emph{第一步：没有相同的值。}设 $i\neq j$。$X_i,X_j$ 独立，$(X_i,X_j)$ 的分布是 $\mu\otimes\mu$（定理~\ref{thm:independence:product-measure}）。对角线 $D=\{(x,y):x=y\}$ 是闭集，按截口计算（定理~\ref{thm:product:product-measure}），
+\[
+P(X_i=X_j)=(\mu\otimes\mu)(D)=\int_\R\mu(\{y\})\,\mu(\dd y)=0 .
+\]
+令 $N=\bigcup_{i<j\leqslant n}\{X_i=X_j\}$，则 $P(N)=0$。
+
+\emph{第二步：每种大小顺序的概率都是 $\frac1{n!}$。}对 $\{1,\dots,n\}$ 的置换 $\tau$，令
+\[
+B_\tau=\{X_{\tau(1)}<X_{\tau(2)}<\cdots<X_{\tau(n)}\}.
+\]
+不同的 $\tau$ 给出的 $B_\tau$ 两两不交（一个 $\omega$ 处 $n$ 个不同的数只有一种从小到大的排法），并且 $\bigcup_\tau B_\tau=N^c$（没有相同值时，总有一种排法）。记 $C=\{x\in\R^n:x_1<x_2<\cdots<x_n\}$，它是开集，$B_\tau=\{(X_{\tau(1)},\dots,X_{\tau(n)})\in C\}$。随机向量 $(X_{\tau(1)},\dots,X_{\tau(n)})$ 的分量独立，每个的分布都是 $\mu$，由定理~\ref{thm:independence:product-measure}，它的分布是 $\mu^{\otimes n}=\mu\otimes\cdots\otimes\mu$，与 $\tau$ 无关。所以 $P(B_\tau)=\mu^{\otimes n}(C)$ 对一切 $\tau$ 相同。$n!$ 个相同的数之和为 $P(N^c)=1$，所以 $P(B_\tau)=\frac1{n!}$。
+
+\emph{第三步：排名向量。}对 $1\leqslant k\leqslant n$，令 $R_k=\#\{j\leqslant k:X_j\leqslant X_k\}$，它是 $X_k$ 在 $X_1,\dots,X_k$ 中从小到大的名次，取值于 $\{1,\dots,k\}$，并且 $R_k$ 是随机变量（有限个示性函数之和）。在 $N^c$ 上，$A_k=\{R_k=k\}$。令 $\cR_n=\{1\}\times\{1,2\}\times\cdots\times\{1,\dots,n\}$，它有 $n!$ 个元素。
+
+我们断言：在每个 $B_\tau$ 上，$(R_1,\dots,R_n)$ 取一个常值 $r(\tau)\in\cR_n$，并且 $\tau\mapsto r(\tau)$ 是双射。事实上，在 $B_\tau$ 上，$X_1,\dots,X_n$ 的大小顺序由 $\tau$ 完全确定，而每个 $R_k$ 只依赖于这个顺序，所以是常值。反过来，由 $(r_1,\dots,r_n)\in\cR_n$ 可以唯一地恢复大小顺序：先放 $X_1$；放好 $X_1,\dots,X_{k-1}$ 的顺序之后，$r_k$ 告诉我们 $X_k$ 在它们之中排第几，于是 $X_k$ 插入的位置唯一确定。所以 $\tau\mapsto r(\tau)$ 是单射；两边都有 $n!$ 个元素，它是双射。
+
+于是对每个 $(r_1,\dots,r_n)\in\cR_n$，$\{R_1=r_1,\dots,R_n=r_n\}$ 与恰好一个 $B_\tau$ 只相差零概率事件 $N$ 的一部分，
+\[
+P(R_1=r_1,\dots,R_n=r_n)=\frac1{n!}=\prod_{k=1}^n\frac1k .
+\]
+对 $r_j$（$j\neq k$）求和，得 $P(R_k=r_k)=\frac1k$。所以 $P(R_1=r_1,\dots,R_n=r_n)=\prod_kP(R_k=r_k)$，由推论~\ref{cor:independence:discrete}，$R_1,\dots,R_n$ 独立，$R_k$ 在 $\{1,\dots,k\}$ 上均匀分布。
+
+\emph{第四步：结论。}$A_k$ 与 $\{R_k=k\}$ 只差零概率事件，而 $\one\{R_k=k\}$ 是 $R_k$ 的函数。所以 $A_1,\dots,A_n$ 独立（零概率事件不影响乘积公式），$P(A_k)=P(R_k=k)=\frac1k$。$n$ 是任意的，所以 $A_1,A_2,\dots$ 独立。
+\end{proof}
+
+\begin{remark}
+这个证明还给出了更多的信息：排名 $R_1,R_2,\dots$ 本身是独立的。直观上，前 $k-1$ 年的成绩彼此之间如何排序，与第 $k$ 年的成绩在它们之中排第几，是互不相干的两件事。结论与分布 $F$ 无关，只要 $F$ 连续。这个“与分布无关”的性质在统计学中叫做\emph{非参数}的，基于排名的统计方法就是从这里出发的。
+\end{remark}
+
+\begin{corollary}[记录的个数]\label{cor:independence:records-count}
+记 $N_n=\sum_{k=1}^n\one_{A_k}$ 为前 $n$ 年记录的个数，$H_n=\sum_{k=1}^n\frac1k$。则
+\begin{enumerate}
+\item $EN_n=H_n$，$\Var(N_n)=\sum_{k=1}^n\bigl(\frac1k-\frac1{k^2}\bigr)\leqslant H_n$；
+\item 对任意 $\varepsilon>0$，$P\bigl(\abs{N_n/H_n-1}>\varepsilon\bigr)\leqslant\frac1{\varepsilon^2H_n}\to0$；由于 $H_n\sim\log n$，前 $n$ 年大约有 $\log n$ 个记录；
+\item 几乎必然地有无穷多个记录：$P(A_k\ \text{i.o.})=1$。
+\end{enumerate}
+\end{corollary}
+\begin{proof}
+(1) 由线性性，$EN_n=\sum_kP(A_k)=H_n$。$\one_{A_k}$ 独立，由推论~\ref{cor:independence:variance}，$\Var(N_n)=\sum_k\Var(\one_{A_k})=\sum_k\frac1k(1-\frac1k)$。
+
+(2) 由 Chebyshev 不等式，$P(\abs{N_n-H_n}>\varepsilon H_n)\leqslant\frac{\Var(N_n)}{\varepsilon^2H_n^2}\leqslant\frac1{\varepsilon^2H_n}$。由于 $\sum_k\frac1k$ 发散，$H_n\to\infty$。（$H_n-\log n$ 收敛到 Euler 常数，这是数学分析中的结论。）
+
+(3) 固定 $m$。对 $n>m$，由独立性与命题~\ref{prop:independence:complements}，
+\[
+P\Bigl(\bigcap_{k=m+1}^nA_k^c\Bigr)=\prod_{k=m+1}^n\Bigl(1-\frac1k\Bigr)=\prod_{k=m+1}^n\frac{k-1}k=\frac mn\to0 .
+\]
+$\bigcap_{k=m+1}^nA_k^c\downarrow\bigcap_{k>m}A_k^c$，由测度的连续性，$P(\bigcap_{k>m}A_k^c)=0$，即 $P(\bigcup_{k>m}A_k)=1$。对一切 $m$ 成立，再令 $m\to\infty$（单调递减的事件列 $\bigcup_{k>m}A_k\downarrow\limsup_kA_k$），$P(\limsup_kA_k)=1$。
+\end{proof}
+
+请对比第一 Borel--Cantelli 引理：这里 $\sum_kP(A_k)=\sum_k\frac1k=\infty$，而结论是无穷多个 $A_k$ 发生。一般地，对独立的事件，$\sum P(A_k)=\infty$ 总蕴含 $P(A_k\ \text{i.o.})=1$，这是第二 Borel--Cantelli 引理，(3) 的证明就是它的证明。
+
+\begin{workedexample}[等待一个更好的报价]\label{we:independence:better-offer}
+你要卖一辆车，陆续收到报价 $X_0,X_1,X_2,\dots$，它们 i.i.d.，分布函数连续。令 $T=\min\{n\geqslant1:X_n>X_0\}$ 为第一个超过最初报价的报价出现的时刻。求 $P(T>n)$ 与 $ET$。
+\end{workedexample}
+\begin{solution}
+$T>n$ 当且仅当 $X_1,\dots,X_n$ 都小于 $X_0$，即 $X_0$ 是 $X_0,X_1,\dots,X_n$ 这 $n+1$ 个数中的最大者。由 Rényi 记录定理证明的第二步（把 $X_0,\dots,X_n$ 看成 $n+1$ 个 i.i.d. 随机变量，每种大小顺序的概率都是 $\frac1{(n+1)!}$，而 $X_0$ 是最大者的顺序有 $n!$ 种），
+\[
+P(T>n)=\frac{n!}{(n+1)!}=\frac1{n+1}.
+\]
+特别地 $P(T=\infty)=\lim_nP(T>n)=0$，$T$ 几乎必然有限。由命题~\ref{prop:expectation:tail-sum}，
+\[
+ET=\sum_{n\geqslant1}P(T\geqslant n)=\sum_{n\geqslant1}P(T>n-1)=\sum_{n\geqslant1}\frac1n=\infty .
+\]
+一个更好的报价迟早会来，但平均要等无穷久。原因是：若最初的报价恰好很高，就要等很久，而这种情况的概率衰减得不够快。
+\end{solution}
+
+\topic{Borel 正规数定理}
+
+在 $([0,1),\cR,\lambda)$ 上，$\xi_n(\omega)$ 是 $\omega$ 的第 $n$ 位二进制数字。由\egref{ex:independence:binary-digits}，$\xi_1,\xi_2,\dots$ 是独立的公平硬币。令 $S_n=\xi_1+\cdots+\xi_n$ 为前 $n$ 位中 $1$ 的个数。我们问：$1$ 出现的频率 $S_n/n$ 是否趋于 $\frac12$？
+
+对具体的数，答案可以是否定的。$\omega=0$ 的展开全是 $0$；$\omega=\frac13=0.010101\cdots$ 的频率趋于 $\frac12$；适当地交替排列越来越长的 $0$ 串与 $1$ 串，可以构造出频率没有极限的数。可是 É.\ Borel 在 1909 年证明了：除了一个 Lebesgue 测度为零的集合之外，每个数的 $1$ 的频率都趋于 $\frac12$。
+
+\begin{definition}[正规数]\label{def:independence:normal}
+若 $\omega\in[0,1)$ 的二进制展开中 $1$ 的频率趋于 $\frac12$，即 $\lim_n\frac{S_n(\omega)}n=\frac12$，称 $\omega$ 是（以 $2$ 为底的）\term{简单正规数}（simply normal number）。
+\end{definition}
+
+我们先看较弱的结论，它只用 Chebyshev 不等式。
+
+\begin{proposition}[Bernoulli 弱大数定律]\label{prop:independence:bernoulli}
+对任意 $\varepsilon>0$，$P\bigl(\abs{S_n/n-\frac12}\geqslant\varepsilon\bigr)\leqslant\frac1{4n\varepsilon^2}\to0$。
+\end{proposition}
+\begin{proof}
+$ES_n=\frac n2$。由独立性与推论~\ref{cor:independence:variance}，$\Var(S_n)=n\Var(\xi_1)=\frac n4$。由 Chebyshev 不等式，$P(\abs{S_n-\frac n2}\geqslant n\varepsilon)\leqslant\frac{n/4}{n^2\varepsilon^2}$。
+\end{proof}
+
+这个命题说：对每个固定的 $n$，频率偏离 $\frac12$ 的那些 $\omega$ 构成的集合测度很小。但它没有说，对一个固定的 $\omega$，频率随 $n\to\infty$ 是否收敛：偏离的集合随 $n$ 变化，一个 $\omega$ 可能今天不在其中，明天又在其中，无穷多次地偏离。要排除这种情况，需要更强的估计：偏离的概率要小到可以对 $n$ 求和，然后用 Borel--Cantelli 引理。Chebyshev 不等式给出的 $\frac1n$ 不能求和，所以我们用四阶矩。
+
+\begin{theorem}[Borel 正规数定理]\label{thm:independence:borel-normal}
+$\lambda\bigl(\{\omega\in[0,1):S_n(\omega)/n\to\frac12\}\bigr)=1$。换句话说，几乎一切 $\omega\in[0,1)$ 都是简单正规数。
+\end{theorem}
+
+\begin{remark}[证明思路]
+令 $Y_i=\xi_i-\frac12$，它们独立，以概率 $\frac12$ 取 $\pm\frac12$，$S_n-\frac n2=Y_1+\cdots+Y_n$。我们计算四阶矩 $E(Y_1+\cdots+Y_n)^4$。展开后，凡是某个 $Y_i$ 只出现一次的项，期望都是零（独立性与 $EY_i=0$），剩下的项只有 $O(n^2)$ 个。于是由 Markov 不等式，$P(\abs{S_n/n-\frac12}\geqslant\varepsilon)\leqslant\frac C{n^2\varepsilon^4}$，可以对 $n$ 求和。
+\end{remark}
+
+\begin{proof}
+\emph{第一步：四阶矩。}令 $Y_i=\xi_i-\frac12$，$T_n=Y_1+\cdots+Y_n=S_n-\frac n2$。$Y_i$ 独立（$\xi_i$ 的函数），$EY_i=0$，$Y_i^2=\frac14$，$Y_i^4=\frac1{16}$。展开
+\[
+T_n^4=\sum_{i,j,k,l=1}^nY_iY_jY_kY_l .
+\]
+它是有限和，每一项有界，由线性性 $ET_n^4=\sum_{i,j,k,l}E(Y_iY_jY_kY_l)$。按下标 $(i,j,k,l)$ 中不同值的出现方式分类：
+\begin{itemize}
+\item 有某个下标值恰好出现一次，比如 $i$ 与 $j,k,l$ 都不同：由推论~\ref{cor:independence:functions}，$Y_i$ 与 $Y_jY_kY_l$ 独立，由定理~\ref{thm:independence:expectation}，$E(Y_iY_jY_kY_l)=EY_i\cdot E(Y_jY_kY_l)=0$。
+\item 四个下标相同：$n$ 项，每项 $EY_i^4=\frac1{16}$。
+\item 两个不同的值各出现两次：选出这两个值的有序对 $(a,b)$，$a\neq b$，有 $n(n-1)$ 种，再选 $(i,j,k,l)$ 中哪两个位置取 $a$，并要求 $i$ 所在的位置取 $a$（以免重复计数），有 $3$ 种方式（与 $i$ 配对的是 $j$、$k$ 或 $l$）。共 $3n(n-1)$ 项，每项 $E(Y_a^2Y_b^2)=EY_a^2EY_b^2=\frac1{16}$。
+\end{itemize}
+其余的情形（某个值出现三次而另一个值出现一次，或者出现三个以上不同的值）都至少有一个值恰好出现一次，属于第一类。所以
+\[
+ET_n^4=\frac n{16}+\frac{3n(n-1)}{16}\leqslant\frac{3n^2}{16}.
+\]
+
+\emph{第二步：可求和的估计。}对 $\varepsilon>0$，由 Markov 不等式（推论~\ref{cor:expectation:chebyshev}，$p=4$），
+\[
+P\Bigl(\Bigl\lvert\frac{S_n}n-\frac12\Bigr\rvert\geqslant\varepsilon\Bigr)=P(\abs{T_n}\geqslant n\varepsilon)\leqslant\frac{ET_n^4}{n^4\varepsilon^4}\leqslant\frac3{16\varepsilon^4n^2}.
+\]
+右边关于 $n$ 可求和。
+
+\emph{第三步：Borel--Cantelli 引理。}由第一 Borel--Cantelli 引理（定理~\ref{thm:expectation:borel-cantelli}），事件 $E_\varepsilon=\{\abs{S_n/n-\frac12}\geqslant\varepsilon\ \text{对无穷多个}\ n\ \text{成立}\}$ 的概率为 $0$。令 $E=\bigcup_{k\geqslant1}E_{1/k}$，$P(E)=0$。若 $\omega\notin E$，则对每个 $k$，只有有限个 $n$ 使 $\abs{S_n(\omega)/n-\frac12}\geqslant\frac1k$，这正是 $S_n(\omega)/n\to\frac12$。
+\end{proof}
+
+\begin{remark}
+(1) 这是我们遇到的第一个\emph{强大数定律}：它断言频率\emph{几乎必然}收敛，而不只是偏离的概率趋于零。证明中真正用到的只是：$Y_i$ 独立，$EY_i=0$，$EY_i^4$ 有界。同样的证明给出：若 $X_1,X_2,\dots$ 是 i.i.d.，$EX_1^4<\infty$，则 $(X_1+\cdots+X_n)/n\to EX_1$ a.s.。以后我们会把条件减弱到 $E\abs{X_1}<\infty$。
+
+(2) 正规数定理有一个耐人寻味的地方：几乎每个数都是正规的，可是要具体写出一个“真正”的正规数（在一切进制下，一切数字串都以应有的频率出现，见本讲作业 C）却很难。人们相信 $\sqrt2$、$\pi$、$e$ 都是正规数，但至今没有证明。这是概率方法的一个特点：它常常能证明具有某种性质的对象“几乎处处都是”，却不给出一个具体的例子。
+
+(3) 这个定理也说明了 $\sigma$-可加性的意义。事件 $\{S_n/n\to\frac12\}$ 涉及全部无穷多位数字，它不能用有限多位来描述；只有在可数可加的概率论中，谈论它的概率才有意义。
+\end{remark}
+
+\topic{本讲小结}
+
+\begin{enumerate}
+\item 独立性的定义按“事件、$\sigma$-代数、随机变量”逐步推广；多个事件的独立性要求一切子族的乘积公式，两两独立不够（\egref{ex:independence:pairwise}）。$\sigma$-代数是信息，独立的随机变量的函数仍然独立。
+\item 判别独立性只需在生成的 $\pi$-类上验证（定理~\ref{thm:independence:pi-systems}），证明用 $\pi$-$\lambda$ 定理。由此得到分布函数判别法、离散型判别法，以及分组定理：独立的 $\sigma$-代数分成不交的组，各组仍然独立。
+\item 独立就是联合分布等于乘积测度（定理~\ref{thm:independence:product-measure}）。于是 Fubini 定理给出 $E(XY)=EX\cdot EY$、独立和的方差等于方差之和、卷积公式。
+\item 用二进制数字可以在 $[0,1)$ 上构造任意给定分布的独立随机变量序列（定理~\ref{thm:independence:existence}）。更一般地，任意一列相容的有限维分布都是 $\R^\N$ 上某个概率测度的有限维分布（Kolmogorov 扩张定理，定理~\ref{thm:independence:kolmogorov}★），它以后用来构造 Markov 链。
+\item Rényi 记录定理：i.i.d. 连续分布序列中“第 $k$ 个是记录”这些事件独立，概率为 $\frac1k$。前 $n$ 个中约有 $\log n$ 个记录，并且几乎必然有无穷多个。
+\item Borel 正规数定理：几乎每个数的二进制数字中 $0$ 与 $1$ 各占一半。证明的模式是“四阶矩估计 + Markov 不等式 + Borel--Cantelli 引理”，这是证明强大数定律的第一个方法。
+\end{enumerate}
+下一讲先把随机变量列的几种收敛方式整理清楚，此后讨论一般的大数定律：弱大数定律（依概率收敛）与强大数定律（几乎必然收敛），以及它们需要的矩条件。
+
+% =====================================================================
+\homework{Euler 函数与独立性，一切进制下的正规数，两两独立的构造，秘书问题}[Euler 函数，正规数，两两独立，秘书问题]
+\label{hw:independence}
+
+\exercisepart{基本习题}
+
+\begin{exercises}{A}{课堂内容的补充}
+\item\label{ex:independence:A1} 
+\begin{questions}
+\item 设事件 $A$ 与自己独立，证明 $P(A)\in\{0,1\}$。
+\begin{solution}
+$P(A)=P(A\cap A)=P(A)^2$，所以 $P(A)\in\{0,1\}$。
+\end{solution}
+\item 设随机变量 $X$ 与自己独立，证明 $X$ 几乎必然是常数。
+\begin{solution}
+思路：对每个 $x$，事件 $\{X\leqslant x\}$ 与自己独立，所以分布函数只取 $0$ 与 $1$；这样的分布函数只能是一个点上的跳跃。
+
+设 $F$ 是 $X$ 的分布函数。对每个 $x$，$\{X\leqslant x\}\in\sigma(X)$，而 $\sigma(X)$ 与自己独立，所以由 A1-1)，$F(x)\in\{0,1\}$。$F$ 单调不减，$F(-\infty)=0$，$F(\infty)=1$，所以 $c=\inf\{x:F(x)=1\}$ 是有限实数。由右连续性，$F(c)=1$；对 $x<c$，$F(x)=0$。于是 $P(X<c)=\lim_{x\uparrow c}F(x)=0$，$P(X\leqslant c)=1$，所以 $P(X=c)=1$。
+\end{solution}
+\end{questions}
+
+\item\label{ex:independence:A2} 在 $((0,1),\cR,\lambda)$ 上令 $X_n(\omega)=\sin(2\pi n\omega)$。
+\begin{questions}
+\item 证明 $X_1,X_2,\dots$ 两两不相关。
+\begin{solution}
+$EX_n=\int_0^1\sin(2\pi n\omega)\dd\omega=0$。对 $m\neq n$，由积化和差，
+\[
+\begin{aligned}
+E(X_mX_n)&=\int_0^1\sin(2\pi m\omega)\sin(2\pi n\omega)\dd\omega\\
+&=\frac12\int_0^1\bigl[\cos(2\pi(m-n)\omega)-\cos(2\pi(m+n)\omega)\bigr]\dd\omega=0,
+\end{aligned}
+\]
+因为非零整数 $k$ 对应的 $\int_0^1\cos(2\pi k\omega)\dd\omega=0$。所以 $\Cov(X_m,X_n)=0$。
+\end{solution}
+\item 证明 $X_1$ 与 $X_2$ 不独立。
+\begin{solution}
+思路：$X_2$ 的平方是 $X_1$ 的平方的函数，若 $X_1,X_2$ 独立，$X_2^2$ 就会与自己独立。
+
+由倍角公式，$X_2=2\sin(2\pi\omega)\cos(2\pi\omega)$，所以 $X_2^2=4X_1^2(1-X_1^2)=h(X_1^2)$，$h(u)=4u(1-u)$。若 $X_1$ 与 $X_2$ 独立，则 $X_1^2$ 与 $X_2^2$ 独立（独立随机变量的函数）。而 $X_2^2=h(X_1^2)$ 是 $\sigma(X_1^2)$-可测的，所以 $\sigma(X_2^2)\subseteq\sigma(X_1^2)$，从而 $\sigma(X_2^2)$ 与自己独立。由 A1-2)，$X_2^2$ 几乎必然是常数。但这不对：$X_2^2=\sin^2(4\pi\omega)$ 在 $\omega\in(0,\frac1{16})$ 上小于 $\sin^2(\frac\pi4)=\frac12$，在 $\omega\in(\frac3{32},\frac5{32})$ 上大于 $\frac12$，两个集合的测度都是正的。矛盾。
+\end{solution}
+\end{questions}
+
+\item\label{ex:independence:A3} 设 $X,Y$ 独立，分布分别为 $\mu,\nu$。
+\begin{questions}
+\item 证明 $P(X+Y=0)=\sum_y\mu(\{-y\})\nu(\{y\})$（和式中只有可数个非零项）。
+\begin{solution}
+由定理~\ref{thm:independence:expectation}(1)，取 $h(x,y)=\one\{x+y=0\}$（闭集的示性函数），先对 $x$ 积分：
+\[
+P(X+Y=0)=\int_\R\Bigl(\int_\R\one\{x=-y\}\,\mu(\dd x)\Bigr)\nu(\dd y)=\int_\R\mu(\{-y\})\,\nu(\dd y).
+\]
+$\mu$ 的原子集 $D=\{x:\mu(\{x\})>0\}$ 是 $\mu$ 的分布函数的间断点集，至多可数（命题~\ref{prop:distributions:jumps}）。函数 $y\mapsto\mu(\{-y\})$ 只在可数集 $-D$ 上非零，等于 $\sum_{z\in-D}\mu(\{-z\})\one_{\{z\}}(y)$，由逐项积分，
+\[
+\int_\R\mu(\{-y\})\,\nu(\dd y)=\sum_{z\in-D}\mu(\{-z\})\nu(\{z\})=\sum_y\mu(\{-y\})\nu(\{y\}).
+\]
+\end{solution}
+\item 若 $X$ 的分布函数连续，证明 $P(X=Y)=0$。
+\begin{solution}
+$-Y$ 与 $X$ 独立。$X$ 的分布函数连续，$\mu(\{x\})=0$ 对一切 $x$ 成立。由 A3-1)（用于 $X$ 与 $-Y$），$P(X=Y)=P(X+(-Y)=0)=0$。
+\end{solution}
+\end{questions}
+
+\item\label{ex:independence:A4} 设 $X,Y$ 独立，分别服从二项分布 $B(n,p)$ 与 $B(m,p)$。证明 $X+Y$ 服从 $B(n+m,p)$。
+\begin{solution}
+记 $q=1-p$。由卷积公式（定理~\ref{thm:independence:convolution}(3)），对 $0\leqslant k\leqslant n+m$，
+\[
+\begin{aligned}
+P(X+Y=k)&=\sum_j\binom njp^jq^{n-j}\binom m{k-j}p^{k-j}q^{m-k+j}\\
+&=p^kq^{n+m-k}\sum_j\binom nj\binom m{k-j},
+\end{aligned}
+\]
+其中 $j$ 取遍 $\max\{0,k-m\}\leqslant j\leqslant\min\{n,k\}$（约定超出范围的二项式系数为 $0$，求和就可以写成对一切 $j$）。由 Vandermonde 恒等式（比较 $(1+x)^n(1+x)^m=(1+x)^{n+m}$ 两边 $x^k$ 的系数），$\sum_j\binom nj\binom m{k-j}=\binom{n+m}k$。所以 $P(X+Y=k)=\binom{n+m}kp^kq^{n+m-k}$。
+\end{solution}
+
+\item\label{ex:independence:A5} 设 $X,Y$ 独立，分别服从参数为 $\lambda,\mu$ 的指数分布。
+\begin{questions}
+\item 证明 $\min\{X,Y\}$ 服从参数为 $\lambda+\mu$ 的指数分布。
+\begin{solution}
+对 $t\geqslant0$，$\{\min\{X,Y\}>t\}=\{X>t\}\cap\{Y>t\}$，由独立性，$P(\min\{X,Y\}>t)=e^{-\lambda t}e^{-\mu t}=e^{-(\lambda+\mu)t}$，这正是参数为 $\lambda+\mu$ 的指数分布的尾概率。
+\end{solution}
+\item 证明 $P(X<Y)=\frac\lambda{\lambda+\mu}$。
+\begin{solution}
+由定理~\ref{thm:independence:expectation}(1)，先对 $y$ 积分：
+\[
+\begin{aligned}
+P(X<Y)&=\int_0^\infty\Bigl(\int_0^\infty\one\{x<y\}\mu e^{-\mu y}\dd y\Bigr)\lambda e^{-\lambda x}\dd x\\
+&=\int_0^\infty e^{-\mu x}\lambda e^{-\lambda x}\dd x=\frac\lambda{\lambda+\mu}.
+\end{aligned}
+\]
+直观上，两个“闹钟”分别以速率 $\lambda,\mu$ 响，先响的是第一个的概率与速率成正比。
+\end{solution}
+\end{questions}
+
+\item\label{ex:independence:A6} 设 $X,Y$ 独立，分别服从正态分布 $N(0,a)$ 与 $N(0,b)$（$a,b>0$ 是方差），即密度为 $p_a(x)=(2\pi a)^{-1/2}e^{-x^2/(2a)}$ 与 $p_b$。证明 $X+Y$ 服从 $N(0,a+b)$。由此说明：$N(\mu,a)$ 与 $N(\nu,b)$ 的独立和服从 $N(\mu+\nu,a+b)$。
+\begin{solution}
+思路：用卷积公式，对指数中的二次式配方，再用 Gauss 积分。
+
+\emph{配方。}直接展开可以验证
+\[
+\frac{(z-y)^2}a+\frac{y^2}b=\frac{a+b}{ab}\Bigl(y-\frac{bz}{a+b}\Bigr)^2+\frac{z^2}{a+b}.
+\]
+（左边 $=y^2(\frac1a+\frac1b)-\frac{2zy}a+\frac{z^2}a$；右边第一项展开为 $\frac{a+b}{ab}y^2-\frac{2zy}a+\frac{bz^2}{a(a+b)}$，而 $\frac{z^2}a-\frac{bz^2}{a(a+b)}=\frac{z^2}{a+b}$。）
+
+\emph{卷积。}由定理~\ref{thm:independence:convolution}(2)，$X+Y$ 的密度为
+\[
+h(z)=\int_\R p_a(z-y)p_b(y)\dd y=\frac{e^{-z^2/(2(a+b))}}{2\pi\sqrt{ab}}\int_\R\exp\Bigl(-\frac{a+b}{2ab}(y-c)^2\Bigr)\dd y,
+\]
+其中 $c=\frac{bz}{a+b}$。由平移不变性（引理~\ref{lem:independence:translation}）可以去掉 $c$；再作换元 $y=\sqrt{s}\,u$，$s=\frac{ab}{a+b}$，由\wegref{we:product:gauss}，$\int_\R e^{-y^2/(2s)}\dd y=\sqrt{2\pi s}$。所以
+\[
+h(z)=\frac{e^{-z^2/(2(a+b))}}{2\pi\sqrt{ab}}\sqrt{\frac{2\pi ab}{a+b}}=\frac1{\sqrt{2\pi(a+b)}}e^{-z^2/(2(a+b))},
+\]
+即 $X+Y$ 服从 $N(0,a+b)$。
+
+\emph{一般情形。}若 $X'\sim N(\mu,a)$，$Y'\sim N(\nu,b)$ 独立，则 $X=X'-\mu$，$Y=Y'-\nu$ 独立（函数），分别服从 $N(0,a)$，$N(0,b)$（平移密度），于是 $X'+Y'=(X+Y)+(\mu+\nu)$ 服从 $N(\mu+\nu,a+b)$。
+\end{solution}
+
+\item\label{ex:independence:A7} 构造四个取值于 $\{-1,1\}$ 的随机变量，使其中任意三个独立，但四个不独立。
+\begin{solution}
+设 $X_1,X_2,X_3$ 独立，都以概率 $\frac12$ 取 $\pm1$，令 $X_4=X_1X_2X_3$。
+
+\emph{任意三个独立。}$X_1,X_2,X_3$ 是假设。看 $X_1,X_2,X_4$：对 $a,b,c\in\{\pm1\}$，$\{X_1=a,X_2=b,X_4=c\}=\{X_1=a,X_2=b,X_3=c/(ab)\}$（因为 $ab=\pm1$，$X_4=c$ 当且仅当 $X_3=c/(ab)$），概率为 $\frac18$。而 $X_4$ 也以概率 $\frac12$ 取 $\pm1$（取边缘），所以 $P(X_1=a,X_2=b,X_4=c)=\frac18=\prod P(\cdot)$，由推论~\ref{cor:independence:discrete}，独立。$X_1,X_3,X_4$ 与 $X_2,X_3,X_4$ 同理。
+
+\emph{四个不独立。}$X_1X_2X_3X_4=(X_1X_2X_3)^2=1$，所以 $P(X_1=X_2=X_3=1,X_4=-1)=0\neq\frac1{16}$。
+\end{solution}
+
+\item\label{ex:independence:A8} 设 $X,Y\geqslant0$ 独立，分布函数分别为 $F,G$。求 $XY$ 的分布函数。
+\begin{solution}
+对 $z<0$，$P(XY\leqslant z)=0$。设 $z\geqslant0$。由定理~\ref{thm:independence:expectation}(1)，取 $h(x,y)=\one\{xy\leqslant z\}$（闭集的示性函数），先对 $x$ 积分：对固定的 $y>0$，$\int\one\{xy\leqslant z\}\,\mu_X(\dd x)=P(X\leqslant z/y)=F(z/y)$；对 $y=0$，$xy=0\leqslant z$，内层积分为 $1$。所以
+\[
+P(XY\leqslant z)=\int_{\{0\}}1\dd G+\int_{(0,\infty)}F(z/y)\dd G(y)=G(0)+\int_{(0,\infty)}F(z/y)\dd G(y),
+\]
+其中 $G(0)=P(Y=0)$（因为 $Y\geqslant0$）。
+\end{solution}
+
+\item\label{ex:independence:A9} 设 $\Omega=\{1,2,3,4\}$，$P(\{i\})=\frac14$。找两个集合族 $\cA_1,\cA_2$，它们独立，但 $\sigma(\cA_1)$ 与 $\sigma(\cA_2)$ 不独立。这说明定理~\ref{thm:independence:pi-systems} 中 $\pi$-类的条件不能去掉。
+\begin{solution}
+取 $\cA_1=\{\{1,2\},\{1,3\}\}$，$\cA_2=\{\{1,4\}\}$。验证独立：$P(\{1,2\}\cap\{1,4\})=P(\{1\})=\frac14=\frac12\cdot\frac12$；$P(\{1,3\}\cap\{1,4\})=\frac14=\frac12\cdot\frac12$。（对 $\abs I=1$ 的子集，等式是平凡的。）
+
+但 $\cA_1$ 不是 $\pi$-类：$\{1,2\}\cap\{1,3\}=\{1\}\notin\cA_1$。$\{1\}\in\sigma(\cA_1)$，$\{1,4\}\in\sigma(\cA_2)$，而 $P(\{1\}\cap\{1,4\})=\frac14\neq\frac14\cdot\frac12=P(\{1\})P(\{1,4\})$。所以 $\sigma(\cA_1)$ 与 $\sigma(\cA_2)$ 不独立。
+\end{solution}
+
+\item\label{ex:independence:A10} 设 $U_1,\dots,U_n$ 独立，都服从 $[0,1]$ 上的均匀分布。求 $M=\max_iU_i$ 与 $m=\min_iU_i$ 的分布函数与期望。
+\begin{solution}
+对 $t\in[0,1]$，$\{M\leqslant t\}=\bigcap_i\{U_i\leqslant t\}$，由独立性，$P(M\leqslant t)=t^n$。同样 $P(m>t)=\prod_iP(U_i>t)=(1-t)^n$。由尾概率公式（定理~\ref{thm:product:tail-formula}），
+\[
+\begin{aligned}
+EM&=\int_0^1P(M>t)\dd t=\int_0^1(1-t^n)\dd t=\frac n{n+1},\\
+Em&=\int_0^1P(m>t)\dd t=\int_0^1(1-t)^n\dd t=\frac1{n+1}.
+\end{aligned}
+\]
+直观上，$n$ 个随机点把 $[0,1]$ 分成 $n+1$ 段，平均每段长 $\frac1{n+1}$。
+\end{solution}
+
+\item\label{ex:independence:A11} 设 $X_1,\dots,X_n$ 独立，都服从参数为 $p$ 的 Bernoulli 分布：$P(X_i=1)=p$，$P(X_i=0)=1-p$。用习题 A4 与归纳法证明 $S_n=X_1+\cdots+X_n$ 服从二项分布 $B(n,p)$。
+\begin{solution}
+Bernoulli 分布就是 $B(1,p)$。$n=1$ 时结论成立。设 $S_{n-1}$ 服从 $B(n-1,p)$。由不交分组上的函数仍然独立（推论~\ref{cor:independence:functions}），$S_{n-1}=X_1+\cdots+X_{n-1}$ 与 $X_n$ 独立。由习题 A4（取 $B(n-1,p)$ 与 $B(1,p)$），$S_n=S_{n-1}+X_n$ 服从 $B(n,p)$。
+
+注意归纳的每一步都要用到“$S_{n-1}$ 与 $X_n$ 独立”，这正是分组定理提供的。只假设 $X_i$ 两两独立是不够的。
+\end{solution}
+
+\item\label{ex:independence:A12} 和的分布是卷积，并不需要独立。设 $X,Y$ 都取值于 $\{0,1,2\}$，并且各以概率 $\frac13$ 取每个值。
+\begin{questions}
+\item 设 $X,Y$ 独立，求 $X+Y$ 的分布。
+\begin{solution}
+由卷积公式（定理~\ref{thm:independence:convolution}(3)），$P(X+Y=k)=\sum_jP(X=j)P(Y=k-j)=\frac19\cdot\#\{(j,k-j):0\leqslant j,k-j\leqslant2\}$。数一数：
+\[
+P(X+Y=k)=\frac19,\ \frac29,\ \frac39,\ \frac29,\ \frac19\qquad(k=0,1,2,3,4).
+\]
+\end{solution}
+\item 求出一切这样的联合分布 $p_{ij}=P(X=i,Y=j)$（$X,Y$ 各自仍在 $\{0,1,2\}$ 上均匀分布），使 $X+Y$ 的分布与 A12-1) 相同。
+\begin{solution}
+思路：未知数是 $9$ 个 $p_{ij}\geqslant0$，条件是三个行和、三个列和都等于 $\frac13$，以及 $X+Y$ 取每个值的概率。逐个解出来。
+
+$X+Y$ 的条件是
+\[
+p_{00}=\tfrac19,\quad p_{01}+p_{10}=\tfrac29,\quad p_{02}+p_{11}+p_{20}=\tfrac39,\quad p_{12}+p_{21}=\tfrac29,\quad p_{22}=\tfrac19 .
+\]
+令 $a=p_{01}$。由 $p_{01}+p_{10}=\frac29$，$p_{10}=\frac29-a$。由第 $0$ 行的和 $p_{00}+p_{01}+p_{02}=\frac13$，$p_{02}=\frac29-a$。由第 $0$ 列的和 $p_{00}+p_{10}+p_{20}=\frac13$，$p_{20}=\frac29-p_{10}=a$。由第 $2$ 列的和 $p_{02}+p_{12}+p_{22}=\frac13$，$p_{12}=\frac29-p_{02}=a$。再由 $p_{12}+p_{21}=\frac29$，$p_{21}=\frac29-a$。最后 $p_{11}=\frac39-p_{02}-p_{20}=\frac13-(\frac29-a)-a=\frac19$。
+
+验证剩下的条件：第 $1$ 行和 $p_{10}+p_{11}+p_{12}=(\frac29-a)+\frac19+a=\frac13$；第 $2$ 行和 $p_{20}+p_{21}+p_{22}=a+(\frac29-a)+\frac19=\frac13$；第 $1$ 列和 $p_{01}+p_{11}+p_{21}=a+\frac19+(\frac29-a)=\frac13$。都成立。非负性要求 $0\leqslant a\leqslant\frac29$。所以全部解是
+\[
+(p_{ij})=\begin{pmatrix}\frac19&a&\frac29-a\\[2pt]\frac29-a&\frac19&a\\[2pt]a&\frac29-a&\frac19\end{pmatrix},\qquad0\leqslant a\leqslant\frac29 .
+\]
+$a=\frac19$ 时每个 $p_{ij}=\frac19$，这就是独立的情形；其余的 $a$ 给出不独立的 $X,Y$，而 $X+Y$ 的分布相同。比如 $a=0$ 时 $P(X=0,Y=1)=0\neq\frac19=P(X=0)P(Y=1)$。
+\end{solution}
+\end{questions}
+
+\item\label{ex:independence:A13} 设 $\rho$ 是集合 $M$ 上的度量。
+\begin{questions}
+\item 设 $h:[0,\infty)\to[0,\infty)$ 可导，$h(0)=0$，$h'(x)>0$（$x>0$），并且 $h'$ 在 $[0,\infty)$ 上单调不增。证明 $h(\rho(x,y))$ 也是 $M$ 上的度量。
+\begin{solution}
+思路：要验证的只有三角不等式，它来自两点：$h$ 单调递增，$h$ 是次可加的，即 $h(s+t)\leqslant h(s)+h(t)$。后者来自凹性。
+
+\emph{单调。}由 $h'>0$（$x>0$）与微分中值定理，$h$ 在 $[0,\infty)$ 上严格递增。于是 $h(u)=0$ 当且仅当 $u=0$，从而 $h(\rho(x,y))=0$ 当且仅当 $x=y$。对称性显然。
+
+\emph{次可加。}导数单调不增的可导函数是凹函数（数学分析中的结论）。设 $s,t\geqslant0$，$s+t>0$。由凹性，
+\[
+h(s)=h\Bigl(\frac s{s+t}(s+t)+\frac t{s+t}\cdot0\Bigr)\geqslant\frac s{s+t}h(s+t)+\frac t{s+t}h(0)=\frac s{s+t}h(s+t),
+\]
+同样 $h(t)\geqslant\frac t{s+t}h(s+t)$。相加得 $h(s)+h(t)\geqslant h(s+t)$。$s=t=0$ 时显然。
+
+\emph{三角不等式。}由 $\rho$ 的三角不等式与 $h$ 的单调性、次可加性，
+\[
+h(\rho(x,z))\leqslant h\bigl(\rho(x,y)+\rho(y,z)\bigr)\leqslant h(\rho(x,y))+h(\rho(y,z)).
+\]
+\end{solution}
+\item 证明 $h(x)=\frac x{1+x}$ 满足 A13-1) 的条件。由此 $\frac{\rho}{1+\rho}$ 是一个取值于 $[0,1)$ 的度量。
+\begin{solution}
+$h(0)=0$；$h'(x)=\frac{(1+x)-x}{(1+x)^2}=\frac1{(1+x)^2}>0$，并且在 $[0,\infty)$ 上单调递减。由 A13-1)，$\frac\rho{1+\rho}$ 是度量。它小于 $1$。
+
+以后讨论依概率收敛时会看到，$E\frac{\abs{X-Y}}{1+\abs{X-Y}}$ 刻画了依概率收敛。
+\end{solution}
+\end{questions}
+\end{exercises}
+
+\begin{probleme}{B}{Euler 函数与独立性}
+设 $n\geqslant2$ 是整数，$\Omega=\{1,\dots,n\}$，$P$ 是均匀分布。对正整数 $d$，令 $A_d=\{\omega\in\Omega:d\mid\omega\}$。Euler 函数 $\varphi(n)$ 是 $\{1,\dots,n\}$ 中与 $n$ 互素的数的个数。本题用独立性证明初等数论中的公式
+\[
+\varphi(n)=n\prod_{p\mid n}\Bigl(1-\frac1p\Bigr),
+\]
+其中乘积取遍 $n$ 的全部素因子。
+\begin{questions}
+\item 证明：若 $d\mid n$，则 $P(A_d)=\frac1d$。
+\begin{solution}
+$\{1,\dots,n\}$ 中 $d$ 的倍数是 $d,2d,\dots,(n/d)d$，共 $n/d$ 个（$n/d$ 是整数）。所以 $P(A_d)=\frac{n/d}n=\frac1d$。
+\end{solution}
+
+\item 设 $p_1,\dots,p_k$ 是 $n$ 的不同的素因子。证明 $A_{p_1}\cap\cdots\cap A_{p_k}=A_{p_1\cdots p_k}$，从而 $\{A_p:p\ \text{是}\ n\ \text{的素因子}\}$ 独立。
+\begin{solution}
+若 $\omega$ 被每个 $p_i$ 整除，由于不同的素数两两互素，$\omega$ 被乘积 $p_1\cdots p_k$ 整除（算术基本定理）；反之显然。所以交集等于 $A_{p_1\cdots p_k}$。又 $p_1\cdots p_k\mid n$，由 B1，
+\[
+P(A_{p_1}\cap\cdots\cap A_{p_k})=\frac1{p_1\cdots p_k}=\prod_{i=1}^kP(A_{p_i}).
+\]
+这对 $n$ 的素因子集合的任意子集成立，按照定义~\ref{def:independence:events}，这些事件独立。
+\end{solution}
+
+\item 证明 Euler 函数的公式。
+\begin{solution}
+$\omega$ 与 $n$ 互素，当且仅当 $n$ 的每个素因子都不整除 $\omega$，即 $\omega\in\bigcap_{p\mid n}A_p^c$。由 B2 与命题~\ref{prop:independence:complements}，$A_p^c$（$p\mid n$）独立，所以
+\[
+\frac{\varphi(n)}n=P\Bigl(\bigcap_{p\mid n}A_p^c\Bigr)=\prod_{p\mid n}\Bigl(1-\frac1p\Bigr).
+\]
+例如 $n=12$，素因子为 $2,3$，$\varphi(12)=12\cdot\frac12\cdot\frac23=4$，与 $1,5,7,11$ 一致。
+\end{solution}
+
+\item 设 $4\mid n$。$A_2$ 与 $A_4$ 是否独立？由此说明 B2 中“素因子”的条件起什么作用。
+\begin{solution}
+$A_4\subseteq A_2$，所以 $P(A_2\cap A_4)=P(A_4)=\frac14$，而 $P(A_2)P(A_4)=\frac18$，不独立。被 $4$ 整除蕴含被 $2$ 整除，这是很强的依赖。B2 的证明用到 $p_1,\dots,p_k$ 两两互素，这时“被每个整除”等价于“被乘积整除”。一般地，对 $n$ 的两两互素的因子 $d_1,\dots,d_k$，$A_{d_1},\dots,A_{d_k}$ 独立，证明相同。
+\end{solution}
+\end{questions}
+\end{probleme}
+
+\begin{probleme}{C}{一切进制下的正规数}
+正文证明了几乎每个数的二进制展开中 $1$ 的频率是 $\frac12$。本题把它推广：设 $b\geqslant2$ 是整数，几乎每个数的 $b$ 进制展开中，每个长度为 $k$ 的数字串出现的频率都是 $b^{-k}$；并且这对一切 $b$ 同时成立。在 $([0,1),\cR,\lambda)$ 上，令 $k_0(\omega)=0$，$k_n(\omega)=\lfloor b^n\omega\rfloor$，$d_n(\omega)=k_n(\omega)-bk_{n-1}(\omega)$，它是 $\omega$ 的第 $n$ 位 $b$ 进制数字。
+\begin{questions}
+\item 证明 $d_n\in\{0,\dots,b-1\}$，并且对 $a_1,\dots,a_n\in\{0,\dots,b-1\}$，
+\[
+\{d_1=a_1,\dots,d_n=a_n\}=\Bigl[\frac j{b^n},\frac{j+1}{b^n}\Bigr),\qquad j=\sum_{i=1}^na_ib^{n-i}.
+\]
+由此证明 $d_1,d_2,\dots$ 独立，每个在 $\{0,\dots,b-1\}$ 上均匀分布。
+\begin{solution}
+\emph{取值范围。}由 $k_{n-1}\leqslant b^{n-1}\omega<k_{n-1}+1$，乘以 $b$ 得 $bk_{n-1}\leqslant b^n\omega<bk_{n-1}+b$，所以 $k_n=\lfloor b^n\omega\rfloor\in\{bk_{n-1},\dots,bk_{n-1}+b-1\}$，即 $d_n\in\{0,\dots,b-1\}$。
+
+\emph{数字与区间。}由 $k_n=bk_{n-1}+d_n$ 与 $k_0=0$，归纳得 $k_n=\sum_{i=1}^nd_ib^{n-i}$。映射 $(a_1,\dots,a_n)\mapsto\sum_ia_ib^{n-i}$ 是 $\{0,\dots,b-1\}^n$ 到 $\{0,\dots,b^n-1\}$ 的双射（$b$ 进制表示的唯一性）。所以 $\{d_1=a_1,\dots,d_n=a_n\}=\{k_n=j\}=\{j\leqslant b^n\omega<j+1\}=[\frac j{b^n},\frac{j+1}{b^n})$。（这里用到：由 $k_n$ 可以唯一地反解出 $d_1,\dots,d_n$。）
+
+\emph{独立性。}$P(d_1=a_1,\dots,d_n=a_n)=b^{-n}$。对 $a_j$（$j\neq i$）求和得 $P(d_i=a_i)=b^{n-1}b^{-n}=\frac1b$。所以乘积公式成立，由推论~\ref{cor:independence:discrete}，$d_1,\dots,d_n$ 独立；$n$ 任意，所以整个序列独立。这与\egref{ex:independence:binary-digits} 完全相同。
+\end{solution}
+
+\item 设 $W_1,W_2,\dots$ 独立，取值于 $\{0,1\}$，$P(W_l=1)=q$。证明 $\frac1m\sum_{l=1}^mW_l\to q$ a.s.
+\begin{solution}
+这是 Borel 正规数定理的证明，只是把 $\frac12$ 换成 $q$。令 $Y_l=W_l-q$，$Y_l$ 独立，$EY_l=0$，$\abs{Y_l}\leqslant1$。展开 $E(Y_1+\cdots+Y_m)^4$：和定理~\ref{thm:independence:borel-normal} 的证明一样，凡有某个下标只出现一次的项期望为零；四个下标相同的项有 $m$ 个，每个 $EY_l^4\leqslant1$；两对下标的项有 $3m(m-1)$ 个，每个 $EY_a^2EY_b^2\leqslant1$。所以 $E(\sum_lY_l)^4\leqslant m+3m(m-1)\leqslant3m^2$。由 Markov 不等式，
+\[
+P\Bigl(\Bigl\lvert\frac1m\sum_{l=1}^mW_l-q\Bigr\rvert\geqslant\varepsilon\Bigr)\leqslant\frac{3m^2}{m^4\varepsilon^4}=\frac3{\varepsilon^4m^2},
+\]
+可以对 $m$ 求和。由第一 Borel--Cantelli 引理与取 $\varepsilon=\frac1j$（$j=1,2,\dots$）的可数并论证，结论成立。
+\end{solution}
+
+\item 设 $a\in\{0,\dots,b-1\}$。证明几乎必然地 $\frac1n\#\{i\leqslant n:d_i=a\}\to\frac1b$。
+\begin{solution}
+令 $W_i=\one\{d_i=a\}$。由 C1，$W_i$ 是独立的 $d_i$ 的函数，所以独立，并且 $P(W_i=1)=\frac1b$。由 C2 即得。
+\end{solution}
+
+\item 设 $\beta=(\beta_1,\dots,\beta_k)\in\{0,\dots,b-1\}^k$ 是一个长度为 $k$ 的数字串，$J_i=\one\{d_i=\beta_1,\dots,d_{i+k-1}=\beta_k\}$。证明几乎必然地 $\frac1n\sum_{i=1}^nJ_i\to b^{-k}$。（提示：$J_i$ 不独立，因为相邻的串有重叠；但下标相差 $k$ 的倍数的 $J_i$ 是独立的。）
+\begin{solution}
+思路：按下标模 $k$ 的余数把 $J_i$ 分成 $k$ 组，每组内是独立的，用 C2；再把 $k$ 组合起来。
+
+\emph{每一组。}固定 $r\in\{1,\dots,k\}$，考虑 $J_r,J_{r+k},J_{r+2k},\dots$。$J_{r+lk}$ 只依赖于数字 $d_{r+lk},\dots,d_{r+lk+k-1}$，对不同的 $l$，这些数字组两两不交。由推论~\ref{cor:independence:functions}（任意有限个都满足），$J_r,J_{r+k},\dots$ 独立。由 C1，$P(J_i=1)=b^{-k}$。由 C2，几乎必然地
+\[
+\frac1m\sum_{l=0}^{m-1}J_{r+lk}\to b^{-k}\qquad(m\to\infty).
+\]
+
+\emph{合起来。}去掉 $k$ 个零概率事件的并之后，上式对一切 $r$ 成立。对 $n\geqslant k$，下标 $i\leqslant n$ 中余数为 $r$ 的有 $m_r(n)$ 个，$m_r(n)\in\{\lfloor n/k\rfloor,\lfloor n/k\rfloor+1\}$，所以 $\frac{m_r(n)}n\to\frac1k$，$m_r(n)\to\infty$。于是
+\[
+\frac1n\sum_{i=1}^nJ_i=\sum_{r=1}^k\frac{m_r(n)}n\cdot\frac1{m_r(n)}\sum_{l=0}^{m_r(n)-1}J_{r+lk}\to\sum_{r=1}^k\frac1k\cdot b^{-k}=b^{-k}.
+\]
+\end{solution}
+
+\item 若 $\omega$ 的 $b$ 进制展开中每个长度为 $k$ 的数字串（对一切 $k\geqslant1$）出现的频率都是 $b^{-k}$，称 $\omega$ 是以 $b$ 为底的\term{正规数}；若它对一切 $b\geqslant2$ 都是正规数，称它是\term{绝对正规数}。证明几乎一切 $\omega\in[0,1)$ 都是绝对正规数。
+\begin{solution}
+对固定的 $b$，数字串的全体 $\bigcup_{k\geqslant1}\{0,\dots,b-1\}^k$ 是可数集。由 C4，对每个串 $\beta$，使其频率不等于 $b^{-k}$ 的 $\omega$ 的集合是零测集。可数个零测集的并是零测集，所以以 $b$ 为底不是正规数的 $\omega$ 构成零测集。再对 $b=2,3,\dots$（可数个）取并，仍是零测集。所以绝对正规数的补集测度为零。
+
+\emph{注。}和正文的注记一样：虽然几乎一切数都是绝对正规数，人们却很难写出一个具体的例子。
+\end{solution}
+\end{questions}
+\end{probleme}
+
+\thinkingpart
+
+\begin{probleme}[问题]{D}{用两个随机数构造很多两两独立的随机变量}
+设 $K\geqslant3$ 是素数，$X,Y$ 独立，都在 $\{0,1,\dots,K-1\}$ 上均匀分布。对 $0\leqslant n<K$，令 $Z_n=(X+nY)\bmod K$。
+\begin{questions}
+\item 证明每个 $Z_n$ 在 $\{0,\dots,K-1\}$ 上均匀分布。
+\begin{solution}
+$n=0$ 时 $Z_0=X$。一般地，对 $z\in\{0,\dots,K-1\}$，由 $X,Y$ 独立，
+\[
+P(Z_n=z)=\sum_{y=0}^{K-1}P(Y=y,\ X\equiv z-ny\pmod K)=\sum_{y=0}^{K-1}\frac1K\cdot\frac1K=\frac1K,
+\]
+因为对每个 $y$，满足 $x\equiv z-ny$ 的 $x\in\{0,\dots,K-1\}$ 恰有一个。
+\end{solution}
+
+\item 证明 $Z_0,\dots,Z_{K-1}$ 两两独立。
+\begin{solution}
+设 $m\neq n$。给定 $(u,v)$，方程组 $x+my\equiv u$，$x+ny\equiv v\pmod K$ 两式相减得 $(n-m)y\equiv v-u$。由于 $K$ 是素数，$0<\abs{n-m}<K$，$n-m$ 模 $K$ 有逆元，所以 $y$ 唯一确定，进而 $x$ 唯一确定。于是 $(x,y)\mapsto(Z_m,Z_n)$ 是 $\{0,\dots,K-1\}^2$ 到自身的双射。$(X,Y)$ 在 $\{0,\dots,K-1\}^2$ 上均匀分布（独立），所以 $(Z_m,Z_n)$ 也均匀分布：$P(Z_m=u,Z_n=v)=\frac1{K^2}=P(Z_m=u)P(Z_n=v)$。由推论~\ref{cor:independence:discrete}，$Z_m,Z_n$ 独立。
+\end{solution}
+
+\item 证明 $Z_0,Z_1,Z_2$ 不独立。
+\begin{solution}
+$Z_2\equiv X+2Y\equiv2(X+Y)-X\equiv2Z_1-Z_0\pmod K$，所以 $Z_0,Z_1$ 决定了 $Z_2$。于是 $P(Z_0=0,Z_1=0,Z_2=1)=0$（$Z_0=Z_1=0$ 蕴含 $Z_2=0$），而三个边缘概率的乘积是 $\frac1{K^3}>0$。
+\end{solution}
+
+\item 设 $f:\{0,\dots,K-1\}\to\R$，$\bar Z=\frac1K\sum_{n=0}^{K-1}f(Z_n)$。证明 $\Var(\bar Z)=\frac1K\Var(f(Z_0))$，从而 Chebyshev 不等式给出 $P(\abs{\bar Z-Ef(Z_0)}\geqslant\varepsilon)\leqslant\frac{\Var(f(Z_0))}{K\varepsilon^2}$。这个估计与 $K$ 个独立样本的情形完全一样，可是这里只用了两个随机数。
+\begin{solution}
+由 D2，$f(Z_m)$ 与 $f(Z_n)$（$m\neq n$）独立，从而不相关。方差的公式（命题~\ref{prop:expectation:variance}(4)）只用到两两不相关，所以 $\Var(\sum_nf(Z_n))=\sum_n\Var(f(Z_n))=K\Var(f(Z_0))$（由 D1，$f(Z_n)$ 同分布）。于是 $\Var(\bar Z)=\frac1{K^2}\cdot K\Var(f(Z_0))$。再由 Chebyshev 不等式，$E\bar Z=Ef(Z_0)$。
+
+这说明：Chebyshev 不等式型的弱大数定律只需要两两独立。这个想法在计算机科学中用来节省随机数。
+\end{solution}
+\end{questions}
+\end{probleme}
+
+\exercisepart{课外知识：秘书问题}
+
+\begin{probleme}{E}{秘书问题}
+你要从 $n$ 位应聘者中录用一位秘书。应聘者按随机的顺序逐一来面试，你只能比较已经面试过的人的优劣，并且必须当场决定录用与否，拒绝之后不能反悔。目标是录用到全体中最好的那一位。我们用 Rényi 记录定理分析下面的策略 $S_r$（$2\leqslant r\leqslant n$）：先拒绝前 $r-1$ 位，然后录用第一位比之前所有人都好的应聘者（若没有这样的人，就失败）。
+
+模型：第 $i$ 位应聘者的水平是 $X_i$，$X_1,\dots,X_n$ i.i.d.，分布函数连续。“比之前所有人都好”就是事件 $A_i$（记录）。
+\begin{questions}
+\item 设 $r\leqslant j\leqslant n$。证明“策略 $S_r$ 录用第 $j$ 位，并且第 $j$ 位是全体中最好的”这一事件（在零概率事件之外）等于
+\[
+A_j\cap\bigcap_{k=r}^{j-1}A_k^c\cap\bigcap_{k=j+1}^nA_k^c .
+\]
+\begin{solution}
+\emph{录用第 $j$ 位。}策略 $S_r$ 录用第 $j$ 位，当且仅当第 $j$ 位是 $r,r+1,\dots,n$ 中第一个创造记录的，即 $A_j\cap\bigcap_{k=r}^{j-1}A_k^c$。
+
+\emph{第 $j$ 位是全体中最好的。}这当且仅当 $X_j>X_i$ 对一切 $i\neq j$ 成立（零概率事件之外没有相同的值），即 $A_j$ 发生并且 $X_k<X_j$ 对一切 $k>j$ 成立。在 $A_j$ 上，我们对 $k=j+1,\dots,n$ 归纳地说明：“$X_{j+1},\dots,X_k$ 都小于 $X_j$”等价于“$A_{j+1},\dots,A_k$ 都不发生”。$k=j+1$：在 $A_j$ 上 $\max_{i\leqslant j}X_i=X_j$，所以 $A_{j+1}^c$（$X_{j+1}$ 不超过之前的最大值）就是 $X_{j+1}<X_j$。若对 $k-1$ 成立，在 $A_j\cap A_{j+1}^c\cap\cdots\cap A_{k-1}^c$ 上 $\max_{i<k}X_i=X_j$，同样 $A_k^c$ 等价于 $X_k<X_j$。所以“第 $j$ 位是最好的”等于 $A_j\cap\bigcap_{k>j}A_k^c$。
+
+两个事件取交，即得。
+\end{solution}
+
+\item 证明这个事件的概率是 $\frac{r-1}{n(j-1)}$。
+\begin{solution}
+由 Rényi 记录定理与命题~\ref{prop:independence:complements}，$A_j$ 与各个 $A_k^c$（$k\neq j$）独立，$P(A_k)=\frac1k$。所以概率为
+\[
+\frac1j\prod_{k=r}^{j-1}\Bigl(1-\frac1k\Bigr)\prod_{k=j+1}^n\Bigl(1-\frac1k\Bigr)=\frac1j\cdot\frac{r-1}{j-1}\cdot\frac jn=\frac{r-1}{n(j-1)},
+\]
+其中两个乘积都是可以相消的：$\prod_{k=r}^{j-1}\frac{k-1}k=\frac{r-1}{j-1}$，$\prod_{k=j+1}^n\frac{k-1}k=\frac jn$。$j=r$ 时第一个乘积是空积，等于 $1=\frac{r-1}{r-1}$，公式仍对。
+\end{solution}
+
+\item 证明策略 $S_r$ 成功的概率是 $p_n(r)=\frac{r-1}n\sum_{i=r-1}^{n-1}\frac1i$。
+\begin{solution}
+对不同的 $j$，E1 中的事件两两不交（录用的人只有一个），它们的并就是“$S_r$ 成功”。由 E2，
+\[
+p_n(r)=\sum_{j=r}^n\frac{r-1}{n(j-1)}=\frac{r-1}n\sum_{i=r-1}^{n-1}\frac1i .
+\]
+\end{solution}
+
+\item 设 $0<x<1$，取 $r_n$ 使 $\frac{r_n-1}n\to x$。证明 $p_n(r_n)\to x\log\frac1x$。由此说明，取 $r_n\approx n/e$，成功的概率趋于 $\frac1e\approx0.368$，并且这是这一类策略所能达到的最好的极限。
+\begin{solution}
+记 $H_m=\sum_{i=1}^m\frac1i$。数学分析中已知 $H_m-\log m\to\gamma$（Euler 常数）。于是 $\sum_{i=r_n-1}^{n-1}\frac1i=H_{n-1}-H_{r_n-2}=\log\frac{n-1}{r_n-2}+o(1)\to\log\frac1x$（因为 $r_n-2\to\infty$，$\frac{r_n-2}{n-1}\to x$）。所以 $p_n(r_n)\to x\log\frac1x$。
+
+函数 $g(x)=x\log\frac1x=-x\log x$ 在 $(0,1)$ 上的导数是 $-\log x-1$，在 $x=\frac1e$ 处为零，在其左边为正、右边为负，所以最大值是 $g(\frac1e)=\frac1e$。
+
+\emph{注。}一个令人意外的结论是：不论 $n$ 多大，都能以大约 $37\%$ 的概率选中最好的人。可以证明，在一切“只依赖于相对排名”的策略中，形如 $S_r$ 的策略已经是最优的，这需要最优停止的理论，我们不再展开。
+\end{solution}
+\end{questions}
+\end{probleme}

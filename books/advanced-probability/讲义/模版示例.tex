@@ -1,0 +1,90 @@
+% !TEX program = xelatex
+% 每个环境的用法示例；改动 yupin-notes.cls 后重新编译本文件检查。
+\documentclass{yupin-notes}
+\input{课程设置}
+\begin{document}
+\makecoursetitle
+\tableofcontents
+
+\lecture{示例：概率空间，$\sigma$-代数，测度的连续性}
+\label{lec:demo}
+
+一段导入正文。术语第一次出现时加黑并标注英文：\term{$\sigma$-代数}（$\sigma$-algebra）。
+
+\topic{$\sigma$-代数}
+
+\begin{summary}
+方框导语：本节要做什么，为什么。
+\end{summary}
+
+\begin{definition}[$\sigma$-代数]\label{def:demo:sigma}
+设 $\Omega$ 为非空集合，$\cF\subseteq 2^\Omega$。若 (1) $\Omega\in\cF$；(2) $A\in\cF\Rightarrow A^c\in\cF$；(3) $A_1,A_2,\dots\in\cF\Rightarrow\bigcup_n A_n\in\cF$，则称 $\cF$ 为 $\Omega$ 上的 \marginterm{$\sigma$-代数}。
+\end{definition}
+
+\begin{example}
+$\{\varnothing,\Omega\}$ 与 $2^\Omega$ 都是 $\sigma$-代数。
+\end{example}
+
+\begin{workedexample}\label{we:demo:coin}
+抛两次公平硬币，写出“至少一次正面”这一事件的概率。
+\end{workedexample}
+\begin{solution}
+样本空间有四个等可能的结果，事件的补是“两次都是反面”，概率为 $1/4$，所以所求概率为 $3/4$。
+\end{solution}
+
+引用例题：\wegref{we:demo:coin}。
+
+\begin{remark}
+注记不编号。
+\end{remark}
+
+\begin{theorem}[测度的连续性]\label{thm:demo:cont}
+若 $A_n\uparrow A$，则 $P(A_n)\uparrow P(A)$。于是 $X_n\toas X$ 蕴含 $X_n\toP X$，且 $E\abs{X}=\int\abs{X}\dd P$，$\Var(X)=E X^2-(EX)^2$，$\one_A$ 为示性函数。
+\end{theorem}
+\begin{proof}
+令 $B_1=A_1$，$B_n=A_n\setminus A_{n-1}$……由定义~\ref{def:demo:sigma} 知 $B_n\in\cF$。
+\end{proof}
+
+\begin{theorem*}[Carathéodory 扩张定理]
+不编号的定理。
+\end{theorem*}
+
+\begin{practice}
+正文中的小练习。
+\end{practice}
+
+\homework{测度的连续性与 Borel–Cantelli 引理}
+
+\exercisepart{基本习题}
+\begin{exercises}{A}{课堂内容的补充}
+  \item\label{ex:demo:A1} 证明定理~\ref{thm:demo:cont} 的下降版本。
+  \begin{solution}
+  思路：取补集化为上升的情形。这里只是示范解答框的样子。
+  \end{solution}
+  \item 第二题。
+\end{exercises}
+
+\begin{probleme}{B}{Borel–Cantelli 引理}
+引导语。
+\begin{questions}
+  \item 第一问。
+  \item 第二问。
+  \begin{questions}\item 子问。\end{questions}
+\end{questions}
+过渡文字。
+\begin{questions}[resume]
+  \item 第三问，可用 \exref{ex:demo:A1} 的结论。
+\end{questions}
+\end{probleme}
+
+\thinkingpart
+\begin{probleme}*[问题]{C}{Vitali 不可测集}
+难题。
+\begin{questions}\item 第一问。\end{questions}
+\end{probleme}
+
+\exercisepart{课外知识：Kolmogorov 0-1 律}
+\begin{probleme}{D}{}
+\begin{questions}\item 第一问。\end{questions}
+\end{probleme}
+\end{document}
