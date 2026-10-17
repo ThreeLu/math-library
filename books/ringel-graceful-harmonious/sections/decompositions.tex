@@ -1,0 +1,69 @@
+\section{Decomposing complete graphs into trees}\label{sec:decompositions}
+
+A graph $G$ \term{decomposes} into copies of $H$ if $E(G)$ is a disjoint union of edge sets of subgraphs isomorphic to $H$~\cite[\S1]{mps20}. Decomposition problems have a long history. Euler's question of 1782 about orthogonal Latin squares asks, in this language, for a decomposition of $K_{n,n,n,n}$ into copies of $K_4$. Kirkman showed in 1847 that $K_n$ decomposes into triangles if and only if $n\equiv1,3\pmod6$. The existence of designs, going back to Steiner (1853) and proved by Keevash (2014), concerns decompositions into \emph{small} cliques. Walecki's round dances of 1882 decompose $K_{2n}$ into $n$ Hamilton paths, a decomposition into \emph{large} graphs. Which other large graphs decompose a complete graph?
+
+\topic{Ringel's conjecture}
+
+\begin{conjecture}[Ringel~\cite{rin63}]\label{conj:ringel}
+For every tree $T$ with $n$ edges, $K_{2n+1}$ decomposes into $2n+1$ copies of $T$.
+\end{conjecture}
+
+The numbers fit: $K_{2n+1}$ has $\binom{2n+1}{2}=(2n+1)n$ edges, exactly enough for $2n+1$ copies of a tree with $n$ edges. Ringel asks whether this host works for \emph{every} such tree; the edge count alone does not guarantee a decomposition.
+
+\begin{example}\label{ex:stars-paths}
+Two families are easy, on the vertex set $\Z_{2n+1}$. For stars, take the star at $i$ with leaves $i+1,\dots,i+n$; the $2n+1$ stars use each edge $\{x,x+d\}$, $1\leq d\leq n$, exactly once. For paths, rotate Walecki's zigzag $2n+1$ times~\cite{luc1883}.
+\end{example}
+
+\topic{Rosa's graceful labellings}
+
+\begin{definition}[Rosa~\cite{ros67}: $\beta$-valuation; the name ``graceful'' is due to Golomb]\label{def:graceful}
+A labelling $f\colon V(T)\to\{0,1,\dots,n\}$ of a tree $T$ with $n$ edges is \term{graceful} if it is injective and the edge labels $|f(x)-f(y)|$ are distinct, and hence exactly $1,2,\dots,n$.
+\end{definition}
+
+For example, the path with $3$ edges labelled $0,3,1,2$ along the path has edge labels $3,2,1$, and Figure~\ref{fig:fork} shows a graceful labelling of a tree with $4$ edges. Rosa introduced such labellings ``as tools for decomposing the complete graph into isomorphic subgraphs''~\cite[\S1]{gal25}.
+
+\begin{figure}[ht]
+\centering
+\input{figures/fork}
+\caption{A graceful labelling of a tree with $4$ edges; the edge labels (red) are $4,3,2,1$.}
+\label{fig:fork}
+\end{figure}
+
+\begin{theorem}[Rosa~\cite{ros67}; see~\cite{mps20}, \S1]\label{thm:rosa}
+If a tree $T$ with $n$ edges has a graceful labelling, then $K_{2n+1}$ decomposes into $2n+1$ copies of $T$, all obtained from one copy by rotation.
+\end{theorem}
+
+\begin{proof}
+Place $T$ on the vertices $f(V(T))\subseteq\{0,\dots,n\}$ of $K_{2n+1}$, whose vertex set is $\Z_{2n+1}$, and let $T_i=T+i$ for $i\in\Z_{2n+1}$. The edge of $T$ with label $d$ joins some $u$ and $u+d$. Every edge of $K_{2n+1}$ has the form $\{x,x+d\}$ with a unique $d\in\{1,\dots,n\}$, and it lies in exactly one $T_i$, namely the one with $i=x-u$.
+\end{proof}
+
+\begin{figure}[ht]
+\centering
+\input{figures/rosa-k7}
+\caption{$n=3$: the path $0,3,1,2$ (solid) and its rotation by $1$ (dashed). The $7$ rotations decompose $K_7$.}
+\label{fig:rosa-k7}
+\end{figure}
+
+\begin{conjecture}[Rosa~\cite{ros67}; also called the Ringel--Kotzig conjecture]\label{conj:graceful}
+Every tree has a graceful labelling.
+\end{conjecture}
+
+Conjecture~\ref{conj:graceful} would give Ringel's conjecture, with a cyclic decomposition. It is known for caterpillars~\cite{ros67}, for trees with at most $4$ leaves, for trees of diameter at most $5$, for symmetrical trees, for olive trees and for other classes, and, by computer, for all trees with at most $35$ vertices (Fang, 2010)~\cite[\S2.1]{gal25}. Kotzig called the effort to prove it a ``disease''~\cite[\S2.1]{gal25}. Rosa observed that graphs fail to be graceful for three reasons: too many vertices, too many edges, or the wrong parity, as for the cycles $C_{4k+1}$ and $C_{4k+2}$~\cite[\S1]{gal25}.
+
+\topic{$\rho$-labellings and Kotzig's conjecture}
+
+A graceful labelling uses the labels $\{0,\dots,n\}$, but for the decomposition only the differences modulo $2n+1$ matter. For $x,y\in\Z_{2n+1}$ let
+\[
+\ell(x,y)=\min(x-y,\ y-x),
+\]
+with $x-y$ and $y-x$ read in $\{0,\dots,2n\}$; this is the \term{length} of the edge $xy$.
+
+\begin{definition}[$\rho$-labelling, in the form of~\cite{mps20}, \S1]\label{def:rho}
+A \term{$\rho$-labelling} of a tree $T$ with $n$ edges is an injective map $f\colon V(T)\to\Z_{2n+1}$ such that the $n$ edges have distinct lengths $\ell(f(x),f(y))\in\{1,\dots,n\}$.
+\end{definition}
+
+\begin{conjecture}[Kotzig; see Rosa~\cite{ros67} and~\cite{mps20}, \S1]\label{conj:kotzig}
+For every tree $T$ with $n$ edges, $K_{2n+1}$ has a cyclic decomposition into copies of $T$, that is, one invariant under $x\mapsto x+1$.
+\end{conjecture}
+
+Every graceful labelling is a $\rho$-labelling, and the proof of Theorem~\ref{thm:rosa} uses only the $\rho$-property.

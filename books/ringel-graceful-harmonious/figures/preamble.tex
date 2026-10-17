@@ -1,0 +1,8 @@
+% Helper macros for this survey's figures (from the talk's preamble).
+\newcommand{\polygonPoints}[4]{%
+  \foreach \k in {0,...,\numexpr#2-1\relax}
+    \coordinate (#1\k) at ($({90-360*\k/#2}:#3)+(#4,0)$);}
+\newcommand{\polygonLabels}[4]{%
+  \foreach \k in {0,...,\numexpr#2-1\relax} {
+    \node[overtex] at (#1\k) {};
+    \node[font=\scriptsize] at ($({90-360*\k/#2}:#3+0.3)+(#4,0)$) {$\k$};}}

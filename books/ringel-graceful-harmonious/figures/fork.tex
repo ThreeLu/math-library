@@ -1,0 +1,11 @@
+\begin{tikzpicture}[every node/.style={font=\small}]
+    \node[bvertex] (u) at (0,1) {}; \node[above=2pt] at (u) {$4$};
+    \node[bvertex] (a) at (-1.4,0) {}; \node[below=2pt] at (a) {$0$};
+    \node[bvertex] (b) at (0,0) {}; \node[below=2pt] at (b) {$1$};
+    \node[bvertex] (c) at (1.4,0) {}; \node[right=2pt] at (c) {$2$};
+    \node[bvertex] (d) at (1.4,-1) {}; \node[right=2pt] at (d) {$3$};
+    \draw (u)--node[above left=-1pt, RainbowRed] {$4$} (a);
+    \draw (u)--node[left=-1pt, RainbowRed] {$3$} (b);
+    \draw (u)--node[above right=-1pt, RainbowRed] {$2$} (c);
+    \draw (c)--node[left=1pt, RainbowRed] {$1$} (d);
+  \end{tikzpicture}

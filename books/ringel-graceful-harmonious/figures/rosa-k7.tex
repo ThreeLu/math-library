@@ -1,0 +1,12 @@
+\begin{tikzpicture}[every node/.style={font=\footnotesize}]
+    \polygonPoints{c}{7}{1.3}{0}
+    \foreach \i in {0,...,6} \foreach \j in {0,...,6} {
+      \ifnum\i<\j \draw[gray!25] (c\i)--(c\j); \fi}
+    \draw[col3, line width=1.4pt] (c0)--(c3);
+    \draw[col2, line width=1.4pt] (c3)--(c1);
+    \draw[col1, line width=1.4pt] (c1)--(c2);
+    \draw[col3, line width=1pt, dashed] (c1)--(c4);
+    \draw[col2, line width=1pt, dashed] (c4)--(c2);
+    \draw[col1, line width=1pt, dashed] (c2)--(c3);
+    \polygonLabels{c}{7}{1.3}{0}
+  \end{tikzpicture}

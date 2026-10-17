@@ -1,0 +1,51 @@
+\section{Hamilton paths with prescribed colours}\label{sec:hamilton-paths}
+
+\topic{Hahn's question}
+
+\begin{problem}[Hahn, 1980, as quoted by Maamoun--Meyniel~\cite{mm84}]\label{prob:hahn}
+Let $n\geq2k$, $k\geq2$ and $(n,k)\neq(4,2)$. In every colouring of the edges of $K_n$ in which each colour appears at most $k$ times, is there a rainbow Hamilton path?
+\end{problem}
+
+The intuition is that few edges per colour should make a rainbow path easy to find. A colouring is \term{proper} if adjacent edges receive different colours; then each colour class is a matching, of size at most $n/2$. An algebraic colouring answers Hahn's question in the negative.
+
+\begin{theorem}[Maamoun--Meyniel~\cite{mm84}]\label{thm:mm}
+Let $n=2^p$ with $p\geq2$, identify $V(K_n)$ with $\mathbb F_2^p$, and give the edge $xy$ the colour $x+y$. This colouring is proper, every colour appears exactly $n/2$ times, and there is no rainbow Hamilton path.
+\end{theorem}
+
+\begin{proof}
+A rainbow Hamilton path $x_1,\dots,x_n$ has $n-1$ edges, so it uses each non-zero colour exactly once. In $\mathbb F_2^p$,
+\[
+x_n-x_1=\sum_{i}(x_{i+1}-x_i)=\sum_{c\neq0}c=0,
+\]
+so $x_n=x_1$, a contradiction.
+\end{proof}
+
+\begin{figure}[ht]
+\centering
+\input{figures/maamoun-meyniel}
+\caption{The sum colouring of $K_{\mathbb F_2^2}$: each colour is a perfect matching, and none of the $24$ orderings of the vertices is rainbow.}
+\label{fig:maamoun-meyniel}
+\end{figure}
+
+\topic{Buratti's problem}
+
+For $x,y\in\Z_v$ the \term{length} of the edge $xy$ of $K_v$ is $\ell(x,y)=\min(|x-y|,\,v-|x-y|)$~\cite[\S1]{hr09}.
+
+\begin{conjecture}[Buratti, 2007, communicated to Rosa~\cite{hr09}]\label{conj:buratti}
+Let $p=2n+1$ be prime and let $L$ be any multiset of $2n$ elements of $\{1,\dots,n\}$. Then $K_p$ has a Hamilton path whose multiset of edge lengths is exactly $L$.
+\end{conjecture}
+
+\begin{figure}[ht]
+\centering
+\input{figures/buratti}
+\caption{$p=7$ and $L=\{1,1,2,2,3,3\}$: the Hamilton path $0,1,2,5,3,6,4$.}
+\label{fig:buratti}
+\end{figure}
+
+With only one length the conjecture is easy, and with two lengths it was solved by Horak and Rosa~\cite{hr09}. Meszka verified it by computer for all $p\leq23$~\cite[\S1]{hr09}; for $p=7$ all $28$ lists are realised. Horak and Rosa extended the question to all $v$.
+
+\begin{conjecture}[Horak--Rosa~\cite{hr09}; in the form of Pasotti--Pellegrini~\cite{pp14}]\label{conj:bhr}
+A multiset $L$ of $v-1$ elements of $\{1,\dots,\lfloor v/2\rfloor\}$ is the list of edge lengths of a Hamilton path of $K_v$ if and only if, for every divisor $d$ of $v$, at most $v-d$ elements of $L$ are multiples of $d$.
+\end{conjecture}
+
+The condition is necessary. An edge whose length is a multiple of $d$ joins two vertices in the same coset of the subgroup $d\Z_v$, which has $d$ cosets. The edges of the path with such lengths form a forest whose components stay inside cosets, so it has at least $d$ components and hence at most $v-d$ edges. For example, for $v=4$ and $L=\{2,2,2\}$ there are three multiples of $2$ but $v-d=2$; indeed only the two edges $\{0,2\}$ and $\{1,3\}$ have length $2$. For $v=p$ prime the condition is empty, and Conjecture~\ref{conj:bhr} is Buratti's conjecture.

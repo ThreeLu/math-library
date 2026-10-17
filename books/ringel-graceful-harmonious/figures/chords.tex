@@ -1,0 +1,20 @@
+\begin{tikzpicture}[every node/.style={font=\footnotesize}]
+    \polygonPoints{a}{7}{1.25}{0}
+    \foreach \i in {0,...,6} \foreach \j in {0,...,6} {
+      \ifnum\i<\j
+        \pgfmathtruncatemacro{\d}{min(\j-\i,7-\j+\i)}
+        \ifcase\d\or \draw[col1] (a\i)--(a\j); \or \draw[col2] (a\i)--(a\j);
+        \or \draw[col3] (a\i)--(a\j); \fi
+      \fi}
+    \polygonLabels{a}{7}{1.25}{0}
+    \node[align=center] at (0,-1.95) {colour $=$ length:\\
+      \textcolor{RainbowRed}{$1$}, \textcolor{RainbowBlue}{$2$}, \textcolor{RainbowGreen}{$3$}};
+    \polygonPoints{b}{7}{1.25}{5}
+    \foreach \i in {0,...,6} \foreach \j in {0,...,6} {
+      \ifnum\i<\j \draw[gray!25] (b\i)--(b\j); \fi}
+    \draw[col1, line width=1.2pt] (b1)--(b6) (b2)--(b5) (b3)--(b4);
+    \draw[col2, line width=1.2pt] (b0)--(b1) (b2)--(b6) (b3)--(b5);
+    \polygonLabels{b}{7}{1.25}{5}
+    \node[align=center] at (5,-1.95) {colour $=$ direction:\\
+      \textcolor{RainbowRed}{$x+y\equiv0$}, \textcolor{RainbowBlue}{$x+y\equiv1$}};
+  \end{tikzpicture}

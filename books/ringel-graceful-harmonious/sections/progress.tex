@@ -1,0 +1,145 @@
+\section{Progress}\label{sec:progress}
+
+\topic{Ringel's and Kotzig's conjectures}
+
+Ringel's conjecture was proved for very large bounded-degree trees by Joos, Kim, K\"uhn and Osthus, and approximate versions for trees with $\Delta(T)=O(n/\log n)$ were obtained by Ferber and Samotij and by Adamaszek, Allen, Grosu and Hladk\'y~\cite[\S1]{mps20}. Montgomery, Pokrovskiy and Sudakov~\cite{mps18} showed that every $2$-factorised $K_{2n+1}$ contains a rainbow copy of every tree with $(1-o(1))n$ edges.
+
+\begin{theorem}[Montgomery--Pokrovskiy--Sudakov~\cite{mps20}; Keevash--Staden~\cite{ks20}]\label{thm:ringel}
+For all sufficiently large $n$, the ND-coloured $K_{2n+1}$ contains a rainbow copy of every tree with $n$ edges. Hence Ringel's and Kotzig's conjectures hold for large $n$.
+\end{theorem}
+
+The methods are absorption, randomised embeddings, and a deterministic, almost graceful embedding for trees with very high degrees~\cite[\S1]{mps20}.
+
+\topic{Returning to the fixed label interval}
+
+The Ringel--Kotzig problem allows labels throughout $\Z_{2m+1}$ for a tree with $m$ edges, while gracefulness requires the fixed interval $\{0,\dots,m\}$. From now on we write $n=|V(T)|$, so that the exact target is $n-1$ distinct differences.
+
+\begin{theorem}[Adamaszek--Allen--Grosu--Hladk\'y~\cite{aagh16}]\label{thm:aagh}
+For every $\varepsilon>0$ there are $\eta>0$ and $n_0$ such that, if $n\geq n_0$ and $\Delta(T)\leq\eta n/\log n$, then $T$ has an injective labelling into $\{1,\dots,\lceil(1+\varepsilon)n\rceil\}$ with all differences distinct.
+\end{theorem}
+
+This retains every edge colour but enlarges the label interval. The next result keeps exactly $n$ labels and counts how many colours survive.
+
+\begin{definition}[Letzter--Pokrovskiy--Williams~\cite{lpw25}, \S1]\label{def:gracesize}
+The \term{gracesize} $\operatorname{gs}(T)$ of a tree $T$ is the largest number of distinct edge differences under a bijection $V(T)\to\{1,\dots,n\}$.
+\end{definition}
+
+Colouring the edge $ij$ of $K_{\{1,\dots,n\}}$ by $|i-j|$,
+\[
+\operatorname{gs}(T)=\max_{\text{spanning copies }T'\cong T}\bigl|\{\text{colours on }E(T')\}\bigr| .
+\]
+For example, on four labels the path $1,2,3,4$ has differences $1,1,1$, while the path $1,4,2,3$ has differences $3,2,1$ and is graceful. Exact gracefulness means that some spanning copy uses all $n-1$ colours.
+
+\begin{theorem}[Letzter--Pokrovskiy--Williams~\cite{lpw25}]\label{thm:lpw}
+For every $\varepsilon>0$ and every sufficiently large $n$, every $n$-vertex tree has a bijective labelling by $\{1,\dots,n\}$ with at least $(1-\varepsilon)n$ distinct edge differences.
+\end{theorem}
+
+In the difference colouring, some spanning copy of $T$ thus uses at least $(1-\varepsilon)n$ colours, with no restriction on the maximum degree. The theorem counts colours on the whole tree; selecting one edge of each colour need not leave a connected subtree. (The paper appeared in November 2025 and was revised in July 2026.)
+
+\topic{Graceful spiders and combs}
+
+The next results ask for all $n-1$ colours but restrict the shape of the tree. A \term{spider} consists of legs meeting at one centre; write $\ell_i$ for the number of edges in leg $i$.
+
+\begin{theorem}[Shan--Zhong~\cite{sz26}, Theorem~3]\label{thm:sz3}
+A spider with $s\geq2$ legs is graceful if $\ell_{i+1}\geq2\ell_i+2$ for $2\leq i<s$ and
+\[
+\ell_2\geq
+\begin{cases}
+2\ell_1+2, & \ell_2\not\equiv1\pmod4,\\
+2\ell_1+4, & \ell_2\equiv1\pmod4.
+\end{cases}
+\]
+\end{theorem}
+
+Here the leg lengths grow fast enough for an exact graceful labelling, and in the difference-coloured $K_{|V(T)|}$ the spanning spider is rainbow. A different family allows arbitrarily many short legs.
+
+\begin{theorem}[Shan--Zhong~\cite{sz26}, Theorem~4]\label{thm:sz4}
+A spider with one leg of arbitrary length and all other legs of length at most $2$ has a graceful labelling with centre label $0$.
+\end{theorem}
+
+\begin{theorem}[Shan--Zhong~\cite{sz26}, Theorem~5]\label{thm:sz5}
+Every spider with at most three legs longer than $2$ is graceful.
+\end{theorem}
+
+Theorem~\ref{thm:sz4} also prescribes the centre label, which in the rainbow embedding specifies the host vertex of the centre; Theorem~\ref{thm:sz5} only asserts gracefulness.
+
+\begin{theorem}[Dumitru--Nacu~\cite{dn26}, Theorem~2.4]\label{thm:dn-comb}
+Every comb full binary tree on $n$ vertices has a graceful labelling with alternating extremes $0,n-1,1,n-2,\dots$ pinned along a longest root-to-leaf spine.
+\end{theorem}
+
+A full binary tree has two children at each internal vertex; in a comb, the internal vertices lie on one root-to-leaf path. Combs are caterpillars, so they were already known to be graceful; the new conclusion prescribes the spine labels, which fixes further vertex positions in the rainbow embedding. The same authors fix the long legs of a spider and let the number of leaves at the hub grow.
+
+\begin{theorem}[Dumitru--Nacu~\cite{dn26}, Corollary~3.6]\label{thm:dn-spider}
+Fix leg lengths $c,L_1,\dots,L_r\geq2$. The spider $S(c,L_1,\dots,L_r,1^t)$ has a graceful labelling with hub label $1$ for all sufficiently large $t$.
+\end{theorem}
+
+Here $1^t$ denotes $t$ additional pendant edges at the common centre. For each fixed collection of long legs, adding enough such edges gives a rainbow spanning spider in the difference colouring, with the hub at host vertex $1$; the threshold may depend on the lengths of the long legs.
+
+\topic{From differences back to sums}
+
+We now change the edge colour from $|x-y|$ to $x+y$ in an abelian group $G$. A rainbow spanning tree in $K_G$ is an injective labelling with distinct edge sums. Recall that the \term{exponent} of $G$ is the least positive integer $m$ with $mg=0$ for all $g\in G$.
+
+\begin{theorem}[M\"uyesser--Pokrovskiy~\cite{mp25b}]\label{thm:mp-sum}
+Fix $\Delta$. For large $n$, an $n$-vertex tree $T$ with $\Delta(T)\leq\Delta$ has a rainbow copy in $K_G$, where $G$ is abelian of order $n$, unless one of the following holds:
+\begin{enumerate}
+\item $G=\Z_2^k$, and $T$ is a path or has exactly two vertices of even degree;
+\item $G$ has exponent $m$, two adjacent vertices $u,v$ have degrees $0\pmod m$, and all other vertices have degrees $1\pmod m$;
+\item $G=\Z_2^k$, and the four vertices of even degree of $T$ carry a perfect matching of $T$.
+\end{enumerate}
+\end{theorem}
+
+These obstructions are conditions on both the group and the degree pattern of the tree, and explain why a theorem for arbitrary sum colourings needs exceptions. Through Proposition~\ref{prop:harm}, Theorem~\ref{thm:mp-sum} settles the Graham--Sloane conjecture, and the conjecture of Chang, Hsu and Rogers, for bounded-degree trees.
+
+\topic{Harmonious groups}
+
+We return to cyclic orderings of a whole group, in which the vertices and the adjacent products must each enumerate $G$; the graph object is a rainbow Hamilton cycle. Beals et al.~\cite{bghj91} showed that abelian groups are harmonious except the elementary abelian $2$-groups and the groups with a unique involution, and that every group of odd order is harmonious. M\"uyesser and Pokrovskiy~\cite{mp22} showed that every sufficiently large group satisfying the Hall--Paige condition, other than $\Z_2^k$, is harmonious. Javaheri~\cite{jav25} showed in December 2025 that every group of odd order not divisible by $3$ is \term{R-harmonious}: both the vertices and the cyclic products enumerate $G\setminus\{e\}$. Can the cyclic ordering also respect inversion?
+
+\begin{definition}[Javaheri~\cite{jav26}, Definition~1.1]\label{def:symmetric}
+A harmonious ordering $g_0,\dots,g_{\ell-1}$ is \term{symmetric} if $g_{\ell-i}=g_i^{-1}$ for $1\leq i\leq\ell-1$.
+\end{definition}
+
+\begin{theorem}[Javaheri~\cite{jav26}, Theorem~1.2]\label{thm:symmetric}
+A finite group is symmetric harmonious if and only if it has odd order.
+\end{theorem}
+
+Every group of odd order was known to have some harmonious ordering; Theorem~\ref{thm:symmetric} guarantees one compatible with inversion. (The preprint appeared in November 2025, the journal version in 2026.)
+
+\begin{example}\label{ex:z5-symmetric}
+In $\Z_5$, written additively, take the vertex order $0,1,2,3,4$. The cyclic sums are $1,3,0,2,4$, and opposite positions are paired by inversion: $4=-1$ and $3=-2$.
+\end{example}
+
+In the complete digraph with $x\to y$ coloured $xy$, listing every group element once makes the cycle Hamiltonian, listing every adjacent product once makes it rainbow, and the condition $g_{\ell-i}=g_i^{-1}$ pairs positions in the vertex order by inversion. The symmetry is a condition on the ordering; no extra graph automorphism is asserted.
+
+A group is \term{$\#$-harmonious} if some cyclic ordering of $G\setminus\{e\}$ has cyclic products enumerating $G\setminus\{e\}$~\cite[Definition~1.4]{jav26}; this is the property called R-harmonious in~\cite{jav25}. In the product-coloured digraph restricted to $G\setminus\{e\}$, the desired cycle visits every remaining vertex and uses exactly the non-identity colours, so it has length $|G|-1$. This differs from an R-sequencing, where the arc $x\to y$ has colour $x^{-1}y$ rather than $xy$.
+
+\begin{theorem}[Javaheri~\cite{jav26}, Theorem~1.5]\label{thm:sharp}
+Let $K$ be an abelian group that has no unique involution, is not an elementary abelian $2$-group, and is not $\Z_3$. For groups $H_1,\dots,H_k$ of odd order, the iterated semidirect product
+\[
+((\cdots(K\ltimes H_1)\ltimes H_2)\cdots)\ltimes H_k,
+\]
+in which $H_i$ is normal at the $i$-th extension step, is $\#$-harmonious.
+\end{theorem}
+
+Each such extension therefore admits the rainbow cycle just described. The same symmetric-ordering theorem supplies the direct-product extension of R*-sequenceability.
+
+\topic{The Buratti--Horak--Rosa conjecture}
+
+Horak and Rosa~\cite{hr09} settled the case of two lengths, and Ollis, Pasotti, Pellegrini and Schmitt~\cite{opps20} many lists with three or four lengths and families with monotone multiplicities. A\u{g}\i rseven and Ollis extended the available three-length families by grid-based constructions~\cite{ao24}, isolated the coprime case, in which every length $x$ satisfies $\gcd(x,v)=1$~\cite{ao24b}, and gave further construction techniques for lists with small support~\cite{ao25}. Note that a list $L$ has $v-1$ entries counted with multiplicity, so a valid-ordering theorem for a subset of a group does not automatically realise such a list.
+
+A \term{linear realisation} of $L$ is a permutation $x_0,\dots,x_{v-1}$ of $\{0,\dots,v-1\}$ with
+\[
+\{|x_i-x_{i-1}|:1\leq i\leq v-1\}=L\quad\text{as multisets}.
+\]
+Choosing signed increments $d_i=x_i-x_{i-1}$, the initial value $x_0$ and all partial sums must visit each label exactly once. Since the cyclic length is $\min(|x-y|,v-|x-y|)$, a linear realisation gives the desired cyclic list when every length is at most $\lfloor v/2\rfloor$. Multiplication by a unit modulo $v$ relabels the cyclic problem, so a coprime length in the support can be normalised to $1$~\cite[\S1]{ao24b}. Prescribed repeated edge lengths require more than distinct partial sums.
+
+Write $L=\{1^a,x^b,y^c\}$ and $v=a+b+c+1$.
+
+\begin{theorem}[A\u{g}\i rseven--Ollis~\cite{ao24}, a case of Theorem~1.3]\label{thm:ao24}
+Suppose $1<x<y\leq\lfloor v/2\rfloor$, $x$ is even, $a+b\geq y-1$ and $a\geq x+y-2$. Then $L$ has a linear realisation, and hence a cyclic realisation.
+\end{theorem}
+
+\begin{theorem}[A\u{g}\i rseven--Ollis~\cite{ao25}, Theorem~1.9]\label{thm:ao25}
+For $k\in\{1,2\}$, $y>k+1$ and $a\geq y$, the list $\{1^a,(y-k)^b,y^c\}$ has a standard linear realisation, that is, one starting at $0$.
+\end{theorem}
+
+For the second family the cyclic interpretation again requires $y\leq\lfloor(a+b+c+1)/2\rfloor$. These are construction families; the full conjecture with the divisor condition remains open.

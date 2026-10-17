@@ -102,3 +102,13 @@ books:
     source: books/graham-sequencings
     main: main.tex
     slides: books/graham-sequencings/slides/Graham-Rearrangement-Conjecture-slides.pdf
+
+  - slug: ringel-graceful-harmonious
+    title: Ringel, Graceful and Harmonious
+    subtitle: Rainbow trees in colourings defined by a cyclic group
+    category: surveys
+    lang: en
+    status: active
+    source: books/ringel-graceful-harmonious
+    main: main.tex
+    slides: books/ringel-graceful-harmonious/slides/Ringel-Graceful-Harmonious-slides.pdf

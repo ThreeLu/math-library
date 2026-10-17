@@ -1,0 +1,12 @@
+\begin{tikzpicture}[scale=1.05, every node/.style={font=\footnotesize}]
+    \node[overtex] (a) at (0,1.5) {}; \node[above left=1pt of a] {$00$};
+    \node[overtex] (b) at (1.7,1.5) {}; \node[above right=1pt of b] {$01$};
+    \node[overtex] (c) at (1.7,0) {}; \node[below right=1pt of c] {$11$};
+    \node[overtex] (d) at (0,0) {}; \node[below left=1pt of d] {$10$};
+    \draw[col1] (a)--(b) node[midway,above] {$01$};
+    \draw[col1] (d)--(c) node[midway,below] {$01$};
+    \draw[col2] (a)--(d) node[midway,left] {$10$};
+    \draw[col2] (b)--(c) node[midway,right] {$10$};
+    \draw[col3] (a)--(c) node[pos=.42,above right] {$11$};
+    \draw[col3] (b)--(d) node[pos=.42,below right] {$11$};
+  \end{tikzpicture}

@@ -1,0 +1,41 @@
+\section{Open problems}\label{sec:open}
+
+\begin{conjecture}[Rosa~\cite{ros67}]\label{conj:graceful-open}
+Every tree $T$ with $n$ edges has an injective labelling $f\colon V(T)\to\{0,\dots,n\}$ whose edge differences $|f(x)-f(y)|$ are distinct.
+\end{conjecture}
+
+By Proposition~\ref{prop:graceful}: for every tree $T$ with $n$ edges, the complete graph $K_{n+1}$ on $\{0,\dots,n\}$, with $xy$ coloured $|x-y|$, contains a rainbow spanning copy of $T$. It is known for caterpillars and many special classes, for all trees with at most $35$ vertices (Fang), with $(1-\varepsilon)n$ distinct differences for large trees (Theorem~\ref{thm:lpw}), and in an approximate form for $\Delta=O(n/\log n)$ (Theorem~\ref{thm:aagh}). The conjecture ``in full generality \dots\ remains open''~\cite[\S1]{lpw25}.
+
+\begin{conjecture}[Kotzig; Ringel~\cite{rin63}]\label{conj:kotzig-open}
+Every tree $T$ with $n$ edges has a $\rho$-labelling: an injective map $f\colon V(T)\to\Z_{2n+1}$ whose edges have distinct lengths $\ell(f(x),f(y))$.
+\end{conjecture}
+
+By Proposition~\ref{prop:kotzig}: for every tree $T$ with $n$ edges the ND-coloured $K_{2n+1}$ contains a rainbow copy of $T$; equivalently, $K_{2n+1}$ has a cyclic decomposition into copies of $T$. It is known for all sufficiently large $n$ (Theorem~\ref{thm:ringel}) and for every graceful tree, hence for all trees with at most $35$ vertices. Open are the trees with $36$ to $n_0$ vertices that are not known to be graceful; $n_0$ is not explicit.
+
+\begin{conjecture}[Graham--Sloane~\cite{gs80}]\label{conj:gs-open}
+Every tree $T$ with $n$ edges has a labelling $f\colon V(T)\to\Z_n$, with exactly one value used twice, whose edge sums $f(x)+f(y)$ are distinct.
+\end{conjecture}
+
+By Proposition~\ref{prop:harm}, the following graph form is stronger: for every tree $T$ on $n$ vertices, the sum-coloured $K_{\Z_n}$ contains a rainbow copy of $T$~\cite[Conjecture~1.3]{mp25b}; Chang, Hsu and Rogers (1987) conjectured that one can even avoid the colour $0$. The conjecture is known for all trees with at most $31$ vertices (Fang), for caterpillars, and for bounded-degree trees with $n$ large (Theorem~\ref{thm:mp-sum}). Trees of unbounded degree are open.
+
+\begin{problem}[after M\"uyesser--Pokrovskiy~\cite{mp25b}, \S1]\label{prob:sum-trees}
+For which pairs $(T,G)$, with $T$ a tree on $n$ vertices and $G$ an abelian group of order $n$, does $K_G$ contain a rainbow copy of $T$? Equivalently, for which $(T,G)$ is there a bijection $f\colon V(T)\to G$ whose edge sums $f(x)+f(y)$ are distinct?
+\end{problem}
+
+For bounded-degree trees and large $n$ the answer is: exactly when none of the three obstructions of Theorem~\ref{thm:mp-sum} occurs~\cite[Theorem~1.5]{mp25b}. Trees of unbounded degree are open; M\"uyesser and Pokrovskiy write that ``we were unable to come up with a plausible conjecture of a characterisation''~\cite[\S1]{mp25b}.
+
+\begin{problem}[expected; see Javaheri~\cite{jav25}, \S1]\label{prob:harmonious-groups}
+Is every finite group that satisfies the Hall--Paige condition, other than $\Z_2^k$, harmonious, that is, can its elements be listed $g_1,\dots,g_n$ with $g_1g_2,\dots,g_ng_1$ all distinct? Equivalently, by Proposition~\ref{prop:hgroup}, does the complete digraph on every such $G$, with $x\to y$ coloured $xy$, contain a rainbow directed Hamilton cycle?
+\end{problem}
+
+The answer is known to be yes for the eligible abelian groups, for groups of odd order, for the dihedral and dicyclic groups of order $8n$ with $n>1$, and for sufficiently large eligible groups~\cite{mp22}. Groups of odd order even admit symmetric harmonious orderings (Theorem~\ref{thm:symmetric}). The remaining cases of even order are open.
+
+\begin{conjecture}[Horak--Rosa~\cite{hr09}; in partial-sums form~\cite{opps20}]\label{conj:bhr-open}
+If $L$ is a multiset of $v-1$ elements of $\{1,\dots,\lfloor v/2\rfloor\}$ and every divisor $d$ of $v$ divides at most $v-d$ of them, then $L$ can be ordered and signed so that the partial sums of $\pm a_1,\dots,\pm a_{v-1}$ are exactly $\Z_v\setminus\{0\}$.
+\end{conjecture}
+
+By Proposition~\ref{prop:bhr}: under the same condition, $K_v$ has a Hamilton path whose multiset of edge lengths is $L$; equivalently, the ND colouring has a Hamilton path with colour multiset $L$. It is known for two lengths, for $v\leq18$ and for primes $p\leq23$, for three- and four-length families~\cite{opps20}, and for the grid-based and small-support families~\cite{ao24,ao25}. The full conjecture with the divisor condition remains open.
+
+\topic{Summary}
+
+Ringel (1963) asked to decompose $K_{2n+1}$ into copies of any tree; Rosa turned this into a labelling problem, and Kotzig into a cyclic one. Graham and Sloane (1980) came from additive bases and codes, and their harmonious labellings led Beals et al.\ (1991) to harmonious groups. Hahn and Buratti asked for Hamilton paths with constrained colours, and the group either answers or obstructs. The translation is that a labelling by $\Z_m$ is a copy of the tree in $K_m$, and distinct differences or sums mean rainbow in the ND or sum colouring.

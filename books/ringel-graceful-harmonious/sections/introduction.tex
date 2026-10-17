@@ -1,0 +1,19 @@
+\section{Introduction}\label{sec:intro}
+
+In a previous survey on Graham's rearrangement conjecture, the arcs $g\to gs$ of a Cayley digraph were coloured by $s$, the statement ``distinct partial products'' became ``rainbow path'', and the proof used only that translations preserve colours. Here we colour the edges of a complete graph $K_m$ on the elements of a group by a \emph{difference} $x-y$ or by a \emph{sum} $x+y$, and look for rainbow \emph{trees}. A copy of a graph $H$ in an edge-coloured graph is \term{rainbow} if its edges have distinct colours. Recall that $\Z_m$ denotes the integers modulo $m$, and that every translation $x\mapsto x+g$ is a bijection of $\Z_m$.
+
+The basic observation is that a labelling becomes an embedding. Put the available labels on the vertices of a complete graph; assigning distinct labels to the vertices of a tree $T$ then places a copy of $T$ in that graph, and conditions on the labelling become conditions on the embedded tree.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{ll}
+\textbf{labelling condition} & \textbf{condition on the embedded tree}\\\hline
+distinct absolute differences & rainbow in the colour $|x-y|$\\
+distinct cyclic lengths & rainbow in the near-distance colouring\\
+distinct sums in a group & rainbow in the colour $x+y$
+\end{tabular}
+\end{center}
+
+The host graph and its label set matter: using the labels $\{0,\dots,m\}$ is more restrictive than choosing $m+1$ vertices in $\Z_{2m+1}$~\cite[\S1]{mps20}. Harmonious trees allow one repeated vertex label, so their rainbow reformulation requires a separate implication~\cite[\S1]{mp25b}.
+
+Sections~\ref{sec:decompositions}--\ref{sec:hamilton-paths} describe where the problems come from: decompositions of complete graphs into trees (Ringel, Rosa, Kotzig), additive bases and codes (Graham and Sloane) and harmonious groups (Beals, Gallian, Headley and Jungreis), and Hamilton paths with prescribed colours (Hahn, Buratti, Horak and Rosa). Section~\ref{sec:translation} gives the translation into rainbow subgraphs, Section~\ref{sec:progress} surveys the progress, and Section~\ref{sec:open} collects open problems. The guiding slogan is that \emph{differences colour by length, and sums colour by direction}.
