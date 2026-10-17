@@ -645,7 +645,7 @@ def write_book_index(book, pages, out, pdf_name, progress):
         actions.append(f'<span class="yp-quiet">{"更新于" if zh else "Updated"} {updated}</span>')
     h = [f'<header class="yp-hero yp-hero-book" data-book="{book["slug"]}">',
          f'<div class="yp-eyebrow">{esc(eyebrow)}</div>',
-         f'<h1 class="yp-hero-title">{esc(book["title"])}</h1>']
+         f'<p class="yp-hero-title" role="heading" aria-level="1">{esc(book["title"])}</p>']
     if book.get("subtitle"):
         h.append(f'<p class="yp-hero-sub">{esc(book["subtitle"])}</p>')
     h.append(f'<div class="yp-actions">{"".join(actions)}</div>')
@@ -776,7 +776,7 @@ def write_home(lib, built):
                 + '</span></li>')
 
     h = ['<header class="yp-hero yp-hero-home">',
-         f'<h1 class="yp-hero-title">{esc(cfg["title"])}</h1>',
+         f'<p class="yp-hero-title" role="heading" aria-level="1">{esc(cfg["title"])}</p>',
          f'<p class="yp-hero-sub">{esc(cfg.get("description", ""))}</p>',
          '<a class="yp-continue" id="yp-continue" data-word="Continue reading" hidden></a>',
          '</header>']
@@ -814,7 +814,7 @@ def write_results(lib, results):
     total = sum(len(e) for _, _, e in results)
     h = ['<header class="yp-hero yp-hero-index">',
          '<div class="yp-eyebrow">Index</div>',
-         '<h1 class="yp-hero-title">Results</h1>',
+         '<p class="yp-hero-title" role="heading" aria-level="1">Results</p>',
          f'<p class="yp-hero-sub">Every numbered definition and statement across the library — {total} in all.</p>',
          '<div class="yp-idx-controls">',
          '<input id="yp-idx-q" type="search" autocomplete="off" '

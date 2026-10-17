@@ -197,6 +197,46 @@ end
 
 local inline_filter = {Math = fix_math, Link = fix_link, Cite = fix_cite}
 
+-- Keep a formula together with the CJK punctuation right after it (or the
+-- opening bracket right before it), so that "(Ω,F,P)，" never breaks before "，".
+local CLOSING = {['，']=1, ['。']=1, ['；']=1, ['：']=1, ['、']=1, ['）']=1, ['！']=1, ['？']=1, ['”']=1, ['’']=1, ['》']=1, ['-']=1, ['–']=1}
+local OPENING = {['（']=1, ['“']=1, ['‘']=1, ['《']=1}
+local function first_char(t) return t:match('^[%z\1-\127\194-\244][\128-\191]*') end
+local function last_char(t) return t:match('[%z\1-\127\194-\244][\128-\191]*$') end
+local function glue_punct(inlines)
+  local out = pandoc.Inlines({})
+  local i = 1
+  while i <= #inlines do
+    local el = inlines[i]
+    if el.t == 'Math' and el.mathtype == 'InlineMath' then
+      local group = pandoc.Inlines({el})
+      local prev = out[#out]
+      if prev and prev.t == 'Str' then
+        local c = last_char(prev.text)
+        if c and OPENING[c] then
+          prev.text = prev.text:sub(1, #prev.text - #c)
+          if prev.text == '' then out:remove(#out) end
+          group:insert(1, pandoc.Str(c))
+        end
+      end
+      local nxt = inlines[i + 1]
+      if nxt and nxt.t == 'Str' then
+        local c = first_char(nxt.text)
+        if c and CLOSING[c] then
+          group:insert(pandoc.Str(c))
+          nxt.text = nxt.text:sub(#c + 1)
+          if nxt.text == '' then i = i + 1 end
+        end
+      end
+      if #group > 1 then out:insert(pandoc.Span(group, {class = 'yp-nobr'})) else out:insert(el) end
+    else
+      out:insert(el)
+    end
+    i = i + 1
+  end
+  return out
+end
+
 -- ---------------------------------------------------------------------
 --  Block helpers
 -- ---------------------------------------------------------------------
@@ -630,6 +670,24 @@ walk_blocks = function(blocks, ctx)
   return out
 end
 
+-- Browser-tab title: formulas as plain characters (\sigma -> σ, \mathbb{R} -> R).
+local GREEK = {alpha='α', beta='β', gamma='γ', delta='δ', varepsilon='ε', epsilon='ε', zeta='ζ',
+  eta='η', theta='θ', kappa='κ', lambda='λ', mu='μ', nu='ν', xi='ξ', pi='π', rho='ρ',
+  sigma='σ', tau='τ', varphi='φ', phi='φ', chi='χ', psi='ψ', omega='ω', Gamma='Γ', Delta='Δ',
+  Theta='Θ', Lambda='Λ', Pi='Π', Sigma='Σ', Phi='Φ', Psi='Ψ', Omega='Ω', infty='∞'}
+function plain_text(inlines)
+  local out = {}
+  pandoc.Inlines(inlines):walk({
+    Str = function(e) out[#out + 1] = e.text end,
+    Space = function() out[#out + 1] = ' ' end,
+    Math = function(m)
+      local t = m.text:gsub('\\(%a+)', function(c) return GREEK[c] or '' end)
+      out[#out + 1] = (t:gsub('[{}^_\\]', ''))
+    end,
+  })
+  return table.concat(out)
+end
+
 -- ---------------------------------------------------------------------
 --  Page assembly
 -- ---------------------------------------------------------------------
@@ -637,11 +695,13 @@ function Pandoc(doc)
   read_meta(doc.meta)
   local blocks = walk_blocks(pandoc.List(doc.blocks))
   blocks = pandoc.Blocks(blocks):walk(inline_filter)
+  blocks = blocks:walk({Inlines = glue_punct})
 
   -- The page title is the first level-1 heading (\lecture or \section).
   for i, b in ipairs(blocks) do
     if b.t == 'Header' and b.level == 1 then
       doc.meta.title = b.content
+      doc.meta.pagetitle = plain_text(b.content)
       blocks:remove(i)
       break
     end

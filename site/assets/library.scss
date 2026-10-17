@@ -112,7 +112,8 @@ html[lang|="zh"] .quarto-title h1.title { font-size: 1.42rem; line-height: 1.55;
 .yp-body {
   line-height: 1.8;
   p { margin: 0.75em 0; }
-  @media (min-width: 768px) { p { text-align: justify; } }
+  // justify only on wide columns: on tablets it opens large gaps around formulas
+  @media (min-width: 1200px) { p { text-align: justify; } }
   mjx-container[display="true"] { margin: 1em 0 !important; overflow-x: auto; overflow-y: hidden; }
   h2 { font-family: var(--yp-serif); font-size: 1.22rem; font-weight: 700; margin-top: 2.6em; margin-bottom: 0.6em; }
   h3 { font-family: var(--yp-serif); font-size: 1.05rem; font-weight: 700; margin-top: 2em; }
@@ -164,9 +165,10 @@ html[lang|="en"] #refs, html[lang|="en"] #quarto-bibliography { font-family: "LM
 .yp-thm { margin: 1.2em 0; position: relative; }
 .yp-thm > p:first-of-type, .yp-thm > .yp-thm-pdf + p { margin-top: 0; }
 .yp-thm-pdf {
-  float: right; margin-left: 0.8em;
+  position: absolute; left: 100%; top: 0.15em; margin-left: 1.2rem; white-space: nowrap;
   font-family: var(--yp-sans); font-style: normal; font-size: 0.66rem; line-height: 2.4;
   a { color: var(--yp-faint) !important; opacity: 0; transition: opacity 0.15s; }
+  @media (max-width: 1199.98px), (hover: none) { display: none; }
 }
 .yp-thm:hover .yp-thm-pdf a { opacity: 1; }
 .yp-thm:target, .yp-eq:target, .yp-qitem:has(:target) {
@@ -249,7 +251,7 @@ html[lang|="en"] #refs, html[lang|="en"] #quarto-bibliography { font-family: "LM
 .yp-shelf {
   display: grid; grid-template-columns: 13rem 1fr; gap: 2rem;
   padding: 2.4rem 0; border-bottom: 1px solid var(--yp-line);
-  @media (max-width: 760px) { grid-template-columns: 1fr; gap: 0.8rem; padding: 1.8rem 0; }
+  @media (max-width: 999.98px) { grid-template-columns: 1fr; gap: 0.9rem; padding: 1.8rem 0; }
 }
 .yp-shelf-head {
   h2 { font-family: var(--yp-serif); font-size: 1.3rem; font-weight: 700; margin: 0 0 0.4rem; border: none; padding: 0; }
@@ -260,7 +262,12 @@ html[lang|="en"] #refs, html[lang|="en"] #quarto-bibliography { font-family: "LM
   display: grid; grid-template-columns: 1fr auto auto; gap: 0 1.4rem; align-items: baseline;
   padding: 0.9rem 0; border-top: 1px solid var(--yp-line);
   &:first-child { border-top: none; padding-top: 0.1rem; }
-  @media (max-width: 760px) { grid-template-columns: 1fr auto; .yp-book-meta { grid-column: 1; grid-row: 2; } }
+  @media (max-width: 999.98px) {
+    grid-template-columns: 1fr auto; row-gap: 0.35rem;
+    .yp-book-main { grid-column: 1 / -1; }
+    .yp-book-meta { grid-column: 1; grid-row: 2; align-self: center; }
+    .yp-book-files { grid-column: 2; grid-row: 2; }
+  }
 }
 .yp-book-main { display: flex; flex-direction: column; gap: 0.15rem; color: var(--yp-ink) !important; }
 .yp-book-main:hover { text-decoration: none; .yp-book-title { color: var(--yp-accent); } }
@@ -372,3 +379,42 @@ a.yp-cite { color: var(--yp-accent); }
 }
 .yp-back[hidden] { display: none; }
 .yp-back-flash { background: rgba(155, 44, 44, 0.16); border-radius: 3px; transition: background 0.4s; }
+
+// ---------------------------------------------------------------------
+//  Tablets and phones
+// ---------------------------------------------------------------------
+// Below 1200px Quarto hides the page TOC but keeps its column: give it to the text.
+@media (max-width: 1199.98px) {
+  #quarto-margin-sidebar { display: none !important; }
+  #quarto-content.page-columns main.content { grid-column: body-content-start / page-end !important; }
+}
+// Figures: centred, like their captions
+.yp-body figure, .yp-body .quarto-figure { text-align: center; }
+.yp-body figure img { display: block; margin-left: auto; margin-right: auto; }
+.yp-body figure > p { text-align: center !important; }
+// Formula + punctuation kept on one line
+.yp-nobr { white-space: nowrap; }
+// Exercise lists and solutions: shallower indentation on narrow screens
+@media (max-width: 999.98px) {
+  .yp-qitem { padding-left: 2.7em; }
+  .yp-qitem .yp-qitem { padding-left: 3.4em; }
+  .yp-qlabel { width: 2.4em; }
+  .yp-qitem .yp-qitem > p > .yp-qlabel { width: 3em; }
+  .yp-solution .yp-solution-body { padding-left: 0.8em; margin-left: 0.1em; }
+  .yp-hero { padding: 2.2rem 0 1.6rem; }
+  .yp-hero-title { font-size: 2.2rem; }
+}
+// Larger tap targets on touch screens
+@media (hover: none) {
+  .yp-solution summary { padding: 0.35em 0; }
+  .yp-toc-aux, .yp-book-pdf { padding: 0.25rem 0.7rem; }
+  .yp-solution-toggle { gap: 1.6em; button { padding: 0.3em 0; } }
+}
+// Wide display formulas (e.g. numbered ones, which MathJax gives a min-width)
+// scroll inside their own box instead of widening the page.
+.yp-eq { display: block; max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+.yp-body mjx-container[display="true"] { max-width: 100%; }
+@media (max-width: 599.98px) {
+  html[lang|="zh"] .quarto-title h1.title { font-size: 1.25rem; }
+  .quarto-title h1.title { font-size: 1.35rem; }
+}
