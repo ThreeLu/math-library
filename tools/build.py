@@ -632,8 +632,7 @@ def write_quarto_yml(lib, sidebars):
                                 {"href": "results.qmd", "text": "Index"}],
                        "right": [{"icon": "github", "href": repo}]},
             "sidebar": sidebars,
-            "page-footer": {"left": f"© {cfg.get('author', '')}",
-                            "right": "Written in LaTeX · read on the web"},
+            "page-footer": {"center": f"© {cfg.get('author', '')}"},
         },
         "format": {"html": {
             "theme": ["cosmo", "assets/library.scss"],
@@ -671,7 +670,6 @@ def write_home(lib, built):
                 + '</li>')
 
     h = ['<header class="yp-hero yp-hero-home">',
-         f'<div class="yp-eyebrow">{esc(cfg.get("author", ""))}</div>',
          f'<h1 class="yp-hero-title">{esc(cfg["title"])}</h1>',
          f'<p class="yp-hero-sub">{esc(cfg.get("description", ""))}</p>',
          '<a class="yp-continue" id="yp-continue" data-word="Continue reading" hidden></a>',

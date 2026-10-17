@@ -21,7 +21,7 @@
 
 site:
   title: Mathematical Notes
-  description: Lecture notes, research notes and surveys, written in LaTeX and read on the web.
+  description: Lecture notes, research notes and surveys.
   author: threelu
   github: threelu
   repo: math-library
@@ -29,13 +29,13 @@ site:
 categories:
   - id: courses
     title: Courses
-    blurb: Graduate courses I am taking or teaching, written up as full lecture notes.
+    blurb: Graduate courses.
   - id: research
     title: Research Topics
-    blurb: Working notes on topics close to my research.
+    blurb: Working notes.
   - id: surveys
     title: Surveys
-    blurb: Long-form surveys, rewritten from talk slides.
+    blurb: Long-form surveys.
 
 books:
   - slug: advanced-probability
