@@ -1,0 +1,8 @@
+.DS_Store
+*.synctex.gz
+**/build/
+_site/
+.quarto/
+_generated/
+参考书籍/
+__pycache__/
