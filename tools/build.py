@@ -13,6 +13,7 @@ a lecture's \\homework part becomes a separate page.
 
 import argparse
 import datetime
+import html
 import json
 import os
 import re
@@ -425,14 +426,18 @@ def build_book(book, no_latex):
     labels_path.write_text(json.dumps(labels, ensure_ascii=False), encoding="utf-8")
 
     # ---- convert -------------------------------------------------------
+    index_path = out / ".index.jsonl"
+    index_path.write_text("", encoding="utf-8")
     thm_offset = sec_offset = 0
     lecture_no = 0
     for p in pages:
         clean = strip_comments(p["tex"])
+        row = progress.get(p["unit"], {})
+        p["topic"] = row.get("主题", "")
         meta = {"yp-labels": labels_path, "yp-page": p["file"], "yp-lang": lang,
                 "yp-numbering": numbering, "yp-thm-offset": thm_offset,
-                "yp-sec-offset": sec_offset, "yp-pdf": pdf_name if pdf.exists() else ""}
-        row = progress.get(p["unit"], {})
+                "yp-sec-offset": sec_offset, "yp-pdf": pdf_name if pdf.exists() else "",
+                "yp-index": index_path, "yp-book": slug, "yp-book-title": book["title"]}
         if p["kind"] == "lecture":
             lecture_no += 1
             p["no"] = lecture_no
@@ -448,7 +453,8 @@ def build_book(book, no_latex):
             hw = labels.get(f"hw:{p['unit']}")
             if hw:
                 meta["yp-pdf-page"] = hw["pdfpage"]
-        p["topic"] = row.get("主题", "")
+        if p["topic"]:
+            meta["yp-crumb"] = short_label(p, lang == "zh") + ("（作业）" if p["kind"] == "homework" else "")
         md = run_pandoc(macros + brace_macros(preprocess(p["tex"], lang), macros), meta)
         (out / f"{p['file']}.qmd").write_text(md, encoding="utf-8")
         p["title"] = page_title(md)
@@ -457,7 +463,18 @@ def build_book(book, no_latex):
 
     write_book_index(book, pages, out, pdf_name if pdf.exists() else None, progress)
     write_dir_metadata(book, out)
-    return pages
+    entries = [json.loads(l) for l in index_path.read_text(encoding="utf-8").splitlines() if l.strip()]
+    index_path.unlink()
+    labels_path.unlink()
+    return pages, entries
+
+
+def short_label(p, zh):
+    """Sidebar / index label: "1. 集合系" from the progress-table topic, else the title."""
+    if p.get("topic"):
+        name = re.split(r"[，：；（(]", p["topic"])[0].strip()
+        return f"{p['no']}. {name}" if zh else name
+    return plain_title(p.get("title", ""))
 
 
 def page_title(md):
@@ -479,12 +496,19 @@ def plain_title(t):
 
 
 GREEK = {"sigma": "σ", "pi": "π", "lambda": "λ", "mu": "μ", "nu": "ν", "omega": "ω",
-         "Omega": "Ω", "varepsilon": "ε", "alpha": "α", "beta": "β", "delta": "δ"}
+         "Omega": "Ω", "varepsilon": "ε", "alpha": "α", "beta": "β", "delta": "δ",
+         "varphi": "φ", "phi": "φ", "xi": "ξ", "eta": "η", "theta": "θ", "rho": "ρ",
+         "tau": "τ", "kappa": "κ", "gamma": "γ", "Lambda": "Λ", "Phi": "Φ", "chi": "χ"}
 
 
 def tex_to_unicode(s):
     s = re.sub(r"\\([A-Za-z]+)", lambda m: GREEK.get(m.group(1), m.group(1)), s)
     return re.sub(r"[{}^_]", "", s)
+
+
+def tex_to_unicode_text(s):
+    """Search text for the index: \\sigma -> σ etc., other commands dropped."""
+    return re.sub(r"\\([A-Za-z]+)", lambda m: GREEK.get(m.group(1), " "), s)
 
 
 def write_dir_metadata(book, out):
@@ -498,38 +522,60 @@ def write_dir_metadata(book, out):
     (out / "_metadata.yml").write_text(yaml.safe_dump(meta, allow_unicode=True), encoding="utf-8")
 
 
+def esc(t):
+    return html.escape(t, quote=True)
+
+
+CATEGORY_WORD = {"courses": "Course", "research": "Research notes", "surveys": "Survey"}
+LANG_WORD = {"zh": "中文", "en": "English"}
+
+
 def write_book_index(book, pages, out, pdf_name, progress):
     zh = book.get("lang") == "zh"
-    lines = ["---", f"title: {json.dumps(book['title'], ensure_ascii=False)}"]
-    if book.get("subtitle"):
-        lines.append(f"subtitle: {json.dumps(book['subtitle'], ensure_ascii=False)}")
-    lines += ["toc: false", "---", ""]
-    buttons = []
+    lectures = [p for p in pages if p["kind"] == "lecture"]
+    front = [p for p in pages if p["kind"] == "front"]
+    first = lectures[0]["file"] + ".html" if lectures else None
+    eyebrow = f'{CATEGORY_WORD.get(book.get("category"), "")} · {LANG_WORD.get(book.get("lang"), "")}'
+    actions = []
+    if first:
+        actions.append(f'<a class="yp-btn" href="{first}">{"从第 1 讲开始" if zh else "Start reading"}</a>')
     if pdf_name:
-        buttons.append(f'<a class="yp-button" href="{pdf_name}">'
-                       + ("下载整本 PDF" if zh else "Download PDF") + "</a>")
+        actions.append(f'<a class="yp-btn yp-btn-ghost" href="{pdf_name}">PDF</a>')
     updated = last_updated(book)
     if updated:
-        buttons.append(f'<span class="yp-updated">{"最后更新" if zh else "Updated"} {updated}</span>')
-    lines += ['<div class="yp-book-actions">' + " ".join(buttons) + "</div>", ""]
-
-    lectures = [p for p in pages if p["kind"] == "lecture"]
-    rows_md = []
-    head = ("| 讲 | 内容 | 作业 |" if zh else "| § | Contents | Exercises |")
-    rows_md += [head, "|---|---|---|"]
+        actions.append(f'<span class="yp-quiet">{"更新于" if zh else "Updated"} {updated}</span>')
+    h = [f'<header class="yp-hero yp-hero-book" data-book="{book["slug"]}">',
+         f'<div class="yp-eyebrow">{esc(eyebrow)}</div>',
+         f'<h1 class="yp-hero-title">{esc(book["title"])}</h1>']
+    if book.get("subtitle"):
+        h.append(f'<p class="yp-hero-sub">{esc(book["subtitle"])}</p>')
+    h.append(f'<div class="yp-actions">{"".join(actions)}</div>')
+    h.append(f'<a class="yp-continue" id="yp-continue-book" data-book="{book["slug"]}" '
+             f'data-word="{"继续阅读" if zh else "Continue reading"}" hidden></a>')
+    h.append("</header>")
+    if front:
+        links = " ".join(f'<a href="{p["file"]}.html">{esc(plain_title(p["title"]))}</a>' for p in front)
+        h.append(f'<nav class="yp-front">{links}</nav>')
+    h.append('<ol class="yp-toc">')
     for p in lectures:
         hw = next((q for q in pages if q["kind"] == "homework" and q["unit"] == p["unit"]), None)
         name = p["topic"] or plain_title(p["title"])
-        hw_cell = f"[{'作业' if zh else 'Exercises'}]({hw['file']}.qmd)" if hw else ""
-        rows_md.append(f"| {p['no']} | [{name}]({p['file']}.qmd) | {hw_cell} |")
-    # planned lectures from the progress table
+        num = p["no"] if zh else re.match(r"\[?(\d+)", plain_title(p["title"]) or "0").group(1)
+        if not zh:
+            name = re.sub(r"^\d+\s*", "", plain_title(p["title"]))
+        aux = (f'<a class="yp-toc-aux" href="{hw["file"]}.html">{"作业" if zh else "Exercises"}</a>'
+               if hw else "")
+        h.append(f'<li><a class="yp-toc-main" href="{p["file"]}.html"><span class="yp-toc-num">{num}</span>'
+                 f'<span class="yp-toc-title">{esc(name)}</span></a>{aux}</li>')
     done = {p["unit"] for p in lectures}
-    n = len(lectures)
     for f, row in progress.items():
         if f not in done and row.get("正文") == "未开始":
-            n += 1
-            rows_md.append(f"| {row.get('讲', n)} | <span class=\"yp-todo\">{row.get('主题', f)}</span> | |")
-    lines += ["## " + ("目录" if zh else "Contents"), "", "::: {.yp-book-index}"] + rows_md + [":::", ""]
+            h.append(f'<li class="yp-toc-todo"><span class="yp-toc-main"><span class="yp-toc-num">'
+                     f'{esc(row.get("讲", ""))}</span><span class="yp-toc-title">{esc(row.get("主题", f))}'
+                     f'</span></span></li>')
+    h.append("</ol>")
+    lines = ["---", f"pagetitle: {json.dumps(book['title'], ensure_ascii=False)}", "toc: false", "---", "",
+             "```{=html}", "\n".join(h), "```", ""]
     (out / "index.qmd").write_text("\n".join(lines), encoding="utf-8")
 
 
@@ -556,9 +602,7 @@ def sidebar_for(book, pages):
     for p in pages:
         if p["kind"] != "lecture":
             continue
-        # sidebar: first phrase of the progress-table topic ("集合系，π-λ 定理" -> "集合系")
-        name = re.split(r"[，：；（(]", p["topic"])[0].strip() if p["topic"] else plain_title(p["title"])
-        text = f"{p['no']}. {name}" if zh else plain_title(p["title"])
+        text = short_label(p, zh)
         hw = [q for q in pages if q["kind"] == "homework" and q["unit"] == p["unit"]]
         if hw:
             contents.append({"section": text, "href": f"{base}/{p['file']}.qmd",
@@ -566,13 +610,14 @@ def sidebar_for(book, pages):
                                            "text": "作业与解答" if zh else "Exercises"}]})
         else:
             contents.append({"href": f"{base}/{p['file']}.qmd", "text": text})
-    return {"id": book["slug"], "title": book["title"], "style": "docked",
+    return {"id": book["slug"], "title": book["title"], "style": "floating",
             "collapse-level": 1, "contents": contents}
 
 
 def write_quarto_yml(lib, sidebars):
     cfg = lib["site"]
     site_url = f"https://{cfg['github']}.github.io/{cfg['repo']}/"
+    repo = f"https://github.com/{cfg['github']}/{cfg['repo']}"
     q = {
         "project": {"type": "website", "output-dir": "_site",
                     "resources": ["books/*/*.pdf"]},
@@ -580,19 +625,21 @@ def write_quarto_yml(lib, sidebars):
             "title": cfg["title"],
             "description": cfg.get("description", ""),
             "site-url": site_url,
-            "repo-url": f"https://github.com/{cfg['github']}/{cfg['repo']}",
+            "repo-url": repo,
             "search": {"location": "navbar", "type": "overlay"},
             "page-navigation": True,
-            "navbar": {"left": [{"href": "index.qmd", "text": "Library"}],
-                       "right": [{"icon": "github",
-                                  "href": f"https://github.com/{cfg['github']}/{cfg['repo']}"}]},
+            "navbar": {"left": [{"href": "index.qmd", "text": "Library"},
+                                {"href": "results.qmd", "text": "Index"}],
+                       "right": [{"icon": "github", "href": repo}]},
             "sidebar": sidebars,
+            "page-footer": {"left": f"© {cfg.get('author', '')}",
+                            "right": "Written in LaTeX · read on the web"},
         },
         "format": {"html": {
             "theme": ["cosmo", "assets/library.scss"],
             "html-math-method": "mathjax",
             "include-in-header": "assets/head.html",
-            "toc": True, "toc-depth": 2,
+            "toc": True, "toc-depth": 2, "toc-title": " ",
             "number-sections": False,
             "anchor-sections": True,
         }},
@@ -603,50 +650,105 @@ def write_quarto_yml(lib, sidebars):
 
 
 def write_home(lib, built):
-    cats = lib["categories"]
+    cfg = lib["site"]
     books = lib["books"]
-    parts = ["---", f"title: {json.dumps(lib['site']['title'])}",
-             f"subtitle: {json.dumps(lib['site'].get('description', ''))}",
-             "page-layout: full", "toc: false", "sidebar: false", "---", ""]
 
-    def card(b):
-        planned = b.get("status") == "planned" or b["slug"] not in built
-        href = f"books/{b['slug']}/index.qmd"
-        meta = [{"zh": "中文", "en": "English"}.get(b.get("lang", "en"), "")]
+    def row(b):
+        slug = b["slug"]
+        meta = [LANG_WORD.get(b.get("lang", "en"), "")]
         prog = progress_summary(b)
         if prog:
             meta.append(prog)
         upd = last_updated(b)
-        if upd and not planned:
-            meta.append(f"updated {upd}")
-        links = ""
-        if not planned:
-            links = f'<a class="yp-card-link" href="books/{b["slug"]}/index.html">Read</a>'
-            if (GENERATED / b["slug"] / f"{b['slug']}.pdf").exists():
-                links += f' <a class="yp-card-link" href="books/{b["slug"]}/{b["slug"]}.pdf">PDF</a>'
-        else:
-            links = '<span class="yp-card-planned">In preparation</span>'
-        sub = f'<div class="yp-card-sub">{b["subtitle"]}</div>' if b.get("subtitle") else ""
-        title = (f'<a href="books/{b["slug"]}/index.html">{b["title"]}</a>'
-                 if not planned else b["title"])
-        return (f'<div class="yp-card{" yp-card-muted" if planned else ""}">'
-                f'<div class="yp-card-title">{title}</div>{sub}'
-                f'<div class="yp-card-meta">{" · ".join(m for m in meta if m)}</div>'
-                f'<div class="yp-card-links">{links}</div></div>')
+        if upd:
+            meta.append(upd)
+        pdf = (GENERATED / slug / f"{slug}.pdf").exists()
+        sub = f'<span class="yp-book-sub">{esc(b["subtitle"])}</span>' if b.get("subtitle") else ""
+        return (f'<li class="yp-book"><a class="yp-book-main" href="books/{slug}/index.html">'
+                f'<span class="yp-book-title">{esc(b["title"])}</span>{sub}</a>'
+                f'<span class="yp-book-meta">{" · ".join(esc(m) for m in meta if m)}</span>'
+                + (f'<a class="yp-book-pdf" href="books/{slug}/{slug}.pdf">PDF</a>' if pdf else '<span></span>')
+                + '</li>')
 
-    for c in cats:
-        shelf = [b for b in books if b.get("category") == c["id"] and b.get("status") != "shelved"]
-        parts.append(f"## {c['title']}\n")
-        parts.append(f'<p class="yp-shelf-blurb">{c.get("blurb", "")}</p>\n')
+    h = ['<header class="yp-hero yp-hero-home">',
+         f'<div class="yp-eyebrow">{esc(cfg.get("author", ""))}</div>',
+         f'<h1 class="yp-hero-title">{esc(cfg["title"])}</h1>',
+         f'<p class="yp-hero-sub">{esc(cfg.get("description", ""))}</p>',
+         '<a class="yp-continue" id="yp-continue" data-word="Continue reading" hidden></a>',
+         '</header>']
+    for c in lib["categories"]:
+        shelf = [b for b in books if b.get("category") == c["id"]
+                 and b.get("status") == "active" and b["slug"] in built]
+        planned = [b for b in books if b.get("category") == c["id"]
+                   and (b.get("status") == "planned" or (b.get("status") == "active" and b["slug"] not in built))]
+        h.append(f'<section class="yp-shelf"><div class="yp-shelf-head"><h2>{esc(c["title"])}</h2>'
+                 f'<p>{esc(c.get("blurb", ""))}</p></div><div class="yp-shelf-body">')
         if shelf:
-            parts.append('<div class="yp-shelf">' + "".join(card(b) for b in shelf) + "</div>\n")
-        else:
-            parts.append('<p class="yp-empty">Nothing here yet.</p>\n')
-    shelved = [b for b in books if b.get("status") == "shelved"]
+            h.append('<ul class="yp-books">' + "".join(row(b) for b in shelf) + "</ul>")
+        if planned:
+            h.append('<p class="yp-planned"><span>In preparation</span>'
+                     + "".join(f"<em>{esc(b['title'])}</em>" for b in planned) + "</p>")
+        if not shelf and not planned:
+            h.append('<p class="yp-planned"><span>Nothing here yet</span></p>')
+        h.append("</div></section>")
+    shelved = [b for b in books if b.get("status") == "shelved" and b["slug"] in built]
     if shelved:
-        parts.append(f'<details class="yp-shelved"><summary>Shelved ({len(shelved)})</summary>'
-                     '<div class="yp-shelf">' + "".join(card(b) for b in shelved) + "</div></details>\n")
-    (SITE / "index.qmd").write_text("\n".join(parts), encoding="utf-8")
+        h.append(f'<details class="yp-shelved"><summary>Shelved · {len(shelved)}</summary>'
+                 '<ul class="yp-books">' + "".join(row(b) for b in shelved) + "</ul></details>")
+    lines = ["---", f"pagetitle: {json.dumps(cfg['title'])}", "toc: false", "sidebar: false", "---", "",
+             "```{=html}", "\n".join(h), "```", ""]
+    (SITE / "index.qmd").write_text("\n".join(lines), encoding="utf-8")
+
+
+KIND_WORD = {"theorem": "Theorems", "proposition": "Propositions", "lemma": "Lemmas",
+             "corollary": "Corollaries", "definition": "Definitions", "conjecture": "Conjectures"}
+
+
+def write_results(lib, results):
+    """results: list of (book, pages, entries) in library order."""
+    total = sum(len(e) for _, _, e in results)
+    h = ['<header class="yp-hero yp-hero-index">',
+         '<div class="yp-eyebrow">Index</div>',
+         '<h1 class="yp-hero-title">Results</h1>',
+         f'<p class="yp-hero-sub">Every numbered definition and statement across the library — {total} in all.</p>',
+         '<div class="yp-idx-controls">',
+         '<input id="yp-idx-q" type="search" autocomplete="off" '
+         'placeholder="Search by name, number or words — e.g. Fatou, 定理 18, π-λ">',
+         '<div class="yp-idx-chips"><button type="button" data-kind="" class="on">All</button>'
+         + "".join(f'<button type="button" data-kind="{k}">{w}</button>' for k, w in KIND_WORD.items()
+                   if any(x["kind"] == k for _, _, es in results for x in es))
+         + "</div>",
+         '<p class="yp-idx-count" id="yp-idx-count"></p>',
+         "</div></header>"]
+    md = ["---", 'pagetitle: "Index of results"', "toc: false", "sidebar: false", "---", "",
+          "```{=html}", "\n".join(h), "```", ""]
+    for book, pages, entries in results:
+        if not entries:
+            continue
+        zh = book.get("lang") == "zh"
+        md += [f'::: {{.yp-idx-book data-book="{book["slug"]}"}}', "",
+               f'## {book["title"]} {{.unnumbered .unlisted}}', ""]
+        by_page = {}
+        for e in entries:
+            by_page.setdefault(e["page"], []).append(e)
+        for p in pages:
+            es = by_page.get(p["file"])
+            if not es:
+                continue
+            label = short_label(p, zh) if p["kind"] != "front" else plain_title(p["title"])
+            if p["kind"] == "homework":
+                label += "（作业）" if zh else " — exercises"
+            md += ['::: {.yp-idx-group}', "", f"### {label} {{.unnumbered .unlisted}}", ""]
+            for e in es:
+                link = f"books/{book['slug']}/{e['page']}.qmd" + (f"#{e['id']}" if e.get("id") else "")
+                text = re.sub(r"\s+", " ", tex_to_unicode_text(e["text"])).replace('"', "'")
+                name = f" [{e['note']}]{{.yp-idx-name}}" if e["note"] else ""
+                md += [f'::: {{.yp-idx-item data-kind="{e["kind"]}" data-text="{esc(text)}"}}',
+                       f"[{e['label']}]({link}){{.yp-idx-label}}{name} [{e['snippet']}]{{.yp-idx-snippet}}",
+                       ":::", ""]
+            md += [":::", ""]
+        md += [":::", ""]
+    (SITE / "results.qmd").write_text("\n".join(md), encoding="utf-8")
 
 
 def progress_summary(book):
@@ -656,7 +758,7 @@ def progress_summary(book):
     if not rows:
         return ""
     written = sum(1 for r in rows.values() if r.get("正文") not in ("未开始", ""))
-    return f"{written}/{len(rows)} lectures"
+    return f"{written} / {len(rows)} lectures"
 
 
 def main():
@@ -666,16 +768,18 @@ def main():
     a = ap.parse_args()
 
     lib = yaml.safe_load((ROOT / "library.yml").read_text(encoding="utf-8"))
-    sidebars, built = [], set()
+    sidebars, built, results = [], set(), []
     for b in lib["books"]:
         if not b.get("source") or b.get("status") == "planned":
             continue
         log(f"book {b['slug']}")
-        pages = build_book(b, a.no_latex)
+        pages, entries = build_book(b, a.no_latex)
         sidebars.append(sidebar_for(b, pages))
         built.add(b["slug"])
+        results.append((b, pages, entries))
     write_quarto_yml(lib, sidebars)
     write_home(lib, built)
+    write_results(lib, results)
     if a.render:
         subprocess.run([QUARTO, "render"], cwd=SITE, check=True)
 

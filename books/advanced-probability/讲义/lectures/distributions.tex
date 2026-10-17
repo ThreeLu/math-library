@@ -30,7 +30,7 @@
 为 $X$ 的\term{分布}（distribution）或\term{律}（law），也记作 $\P\circ X^{-1}$，称为 $\P$ 在 $X$ 下的\term{像测度}（image measure, pushforward）。若两个随机元 $X,Y$（可以定义在不同的概率空间上）有相同的分布，称它们\term{同分布}（equal in distribution），记作 $X\eqd Y$。
 \end{definition}
 
-$\mu_X$ 是 $(S,\cS)$ 上的概率测度：$\mu_X(S)=\P(\Omega)=1$；若 $B_n\in\cS$ 两两不交，则事件 $\{X\in B_n\}$ 两两不交（$X(\omega)$ 不能同时落在两个不交的集合中），且 $\{X\in\bigcup_nB_n\}=\bigcup_n\{X\in B_n\}$，于是 $\mu_X(\bigcup_nB_n)=\sum_nP(X\in B_n)=\sum_n\mu_X(B_n)$。
+$\mu_X$ 是 $(S,\cS)$ 上的概率测度：$\mu_X(S)=\P(\Omega)=1$；若 $B_n\in\cS$ 两两不交，则事件 $\{X\in B_n\}$ 两两不交（$X(\omega)$ 不能同时落在两个不交的集合中），且 $\{X\in\bigcup_nB_n\}=\bigcup_n\{X\in B_n\}$，于是 $\mu_X(\bigcup_nB_n)=\sum_n\P(X\in B_n)=\sum_n\mu_X(B_n)$。
 
 \begin{example}[分布不决定随机变量]
 在 $([0,1],\cR\cap[0,1],\lambda)$ 上令 $X(\omega)=\omega$，$Y(\omega)=1-\omega$。对 $0\leqslant x\leqslant1$，$\P(X\leqslant x)=\lambda([0,x])=x$，$\P(Y\leqslant x)=\lambda([1-x,1])=x$。于是 $X\eqd Y$（由推论~\ref{cor:measures:distribution-function}），但除了 $\omega=1/2$ 之外处处 $X(\omega)\neq Y(\omega)$。同分布只是关于“随机规律”的陈述，与两个函数是否相等无关。
@@ -286,7 +286,7 @@ X_i=\one_{\{U_i\leqslant p\}},\qquad Y_i=\one_{\{U_i\leqslant q\}},\qquad S=\sum
 在两枚硬币的例子中，$n=1$ 时 $X_1$ 与 $Y_1$ 恰好是这个分位数耦合（差一个 $\omega\mapsto1-\omega$ 的翻转）。
 
 \begin{remark}
-这个定理说明，“$X$ 随机地小于 $Y$”这个关于分布的条件，与“$X\leqslant Y$”这个逐点的条件，在允许重新构造随机变量的意义下是一回事。这是耦合方法的一个典型模式：分布之间的不等式往往难以直接处理，而随机变量之间的逐点不等式可以直接取期望、取概率、取极限。比如以后学了期望就知道，若 $X\preceq_{\mathrm{st}}Y$，则对任何单调不减的函数 $g$，$Eg(X)\leqslant Eg(Y)$，因为在耦合下 $g(X)\leqslant g(Y)$ 处处成立。
+这个定理说明，“$X$ 随机地小于 $Y$”这个关于分布的条件，与“$X\leqslant Y$”这个逐点的条件，在允许重新构造随机变量的意义下是一回事。这是耦合方法的一个典型模式：分布之间的不等式往往难以直接处理，而随机变量之间的逐点不等式可以直接取期望、取概率、取极限。比如以后学了期望就知道，若 $X\preceq_{\mathrm{st}}Y$，则对任何单调不减的函数 $g$，$\E g(X)\leqslant \E g(Y)$，因为在耦合下 $g(X)\leqslant g(Y)$ 处处成立。
 \end{remark}
 
 \begin{historynote}

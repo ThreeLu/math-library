@@ -85,7 +85,7 @@
 
 作者可以修改这张表；改过之后以这里为准。模版已定义的宏见 `讲义/README.md`。
 
-- 概率空间 $(\Omega,\mathcal F,\mathbb P)$，概率测度一律写 `\P`（排作 $\mathbb P$），如 `\P(X\in B)`、`\int X\dd\P`；不是概率的 $P$（Hahn 分解的正集、Riemann 和的分割）照常写 `P`。一般测度空间 $(S,\mathcal S,\mu)$。期望 $E X$，方差 $\operatorname{Var}(X)$，协方差 $\operatorname{Cov}(X,Y)$，示性函数 $1_A$，条件期望 $E(X\mid\mathcal G)$。
+- 概率空间 $(\Omega,\mathcal F,\mathbb P)$，概率测度一律写 `\P`（排作 $\mathbb P$），如 `\P(X\in B)`、`\int X\dd\P`；不是概率的 $P$（Hahn 分解的正集、Riemann 和的分割）照常写 `P`。一般测度空间 $(S,\mathcal S,\mu)$。期望一律写 `\E`（排作 $\mathbb E$），如 `\E X`、`\E\abs X`、`\E(X\mid\cG)`；作集合用的 $E$（如 $E\in\cF$、$\int_E$）照常写 `E`。方差 $\operatorname{Var}(X)$，协方差 $\operatorname{Cov}(X,Y)$，示性函数 $1_A$，条件期望 $\mathbb E(X\mid\mathcal G)$。
 - 集合：$\mathbb N=\{1,2,\dots\}$（含 0 时明说），幂集 $2^\Omega$，补集 $A^c$，差集 $A\setminus B$，单调 $A_n\uparrow A$、$A_n\downarrow A$；由 $\mathcal A$ 生成的 σ-代数 $\sigma(\mathcal A)$，由随机变量生成的 $\sigma(X)$；Borel σ-代数 $\mathcal R$（$\mathbb R$ 上）与 $\mathcal R^d$，与 Durrett 一致；Lebesgue 测度 $\lambda$。
 - 收敛：几乎必然 $X_n\to X$ a.s.（`\toas`），依概率 $X_n\to X$ in probability（`\toP`），$L^p$ 收敛（`\toLp`），弱收敛（依分布收敛）$X_n\Rightarrow X$、$F_n\Rightarrow F$。同分布 $X\stackrel{d}{=}Y$（`\eqd`）。独立同分布写 i.i.d.。
 - 中文译名：almost surely 几乎必然；almost everywhere 几乎处处；in probability 依概率；weak convergence 弱收敛；distribution function 分布函数；random variable 随机变量；expectation／expected value 期望；measurable 可测；π-system π-类；λ-system λ-类；field／algebra 代数（域）；semialgebra 半代数；outer measure 外测度；monotone convergence theorem 单调收敛定理；dominated convergence theorem 控制收敛定理；uniformly integrable 一致可积；tail σ-field 尾 σ-代数；characteristic function 特征函数；martingale 鞅；supermartingale 上鞅；submartingale 下鞅；stopping time 停时；filtration 域流（σ-代数流）；Markov chain Markov 链；recurrent 常返；transient 暂留；stationary distribution 平稳分布。

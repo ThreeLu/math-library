@@ -272,9 +272,9 @@ Tonelli 定理的一个重要应用，是把积分写成“横条”的积分。
 
 \begin{theorem}[期望的尾概率公式]\label{thm:product:tail-formula}
 \begin{enumerate}
-\item 设 $X\geqslant0$。则 $EX=\int_0^\infty \P(X>t)\dd t$。
-\item 设 $X\geqslant0$，$p>0$。则 $EX^p=\int_0^\infty pt^{p-1}\P(X>t)\dd t$。
-\item 设 $X$ 可积，$F$ 是它的分布函数。则 $EX=\int_0^\infty(1-F(t))\dd t-\int_{-\infty}^0F(t)\dd t$。
+\item 设 $X\geqslant0$。则 $\E X=\int_0^\infty \P(X>t)\dd t$。
+\item 设 $X\geqslant0$，$p>0$。则 $\E X^p=\int_0^\infty pt^{p-1}\P(X>t)\dd t$。
+\item 设 $X$ 可积，$F$ 是它的分布函数。则 $\E X=\int_0^\infty(1-F(t))\dd t-\int_{-\infty}^0F(t)\dd t$。
 \end{enumerate}
 （这里的积分都是关于 Lebesgue 测度的；被积函数是单调函数，所以是 Borel 函数。）
 \end{theorem}
@@ -289,7 +289,7 @@ X(\omega)^p=\int_{(0,\infty)}pt^{p-1}\one_{\{t<X(\omega)\}}\dd t .
 \]
 函数 $h(\omega,t)=pt^{p-1}\one_G(\omega,t)$，$G=\{(\omega,t):t<X(\omega)\}$，在 $\Omega\times(0,\infty)$ 上关于 $\cF\otimes\cR$ 可测：$G$ 可测，理由与命题~\ref{prop:product:area-under-graph} 的证明一样；$(\omega,t)\mapsto pt^{p-1}$ 是连续函数与投影的复合。$h\geqslant0$，由 Tonelli 定理（对 $\P$ 与 $\lambda$），
 \[
-EX^p=\int_\Omega\int_{(0,\infty)}h(\omega,t)\dd t\,\P(\dd\omega)=\int_{(0,\infty)}pt^{p-1}\int_\Omega\one_{\{X>t\}}\dd \P\dd t=\int_0^\infty pt^{p-1}\P(X>t)\dd t .
+\E X^p=\int_\Omega\int_{(0,\infty)}h(\omega,t)\dd t\,\P(\dd\omega)=\int_{(0,\infty)}pt^{p-1}\int_\Omega\one_{\{X>t\}}\dd \P\dd t=\int_0^\infty pt^{p-1}\P(X>t)\dd t .
 \]
 
 (3) 同样的想法。对实数 $x$，
@@ -299,21 +299,21 @@ x^+=\int_{(0,\infty)}\one_{\{x>t\}}\dd t,\qquad x^-=\int_{(-\infty,0]}\one_{\{x\
 第一个式子：$x>0$ 时右边是 $\lambda((0,x))=x$，$x\leqslant0$ 时右边是 $0$。第二个式子：$x<0$ 时 $\{s\leqslant0:x\leqslant s\}=[x,0]$，长度为 $-x=x^-$；$x>0$ 时这个集合是空集；$x=0$ 时它是 $\{0\}$，长度为 $0$。集合 $\{(\omega,s):X(\omega)\leqslant s\}$ 是 $\{(\omega,s):s<X(\omega)\}$ 的补集，同上可测。由 Tonelli 定理，
 \[
 \begin{aligned}
-EX^+&=\int_0^\infty \P(X>t)\dd t=\int_0^\infty(1-F(t))\dd t,\\
-EX^-&=\int_{(-\infty,0]}\P(X\leqslant s)\dd s=\int_{-\infty}^0F(s)\dd s .
+\E X^+&=\int_0^\infty \P(X>t)\dd t=\int_0^\infty(1-F(t))\dd t,\\
+\E X^-&=\int_{(-\infty,0]}\P(X\leqslant s)\dd s=\int_{-\infty}^0F(s)\dd s .
 \end{aligned}
 \]
 $X$ 可积，两项都有限，相减即得。
 \end{proof}
 
-这个定理改进了上一讲的命题~\ref{prop:expectation:tail-sum}：那里的和 $\sum_nP(X\geqslant n)$ 是这里的积分 $\int_0^\infty \P(X>t)\dd t$ 的“Riemann 和”。由 (2)，$p$ 阶矩有限当且仅当 $\int_0^\infty t^{p-1}\P(\abs X>t)\dd t<\infty$，这就把上一讲\wegref{we:expectation:moments-tails} 中“矩与尾概率”的关系说得更准确了。
+这个定理改进了上一讲的命题~\ref{prop:expectation:tail-sum}：那里的和 $\sum_n\P(X\geqslant n)$ 是这里的积分 $\int_0^\infty \P(X>t)\dd t$ 的“Riemann 和”。由 (2)，$p$ 阶矩有限当且仅当 $\int_0^\infty t^{p-1}\P(\abs X>t)\dd t<\infty$，这就把上一讲\wegref{we:expectation:moments-tails} 中“矩与尾概率”的关系说得更准确了。
 
 \begin{example}
-(1) 参数为 $\lambda$ 的指数分布：$\P(X>t)=e^{-\lambda t}$（$t\geqslant0$），$EX=\int_0^\infty e^{-\lambda t}\dd t=\frac1\lambda$，$EX^2=\int_0^\infty2te^{-\lambda t}\dd t=\frac2{\lambda^2}$。与上一讲习题 A10 的结果一致，但这次不需要知道密度。
+(1) 参数为 $\lambda$ 的指数分布：$\P(X>t)=e^{-\lambda t}$（$t\geqslant0$），$\E X=\int_0^\infty e^{-\lambda t}\dd t=\frac1\lambda$，$\E X^2=\int_0^\infty2te^{-\lambda t}\dd t=\frac2{\lambda^2}$。与上一讲习题 A10 的结果一致，但这次不需要知道密度。
 
-(2) $[0,1]$ 上的均匀分布：$\P(X>t)=1-t$（$0\leqslant t\leqslant1$），$EX=\int_0^1(1-t)\dd t=\frac12$。
+(2) $[0,1]$ 上的均匀分布：$\P(X>t)=1-t$（$0\leqslant t\leqslant1$），$\E X=\int_0^1(1-t)\dd t=\frac12$。
 
-(3) 设 $X_1,\dots,X_n$ 是随机变量，$\P(X_i>t)=e^{-t}$（$t\geqslant0$），$M=\min_iX_i$。若对一切 $t\geqslant0$，$\P(X_1>t,\dots,X_n>t)=e^{-nt}$（下一讲会知道，$X_i$ 独立时正是如此），则 $\P(M>t)=e^{-nt}$，$EM=\frac1n$。
+(3) 设 $X_1,\dots,X_n$ 是随机变量，$\P(X_i>t)=e^{-t}$（$t\geqslant0$），$M=\min_iX_i$。若对一切 $t\geqslant0$，$\P(X_1>t,\dots,X_n>t)=e^{-nt}$（下一讲会知道，$X_i$ 独立时正是如此），则 $\P(M>t)=e^{-nt}$，$\E M=\frac1n$。
 \end{example}
 
 \begin{workedexample}\label{we:product:shift-integral}
@@ -394,7 +394,7 @@ $\cB\subseteq\cA$：只需证明 $\cB$ 的每个生成元 $E\times A_n$（$E\in\
 \begin{example}[$n$ 次独立试验的模型]\label{ex:product:independent-trials}
 设 $\mu_1,\dots,\mu_n$ 是 $\R$ 上的概率测度。在 $(\R^n,\cR^n,\P)$ 上，$\P=\mu_1\otimes\cdots\otimes\mu_n$，令 $X_i(x_1,\dots,x_n)=x_i$ 为第 $i$ 个坐标。则对 Borel 集 $B_1,\dots,B_n$，
 \[
-\P(X_1\in B_1,\dots,X_n\in B_n)=\P(B_1\times\cdots\times B_n)=\prod_{i=1}^n\mu_i(B_i)=\prod_{i=1}^nP(X_i\in B_i).
+\P(X_1\in B_1,\dots,X_n\in B_n)=\P(B_1\times\cdots\times B_n)=\prod_{i=1}^n\mu_i(B_i)=\prod_{i=1}^n\P(X_i\in B_i).
 \]
 特别地，$X_i$ 的分布是 $\mu_i$（取 $B_j=\R$，$j\neq i$）。“联合概率等于各自概率的乘积”，这就是下一讲要定义的独立性。所以乘积测度给出了“$n$ 个独立的、分布分别为 $\mu_i$ 的随机变量”的一个具体构造。
 \end{example}
@@ -406,7 +406,7 @@ $\cB\subseteq\cA$：只需证明 $\cB$ 的每个生成元 $E\times A_n$（$E\in\
 \item 乘积测度 $(\mu\otimes\nu)(E)=\int\nu(E_s)\,\mu(\dd s)$ 是唯一满足 $(\mu\otimes\nu)(A\times B)=\mu(A)\nu(B)$ 的测度；两种截法给出同一个测度，理由是唯一性（定理~\ref{thm:product:product-measure}）。
 \item Tonelli 定理：非负可测函数的积分可以化为累次积分，次序任意，无需任何可积性条件。Fubini 定理：可积函数同样如此。使用时先对 $\abs f$ 用 Tonelli 定理验证可积性。
 \item 反例：不可积时两个累次积分可以不同（二重级数、$e^{-st}-2e^{-2st}$）；不是 $\sigma$-有限时也可以不同（计数测度与对角线）。
-\item 应用：$\lambda_2=\lambda\otimes\lambda$（祖暅原理）；$\int f\dd\mu=\int_0^\infty\mu(f>y)\dd y$，即 $EX=\int_0^\infty \P(X>t)\dd t$；Gauss 积分。
+\item 应用：$\lambda_2=\lambda\otimes\lambda$（祖暅原理）；$\int f\dd\mu=\int_0^\infty\mu(f>y)\dd y$，即 $\E X=\int_0^\infty \P(X>t)\dd t$；Gauss 积分。
 \item 有限个概率测度的乘积给出了 $n$ 个独立随机变量的模型。下一讲从这里出发讨论独立性。
 \end{enumerate}
 
@@ -477,31 +477,31 @@ $\cB\subseteq\cA$：只需证明 $\cB$ 的每个生成元 $E\times A_n$（$E\in\
 
 \item\label{ex:product:A5} 
 \begin{questions}
-\item 证明 $EX^2=2\int_0^\infty tP(\abs X>t)\dd t$。
+\item 证明 $\E X^2=2\int_0^\infty t\P(\abs X>t)\dd t$。
 \begin{solution}
 对 $\abs X$ 用定理~\ref{thm:product:tail-formula}(2)，$p=2$。
 \end{solution}
-\item 设 $N$ 取值于非负整数，证明 $\sum_{n\geqslant1}nP(N\geqslant n)=\frac12E[N(N+1)]$。
+\item 设 $N$ 取值于非负整数，证明 $\sum_{n\geqslant1}n\P(N\geqslant n)=\frac12\E[N(N+1)]$。
 \begin{solution}
 思路：和命题~\ref{prop:expectation:tail-sum} 一样，先对每个 $\omega$ 写出恒等式，再用 Tonelli 定理（这里是关于 $\P$ 与计数测度的乘积）交换求和与期望。
 
 对非负整数 $k$，$\sum_{n\geqslant1}n\one_{\{k\geqslant n\}}=1+2+\cdots+k=\frac{k(k+1)}2$。所以逐点有 $\sum_{n\geqslant1}n\one_{\{N\geqslant n\}}=\frac{N(N+1)}2$。左边是非负函数的级数，由逐项积分（推论~\ref{cor:integration:series}），
 \[
-\sum_{n\geqslant1}nP(N\geqslant n)=E\sum_{n\geqslant1}n\one_{\{N\geqslant n\}}=\frac12E[N(N+1)].
+\sum_{n\geqslant1}n\P(N\geqslant n)=\E\sum_{n\geqslant1}n\one_{\{N\geqslant n\}}=\frac12\E[N(N+1)].
 \]
 （逐项积分本身就是 Tonelli 定理对 $\P\otimes$ 计数测度的特例。）
 \end{solution}
 \end{questions}
 
-\item\label{ex:product:A6} 用尾概率公式重新证明\wegref{we:expectation:tP}：若 $E\abs X<\infty$，则 $tP(\abs X>t)\to0$。（提示：$t\mapsto \P(\abs X>t)$ 单调不增，比较 $\frac t2\P(\abs X>t)$ 与 $\int_{t/2}^tP(\abs X>s)\dd s$。）
+\item\label{ex:product:A6} 用尾概率公式重新证明\wegref{we:expectation:tP}：若 $\E\abs X<\infty$，则 $t\P(\abs X>t)\to0$。（提示：$t\mapsto \P(\abs X>t)$ 单调不增，比较 $\frac t2\P(\abs X>t)$ 与 $\int_{t/2}^t\P(\abs X>s)\dd s$。）
 \begin{solution}
 令 $G(s)=\P(\abs X>s)$，单调不增。对 $s\in[t/2,t]$，$G(s)\geqslant G(t)$，所以
 \[
 \frac t2G(t)\leqslant\int_{t/2}^tG(s)\dd s\leqslant\int_{t/2}^\infty G(s)\dd s .
 \]
-由定理~\ref{thm:product:tail-formula}(1)，$\int_0^\infty G(s)\dd s=E\abs X<\infty$。由单调收敛定理（或控制收敛定理），$\int_{t/2}^\infty G(s)\dd s=\int_0^\infty G(s)\one_{\{s\geqslant t/2\}}\dd s\to0$（$t\to\infty$）：被积函数被可积的 $G$ 控制，并且逐点趋于 $0$。所以 $tG(t)\to0$。
+由定理~\ref{thm:product:tail-formula}(1)，$\int_0^\infty G(s)\dd s=\E\abs X<\infty$。由单调收敛定理（或控制收敛定理），$\int_{t/2}^\infty G(s)\dd s=\int_0^\infty G(s)\one_{\{s\geqslant t/2\}}\dd s\to0$（$t\to\infty$）：被积函数被可积的 $G$ 控制，并且逐点趋于 $0$。所以 $tG(t)\to0$。
 
-这个证明与\wegref{we:expectation:tP} 的证明想法一样：都是把 $tP(\abs X>t)$ 用“$\abs X$ 的期望中来自大值的部分”来控制。区别在于这里在“值域”上做，那里在“样本空间”上做。
+这个证明与\wegref{we:expectation:tP} 的证明想法一样：都是把 $t\P(\abs X>t)$ 用“$\abs X$ 的期望中来自大值的部分”来控制。区别在于这里在“值域”上做，那里在“样本空间”上做。
 \end{solution}
 
 \item\label{ex:product:A7} （Frullani 积分）设 $0<a<b$。证明 $\displaystyle\int_0^\infty\frac{e^{-at}-e^{-bt}}t\dd t=\log\frac ba$。
@@ -640,9 +640,9 @@ $F$ 连续，$\mu(\{x\})=F(x)-F(x-)=0$，和式为零；两个积分相同，公
 $F=\one_{[0,\infty)}$ 对应的测度是 $\delta_0$。$\int_{(a,b]}F\dd F=F(0)=1$，所以左边是 $2$。右边：$F(b)G(b)-F(a)G(a)=1-0=1$，和式 $=\mu(\{0\})\nu(\{0\})=1$，共 $2$。若去掉和式，右边是 $1\neq2$。
 \end{solution}
 
-\item 设随机变量 $X$ 的分布函数 $F$ 连续。证明 $EF(X)=\frac12$。
+\item 设随机变量 $X$ 的分布函数 $F$ 连续。证明 $\E F(X)=\frac12$。
 \begin{solution}
-由变量替换公式，$EF(X)=\int_\R F\dd\mu=\lim_n\int_{(-n,n]}F\dd F$（单调收敛定理，$F\geqslant0$）。由 C5，$\int_{(-n,n]}F\dd F=\frac12(F(n)^2-F(-n)^2)\to\frac12(1-0)=\frac12$。
+由变量替换公式，$\E F(X)=\int_\R F\dd\mu=\lim_n\int_{(-n,n]}F\dd F$（单调收敛定理，$F\geqslant0$）。由 C5，$\int_{(-n,n]}F\dd F=\frac12(F(n)^2-F(-n)^2)\to\frac12(1-0)=\frac12$。
 
 （这与第~\ref{lec:distributions} 讲习题~\exref{ex:distributions:A1} 一致：$F$ 连续时 $F(X)$ 服从 $[0,1]$ 上的均匀分布，期望为 $\frac12$。）
 \end{solution}

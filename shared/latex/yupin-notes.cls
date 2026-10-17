@@ -388,6 +388,7 @@
 \newcommand{\Q}{\mathbb{Q}}
 \newcommand{\C}{\mathbb{C}}
 \renewcommand{\P}{\mathbb{P}}                       % 概率测度，全站统一写作 \P（排作 ℙ）
+\newcommand{\E}{\mathbb{E}}                         % 期望，全站统一写作 \E（排作 𝔼）
 % 花体字母 \cA … \cZ
 \newcommand{\cA}{\mathcal{A}}
 \newcommand{\cB}{\mathcal{B}}

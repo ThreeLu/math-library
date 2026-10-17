@@ -3,26 +3,31 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.7.0/style.css">
 <script>
-// "Show all / hide all" for pages with collapsible solutions
 document.addEventListener("DOMContentLoaded", () => {
-  const sols = document.querySelectorAll("details.yp-solution");
-  if (sols.length < 2) return;
-  const zh = document.documentElement.lang.startsWith("zh");
-  const bar = document.createElement("div");
-  bar.className = "yp-solution-toggle";
-  const mk = (label, open) => {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.textContent = label;
-    b.onclick = () => sols.forEach(d => (d.open = open));
-    return b;
+  const zh = (document.documentElement.lang || "").startsWith("zh");
+  const store = {
+    get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
   };
-  bar.append(mk(zh ? `展开全部解答（${sols.length}）` : `Show all solutions (${sols.length})`, true),
-             mk(zh ? "全部折叠" : "Hide all", false));
-  const body = document.querySelector(".yp-body");
-  const banner = body && body.querySelector(".yp-banner");
-  if (banner) banner.after(bar); else if (body) body.prepend(bar);
-  // open a solution when a link points inside it
+
+  // ---- Solutions: show all / hide all, and open the one a link points into
+  const sols = document.querySelectorAll("details.yp-solution");
+  if (sols.length > 1) {
+    const bar = document.createElement("div");
+    bar.className = "yp-solution-toggle";
+    const mk = (label, open) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = label;
+      b.onclick = () => sols.forEach(d => (d.open = open));
+      return b;
+    };
+    bar.append(mk(zh ? `展开全部解答 · ${sols.length}` : `Show all solutions · ${sols.length}`, true),
+               mk(zh ? "全部折叠" : "Hide all", false));
+    const body = document.querySelector(".yp-body");
+    const banner = body && body.querySelector(".yp-banner");
+    if (banner) banner.after(bar); else if (body) body.prepend(bar);
+  }
   const openTarget = () => {
     const t = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
     const d = t && t.closest("details");
@@ -30,5 +35,74 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   window.addEventListener("hashchange", openTarget);
   openTarget();
+
+  // ---- Continue reading: remember the last page read, overall and per book
+  const body = document.querySelector(".yp-body[data-book]");
+  if (body) {
+    const h1 = document.querySelector("h1.title");
+    const entry = {
+      url: location.pathname,
+      label: body.dataset.crumb || (h1 ? h1.textContent.trim() : document.title),
+      book: body.dataset.book,
+      bookTitle: body.dataset.bookTitle || "",
+      t: Date.now(),
+    };
+    store.set("yp:last", entry);
+    store.set("yp:last:" + entry.book, entry);
+  }
+  const fill = (el, entry, showBook) => {
+    if (!el || !entry || !entry.url || entry.url === location.pathname) return;
+    el.href = entry.url;
+    el.innerHTML = "";
+    const w = document.createElement("span");
+    w.className = "yp-continue-word";
+    w.textContent = el.dataset.word;
+    const l = document.createElement("span");
+    l.textContent = entry.label;
+    el.append(w, l);
+    if (showBook && entry.bookTitle) {
+      const b = document.createElement("span");
+      b.className = "yp-continue-book";
+      b.textContent = entry.bookTitle;
+      el.append(b);
+    }
+    el.hidden = false;
+  };
+  fill(document.getElementById("yp-continue"), store.get("yp:last"), true);
+  const cb = document.getElementById("yp-continue-book");
+  if (cb) fill(cb, store.get("yp:last:" + cb.dataset.book), false);
+
+  // ---- Index of results: search box and kind filter ("/" focuses the box)
+  const q = document.getElementById("yp-idx-q");
+  if (q) {
+    const items = [...document.querySelectorAll(".yp-idx-item")];
+    const chips = [...document.querySelectorAll(".yp-idx-chips button")];
+    const count = document.getElementById("yp-idx-count");
+    let kind = "";
+    const apply = () => {
+      const terms = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+      let n = 0;
+      items.forEach(it => {
+        const ok = (!kind || it.dataset.kind === kind) &&
+                   terms.every(t => (it.dataset.text || "").includes(t));
+        it.hidden = !ok;
+        if (ok) n++;
+      });
+      document.querySelectorAll(".yp-idx-group, .yp-idx-book").forEach(g => {
+        g.hidden = !g.querySelector(".yp-idx-item:not([hidden])");
+      });
+      count.textContent = `${n} of ${items.length}`;
+    };
+    q.addEventListener("input", apply);
+    chips.forEach(c => c.addEventListener("click", () => {
+      chips.forEach(x => x.classList.toggle("on", x === c));
+      kind = c.dataset.kind;
+      apply();
+    }));
+    document.addEventListener("keydown", e => {
+      if (e.key === "/" && document.activeElement !== q) { e.preventDefault(); q.focus(); }
+    });
+    apply();
+  }
 });
 </script>

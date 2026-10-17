@@ -5,7 +5,7 @@
 \lecture{不相关随机变量的 \texorpdfstring{$L^2$}{L²} 弱大数定律，Bernstein 多项式与高维立方体，三角阵列与集券问题、随机置换的圈、占位问题，截断法与三角阵列的弱大数定律，Khinchin 弱大数定律，Cauchy 分布与 St.\ Petersburg 悖论}
 \label{lec:weak-laws}
 
-把一枚公平的硬币抛 $n$ 次，正面的次数 $S_n$ 满足 $ES_n=\frac n2$，$\Var(S_n)=\frac n4$。由 Chebyshev 不等式，
+把一枚公平的硬币抛 $n$ 次，正面的次数 $S_n$ 满足 $\E S_n=\frac n2$，$\Var(S_n)=\frac n4$。由 Chebyshev 不等式，
 \[
 \P\Bigl(\Bigl\lvert\frac{S_n}n-\frac12\Bigr\rvert\geqslant\varepsilon\Bigr)\leqslant\frac{\Var(S_n)}{n^2\varepsilon^2}=\frac1{4n\varepsilon^2}\to0 .
 \]
@@ -13,50 +13,50 @@
 \begin{enumerate}
 \item 硬币换成一般的随机变量 $X_1,X_2,\dots$，需要什么条件？第一节的回答是：只要两两不相关、方差有界，证明一字不改。
 \item 若随机变量不是同一个序列，而是每个 $n$ 各有一组（比如集齐 $n$ 种卡片所需的次数），怎么办？第二节的回答是：只要方差相对于“尺度”$b_n^2$ 是小量。
-\item 若方差无穷，甚至期望无穷，还有没有大数定律？第三节用截断法回答：i.i.d.\ 时，只要 $E\abs{X_1}<\infty$，就有 $S_n/n\toP EX_1$；甚至 $E\abs{X_1}=\infty$ 时，有时也能找到合适的“中心”$a_n$ 使 $S_n/n-a_n\toP0$，St.\ Petersburg 悖论就是这样解决的。
+\item 若方差无穷，甚至期望无穷，还有没有大数定律？第三节用截断法回答：i.i.d.\ 时，只要 $\E\abs{X_1}<\infty$，就有 $S_n/n\toP \E X_1$；甚至 $\E\abs{X_1}=\infty$ 时，有时也能找到合适的“中心”$a_n$ 使 $S_n/n-a_n\toP0$，St.\ Petersburg 悖论就是这样解决的。
 \end{enumerate}
 这一讲的结论都是\term{弱大数定律}（weak law of large numbers），结论是依概率收敛。几乎必然收敛的\term{强大数定律}在后面的一讲中证明。
 
 \topic{本讲用到的前文结果}
 
 \begin{enumerate}
-\item 依概率收敛（定义~\ref{def:convergence:probability}）：$Y_n\toP Y$ 指对一切 $\varepsilon>0$，$\P(\abs{Y_n-Y}>\varepsilon)\to0$。$L^p$ 收敛蕴含依概率收敛（定理~\ref{thm:convergence:Lp-implies-p}）：由 Chebyshev 不等式，$\P(\abs{Y_n-Y}\geqslant\varepsilon)\leqslant\varepsilon^{-p}E\abs{Y_n-Y}^p$。依概率收敛对连续函数与四则运算封闭（推论~\ref{cor:convergence:continuous-mapping}）。
-\item 方差与协方差（定义~\ref{def:expectation:variance}、命题~\ref{prop:expectation:variance}）：$\Var(aX+b)=a^2\Var(X)$；$\Var(\sum X_i)=\sum\Var(X_i)+2\sum_{i<j}\Cov(X_i,X_j)$；$\Var(X)\leqslant EX^2$。
-\item Chebyshev 不等式（推论~\ref{cor:expectation:chebyshev}）：$\P(\abs{X-EX}\geqslant a)\leqslant\Var(X)/a^2$。
+\item 依概率收敛（定义~\ref{def:convergence:probability}）：$Y_n\toP Y$ 指对一切 $\varepsilon>0$，$\P(\abs{Y_n-Y}>\varepsilon)\to0$。$L^p$ 收敛蕴含依概率收敛（定理~\ref{thm:convergence:Lp-implies-p}）：由 Chebyshev 不等式，$\P(\abs{Y_n-Y}\geqslant\varepsilon)\leqslant\varepsilon^{-p}\E\abs{Y_n-Y}^p$。依概率收敛对连续函数与四则运算封闭（推论~\ref{cor:convergence:continuous-mapping}）。
+\item 方差与协方差（定义~\ref{def:expectation:variance}、命题~\ref{prop:expectation:variance}）：$\Var(aX+b)=a^2\Var(X)$；$\Var(\sum X_i)=\sum\Var(X_i)+2\sum_{i<j}\Cov(X_i,X_j)$；$\Var(X)\leqslant \E X^2$。
+\item Chebyshev 不等式（推论~\ref{cor:expectation:chebyshev}）：$\P(\abs{X-\E X}\geqslant a)\leqslant\Var(X)/a^2$。
 \item 独立随机变量两两不相关，和的方差等于方差的和（推论~\ref{cor:independence:variance}）；独立随机变量的函数仍独立（推论~\ref{cor:independence:functions}）；离散随机变量的独立性只需验证联合概率质量函数是乘积（推论~\ref{cor:independence:discrete}）；独立随机变量序列存在（定理~\ref{thm:independence:existence}）。
-\item 尾概率公式（定理~\ref{thm:product:tail-formula}）：$Y\geqslant0$，$p>0$ 时，$EY^p=\int_0^\infty py^{p-1}\P(Y>y)\dd y$。
-\item 课堂提问的例题（第~\pageref{we:expectation:tP} 页）：$E\abs X<\infty$ 蕴含 $xP(\abs X>x)\to0$，而且 $E(\abs X;\abs X>x)\to0$。
+\item 尾概率公式（定理~\ref{thm:product:tail-formula}）：$Y\geqslant0$，$p>0$ 时，$\E Y^p=\int_0^\infty py^{p-1}\P(Y>y)\dd y$。
+\item 课堂提问的例题（第~\pageref{we:expectation:tP} 页）：$\E\abs X<\infty$ 蕴含 $x\P(\abs X>x)\to0$，而且 $\E(\abs X;\abs X>x)\to0$。
 \item 控制收敛定理与有界收敛定理（定理~\ref{thm:integration:dct}、推论~\ref{cor:integration:bct}）。
 \end{enumerate}
 
 \topic{\texorpdfstring{$L^2$}{L²} 弱大数定律}
 
-若一族随机变量 $\{X_i\}_{i\in I}$ 满足 $EX_i^2<\infty$，并且 $E(X_iX_j)=EX_i\,EX_j$（即 $\Cov(X_i,X_j)=0$）对一切 $i\neq j$ 成立，称它们\term{两两不相关}（uncorrelated）。独立且平方可积的随机变量两两不相关（推论~\ref{cor:independence:variance}），反之不然（\egref{ex:independence:uncorrelated}）。
+若一族随机变量 $\{X_i\}_{i\in I}$ 满足 $\E X_i^2<\infty$，并且 $\E(X_iX_j)=\E X_i\,\E X_j$（即 $\Cov(X_i,X_j)=0$）对一切 $i\neq j$ 成立，称它们\term{两两不相关}（uncorrelated）。独立且平方可积的随机变量两两不相关（推论~\ref{cor:independence:variance}），反之不然（\egref{ex:independence:uncorrelated}）。
 
 \begin{theorem}\label{thm:weak-laws:variance-sum}
 设 $X_1,\dots,X_n$ 平方可积且两两不相关。则 $\Var(X_1+\cdots+X_n)=\Var(X_1)+\cdots+\Var(X_n)$。
 \end{theorem}
 \begin{proof}
-这是命题~\ref{prop:expectation:variance}(4) 的特例：右边多出的那一项 $2\sum_{i<j}\Cov(X_i,X_j)$ 为零。我们再把计算写一遍，因为它是本讲一切估计的出发点。记 $\mu_i=EX_i$，$S_n=\sum_iX_i$，则 $ES_n=\sum_i\mu_i$，
+这是命题~\ref{prop:expectation:variance}(4) 的特例：右边多出的那一项 $2\sum_{i<j}\Cov(X_i,X_j)$ 为零。我们再把计算写一遍，因为它是本讲一切估计的出发点。记 $\mu_i=\E X_i$，$S_n=\sum_iX_i$，则 $\E S_n=\sum_i\mu_i$，
 \[
-\Var(S_n)=E\Bigl(\sum_{i=1}^n(X_i-\mu_i)\Bigr)^2=\sum_{i=1}^nE(X_i-\mu_i)^2+2\sum_{1\leqslant j<i\leqslant n}E\bigl[(X_i-\mu_i)(X_j-\mu_j)\bigr],
+\Var(S_n)=\E\Bigl(\sum_{i=1}^n(X_i-\mu_i)\Bigr)^2=\sum_{i=1}^n\E(X_i-\mu_i)^2+2\sum_{1\leqslant j<i\leqslant n}\E\bigl[(X_i-\mu_i)(X_j-\mu_j)\bigr],
 \]
-而 $E[(X_i-\mu_i)(X_j-\mu_j)]=EX_iX_j-\mu_iEX_j-\mu_jEX_i+\mu_i\mu_j=EX_iX_j-\mu_i\mu_j=0$。
+而 $\E[(X_i-\mu_i)(X_j-\mu_j)]=\E X_iX_j-\mu_i\E X_j-\mu_j\E X_i+\mu_i\mu_j=\E X_iX_j-\mu_i\mu_j=0$。
 \end{proof}
 
 \begin{theorem}[$L^2$ 弱大数定律]\label{thm:weak-laws:L2}
-设 $X_1,X_2,\dots$ 两两不相关，$EX_i=\mu$，$\Var(X_i)\leqslant C<\infty$。令 $S_n=X_1+\cdots+X_n$。则 $n\to\infty$ 时 $S_n/n\to\mu$ 在 $L^2$ 中成立，从而 $S_n/n\toP\mu$。
+设 $X_1,X_2,\dots$ 两两不相关，$\E X_i=\mu$，$\Var(X_i)\leqslant C<\infty$。令 $S_n=X_1+\cdots+X_n$。则 $n\to\infty$ 时 $S_n/n\to\mu$ 在 $L^2$ 中成立，从而 $S_n/n\toP\mu$。
 \end{theorem}
 \begin{proof}
-$E(S_n/n)=\mu$，由 $\Var(cY)=c^2\Var(Y)$ 与定理~\ref{thm:weak-laws:variance-sum}，
+$\E(S_n/n)=\mu$，由 $\Var(cY)=c^2\Var(Y)$ 与定理~\ref{thm:weak-laws:variance-sum}，
 \[
-E\Bigl(\frac{S_n}n-\mu\Bigr)^2=\Var\Bigl(\frac{S_n}n\Bigr)=\frac1{n^2}\bigl(\Var(X_1)+\cdots+\Var(X_n)\bigr)\leqslant\frac{Cn}{n^2}=\frac Cn\to0 .
+\E\Bigl(\frac{S_n}n-\mu\Bigr)^2=\Var\Bigl(\frac{S_n}n\Bigr)=\frac1{n^2}\bigl(\Var(X_1)+\cdots+\Var(X_n)\bigr)\leqslant\frac{Cn}{n^2}=\frac Cn\to0 .
 \]
 再由定理~\ref{thm:convergence:Lp-implies-p}（$p=2$），$S_n/n\toP\mu$。具体地，$\P(\abs{S_n/n-\mu}>\varepsilon)\leqslant\frac C{n\varepsilon^2}$。
 \end{proof}
 
 \begin{remark}
-这个定理最重要的特例是：$X_1,X_2,\dots$ \term{独立同分布}（independent and identically distributed，简写为 i.i.d.），$EX_1^2<\infty$，则 $S_n/n\toP EX_1$。定理~\ref{thm:weak-laws:khinchin} 将说明 $E\abs{X_1}<\infty$ 就够了。但 $L^2$ 的证明有它的好处：它给出了收敛的速度 $C/(n\varepsilon^2)$，并且只用到“不相关”，远比独立弱。证明的要点是一个数量级的比较：$S_n-ES_n$ 的“典型大小”是标准差 $\sqrt{\Var(S_n)}\leqslant\sqrt{Cn}$，比 $n$ 小得多，所以除以 $n$ 以后趋于零。以后的中心极限定理会说，$\sqrt n$ 恰好是正确的量级。
+这个定理最重要的特例是：$X_1,X_2,\dots$ \term{独立同分布}（independent and identically distributed，简写为 i.i.d.），$\E X_1^2<\infty$，则 $S_n/n\toP \E X_1$。定理~\ref{thm:weak-laws:khinchin} 将说明 $\E\abs{X_1}<\infty$ 就够了。但 $L^2$ 的证明有它的好处：它给出了收敛的速度 $C/(n\varepsilon^2)$，并且只用到“不相关”，远比独立弱。证明的要点是一个数量级的比较：$S_n-\E S_n$ 的“典型大小”是标准差 $\sqrt{\Var(S_n)}\leqslant\sqrt{Cn}$，比 $n$ 小得多，所以除以 $n$ 以后趋于零。以后的中心极限定理会说，$\sqrt n$ 恰好是正确的量级。
 \end{remark}
 
 我们先看两个看起来与随机性无关的应用。
@@ -71,9 +71,9 @@ f_n(x)=\sum_{m=0}^n\binom nmx^m(1-x)^{n-m}f\Bigl(\frac mn\Bigr)
 \begin{solution}
 这正是第~\ref{lec:expectation} 讲作业 E 的 Weierstrass 定理，那里用的是同一个想法，这里换成大数定律的语言再说一遍。
 
-\emph{第一步：概率解释。}固定 $p\in[0,1]$，取独立的 $X_1,\dots,X_n$，$\P(X_i=1)=p$，$\P(X_i=0)=1-p$（由定理~\ref{thm:independence:existence} 存在），$S_n=X_1+\cdots+X_n$。$S_n$ 服从二项分布，$\P(S_n=m)=\binom nmp^m(1-p)^{n-m}$，所以由变量替换公式（推论~\ref{cor:expectation:discrete}），$Ef(S_n/n)=f_n(p)$。直观上，$S_n/n\approx p$，所以 $f_n(p)=Ef(S_n/n)\approx f(p)$。
+\emph{第一步：概率解释。}固定 $p\in[0,1]$，取独立的 $X_1,\dots,X_n$，$\P(X_i=1)=p$，$\P(X_i=0)=1-p$（由定理~\ref{thm:independence:existence} 存在），$S_n=X_1+\cdots+X_n$。$S_n$ 服从二项分布，$\P(S_n=m)=\binom nmp^m(1-p)^{n-m}$，所以由变量替换公式（推论~\ref{cor:expectation:discrete}），$\E f(S_n/n)=f_n(p)$。直观上，$S_n/n\approx p$，所以 $f_n(p)=\E f(S_n/n)\approx f(p)$。
 
-\emph{第二步：定量。}$EX_i=p$，$\Var(X_i)=p(1-p)\leqslant\frac14$，由定理~\ref{thm:weak-laws:L2} 的证明，
+\emph{第二步：定量。}$\E X_i=p$，$\Var(X_i)=p(1-p)\leqslant\frac14$，由定理~\ref{thm:weak-laws:L2} 的证明，
 \[
 \P(\abs{S_n/n-p}>\delta)\leqslant\frac{p(1-p)}{n\delta^2}\leqslant\frac1{4n\delta^2},
 \]
@@ -81,7 +81,7 @@ f_n(x)=\sum_{m=0}^n\binom nmx^m(1-x)^{n-m}f\Bigl(\frac mn\Bigr)
 
 \emph{第三步：一致连续性。}令 $M=\sup_{[0,1]}\abs f<\infty$。给定 $\varepsilon>0$，由 $f$ 在 $[0,1]$ 上一致连续，取 $\delta>0$ 使 $\abs{x-y}\leqslant\delta$ 时 $\abs{f(x)-f(y)}<\varepsilon$。在事件 $\{\abs{S_n/n-p}\leqslant\delta\}$ 上，$\abs{f(S_n/n)-f(p)}<\varepsilon$；在其余地方，它不超过 $2M$。所以
 \[
-\abs{f_n(p)-f(p)}\leqslant E\abs{f(S_n/n)-f(p)}\leqslant\varepsilon+2MP(\abs{S_n/n-p}>\delta)\leqslant\varepsilon+\frac{2M}{4n\delta^2}.
+\abs{f_n(p)-f(p)}\leqslant \E\abs{f(S_n/n)-f(p)}\leqslant\varepsilon+2M\P(\abs{S_n/n-p}>\delta)\leqslant\varepsilon+\frac{2M}{4n\delta^2}.
 \]
 右边与 $p$ 无关，所以 $\limsup_n\sup_p\abs{f_n(p)-f(p)}\leqslant\varepsilon$，$\varepsilon$ 任意。
 
@@ -96,7 +96,7 @@ A_{n,\varepsilon}=\Bigl\{x\in\R^n:\ (1-\varepsilon)\sqrt{n/3}<\abs x<(1+\varepsi
 则 $\lambda_n(A_{n,\varepsilon}\cap(-1,1)^n)/2^n\to1$。
 \end{workedexample}
 \begin{solution}
-\emph{大数定律。}$Y_i=X_i^2$ 是独立随机变量的函数，仍独立（推论~\ref{cor:independence:functions}），同分布。$EY_i=\frac12\int_{-1}^1x^2\dd x=\frac13$，$\Var(Y_i)\leqslant EY_i^2=\frac12\int_{-1}^1x^4\dd x=\frac15\leqslant1$。由定理~\ref{thm:weak-laws:L2}，$(Y_1+\cdots+Y_n)/n\toP\frac13$。
+\emph{大数定律。}$Y_i=X_i^2$ 是独立随机变量的函数，仍独立（推论~\ref{cor:independence:functions}），同分布。$\E Y_i=\frac12\int_{-1}^1x^2\dd x=\frac13$，$\Var(Y_i)\leqslant \E Y_i^2=\frac12\int_{-1}^1x^4\dd x=\frac15\leqslant1$。由定理~\ref{thm:weak-laws:L2}，$(Y_1+\cdots+Y_n)/n\toP\frac13$。
 
 \emph{几何解释。}$(X_1,\dots,X_n)$ 的分布是 $(-1,1)^n$ 上的均匀分布：由独立性与定理~\ref{thm:independence:product-measure}，它的分布是 $n$ 个一维均匀分布的乘积测度，即 $2^{-n}\lambda_n$ 限制在 $(-1,1)^n$ 上。所以
 \[
@@ -115,20 +115,20 @@ A_{n,\varepsilon}=\Bigl\{x\in\R^n:\ (1-\varepsilon)\sqrt{n/3}<\abs x<(1+\varepsi
 很多经典的极限定理研究的是\term{三角阵列}（triangular array）：对每个 $n$ 有一组随机变量 $X_{n,1},\dots,X_{n,n}$，考察行和 $S_n=X_{n,1}+\cdots+X_{n,n}$。不同的行可以完全不同。下面这个简单的定理连这个结构都不需要，$S_n$ 可以是任意一列随机变量。
 
 \begin{theorem}\label{thm:weak-laws:triangular-L2}
-设 $\mu_n=ES_n$，$\sigma_n^2=\Var(S_n)$，$b_n>0$。若 $\sigma_n^2/b_n^2\to0$，则
+设 $\mu_n=\E S_n$，$\sigma_n^2=\Var(S_n)$，$b_n>0$。若 $\sigma_n^2/b_n^2\to0$，则
 \[
 \frac{S_n-\mu_n}{b_n}\toP0 .
 \]
 \end{theorem}
 \begin{proof}
-$E\bigl((S_n-\mu_n)/b_n\bigr)^2=b_n^{-2}\Var(S_n)\to0$，由定理~\ref{thm:convergence:Lp-implies-p}。
+$\E\bigl((S_n-\mu_n)/b_n\bigr)^2=b_n^{-2}\Var(S_n)\to0$，由定理~\ref{thm:convergence:Lp-implies-p}。
 \end{proof}
 
 定理的用法是：选一个尽量小、但仍使 $\sigma_n/b_n\to0$ 的尺度 $b_n$，结论就说 $S_n$ 在 $\mu_n$ 附近、误差为 $o(b_n)$。下面三个例子中要用到调和级数的估计：比较 $\frac1m$ 与 $\int_{m-1}^m\frac{\dd x}x$、$\int_m^{m+1}\frac{\dd x}x$，得
 \begin{equation}\label{eq:weak-laws:harmonic}
 \log n\leqslant\sum_{m=1}^n\frac1m\leqslant1+\log n .
 \end{equation}
-（左边：$\sum_{m=1}^n\frac1m\geqslant\int_1^{n+1}\frac{\dd x}x\geqslant\log n$；右边：$\sum_{m=2}^n\frac1m\leqslant\int_1^n\frac{\dd x}x=\log n$。）还要用到几何分布的方差：若 $\P(N=k)=p(1-p)^{k-1}$，$k\geqslant1$，则 $EN=\frac1p$，$\Var(N)=\frac{1-p}{p^2}\leqslant\frac1{p^2}$。（由本讲习题~\exref{ex:weak-laws:A4}，$EN^2=\sum_{k\geqslant1}(2k-1)\P(N\geqslant k)=\sum_{k\geqslant1}(2k-1)(1-p)^{k-1}=\frac2{p^2}-\frac1p$，减去 $(EN)^2=\frac1{p^2}$。）
+（左边：$\sum_{m=1}^n\frac1m\geqslant\int_1^{n+1}\frac{\dd x}x\geqslant\log n$；右边：$\sum_{m=2}^n\frac1m\leqslant\int_1^n\frac{\dd x}x=\log n$。）还要用到几何分布的方差：若 $\P(N=k)=p(1-p)^{k-1}$，$k\geqslant1$，则 $\E N=\frac1p$，$\Var(N)=\frac{1-p}{p^2}\leqslant\frac1{p^2}$。（由本讲习题~\exref{ex:weak-laws:A4}，$\E N^2=\sum_{k\geqslant1}(2k-1)\P(N\geqslant k)=\sum_{k\geqslant1}(2k-1)(1-p)^{k-1}=\frac2{p^2}-\frac1p$，减去 $(\E N)^2=\frac1{p^2}$。）
 
 \begin{workedexample}[集券问题]\label{we:weak-laws:coupon}
 设 $X_1,X_2,\dots$ 独立，都服从 $\{1,\dots,n\}$ 上的均匀分布。想象每买一包零食得到一张卡片，共有 $n$ 种，每次得到哪一种是等可能的、互相独立的。令 $\tau_k^n=\inf\{m:\ \abs{\{X_1,\dots,X_m\}}=k\}$ 为第一次集到 $k$ 种不同卡片的时刻，$T_n=\tau_n^n$ 为集齐全套的时刻。证明
@@ -151,14 +151,14 @@ $E\bigl((S_n-\mu_n)/b_n\bigr)^2=b_n^{-2}\Var(S_n)\to0$，由定理~\ref{thm:conv
 
 \emph{第三步：期望与方差。}由线性性与 \eqref{eq:weak-laws:harmonic}，
 \[
-ET_n=\sum_{k=1}^n\frac1{p_k}=\sum_{k=1}^n\frac n{n-k+1}=n\sum_{m=1}^n\frac1m\sim n\log n .
+\E T_n=\sum_{k=1}^n\frac1{p_k}=\sum_{k=1}^n\frac n{n-k+1}=n\sum_{m=1}^n\frac1m\sim n\log n .
 \]
 由独立性（定理~\ref{thm:weak-laws:variance-sum}）与几何分布的方差，
 \[
 \Var(T_n)\leqslant\sum_{k=1}^n\frac1{p_k^2}=n^2\sum_{m=1}^n\frac1{m^2}\leqslant n^2\sum_{m=1}^\infty\frac1{m^2}=\frac{\pi^2}6n^2 .
 \]
 
-\emph{第四步：用定理~\ref{thm:weak-laws:triangular-L2}。}取 $b_n=n\log n$，$\Var(T_n)/b_n^2\leqslant\frac{\pi^2}{6(\log n)^2}\to0$，于是 $(T_n-ET_n)/(n\log n)\toP0$。又 $ET_n/(n\log n)\to1$（由 \eqref{eq:weak-laws:harmonic}），所以 $T_n/(n\log n)\toP1$。
+\emph{第四步：用定理~\ref{thm:weak-laws:triangular-L2}。}取 $b_n=n\log n$，$\Var(T_n)/b_n^2\leqslant\frac{\pi^2}{6(\log n)^2}\to0$，于是 $(T_n-\E T_n)/(n\log n)\toP0$。又 $\E T_n/(n\log n)\to1$（由 \eqref{eq:weak-laws:harmonic}），所以 $T_n/(n\log n)\toP1$。
 
 例如 $n=365$：要“见到所有的生日”，大约需要 $365\log365\approx2153$ 个人，是生日种数的 $5.9$ 倍。$T_n$ 的波动 $\sqrt{\Var(T_n)}$ 是 $n$ 的量级，比 $n\log n$ 小一个对数因子，所以选 $b_n=n\log n$ 正好。
 \end{solution}
@@ -190,9 +190,9 @@ ET_n=\sum_{k=1}^n\frac1{p_k}=\sum_{k=1}^n\frac n{n-k+1}=n\sum_{m=1}^n\frac1m\sim
 \]
 由推论~\ref{cor:independence:discrete}，(1) 成立。（$k=n$ 时只剩一个数，必然闭合，$\P(X_{n,n}=1)=1$，与公式一致。）
 
-\emph{第四步：大数定律。}由 (1)，$ES_n=\sum_{k=1}^n\frac1{n-k+1}=\sum_{m=1}^n\frac1m$。$X_{n,k}^2=X_{n,k}$，所以
+\emph{第四步：大数定律。}由 (1)，$\E S_n=\sum_{k=1}^n\frac1{n-k+1}=\sum_{m=1}^n\frac1m$。$X_{n,k}^2=X_{n,k}$，所以
 \[
-\Var(S_n)=\sum_k\Var(X_{n,k})\leqslant\sum_kEX_{n,k}^2=\sum_kEX_{n,k}=ES_n\leqslant1+\log n .
+\Var(S_n)=\sum_k\Var(X_{n,k})\leqslant\sum_k\E X_{n,k}^2=\sum_k\E X_{n,k}=\E S_n\leqslant1+\log n .
 \]
 取 $b_n=(\log n)^{1/2+\varepsilon}$，$\Var(S_n)/b_n^2\leqslant(1+\log n)/(\log n)^{1+2\varepsilon}\to0$，由定理~\ref{thm:weak-laws:triangular-L2} 得 (2)。取 $\varepsilon=\frac12$，再由 \eqref{eq:weak-laws:harmonic}，$S_n/\log n\toP1$。
 
@@ -208,9 +208,9 @@ ET_n=\sum_{k=1}^n\frac1{p_k}=\sum_{k=1}^n\frac n{n-k+1}=n\sum_{m=1}^n\frac1m\sim
 \P(A_i)=\Bigl(1-\frac1n\Bigr)^r,\qquad \P(A_i\cap A_j)=\Bigl(1-\frac2n\Bigr)^r\quad(i\neq j).
 \]
 
-\emph{期望。}$EN_n=n(1-\frac1n)^r$。由 $\log(1-\frac1n)=-\frac1n+O(\frac1{n^2})$，$r\log(1-\frac1n)=-\frac rn+O(\frac r{n^2})\to-c$，所以 $(1-\frac1n)^r\to e^{-c}$，$EN_n/n\to e^{-c}$。同理 $(1-\frac2n)^r\to e^{-2c}$。
+\emph{期望。}$\E N_n=n(1-\frac1n)^r$。由 $\log(1-\frac1n)=-\frac1n+O(\frac1{n^2})$，$r\log(1-\frac1n)=-\frac rn+O(\frac r{n^2})\to-c$，所以 $(1-\frac1n)^r\to e^{-c}$，$\E N_n/n\to e^{-c}$。同理 $(1-\frac2n)^r\to e^{-2c}$。
 
-\emph{方差。}$EN_n^2=E\bigl(\sum_i\one_{A_i}\bigr)^2=\sum_{i,j}\P(A_i\cap A_j)$，于是
+\emph{方差。}$\E N_n^2=\E\bigl(\sum_i\one_{A_i}\bigr)^2=\sum_{i,j}\P(A_i\cap A_j)$，于是
 \[
 \begin{aligned}
 \Var(N_n)&=\sum_{i,j}\bigl(\P(A_i\cap A_j)-\P(A_i)\P(A_j)\bigr)\\
@@ -219,12 +219,12 @@ ET_n=\sum_{k=1}^n\frac1{p_k}=\sum_{k=1}^n\frac n{n-k+1}=n\sum_{m=1}^n\frac1m\sim
 \]
 前一项来自 $i\neq j$，后一项来自 $i=j$。除以 $n^2$：方括号中第一项趋于 $e^{-2c}-e^{-2c}=0$，第二项除以 $n^2$ 后不超过 $\frac1n$。所以 $\Var(N_n/n)\to0$。
 
-\emph{结论。}取 $b_n=n$，由定理~\ref{thm:weak-laws:triangular-L2}，$(N_n-EN_n)/n\toP0$，再结合 $EN_n/n\to e^{-c}$ 即得。注意 $\one_{A_i}$ 之间并不独立（甚至是负相关的），这里只用到了方差的计算。比如 $r=n$ 时，大约有 $e^{-1}\approx37\%$ 的盒子是空的。
+\emph{结论。}取 $b_n=n$，由定理~\ref{thm:weak-laws:triangular-L2}，$(N_n-\E N_n)/n\toP0$，再结合 $\E N_n/n\to e^{-c}$ 即得。注意 $\one_{A_i}$ 之间并不独立（甚至是负相关的），这里只用到了方差的计算。比如 $r=n$ 时，大约有 $e^{-1}\approx37\%$ 的盒子是空的。
 \end{solution}
 
 \topic{截断法}
 
-到目前为止的证明都靠方差。可是 i.i.d.\ 的随机变量只要 $E\abs{X_1}<\infty$，大数定律就应该成立，而方差可能是无穷。处理的办法是\term{截断}（truncation）：把 $X$ 在水平 $M$ 处截断，即考虑
+到目前为止的证明都靠方差。可是 i.i.d.\ 的随机变量只要 $\E\abs{X_1}<\infty$，大数定律就应该成立，而方差可能是无穷。处理的办法是\term{截断}（truncation）：把 $X$ 在水平 $M$ 处截断，即考虑
 \[
 \bar X=X\one_{\{\abs X\leqslant M\}}=\begin{cases}X,&\abs X\leqslant M,\\0,&\abs X>M.\end{cases}
 \]
@@ -233,10 +233,10 @@ $\bar X$ 有界，方差有限，可以用 Chebyshev 不等式；而 $X$ 与 $\b
 \begin{theorem}[三角阵列的弱大数定律]\label{thm:weak-laws:truncated-triangular}
 对每个 $n$，设 $X_{n,1},\dots,X_{n,n}$ 独立。设 $b_n>0$，$b_n\to\infty$，令 $\bar X_{n,k}=X_{n,k}\one_{\{\abs{X_{n,k}}\leqslant b_n\}}$。若 $n\to\infty$ 时
 \begin{enumerate}
-\item[(i)] $\sum_{k=1}^nP(\abs{X_{n,k}}>b_n)\to0$，
-\item[(ii)] $b_n^{-2}\sum_{k=1}^nE\bar X_{n,k}^2\to0$，
+\item[(i)] $\sum_{k=1}^n\P(\abs{X_{n,k}}>b_n)\to0$，
+\item[(ii)] $b_n^{-2}\sum_{k=1}^n\E\bar X_{n,k}^2\to0$，
 \end{enumerate}
-令 $S_n=X_{n,1}+\cdots+X_{n,n}$，$a_n=\sum_{k=1}^nE\bar X_{n,k}$，则 $(S_n-a_n)/b_n\toP0$。
+令 $S_n=X_{n,1}+\cdots+X_{n,n}$，$a_n=\sum_{k=1}^n\E\bar X_{n,k}$，则 $(S_n-a_n)/b_n\toP0$。
 \end{theorem}
 \begin{proof}
 令 $\bar S_n=\bar X_{n,1}+\cdots+\bar X_{n,n}$。若 $S_n\neq\bar S_n$，则某个 $X_{n,k}\neq\bar X_{n,k}$。所以对 $\varepsilon>0$，
@@ -245,11 +245,11 @@ $\bar X$ 有界，方差有限，可以用 Chebyshev 不等式；而 $X$ 与 $\b
 \]
 \emph{第一项。}由次可加性与 (i)，
 \[
-\P(S_n\neq\bar S_n)\leqslant \P\Bigl(\bigcup_{k=1}^n\{\bar X_{n,k}\neq X_{n,k}\}\Bigr)\leqslant\sum_{k=1}^nP(\abs{X_{n,k}}>b_n)\to0 .
+\P(S_n\neq\bar S_n)\leqslant \P\Bigl(\bigcup_{k=1}^n\{\bar X_{n,k}\neq X_{n,k}\}\Bigr)\leqslant\sum_{k=1}^n\P(\abs{X_{n,k}}>b_n)\to0 .
 \]
-\emph{第二项。}$a_n=E\bar S_n$。$\bar X_{n,k}$ 是独立随机变量的函数，仍独立（推论~\ref{cor:independence:functions}），有界，所以两两不相关。由 Chebyshev 不等式、定理~\ref{thm:weak-laws:variance-sum} 与 $\Var(Y)\leqslant EY^2$，
+\emph{第二项。}$a_n=\E\bar S_n$。$\bar X_{n,k}$ 是独立随机变量的函数，仍独立（推论~\ref{cor:independence:functions}），有界，所以两两不相关。由 Chebyshev 不等式、定理~\ref{thm:weak-laws:variance-sum} 与 $\Var(Y)\leqslant \E Y^2$，
 \[
-\P\Bigl(\Bigl\lvert\frac{\bar S_n-a_n}{b_n}\Bigr\rvert>\varepsilon\Bigr)\leqslant\frac{\Var(\bar S_n)}{\varepsilon^2b_n^2}=\frac1{\varepsilon^2b_n^2}\sum_{k=1}^n\Var(\bar X_{n,k})\leqslant\frac1{\varepsilon^2b_n^2}\sum_{k=1}^nE\bar X_{n,k}^2\to0
+\P\Bigl(\Bigl\lvert\frac{\bar S_n-a_n}{b_n}\Bigr\rvert>\varepsilon\Bigr)\leqslant\frac{\Var(\bar S_n)}{\varepsilon^2b_n^2}=\frac1{\varepsilon^2b_n^2}\sum_{k=1}^n\Var(\bar X_{n,k})\leqslant\frac1{\varepsilon^2b_n^2}\sum_{k=1}^n\E\bar X_{n,k}^2\to0
 \]
 由 (ii)。
 \end{proof}
@@ -259,27 +259,27 @@ $\bar X$ 有界，方差有限，可以用 Chebyshev 不等式；而 $X$ 与 $\b
 \begin{theorem}[弱大数定律]\label{thm:weak-laws:wlln}
 设 $X_1,X_2,\dots$ 是 i.i.d.，并且
 \begin{equation}\label{eq:weak-laws:xP}
-xP(\abs{X_1}>x)\to0\qquad(x\to\infty).
+x\P(\abs{X_1}>x)\to0\qquad(x\to\infty).
 \end{equation}
-令 $S_n=X_1+\cdots+X_n$，$\mu_n=E(X_1\one_{\{\abs{X_1}\leqslant n\}})$。则 $S_n/n-\mu_n\toP0$。
+令 $S_n=X_1+\cdots+X_n$，$\mu_n=\E(X_1\one_{\{\abs{X_1}\leqslant n\}})$。则 $S_n/n-\mu_n\toP0$。
 \end{theorem}
 
 \begin{remark}[证明思路]
-用定理~\ref{thm:weak-laws:truncated-triangular}，取 $X_{n,k}=X_k$（每一行都是同一个序列的前 $n$ 项），$b_n=n$。条件 (i) 就是 $nP(\abs{X_1}>n)\to0$，这正是假设 \eqref{eq:weak-laws:xP}。条件 (ii) 是 $\frac1nE(X_1^2;\abs{X_1}\leqslant n)\to0$，要用尾概率公式把它也化成关于 $yP(\abs{X_1}>y)$ 的条件：它是函数 $2yP(\abs{X_1}>y)$ 在 $[0,n]$ 上的平均值，而这个函数趋于零。
+用定理~\ref{thm:weak-laws:truncated-triangular}，取 $X_{n,k}=X_k$（每一行都是同一个序列的前 $n$ 项），$b_n=n$。条件 (i) 就是 $n\P(\abs{X_1}>n)\to0$，这正是假设 \eqref{eq:weak-laws:xP}。条件 (ii) 是 $\frac1n\E(X_1^2;\abs{X_1}\leqslant n)\to0$，要用尾概率公式把它也化成关于 $y\P(\abs{X_1}>y)$ 的条件：它是函数 $2y\P(\abs{X_1}>y)$ 在 $[0,n]$ 上的平均值，而这个函数趋于零。
 \end{remark}
 
 \begin{proof}
 取 $X_{n,k}=X_k$，$b_n=n$，$\bar X_{n,k}=X_k\one_{\{\abs{X_k}\leqslant n\}}$。
 
-\emph{条件 (i)。}由同分布，$\sum_{k=1}^nP(\abs{X_k}>n)=nP(\abs{X_1}>n)\to0$。
+\emph{条件 (i)。}由同分布，$\sum_{k=1}^n\P(\abs{X_k}>n)=n\P(\abs{X_1}>n)\to0$。
 
-\emph{条件 (ii)。}由同分布，要证 $n^{-2}\cdot nE\bar X_{n,1}^2=\frac1nE\bar X_{n,1}^2\to0$。由尾概率公式（定理~\ref{thm:product:tail-formula}(2)，$p=2$），
+\emph{条件 (ii)。}由同分布，要证 $n^{-2}\cdot n\E\bar X_{n,1}^2=\frac1n\E\bar X_{n,1}^2\to0$。由尾概率公式（定理~\ref{thm:product:tail-formula}(2)，$p=2$），
 \[
-E\bar X_{n,1}^2=\int_0^\infty2yP(\abs{\bar X_{n,1}}>y)\dd y\leqslant\int_0^n2yP(\abs{X_1}>y)\dd y .
+\E\bar X_{n,1}^2=\int_0^\infty2y\P(\abs{\bar X_{n,1}}>y)\dd y\leqslant\int_0^n2y\P(\abs{X_1}>y)\dd y .
 \]
 这里用了：$y\geqslant n$ 时 $\P(\abs{\bar X_{n,1}}>y)=0$（$\abs{\bar X_{n,1}}\leqslant n$）；$y<n$ 时 $\{\abs{\bar X_{n,1}}>y\}=\{y<\abs{X_1}\leqslant n\}\subseteq\{\abs{X_1}>y\}$。
 
-令 $g(y)=2yP(\abs{X_1}>y)$，$y\geqslant0$。它是 Borel 函数（$y$ 与单调函数之积），$0\leqslant g(y)\leqslant2y$，并且由 \eqref{eq:weak-laws:xP}，$g(y)\to0$（$y\to\infty$）。所以 $g$ 有界：取 $Y$ 使 $y>Y$ 时 $g(y)\leqslant1$，则 $M=\sup_yg(y)\leqslant\max\{2Y,1\}<\infty$。作变量替换 $y=nx$（第~\ref{lec:integration} 讲作业 E），
+令 $g(y)=2y\P(\abs{X_1}>y)$，$y\geqslant0$。它是 Borel 函数（$y$ 与单调函数之积），$0\leqslant g(y)\leqslant2y$，并且由 \eqref{eq:weak-laws:xP}，$g(y)\to0$（$y\to\infty$）。所以 $g$ 有界：取 $Y$ 使 $y>Y$ 时 $g(y)\leqslant1$，则 $M=\sup_yg(y)\leqslant\max\{2Y,1\}<\infty$。作变量替换 $y=nx$（第~\ref{lec:integration} 讲作业 E），
 \[
 \frac1n\int_0^ng(y)\dd y=\int_0^1g(nx)\dd x .
 \]
@@ -291,23 +291,23 @@ E\bar X_{n,1}^2=\int_0^\infty2yP(\abs{\bar X_{n,1}}>y)\dd y\leqslant\int_0^n2yP(
 \begin{remark}
 (1) 条件 \eqref{eq:weak-laws:xP} 是必要的：若存在常数 $a_n$ 使 $S_n/n-a_n\toP0$，则 \eqref{eq:weak-laws:xP} 成立。这个方向的证明较长，我们不证，可参看 Feller 的书（第二卷）。
 
-(2) \eqref{eq:weak-laws:xP} 只比 $E\abs{X_1}<\infty$ 弱一点点。由尾概率公式（$p=1-\varepsilon$），若 $xP(\abs{X_1}>x)\to0$，则对 $x\geqslant x_0$ 有 $\P(\abs{X_1}>x)\leqslant\frac1x$，于是
+(2) \eqref{eq:weak-laws:xP} 只比 $\E\abs{X_1}<\infty$ 弱一点点。由尾概率公式（$p=1-\varepsilon$），若 $x\P(\abs{X_1}>x)\to0$，则对 $x\geqslant x_0$ 有 $\P(\abs{X_1}>x)\leqslant\frac1x$，于是
 \[
-E\abs{X_1}^{1-\varepsilon}=\int_0^\infty(1-\varepsilon)x^{-\varepsilon}\P(\abs{X_1}>x)\dd x\leqslant\int_0^{x_0}(1-\varepsilon)x^{-\varepsilon}\dd x+\int_{x_0}^\infty(1-\varepsilon)x^{-1-\varepsilon}\dd x<\infty .
+\E\abs{X_1}^{1-\varepsilon}=\int_0^\infty(1-\varepsilon)x^{-\varepsilon}\P(\abs{X_1}>x)\dd x\leqslant\int_0^{x_0}(1-\varepsilon)x^{-\varepsilon}\dd x+\int_{x_0}^\infty(1-\varepsilon)x^{-1-\varepsilon}\dd x<\infty .
 \]
-反过来，$E\abs{X_1}<\infty$ 蕴含 \eqref{eq:weak-laws:xP}（第~\ref{lec:expectation} 讲的例题，第~\pageref{we:expectation:tP} 页）。$E\abs{X_1}=\infty$ 而 \eqref{eq:weak-laws:xP} 成立的例子见作业 B、C。
+反过来，$\E\abs{X_1}<\infty$ 蕴含 \eqref{eq:weak-laws:xP}（第~\ref{lec:expectation} 讲的例题，第~\pageref{we:expectation:tP} 页）。$\E\abs{X_1}=\infty$ 而 \eqref{eq:weak-laws:xP} 成立的例子见作业 B、C。
 \end{remark}
 
 最后得到弱大数定律最常见的形式。
 
 \begin{theorem}[Khinchin 弱大数定律]\label{thm:weak-laws:khinchin}
-设 $X_1,X_2,\dots$ 是 i.i.d.，$E\abs{X_1}<\infty$，$\mu=EX_1$，$S_n=X_1+\cdots+X_n$。则 $S_n/n\toP\mu$。
+设 $X_1,X_2,\dots$ 是 i.i.d.，$\E\abs{X_1}<\infty$，$\mu=\E X_1$，$S_n=X_1+\cdots+X_n$。则 $S_n/n\toP\mu$。
 \end{theorem}
 \begin{proof}
 由控制收敛定理用两次：
 \begin{itemize}
-\item $xP(\abs{X_1}>x)\leqslant E(\abs{X_1};\abs{X_1}>x)\to0$（$x\to\infty$），这是第~\ref{lec:expectation} 讲的例题（第~\pageref{we:expectation:tP} 页）；
-\item $\mu_n=E(X_1\one_{\{\abs{X_1}\leqslant n\}})\to EX_1=\mu$：被积函数逐点趋于 $X_1$，被可积的 $\abs{X_1}$ 控制。
+\item $x\P(\abs{X_1}>x)\leqslant \E(\abs{X_1};\abs{X_1}>x)\to0$（$x\to\infty$），这是第~\ref{lec:expectation} 讲的例题（第~\pageref{we:expectation:tP} 页）；
+\item $\mu_n=\E(X_1\one_{\{\abs{X_1}\leqslant n\}})\to \E X_1=\mu$：被积函数逐点趋于 $X_1$，被可积的 $\abs{X_1}$ 控制。
 \end{itemize}
 由定理~\ref{thm:weak-laws:wlln}，对 $\varepsilon>0$，$\P(\abs{S_n/n-\mu_n}>\varepsilon/2)\to0$。取 $N$ 使 $n\geqslant N$ 时 $\abs{\mu_n-\mu}<\varepsilon/2$，则 $\{\abs{S_n/n-\mu}>\varepsilon\}\subseteq\{\abs{S_n/n-\mu_n}>\varepsilon/2\}$，所以 $\P(\abs{S_n/n-\mu}>\varepsilon)\to0$。
 \end{proof}
@@ -317,13 +317,13 @@ E\abs{X_1}^{1-\varepsilon}=\int_0^\infty(1-\varepsilon)x^{-\varepsilon}\P(\abs{X
 \[
 \P(\abs{X_1}>x)=2\int_x^\infty\frac{\dd t}{\pi(1+t^2)}=\frac2\pi\Bigl(\frac\pi2-\arctan x\Bigr)\sim\frac2\pi\int_x^\infty\frac{\dd t}{t^2}=\frac2{\pi x},
 \]
-所以 $xP(\abs{X_1}>x)\to\frac2\pi\neq0$。由上面注记中的必要性，不存在常数 $\mu_n$ 使 $S_n/n-\mu_n\toP0$。以后学了特征函数，我们会证明一个更惊人的事实：$S_n/n$ 与 $X_1$ 同分布，不论 $n$ 多大。平均了 $n$ 次，一点也没有变得更集中。这是因为 Cauchy 分布的尾部太重：$n$ 个样本中最大的那个大约是 $n$ 的量级，它一个就足以左右平均值。
+所以 $x\P(\abs{X_1}>x)\to\frac2\pi\neq0$。由上面注记中的必要性，不存在常数 $\mu_n$ 使 $S_n/n-\mu_n\toP0$。以后学了特征函数，我们会证明一个更惊人的事实：$S_n/n$ 与 $X_1$ 同分布，不论 $n$ 多大。平均了 $n$ 次，一点也没有变得更集中。这是因为 Cauchy 分布的尾部太重：$n$ 个样本中最大的那个大约是 $n$ 的量级，它一个就足以左右平均值。
 \end{example}
 
 下面的例子说明，期望为无穷时，弱大数定律在适当的形式下仍可能成立。
 
 \begin{workedexample}[St.\ Petersburg 悖论]\label{we:weak-laws:st-petersburg}
-设 $X_1,X_2,\dots$ 独立，$\P(X_i=2^j)=2^{-j}$，$j\geqslant1$。（抛一枚公平的硬币直到出现正面，若用了 $j$ 次，你赢 $2^j$ 元。）$EX_1=\sum_j2^j2^{-j}=\infty$。证明 $S_n/(n\log_2n)\toP1$。由此说明，玩 $n$ 次这个游戏，每次的“公平价格”大约是 $\log_2n$ 元。
+设 $X_1,X_2,\dots$ 独立，$\P(X_i=2^j)=2^{-j}$，$j\geqslant1$。（抛一枚公平的硬币直到出现正面，若用了 $j$ 次，你赢 $2^j$ 元。）$\E X_1=\sum_j2^j2^{-j}=\infty$。证明 $S_n/(n\log_2n)\toP1$。由此说明，玩 $n$ 次这个游戏，每次的“公平价格”大约是 $\log_2n$ 元。
 \end{workedexample}
 \begin{solution}
 本例中的对数都以 $2$ 为底。用定理~\ref{thm:weak-laws:truncated-triangular}，$X_{n,k}=X_k$。关键是选 $b_n$：要使 (i) 成立，$b_n$ 不能太小；要使 (ii) 成立，$b_n$ 要尽量小。
@@ -332,17 +332,17 @@ E\abs{X_1}^{1-\varepsilon}=\int_0^\infty(1-\varepsilon)x^{-\varepsilon}\P(\abs{X
 
 \emph{第二步：选 $b_n$。}取正整数 $K(n)\to\infty$，并使 $m(n)=\log n+K(n)$ 是整数（$\log n$ 不是整数时，把 $K(n)$ 取成使和为整数的数），令 $b_n=2^{m(n)}=n2^{K(n)}$。由第一步，
 \[
-nP(\abs{X_1}>b_n)\leqslant nP(X_1\geqslant2^{m(n)})=n2^{-m(n)+1}=2^{-K(n)+1}\to0,
+n\P(\abs{X_1}>b_n)\leqslant n\P(X_1\geqslant2^{m(n)})=n2^{-m(n)+1}=2^{-K(n)+1}\to0,
 \]
 这是条件 (i)。
 
 \emph{第三步：条件 (ii)。}$\bar X_{n,k}=X_k\one_{\{X_k\leqslant b_n\}}$，
 \[
-E\bar X_{n,k}^2=\sum_{j=1}^{m(n)}2^{2j}2^{-j}=\sum_{j=1}^{m(n)}2^j\leqslant2^{m(n)+1}=2b_n .
+\E\bar X_{n,k}^2=\sum_{j=1}^{m(n)}2^{2j}2^{-j}=\sum_{j=1}^{m(n)}2^j\leqslant2^{m(n)+1}=2b_n .
 \]
-所以 $b_n^{-2}\sum_{k\leqslant n}E\bar X_{n,k}^2\leqslant\frac{2n}{b_n}=2^{1-K(n)}\to0$。
+所以 $b_n^{-2}\sum_{k\leqslant n}\E\bar X_{n,k}^2\leqslant\frac{2n}{b_n}=2^{1-K(n)}\to0$。
 
-\emph{第四步：$a_n$。}$E\bar X_{n,k}=\sum_{j=1}^{m(n)}2^j2^{-j}=m(n)$，所以 $a_n=nm(n)=n\log n+nK(n)$。由定理~\ref{thm:weak-laws:truncated-triangular}，
+\emph{第四步：$a_n$。}$\E\bar X_{n,k}=\sum_{j=1}^{m(n)}2^j2^{-j}=m(n)$，所以 $a_n=nm(n)=n\log n+nK(n)$。由定理~\ref{thm:weak-laws:truncated-triangular}，
 \[
 \frac{S_n-nm(n)}{n2^{K(n)}}\toP0 .
 \]
@@ -360,8 +360,8 @@ E\bar X_{n,k}^2=\sum_{j=1}^{m(n)}2^{2j}2^{-j}=\sum_{j=1}^{m(n)}2^j\leqslant2^{m(
 
 \begin{enumerate}
 \item $L^2$ 弱大数定律（定理~\ref{thm:weak-laws:L2}）：两两不相关、期望相同、方差有界，则 $S_n/n\to\mu$ 在 $L^2$ 中与依概率成立。证明只有三行：不相关时方差可加，$\Var(S_n/n)\leqslant C/n$，再用 Chebyshev 不等式。
-\item 三角阵列（定理~\ref{thm:weak-laws:triangular-L2}）：只要 $\Var(S_n)=o(b_n^2)$，就有 $(S_n-ES_n)/b_n\toP0$。用它解决了集券问题（$T_n\approx n\log n$）、随机置换的圈数（$\approx\log n$）、占位问题（空盒比例 $\approx e^{-c}$）。这些例子中，难处在于把所求的量写成（独立的或协方差可算的）示性函数或简单随机变量之和。
-\item 截断法（定理~\ref{thm:weak-laws:truncated-triangular}）：方差无穷时，在适当的水平 $b_n$ 处截断，截掉的部分用“概率小”处理，保留的部分用 Chebyshev 不等式处理。由此得到：i.i.d.\ 且 $xP(\abs{X_1}>x)\to0$ 时 $S_n/n-\mu_n\toP0$（定理~\ref{thm:weak-laws:wlln}）；$E\abs{X_1}<\infty$ 时 $S_n/n\toP EX_1$（Khinchin，定理~\ref{thm:weak-laws:khinchin}）。
+\item 三角阵列（定理~\ref{thm:weak-laws:triangular-L2}）：只要 $\Var(S_n)=o(b_n^2)$，就有 $(S_n-\E S_n)/b_n\toP0$。用它解决了集券问题（$T_n\approx n\log n$）、随机置换的圈数（$\approx\log n$）、占位问题（空盒比例 $\approx e^{-c}$）。这些例子中，难处在于把所求的量写成（独立的或协方差可算的）示性函数或简单随机变量之和。
+\item 截断法（定理~\ref{thm:weak-laws:truncated-triangular}）：方差无穷时，在适当的水平 $b_n$ 处截断，截掉的部分用“概率小”处理，保留的部分用 Chebyshev 不等式处理。由此得到：i.i.d.\ 且 $x\P(\abs{X_1}>x)\to0$ 时 $S_n/n-\mu_n\toP0$（定理~\ref{thm:weak-laws:wlln}）；$\E\abs{X_1}<\infty$ 时 $S_n/n\toP \E X_1$（Khinchin，定理~\ref{thm:weak-laws:khinchin}）。
 \item 反例与边界情形：Cauchy 分布没有弱大数定律；St.\ Petersburg 游戏期望无穷，但 $S_n/(n\log_2n)\toP1$。
 \item 弱大数定律只说“对每个大的 $n$，$S_n/n$ 偏离很大的概率很小”，不排除一个固定的 $\omega$ 无穷多次偏离。几乎必然收敛的强大数定律要用到下一讲的 Borel--Cantelli 引理。截断法在那里还会再次出现。
 \end{enumerate}
@@ -373,32 +373,32 @@ E\bar X_{n,k}^2=\sum_{j=1}^{m(n)}2^{2j}2^{-j}=\sum_{j=1}^{m(n)}2^j\leqslant2^{m(
 \exercisepart{基本习题}
 
 \begin{exercises}{A}{课堂内容的补充}
-\item\label{ex:weak-laws:A1} 设 $X_1,X_2,\dots$ 两两不相关，$EX_i=\mu_i$，$\Var(X_i)/i\to0$（$i\to\infty$）。令 $S_n=X_1+\cdots+X_n$，$\nu_n=ES_n/n$。证明 $S_n/n-\nu_n\to0$ 在 $L^2$ 中与依概率成立。
+\item\label{ex:weak-laws:A1} 设 $X_1,X_2,\dots$ 两两不相关，$\E X_i=\mu_i$，$\Var(X_i)/i\to0$（$i\to\infty$）。令 $S_n=X_1+\cdots+X_n$，$\nu_n=\E S_n/n$。证明 $S_n/n-\nu_n\to0$ 在 $L^2$ 中与依概率成立。
 \begin{solution}
 思路：与定理~\ref{thm:weak-laws:L2} 相同，只是方差不再有界，要用“方差增长得比 $i$ 慢”。
 
-由定理~\ref{thm:weak-laws:variance-sum}，$E(S_n/n-\nu_n)^2=\Var(S_n/n)=\frac1{n^2}\sum_{i=1}^n\Var(X_i)$。给定 $\varepsilon>0$，取 $N$ 使 $i>N$ 时 $\Var(X_i)\leqslant\varepsilon i$。记 $C_N=\sum_{i\leqslant N}\Var(X_i)$。则对 $n>N$，
+由定理~\ref{thm:weak-laws:variance-sum}，$\E(S_n/n-\nu_n)^2=\Var(S_n/n)=\frac1{n^2}\sum_{i=1}^n\Var(X_i)$。给定 $\varepsilon>0$，取 $N$ 使 $i>N$ 时 $\Var(X_i)\leqslant\varepsilon i$。记 $C_N=\sum_{i\leqslant N}\Var(X_i)$。则对 $n>N$，
 \[
 \frac1{n^2}\sum_{i=1}^n\Var(X_i)\leqslant\frac{C_N}{n^2}+\frac\varepsilon{n^2}\sum_{i=1}^ni\leqslant\frac{C_N}{n^2}+\varepsilon .
 \]
-所以 $\limsup_nE(S_n/n-\nu_n)^2\leqslant\varepsilon$，$\varepsilon$ 任意，$L^2$ 收敛成立。依概率收敛由定理~\ref{thm:convergence:Lp-implies-p}。
+所以 $\limsup_n\E(S_n/n-\nu_n)^2\leqslant\varepsilon$，$\varepsilon$ 任意，$L^2$ 收敛成立。依概率收敛由定理~\ref{thm:convergence:Lp-implies-p}。
 
 这个习题说明，均值可以随 $i$ 变化，方差也可以无界，只要 $\Var(X_i)=o(i)$。
 \end{solution}
 
-\item\label{ex:weak-laws:A2} $L^2$ 弱大数定律可以推广到某些不独立的序列。设 $EX_n=0$，并且对 $m\leqslant n$ 有 $E(X_nX_m)\leqslant r(n-m)$（左边没有绝对值），其中 $r(k)\to0$（$k\to\infty$）。证明 $(X_1+\cdots+X_n)/n\toP0$。
+\item\label{ex:weak-laws:A2} $L^2$ 弱大数定律可以推广到某些不独立的序列。设 $\E X_n=0$，并且对 $m\leqslant n$ 有 $\E(X_nX_m)\leqslant r(n-m)$（左边没有绝对值），其中 $r(k)\to0$（$k\to\infty$）。证明 $(X_1+\cdots+X_n)/n\toP0$。
 \begin{solution}
-思路：直接计算二阶矩。条件 $m=n$ 时给出 $EX_n^2\leqslant r(0)<\infty$，所以一切二阶矩有限。
+思路：直接计算二阶矩。条件 $m=n$ 时给出 $\E X_n^2\leqslant r(0)<\infty$，所以一切二阶矩有限。
 
-由 $ES_n^2=\sum_{i=1}^nEX_i^2+2\sum_{1\leqslant m<k\leqslant n}E(X_kX_m)$ 与假设，
+由 $\E S_n^2=\sum_{i=1}^n\E X_i^2+2\sum_{1\leqslant m<k\leqslant n}\E(X_kX_m)$ 与假设，
 \[
-ES_n^2\leqslant nr(0)+2\sum_{k=2}^n\sum_{m=1}^{k-1}r(k-m)=nr(0)+2\sum_{k=2}^n\sum_{j=1}^{k-1}r(j)\leqslant2\sum_{k=1}^n\sum_{j=0}^{k-1}r^+(j),
+\E S_n^2\leqslant nr(0)+2\sum_{k=2}^n\sum_{m=1}^{k-1}r(k-m)=nr(0)+2\sum_{k=2}^n\sum_{j=1}^{k-1}r(j)\leqslant2\sum_{k=1}^n\sum_{j=0}^{k-1}r^+(j),
 \]
-其中 $r^+=\max\{r,0\}$，最后一步把每一项换成不小于它的非负数（$r(0)\geqslant EX_1^2\geqslant0$）。
+其中 $r^+=\max\{r,0\}$，最后一步把每一项换成不小于它的非负数（$r(0)\geqslant \E X_1^2\geqslant0$）。
 
 由 $r^+(j)\to0$，Cesàro 平均也趋于零：给定 $\varepsilon$，取 $J$ 使 $j\geqslant J$ 时 $r^+(j)\leqslant\varepsilon$，则 $\sum_{j=0}^{k-1}r^+(j)\leqslant R_J+\varepsilon k$，$R_J=\sum_{j<J}r^+(j)$。于是
 \[
-E\Bigl(\frac{S_n}n\Bigr)^2\leqslant\frac2{n^2}\sum_{k=1}^n(R_J+\varepsilon k)\leqslant\frac{2R_J}n+\varepsilon\cdot\frac{n+1}n,
+\E\Bigl(\frac{S_n}n\Bigr)^2\leqslant\frac2{n^2}\sum_{k=1}^n(R_J+\varepsilon k)\leqslant\frac{2R_J}n+\varepsilon\cdot\frac{n+1}n,
 \]
 $\limsup\leqslant\varepsilon$。所以 $S_n/n\to0$ 在 $L^2$ 中，从而依概率。
 
@@ -409,7 +409,7 @@ $\limsup\leqslant\varepsilon$。所以 $S_n/n\to0$ 在 $L^2$ 中，从而依概�
 \begin{questions}
 \item 设 $\int_0^1\abs{f(x)}\dd x<\infty$。证明 $I_n\toP I$。
 \begin{solution}
-$f(U_1),f(U_2),\dots$ 是独立随机变量的函数，独立（推论~\ref{cor:independence:functions}），同分布。由变量替换公式（推论~\ref{cor:expectation:density}），$E\abs{f(U_1)}=\int_0^1\abs f<\infty$，$Ef(U_1)=I$。由 Khinchin 弱大数定律（定理~\ref{thm:weak-laws:khinchin}），$I_n\toP I$。
+$f(U_1),f(U_2),\dots$ 是独立随机变量的函数，独立（推论~\ref{cor:independence:functions}），同分布。由变量替换公式（推论~\ref{cor:expectation:density}），$\E\abs{f(U_1)}=\int_0^1\abs f<\infty$，$\E f(U_1)=I$。由 Khinchin 弱大数定律（定理~\ref{thm:weak-laws:khinchin}），$I_n\toP I$。
 \end{solution}
 \item 设 $\int_0^1\abs{f(x)}^2\dd x<\infty$。用 Chebyshev 不等式估计 $\P(\abs{I_n-I}>a/\sqrt n)$。
 \begin{solution}
@@ -423,23 +423,23 @@ $f(U_1),f(U_2),\dots$ 是独立随机变量的函数，独立（推论~\ref{cor:
 
 \item\label{ex:weak-laws:A4} 设 $X\geqslant0$ 取整数值。
 \begin{questions}
-\item 证明 $EX=\sum_{n\geqslant1}\P(X\geqslant n)$。
+\item 证明 $\E X=\sum_{n\geqslant1}\P(X\geqslant n)$。
 \begin{solution}
 这是命题~\ref{prop:expectation:tail-sum}(1)：逐点 $X=\sum_{n\geqslant1}\one_{\{X\geqslant n\}}$，再逐项求期望。
 \end{solution}
-\item 求 $EX^2$ 的类似表达式。
+\item 求 $\E X^2$ 的类似表达式。
 \begin{solution}
 对非负整数 $k$，$k^2=\sum_{n=1}^k(2n-1)$（前 $k$ 个奇数之和）。所以逐点 $X^2=\sum_{n\geqslant1}(2n-1)\one_{\{X\geqslant n\}}$（$X=\infty$ 时两边都是 $\infty$），由逐项积分（推论~\ref{cor:integration:series}），
 \[
-EX^2=\sum_{n\geqslant1}(2n-1)\P(X\geqslant n).
+\E X^2=\sum_{n\geqslant1}(2n-1)\P(X\geqslant n).
 \]
-这与定理~\ref{thm:product:tail-formula}(2) 的公式 $EX^2=\int_0^\infty2yP(X>y)\dd y$ 是平行的：在 $y\in[n-1,n)$ 上 $\P(X>y)=\P(X\geqslant n)$，$\int_{n-1}^n2y\dd y=2n-1$。
+这与定理~\ref{thm:product:tail-formula}(2) 的公式 $\E X^2=\int_0^\infty2y\P(X>y)\dd y$ 是平行的：在 $y\in[n-1,n)$ 上 $\P(X>y)=\P(X\geqslant n)$，$\int_{n-1}^n2y\dd y=2n-1$。
 \end{solution}
 \end{questions}
 
 \item\label{ex:weak-laws:A5} 推广尾概率公式：设 $h\geqslant0$ 是 Borel 函数，在有界区间上可积，$H(x)=\int_{(-\infty,x]}h(y)\dd y$（设它对一切 $x$ 有限）。证明对任意随机变量 $X$，
 \[
-EH(X)=\int_{-\infty}^\infty h(y)\P(X\geqslant y)\dd y .
+\E H(X)=\int_{-\infty}^\infty h(y)\P(X\geqslant y)\dd y .
 \]
 重要的特例是 $H(x)=e^{\theta x}$（$\theta>0$）。
 \begin{solution}
@@ -447,26 +447,26 @@ EH(X)=\int_{-\infty}^\infty h(y)\P(X\geqslant y)\dd y .
 
 对每个 $\omega$，$H(X(\omega))=\int_\R h(y)\one_{\{y\leqslant X(\omega)\}}\dd y$。集合 $G=\{(\omega,y):y\leqslant X(\omega)\}$ 属于 $\cF\otimes\cR$（它是可测函数 $(\omega,y)\mapsto X(\omega)-y$ 的非负集），所以 $(\omega,y)\mapsto h(y)\one_G(\omega,y)$ 是非负可测函数。由 Tonelli 定理（定理~\ref{thm:product:tonelli}），
 \[
-EH(X)=\int_\Omega\int_\R h(y)\one_G\dd y\dd \P=\int_\R h(y)\int_\Omega\one_{\{X\geqslant y\}}\dd \P\dd y=\int_\R h(y)\P(X\geqslant y)\dd y .
+\E H(X)=\int_\Omega\int_\R h(y)\one_G\dd y\dd \P=\int_\R h(y)\int_\Omega\one_{\{X\geqslant y\}}\dd \P\dd y=\int_\R h(y)\P(X\geqslant y)\dd y .
 \]
-（两边都可以是 $+\infty$。）特例：$h(y)=\theta e^{\theta y}$，$H(x)=e^{\theta x}$，得 $Ee^{\theta X}=\int_\R\theta e^{\theta y}\P(X\geqslant y)\dd y$。所以 $Ee^{\theta X}<\infty$ 与尾概率 $\P(X\geqslant y)$ 指数衰减的速度有关，这在大偏差估计中常用。
+（两边都可以是 $+\infty$。）特例：$h(y)=\theta e^{\theta y}$，$H(x)=e^{\theta x}$，得 $\E e^{\theta X}=\int_\R\theta e^{\theta y}\P(X\geqslant y)\dd y$。所以 $\E e^{\theta X}<\infty$ 与尾概率 $\P(X\geqslant y)$ 指数衰减的速度有关，这在大偏差估计中常用。
 \end{solution}
 
-\item\label{ex:weak-laws:A6} 设 $X_1,X_2,\dots$ 是 i.i.d.，$E\abs{X_1}<\infty$。证明 $\max_{1\leqslant k\leqslant n}\abs{X_k}/n\toP0$。这说明 $S_n$ 中没有哪一项能左右整体，与 Cauchy 分布的情形（\egref{ex:weak-laws:cauchy}）形成对照。
+\item\label{ex:weak-laws:A6} 设 $X_1,X_2,\dots$ 是 i.i.d.，$\E\abs{X_1}<\infty$。证明 $\max_{1\leqslant k\leqslant n}\abs{X_k}/n\toP0$。这说明 $S_n$ 中没有哪一项能左右整体，与 Cauchy 分布的情形（\egref{ex:weak-laws:cauchy}）形成对照。
 \begin{solution}
 对 $\varepsilon>0$，由次可加性与同分布，
 \[
 \begin{aligned}
-\P\Bigl(\max_{k\leqslant n}\abs{X_k}>n\varepsilon\Bigr)&\leqslant\sum_{k=1}^nP(\abs{X_k}>n\varepsilon)=nP(\abs{X_1}>n\varepsilon)\\
+\P\Bigl(\max_{k\leqslant n}\abs{X_k}>n\varepsilon\Bigr)&\leqslant\sum_{k=1}^n\P(\abs{X_k}>n\varepsilon)=n\P(\abs{X_1}>n\varepsilon)\\
 &=\frac1\varepsilon\cdot(n\varepsilon)\P(\abs{X_1}>n\varepsilon)\to0,
 \end{aligned}
 \]
-最后一步用了第~\ref{lec:expectation} 讲的例题（第~\pageref{we:expectation:tP} 页）：$tP(\abs{X_1}>t)\to0$。
+最后一步用了第~\ref{lec:expectation} 讲的例题（第~\pageref{we:expectation:tP} 页）：$t\P(\abs{X_1}>t)\to0$。
 \end{solution}
 
-\item\label{ex:weak-laws:A7} （样本方差的相合性）设 $X_1,X_2,\dots$ 是 i.i.d.，$EX_1^2<\infty$，$\mu=EX_1$，$\sigma^2=\Var(X_1)$。令 $\bar X_n=\frac1n\sum_{i=1}^nX_i$，$s_n^2=\frac1n\sum_{i=1}^n(X_i-\bar X_n)^2$。证明 $s_n^2\toP\sigma^2$。
+\item\label{ex:weak-laws:A7} （样本方差的相合性）设 $X_1,X_2,\dots$ 是 i.i.d.，$\E X_1^2<\infty$，$\mu=\E X_1$，$\sigma^2=\Var(X_1)$。令 $\bar X_n=\frac1n\sum_{i=1}^nX_i$，$s_n^2=\frac1n\sum_{i=1}^n(X_i-\bar X_n)^2$。证明 $s_n^2\toP\sigma^2$。
 \begin{solution}
-展开：$s_n^2=\frac1n\sum_iX_i^2-2\bar X_n\cdot\frac1n\sum_iX_i+\bar X_n^2=\frac1n\sum_iX_i^2-\bar X_n^2$。$X_i^2$ 是 i.i.d.，$EX_1^2<\infty$，由 Khinchin 弱大数定律 $\frac1n\sum_iX_i^2\toP EX_1^2$；同理 $\bar X_n\toP\mu$。由依概率收敛的运算（推论~\ref{cor:convergence:continuous-mapping}），$\bar X_n^2\toP\mu^2$，$s_n^2\toP EX_1^2-\mu^2=\sigma^2$。
+展开：$s_n^2=\frac1n\sum_iX_i^2-2\bar X_n\cdot\frac1n\sum_iX_i+\bar X_n^2=\frac1n\sum_iX_i^2-\bar X_n^2$。$X_i^2$ 是 i.i.d.，$\E X_1^2<\infty$，由 Khinchin 弱大数定律 $\frac1n\sum_iX_i^2\toP \E X_1^2$；同理 $\bar X_n\toP\mu$。由依概率收敛的运算（推论~\ref{cor:convergence:continuous-mapping}），$\bar X_n^2\toP\mu^2$，$s_n^2\toP \E X_1^2-\mu^2=\sigma^2$。
 
 在统计中，这说明样本方差是总体方差的“相合估计”：样本越大，估计越准。（把 $\frac1n$ 换成 $\frac1{n-1}$ 不影响结论，因为 $\frac n{n-1}\to1$。）
 \end{solution}
@@ -477,35 +477,35 @@ EH(X)=\int_\Omega\int_\R h(y)\one_G\dd y\dd \P=\int_\R h(y)\int_\Omega\one_{\{X\
 \[
 \P\bigl(X_1=(-1)^kk\bigr)=\frac C{k^2\log k},\qquad k=2,3,\dots,
 \]
-其中 $C$ 是使概率之和为 $1$ 的常数。本题证明：$E\abs{X_1}=\infty$，但存在有限的常数 $\mu$ 使 $S_n/n\toP\mu$。
+其中 $C$ 是使概率之和为 $1$ 的常数。本题证明：$\E\abs{X_1}=\infty$，但存在有限的常数 $\mu$ 使 $S_n/n\toP\mu$。
 \begin{questions}
-\item 证明 $C$ 存在（级数 $\sum_{k\geqslant2}\frac1{k^2\log k}$ 收敛），并证明 $E\abs{X_1}=\infty$。
+\item 证明 $C$ 存在（级数 $\sum_{k\geqslant2}\frac1{k^2\log k}$ 收敛），并证明 $\E\abs{X_1}=\infty$。
 \begin{solution}
 $k\geqslant3$ 时 $\log k\geqslant1$，$\frac1{k^2\log k}\leqslant\frac1{k^2}$，级数收敛，令 $C=(\sum_{k\geqslant2}\frac1{k^2\log k})^{-1}$。由变量替换公式，
 \[
-E\abs{X_1}=\sum_{k\geqslant2}k\cdot\frac C{k^2\log k}=C\sum_{k\geqslant2}\frac1{k\log k}=\infty,
+\E\abs{X_1}=\sum_{k\geqslant2}k\cdot\frac C{k^2\log k}=C\sum_{k\geqslant2}\frac1{k\log k}=\infty,
 \]
 最后一步：$\frac1{x\log x}$ 在 $[2,\infty)$ 上递减，$\sum_{k=3}^n\frac1{k\log k}\geqslant\int_3^{n+1}\frac{\dd x}{x\log x}=\log\log(n+1)-\log\log3\to\infty$。
 \end{solution}
-\item 证明 $xP(\abs{X_1}>x)\to0$。
+\item 证明 $x\P(\abs{X_1}>x)\to0$。
 \begin{solution}
 对 $x\geqslant3$，
 \[
 \P(\abs{X_1}>x)=\sum_{k>x}\frac C{k^2\log k}\leqslant\frac C{\log x}\sum_{k>x}\frac1{k^2}\leqslant\frac C{\log x}\int_{x-1}^\infty\frac{\dd t}{t^2}=\frac C{(x-1)\log x},
 \]
-（第二个不等号：$\frac1{k^2}\leqslant\int_{k-1}^k\frac{\dd t}{t^2}$，而最小的 $k>x$ 满足 $k-1\geqslant x-1$）。所以 $xP(\abs{X_1}>x)\leqslant\frac{Cx}{(x-1)\log x}\to0$。
+（第二个不等号：$\frac1{k^2}\leqslant\int_{k-1}^k\frac{\dd t}{t^2}$，而最小的 $k>x$ 满足 $k-1\geqslant x-1$）。所以 $x\P(\abs{X_1}>x)\leqslant\frac{Cx}{(x-1)\log x}\to0$。
 \end{solution}
-\item 令 $\mu_n=E(X_1\one_{\{\abs{X_1}\leqslant n\}})$。证明 $\mu_n$ 收敛到一个有限的数 $\mu$。
+\item 令 $\mu_n=\E(X_1\one_{\{\abs{X_1}\leqslant n\}})$。证明 $\mu_n$ 收敛到一个有限的数 $\mu$。
 \begin{solution}
 $\mu_n=\sum_{k=2}^n(-1)^kk\cdot\frac C{k^2\log k}=C\sum_{k=2}^n\frac{(-1)^k}{k\log k}$。$\frac1{k\log k}$ 单调递减趋于零，由交错级数的 Leibniz 判别法，级数 $\sum_{k\geqslant2}\frac{(-1)^k}{k\log k}$ 收敛。令 $\mu=C\sum_{k\geqslant2}\frac{(-1)^k}{k\log k}$，则 $\mu_n\to\mu$。
 
-注意这个级数只是条件收敛，不是绝对收敛，这正对应着 $E\abs{X_1}=\infty$：正负项相消，使截断的期望收敛。
+注意这个级数只是条件收敛，不是绝对收敛，这正对应着 $\E\abs{X_1}=\infty$：正负项相消，使截断的期望收敛。
 \end{solution}
 \item 由定理~\ref{thm:weak-laws:wlln} 完成证明。
 \begin{solution}
 由 B2) 与定理~\ref{thm:weak-laws:wlln}，$S_n/n-\mu_n\toP0$；由 B3)，$\mu_n\to\mu$。与定理~\ref{thm:weak-laws:khinchin} 的证明最后一段相同，$S_n/n\toP\mu$。
 
-这个例子说明，Khinchin 弱大数定律中的 $E\abs{X_1}<\infty$ 并不是必要的。（但以后会看到，强大数定律 $S_n/n\to\mu$ a.s.\ 一定要求 $E\abs{X_1}<\infty$。）
+这个例子说明，Khinchin 弱大数定律中的 $\E\abs{X_1}<\infty$ 并不是必要的。（但以后会看到，强大数定律 $S_n/n\to\mu$ a.s.\ 一定要求 $\E\abs{X_1}<\infty$。）
 \end{solution}
 \end{questions}
 \end{probleme}
@@ -513,27 +513,27 @@ $\mu_n=\sum_{k=2}^n(-1)^kk\cdot\frac C{k^2\log k}=C\sum_{k=2}^n\frac{(-1)^k}{k\l
 \begin{probleme}{C}{期望无穷，样本均值以可计算的速度趋于无穷}
 设 $X_1,X_2,\dots$ 是 i.i.d.，$\P(X_1>x)=\frac e{x\log x}$（$x\geqslant e$），$\P(X_1\geqslant e)=1$。
 \begin{questions}
-\item 验证这确实给出了一个分布，并证明 $EX_1=\infty$。
+\item 验证这确实给出了一个分布，并证明 $\E X_1=\infty$。
 \begin{solution}
 $G(x)=\frac e{x\log x}$ 在 $[e,\infty)$ 上连续、严格递减（$x\log x$ 递增），$G(e)=1$，$G(\infty)=0$。令 $F(x)=0$（$x<e$），$F(x)=1-G(x)$（$x\geqslant e$），它是连续的分布函数，由定理~\ref{thm:distributions:characterization} 存在对应的随机变量。由尾概率公式，
 \[
-EX_1=\int_0^\infty \P(X_1>x)\dd x\geqslant\int_e^\infty\frac{e\dd x}{x\log x}=e\bigl[\log\log x\bigr]_e^\infty=\infty .
+\E X_1=\int_0^\infty \P(X_1>x)\dd x\geqslant\int_e^\infty\frac{e\dd x}{x\log x}=e\bigl[\log\log x\bigr]_e^\infty=\infty .
 \]
 \end{solution}
-\item 证明 $xP(X_1>x)\to0$。
+\item 证明 $x\P(X_1>x)\to0$。
 \begin{solution}
-$xP(X_1>x)=\frac e{\log x}\to0$。
+$x\P(X_1>x)=\frac e{\log x}\to0$。
 \end{solution}
-\item 计算 $\mu_n=E(X_1\one_{\{X_1\leqslant n\}})$（$n\geqslant e$），并证明 $\mu_n\sim e\log\log n$。
+\item 计算 $\mu_n=\E(X_1\one_{\{X_1\leqslant n\}})$（$n\geqslant e$），并证明 $\mu_n\sim e\log\log n$。
 \begin{solution}
 由尾概率公式，对 $Y=X_1\one_{\{X_1\leqslant n\}}\geqslant0$，$\P(Y>x)=\P(x<X_1\leqslant n)=\P(X_1>x)-\P(X_1>n)$（$x<n$），$=0$（$x\geqslant n$）。所以
 \[
 \begin{aligned}
-\mu_n&=\int_0^n\bigl(\P(X_1>x)-\P(X_1>n)\bigr)\dd x=e+\int_e^n\frac{e\dd x}{x\log x}-nP(X_1>n)\\
+\mu_n&=\int_0^n\bigl(\P(X_1>x)-\P(X_1>n)\bigr)\dd x=e+\int_e^n\frac{e\dd x}{x\log x}-n\P(X_1>n)\\
 &=e+e\log\log n-\frac e{\log n},
 \end{aligned}
 \]
-其中 $\int_0^eP(X_1>x)\dd x=e$。于是 $\mu_n/(e\log\log n)\to1$。
+其中 $\int_0^e\P(X_1>x)\dd x=e$。于是 $\mu_n/(e\log\log n)\to1$。
 \end{solution}
 \item 证明 $S_n/n-\mu_n\toP0$，从而 $\frac{S_n}{n\log\log n}\toP e$。
 \begin{solution}
@@ -549,11 +549,11 @@ $xP(X_1>x)=\frac e{\log x}\to0$。
 \begin{probleme}[问题]{D}{一个“不公平的公平游戏”}
 令 $p_k=\frac1{2^kk(k+1)}$，$k=1,2,\dots$，$p_0=1-\sum_{k\geqslant1}p_k$。设 $X_1,X_2,\dots$ 是 i.i.d.，$\P(X_n=-1)=p_0$，$\P(X_n=2^k-1)=p_k$，$k\geqslant1$。令 $S_n=X_1+\cdots+X_n$，$m(n)=\min\{m:\ 2^{-m}m^{-3/2}\leqslant n^{-1}\}$，$b_n=2^{m(n)}$。
 \begin{questions}
-\item 证明 $EX_n=0$。（这是一个“公平”的赌博：每次输 $1$ 元，或者赢 $2^k-1$ 元。）
+\item 证明 $\E X_n=0$。（这是一个“公平”的赌博：每次输 $1$ 元，或者赢 $2^k-1$ 元。）
 \begin{solution}
 $\sum_{k\geqslant1}2^kp_k=\sum_{k\geqslant1}\frac1{k(k+1)}=\sum_k\bigl(\frac1k-\frac1{k+1}\bigr)=1$。$X_n$ 的期望（各项绝对收敛，因为 $\sum_k2^kp_k<\infty$）是
 \[
-EX_n=-p_0+\sum_{k\geqslant1}(2^k-1)p_k=-p_0+1-\sum_{k\geqslant1}p_k=-p_0+1-(1-p_0)=0 .
+\E X_n=-p_0+\sum_{k\geqslant1}(2^k-1)p_k=-p_0+1-\sum_{k\geqslant1}p_k=-p_0+1-(1-p_0)=0 .
 \]
 \end{solution}
 \item 证明 $m(n)\to\infty$，$m(n)/\log_2n\to1$，并且 $b_n\log_2n/n\to0$。
@@ -564,31 +564,31 @@ m-1+\tfrac32\log_2(m-1)<\log_2n\leqslant m+\tfrac32\log_2m,
 \]
 所以 $\log_2n/m\to1$。又 $b_n=2^m<\frac{2n}{(m-1)^{3/2}}$，于是 $\frac{b_n\log_2n}n<\frac{2\log_2n}{(m-1)^{3/2}}\to0$（$\log_2n\sim m$）。
 \end{solution}
-\item 验证定理~\ref{thm:weak-laws:truncated-triangular} 的条件 (i)：$nP(\abs{X_1}>b_n)\to0$。
+\item 验证定理~\ref{thm:weak-laws:truncated-triangular} 的条件 (i)：$n\P(\abs{X_1}>b_n)\to0$。
 \begin{solution}
 $\abs{X_1}>2^m$ 当且仅当 $X_1=2^k-1$，$k\geqslant m+1$。所以
 \[
 \P(\abs{X_1}>b_n)=\sum_{k>m}p_k\leqslant\frac1{m^2}\sum_{k>m}2^{-k}=\frac{2^{-m}}{m^2}.
 \]
-于是 $nP(\abs{X_1}>b_n)\leqslant n2^{-m}m^{-3/2}\cdot m^{-1/2}\leqslant m^{-1/2}\to0$，用了 $m$ 的定义 $n2^{-m}m^{-3/2}\leqslant1$。
+于是 $n\P(\abs{X_1}>b_n)\leqslant n2^{-m}m^{-3/2}\cdot m^{-1/2}\leqslant m^{-1/2}\to0$，用了 $m$ 的定义 $n2^{-m}m^{-3/2}\leqslant1$。
 \end{solution}
-\item 验证条件 (ii)：$nE\bar X_{n,1}^2/b_n^2\to0$。（提示：$\sum_{k\leqslant m}2^k/k^2\leqslant C2^m/m^2$。）
+\item 验证条件 (ii)：$n\E\bar X_{n,1}^2/b_n^2\to0$。（提示：$\sum_{k\leqslant m}2^k/k^2\leqslant C2^m/m^2$。）
 \begin{solution}
 \emph{提示中的估计。}$\sum_{k\leqslant m/2}\frac{2^k}{k^2}\leqslant\sum_{k\leqslant m/2}2^k\leqslant2^{m/2+1}$；$\sum_{m/2<k\leqslant m}\frac{2^k}{k^2}\leqslant\frac4{m^2}\sum_{k\leqslant m}2^k\leqslant\frac{8\cdot2^m}{m^2}$。而 $2^{m/2+1}\leqslant\frac{2^m}{m^2}$ 对充分大的 $m$ 成立。所以 $\sum_{k\leqslant m}\frac{2^k}{k^2}\leqslant\frac{9\cdot2^m}{m^2}$（$m$ 充分大）。
 
 $\bar X_{n,1}$ 取值 $-1$ 或 $2^k-1$（$k\leqslant m$），所以
 \[
-E\bar X_{n,1}^2\leqslant1+\sum_{k\leqslant m}2^{2k}p_k=1+\sum_{k\leqslant m}\frac{2^k}{k(k+1)}\leqslant1+\frac{9\cdot2^m}{m^2}.
+\E\bar X_{n,1}^2\leqslant1+\sum_{k\leqslant m}2^{2k}p_k=1+\sum_{k\leqslant m}\frac{2^k}{k(k+1)}\leqslant1+\frac{9\cdot2^m}{m^2}.
 \]
 于是
 \[
-\frac{nE\bar X_{n,1}^2}{b_n^2}\leqslant\frac n{4^m}+\frac{9n}{2^mm^2}\leqslant\frac{m^{3/2}}{2^m}+\frac9{m^{1/2}}\to0,
+\frac{n\E\bar X_{n,1}^2}{b_n^2}\leqslant\frac n{4^m}+\frac{9n}{2^mm^2}\leqslant\frac{m^{3/2}}{2^m}+\frac9{m^{1/2}}\to0,
 \]
 用了 $n\leqslant2^mm^{3/2}$。
 \end{solution}
-\item 计算 $a_n=nE\bar X_{n,1}$，并由定理~\ref{thm:weak-laws:truncated-triangular} 证明 $\dfrac{S_n}{n/\log_2n}\toP-1$。
+\item 计算 $a_n=n\E\bar X_{n,1}$，并由定理~\ref{thm:weak-laws:truncated-triangular} 证明 $\dfrac{S_n}{n/\log_2n}\toP-1$。
 \begin{solution}
-由 D1)，$E\bar X_{n,1}=EX_1-\sum_{k>m}(2^k-1)p_k=-\sum_{k>m}2^kp_k+\sum_{k>m}p_k$。而 $\sum_{k>m}2^kp_k=\sum_{k>m}\frac1{k(k+1)}=\frac1{m+1}$，$0\leqslant\sum_{k>m}p_k\leqslant2^{-m}$。所以 $a_n=-\frac n{m+1}+\theta_nn2^{-m}$，$0\leqslant\theta_n\leqslant1$。
+由 D1)，$\E\bar X_{n,1}=\E X_1-\sum_{k>m}(2^k-1)p_k=-\sum_{k>m}2^kp_k+\sum_{k>m}p_k$。而 $\sum_{k>m}2^kp_k=\sum_{k>m}\frac1{k(k+1)}=\frac1{m+1}$，$0\leqslant\sum_{k>m}p_k\leqslant2^{-m}$。所以 $a_n=-\frac n{m+1}+\theta_nn2^{-m}$，$0\leqslant\theta_n\leqslant1$。
 
 由定理~\ref{thm:weak-laws:truncated-triangular}，$(S_n-a_n)/b_n\toP0$。于是
 \[
@@ -598,7 +598,7 @@ E\bar X_{n,1}^2\leqslant1+\sum_{k\leqslant m}2^{2k}p_k=1+\sum_{k\leqslant m}\fra
 \end{solution}
 \item 解释结论。
 \begin{solution}
-每次赌博的期望是 $0$，并且 $E\abs{X_1}=p_0+\sum_k(2^k-1)p_k<\infty$，可是赌 $n$ 次以后，几乎肯定已经输掉了大约 $n/\log_2n$ 元。原因是：期望中的“补偿”来自极少发生的巨额收益 $2^k-1$，它们的概率小到在 $n$ 次赌博中几乎不会出现（D3)），而每次输掉的 $1$ 元却是实实在在的。
+每次赌博的期望是 $0$，并且 $\E\abs{X_1}=p_0+\sum_k(2^k-1)p_k<\infty$，可是赌 $n$ 次以后，几乎肯定已经输掉了大约 $n/\log_2n$ 元。原因是：期望中的“补偿”来自极少发生的巨额收益 $2^k-1$，它们的概率小到在 $n$ 次赌博中几乎不会出现（D3)），而每次输掉的 $1$ 元却是实实在在的。
 
 这与 Khinchin 弱大数定律并不矛盾。那里的结论是 $S_n/n\toP0$，而这里 $S_n/n=\frac{S_n}{n/\log_2n}\cdot\frac1{\log_2n}\toP(-1)\cdot0=0$，两者一致。区别在于精度：弱大数定律只说 $S_n=o(n)$，这里说的是 $S_n\approx-n/\log_2n$，后者恰好是 $o(n)$ 的。所以“期望为零”只保证平均每次的盈亏趋于零，并不保证总盈亏不趋于 $-\infty$。
 \end{solution}
@@ -606,27 +606,27 @@ E\bar X_{n,1}^2\leqslant1+\sum_{k\leqslant m}2^{2k}p_k=1+\sum_{k\leqslant m}\fra
 \end{probleme}
 
 \begin{probleme}*[问题]{E}{正随机变量的弱大数定律}
-设 $X_1,X_2,\dots$ 是 i.i.d.，$\P(0\leqslant X_i<\infty)=1$，$\P(X_i>x)>0$ 对一切 $x$ 成立，分布函数 $F$ 连续。令 $\mu(s)=E(X_1;X_1\leqslant s)=\int_{[0,s]}x\dd F(x)$，$\nu(s)=\dfrac{\mu(s)}{s(1-F(s))}$。已知：存在常数 $a_n$ 使 $S_n/a_n\toP1$，当且仅当 $\nu(s)\to\infty$（$s\to\infty$）。本题证明充分性。设 $\nu(s)\to\infty$。
+设 $X_1,X_2,\dots$ 是 i.i.d.，$\P(0\leqslant X_i<\infty)=1$，$\P(X_i>x)>0$ 对一切 $x$ 成立，分布函数 $F$ 连续。令 $\mu(s)=\E(X_1;X_1\leqslant s)=\int_{[0,s]}x\dd F(x)$，$\nu(s)=\dfrac{\mu(s)}{s(1-F(s))}$。已知：存在常数 $a_n$ 使 $S_n/a_n\toP1$，当且仅当 $\nu(s)\to\infty$（$s\to\infty$）。本题证明充分性。设 $\nu(s)\to\infty$。
 \begin{questions}
 \item 证明 $s/\mu(s)$ 在 $\mu(s)>0$ 的 $s$ 上连续，并且 $s\to\infty$ 时 $s/\mu(s)\to\infty$。由此，对充分大的 $n$ 可以取 $b_n$ 使 $n\mu(b_n)=b_n$，并且 $b_n\to\infty$。
 \begin{solution}
-$F$ 连续，所以 $\mu(s)=E(X_1;X_1\leqslant s)$ 关于 $s$ 连续（$s_k\to s$ 时 $X_1\one_{\{X_1\leqslant s_k\}}\to X_1\one_{\{X_1\leqslant s\}}$，除了在 $\{X_1=s\}$ 上，而它的概率为零；被 $X_1\one_{\{X_1\leqslant s+1\}}$ 控制，由控制收敛定理）。所以 $s/\mu(s)$ 在 $\mu(s)>0$ 处连续。由 $\nu(s)\to\infty$ 与 $1-F(s)>0$，$\mu(s)>0$ 对充分大的 $s$ 成立。又 $\frac{\mu(s)}s=E\bigl(\frac{X_1}s;X_1\leqslant s\bigr)\to0$（被积函数不超过 $1$，逐点趋于零，有界收敛定理），所以 $s/\mu(s)\to\infty$。由介值定理，对充分大的 $n$ 存在 $b_n$ 使 $b_n/\mu(b_n)=n$；取最大的这样的 $b_n$（集合有界且闭），则 $b_n\to\infty$：否则 $b_n$ 有界，而 $s/\mu(s)$ 在有界闭区间上有界，与 $b_n/\mu(b_n)=n\to\infty$ 矛盾。
+$F$ 连续，所以 $\mu(s)=\E(X_1;X_1\leqslant s)$ 关于 $s$ 连续（$s_k\to s$ 时 $X_1\one_{\{X_1\leqslant s_k\}}\to X_1\one_{\{X_1\leqslant s\}}$，除了在 $\{X_1=s\}$ 上，而它的概率为零；被 $X_1\one_{\{X_1\leqslant s+1\}}$ 控制，由控制收敛定理）。所以 $s/\mu(s)$ 在 $\mu(s)>0$ 处连续。由 $\nu(s)\to\infty$ 与 $1-F(s)>0$，$\mu(s)>0$ 对充分大的 $s$ 成立。又 $\frac{\mu(s)}s=\E\bigl(\frac{X_1}s;X_1\leqslant s\bigr)\to0$（被积函数不超过 $1$，逐点趋于零，有界收敛定理），所以 $s/\mu(s)\to\infty$。由介值定理，对充分大的 $n$ 存在 $b_n$ 使 $b_n/\mu(b_n)=n$；取最大的这样的 $b_n$（集合有界且闭），则 $b_n\to\infty$：否则 $b_n$ 有界，而 $s/\mu(s)$ 在有界闭区间上有界，与 $b_n/\mu(b_n)=n\to\infty$ 矛盾。
 \end{solution}
 \item 验证定理~\ref{thm:weak-laws:truncated-triangular} 的条件 (i)。
 \begin{solution}
-$nP(X_1>b_n)=n(1-F(b_n))=\frac{b_n}{\mu(b_n)}(1-F(b_n))=\frac1{\nu(b_n)}\to0$。
+$n\P(X_1>b_n)=n(1-F(b_n))=\frac{b_n}{\mu(b_n)}(1-F(b_n))=\frac1{\nu(b_n)}\to0$。
 \end{solution}
-\item 验证条件 (ii)。（提示：由尾概率公式 $E(X_1^2;X_1\leqslant b)\leqslant\int_0^b2y(1-F(y))\dd y$，再用 $1-F(y)=\frac{\mu(y)}{y\nu(y)}$。）
+\item 验证条件 (ii)。（提示：由尾概率公式 $\E(X_1^2;X_1\leqslant b)\leqslant\int_0^b2y(1-F(y))\dd y$，再用 $1-F(y)=\frac{\mu(y)}{y\nu(y)}$。）
 \begin{solution}
-与定理~\ref{thm:weak-laws:wlln} 的证明相同，$E\bar X_{n,1}^2\leqslant\int_0^{b}2y(1-F(y))\dd y$，$b=b_n$。给定 $\varepsilon>0$，取 $y_0$ 使 $y\geqslant y_0$ 时 $\nu(y)\geqslant\frac1\varepsilon$。在 $[0,y_0]$ 上 $2y(1-F(y))\leqslant2y$；在 $[y_0,b]$ 上 $2y(1-F(y))=\frac{2\mu(y)}{\nu(y)}\leqslant2\varepsilon\mu(b)$（$\mu$ 单调）。所以
+与定理~\ref{thm:weak-laws:wlln} 的证明相同，$\E\bar X_{n,1}^2\leqslant\int_0^{b}2y(1-F(y))\dd y$，$b=b_n$。给定 $\varepsilon>0$，取 $y_0$ 使 $y\geqslant y_0$ 时 $\nu(y)\geqslant\frac1\varepsilon$。在 $[0,y_0]$ 上 $2y(1-F(y))\leqslant2y$；在 $[y_0,b]$ 上 $2y(1-F(y))=\frac{2\mu(y)}{\nu(y)}\leqslant2\varepsilon\mu(b)$（$\mu$ 单调）。所以
 \[
-E\bar X_{n,1}^2\leqslant y_0^2+2\varepsilon b\mu(b).
+\E\bar X_{n,1}^2\leqslant y_0^2+2\varepsilon b\mu(b).
 \]
-于是 $\frac{nE\bar X_{n,1}^2}{b_n^2}\leqslant\frac{ny_0^2}{b_n^2}+2\varepsilon\frac{n\mu(b_n)}{b_n}=\frac{y_0^2}{b_n\mu(b_n)}+2\varepsilon$，用了 $n=b_n/\mu(b_n)$。第一项趋于零（$b_n\to\infty$，$\mu(b_n)$ 不减），$\limsup\leqslant2\varepsilon$。
+于是 $\frac{n\E\bar X_{n,1}^2}{b_n^2}\leqslant\frac{ny_0^2}{b_n^2}+2\varepsilon\frac{n\mu(b_n)}{b_n}=\frac{y_0^2}{b_n\mu(b_n)}+2\varepsilon$，用了 $n=b_n/\mu(b_n)$。第一项趋于零（$b_n\to\infty$，$\mu(b_n)$ 不减），$\limsup\leqslant2\varepsilon$。
 \end{solution}
 \item 完成证明：$S_n/b_n\toP1$。
 \begin{solution}
-$a_n=nE\bar X_{n,1}=n\mu(b_n)=b_n$。由定理~\ref{thm:weak-laws:truncated-triangular}，$(S_n-b_n)/b_n\toP0$，即 $S_n/b_n\toP1$。
+$a_n=n\E\bar X_{n,1}=n\mu(b_n)=b_n$。由定理~\ref{thm:weak-laws:truncated-triangular}，$(S_n-b_n)/b_n\toP0$，即 $S_n/b_n\toP1$。
 
 St.\ Petersburg 游戏（去掉“$F$ 连续”这个技术性的假设）是这种情形：$\mu(s)\approx\log_2s$，$1-F(s)\approx\frac2s$，$\nu(s)\approx\frac12\log_2s\to\infty$；$n\mu(b_n)=b_n$ 给出 $b_n\approx n\log_2n$，与例题（第~\pageref{we:weak-laws:st-petersburg} 页）的结论一致。
 \end{solution}

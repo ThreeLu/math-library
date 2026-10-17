@@ -40,7 +40,7 @@ Z_n=\frac{S_n-n/2}{\sqrt n/2}.
 \item 哪些集合可以谈论概率？（不是所有集合都行，这引出 \term{$\sigma$-代数}，第~\ref{lec:set-systems} 讲。）
 \item 概率要满足什么规则？（可数可加性，这引出\term{测度}，第~\ref{lec:measures} 讲。）
 \item 满足这些规则的概率真的存在吗？比如 $[0,1]$ 上的“长度”。（这是\term{测度的延拓}，第~\ref{lec:extension-of-measures} 讲。）
-\item 期望 $EX$ 在无穷的、连续的情形下怎样定义？（这是 \term{Lebesgue 积分}，第~\ref{lec:integration} 讲。）
+\item 期望 $\E X$ 在无穷的、连续的情形下怎样定义？（这是 \term{Lebesgue 积分}，第~\ref{lec:integration} 讲。）
 \end{itemize}
 测度论就是为了回答这些问题而建立的。它本身不是概率论的目的，而是概率论的语言。很多测度论的名词，在概率论里只是换了个名字。下面这张对照表请同学们熟记：
 
@@ -54,7 +54,7 @@ Z_n=\frac{S_n-n/2}{\sqrt n/2}.
 $\cF$ 中的集合 & 事件 & 可以问“发生了没有”的事情\\
 可测函数 & 随机变量 & 由试验结果决定的数\\
 像测度 $\mu\circ X^{-1}$ & 分布 $\mu_X$ & $X$ 落在各处的概率\\
-积分 $\int X\dd\mu$ & 期望 $EX$ & 加权平均\\
+积分 $\int X\dd\mu$ & 期望 $\E X$ & 加权平均\\
 几乎处处（a.e.） & 几乎必然（a.s.） & 除了一个概率为零的事件之外\\
 乘积测度 & 独立 & 互不影响的试验\\
 Radon--Nikodym 导数 & 密度；以后的条件期望 & 一个测度相对另一个的“比率”\\
@@ -71,8 +71,8 @@ Radon--Nikodym 导数 & 密度；以后的条件期望 & 一个测度相对另�
 \emph{例子}：强大数定律，$S_n/n\to\frac12$ a.s.
 \item \textbf{依概率收敛} $X_n\to X$ in probability：对每个 $\varepsilon>0$，$\P(\abs{X_n-X}>\varepsilon)\to0$。也就是说，对每个大的 $n$，“$X_n$ 与 $X$ 相差较大”这件事的概率很小。它比几乎必然收敛弱：允许每个 $\omega$ 都“偶尔”偏离一下，只要偏离的时刻越来越稀少。\\
 \emph{例子}：弱大数定律。
-\item \textbf{$L^p$ 收敛} $X_n\to X$ in $L^p$：$E\abs{X_n-X}^p\to0$。这是“平均意义下”的收敛。\\
-\emph{例子}：$E(S_n/n-\frac12)^2=\frac1{4n}\to0$。
+\item \textbf{$L^p$ 收敛} $X_n\to X$ in $L^p$：$\E\abs{X_n-X}^p\to0$。这是“平均意义下”的收敛。\\
+\emph{例子}：$\E(S_n/n-\frac12)^2=\frac1{4n}\to0$。
 \item \textbf{依分布收敛} $X_n\Rightarrow X$：$\P(X_n\leqslant x)\to \P(X\leqslant x)$（在 $X$ 的分布函数的连续点 $x$ 处）。它只比较\emph{分布}，根本不比较 $X_n$ 与 $X$ 的值；$X_n$ 与 $X$ 甚至可以定义在不同的概率空间上。\\
 \emph{例子}：中心极限定理。
 \end{enumerate}

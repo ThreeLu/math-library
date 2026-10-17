@@ -13,7 +13,7 @@ shared/latex/          全站共用的文档类
 templates/english-book/ 新建英文书时复制这个目录
 tools/build.py         LaTeX → aux/PDF → pandoc → Quarto 页面；生成侧边栏与首页
 tools/yp-filter.lua    pandoc 过滤器：编号、定理框、折叠解答、习题题号、交叉引用
-site/assets/           网站样式（library.scss、dark.scss）、字体、head.html
+site/assets/           网站样式（library.scss）、字体、head.html（解答折叠、继续阅读、索引筛选的脚本）
 site/                  其余内容都是生成的，不进 git
 ```
 
@@ -31,6 +31,9 @@ make preview   # 本地预览 http://localhost:4200
 - 每个 `\input` 的文件是一页；中文讲义里 `\homework` 之后的部分单独成页。
 - 只认 `yupin-notes` 定义的环境与宏。新增环境或宏时，要同时改 `tools/build.py` 的 `preprocess`（或 `THEOREM_ENVS`）和 `tools/yp-filter.lua`，然后 `make fast`，确认没有警告、没有 MathJax 报错。
 - 记号宏写在 cls（中文）或 clo（英文）的“记号 / Notation”一节，构建时从那里读取，并由 pandoc 在公式里展开。
+- 概率与期望全站统一写 `\P`、`\E`（$\mathbb P$、$\mathbb E$），两种语言的文档类都已定义。
+- 定理索引（导航栏 Index，`site/results.qmd`）由过滤器在转换时收集：所有编号的定义、命题、引理、定理、推论、猜想，显示编号、名字（环境的可选参数）和陈述的开头。给定理起名字（`\begin{theorem}[Fatou 引理]`）能让它在索引里更好找。
+- 首页与书目录页的“继续阅读”只存在读者自己浏览器的 localStorage 里。
 
 ## 新增、收纳一本书
 

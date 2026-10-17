@@ -21,12 +21,13 @@
 --    yp-sec-offset  sections before this page (section mode)
 --    yp-pdf         URL of the book PDF
 --    yp-kicker, yp-pdf-page   banner contents
+--    yp-index       file to append index-of-results entries to (JSON lines)
 -- =====================================================================
 
 local stringify = pandoc.utils.stringify
 
 local labels = {}
-local page, lang, numbering, pdf_url
+local page, lang, numbering, pdf_url, index_path
 local thm_counter, sec_counter, sub_counter = 0, 0, 0
 
 local NAMES = {
@@ -69,6 +70,7 @@ local function read_meta(meta)
   lang = stringify(meta['yp-lang'] or 'zh')
   numbering = stringify(meta['yp-numbering'] or 'global')
   pdf_url = stringify(meta['yp-pdf'] or '')
+  index_path = stringify(meta['yp-index'] or '')
   thm_counter = tonumber(stringify(meta['yp-thm-offset'] or '0')) or 0
   sec_counter = tonumber(stringify(meta['yp-sec-offset'] or '0')) or 0
   local path = stringify(meta['yp-labels'] or '')
@@ -283,6 +285,112 @@ local function first_list(blocks)
 end
 
 -- ---------------------------------------------------------------------
+--  Index of results: one JSON line per numbered statement
+-- ---------------------------------------------------------------------
+local INDEXED = {
+  definition = true, proposition = true, lemma = true, theorem = true,
+  corollary = true, conjecture = true,
+}
+
+-- Plain inlines for the index: links become text, nothing page-relative.
+local function unlink(inlines)
+  return pandoc.Inlines(inlines):walk({
+    Link = function(l) return l.content end,
+    Span = function(sp) sp.identifier = ''; sp.attributes = {}; return sp end,
+  })
+end
+
+-- Rough visible length: characters of text, a formula counts as 3.
+local function visible_len(inlines)
+  local n = 0
+  for _, el in ipairs(inlines) do
+    if el.t == 'Str' then n = n + (utf8.len(el.text) or #el.text)
+    elseif el.t == 'Math' then n = n + 3 end
+  end
+  return n
+end
+
+-- The statement's opening: its first sentence (up to 。 ； or a full stop),
+-- plus the next one when the first is only a set-up such as "设 A⊆Ω。".
+-- Stops before display math; at most ~50 inlines.
+local function opening_inlines(blocks)
+  -- the first paragraph, continued into the next block when it is only a
+  -- short set-up ("设 A⊆Ω。" followed by a list of claims)
+  local stream = pandoc.Inlines({})
+  for k = 1, math.min(#blocks, 2) do
+    local b = blocks[k]
+    local inl
+    if b.t == 'Para' or b.t == 'Plain' then
+      inl = b.content
+    elseif (b.t == 'OrderedList' or b.t == 'BulletList') and b.content[1] and b.content[1][1]
+        and (b.content[1][1].t == 'Para' or b.content[1][1].t == 'Plain') then
+      inl = pandoc.Inlines({pandoc.Str(b.t == 'OrderedList' and '1)' or '•'), pandoc.Space()})
+      inl:extend(b.content[1][1].content)
+    end
+    if not inl then break end
+    if #stream > 0 then stream:insert(pandoc.Space()) end
+    stream:extend(inl)
+    if visible_len(stream) >= 16 then break end
+  end
+  return stream
+end
+
+local function first_sentence(blocks)
+  local content = opening_inlines(blocks)
+  if #content == 0 then return content end
+  local out, sentences = pandoc.Inlines({}), 0
+  for i, el in ipairs(content) do
+    if i > 50 or (el.t == 'Math' and el.mathtype == 'DisplayMath') then
+      out:insert(pandoc.Str('…'))
+      break
+    end
+    if el.t == 'Str' then
+      local a, b = el.text:find('。'), nil
+      if a then b = a + #'。' - 1 else a = el.text:find('；'); if a then b = a + #'；' - 1 end end
+      if not a and el.text:match('%.$') and not el.text:match('^%a%.$') then b = #el.text end
+      if b then
+        out:insert(pandoc.Str(el.text:sub(1, b)))
+        sentences = sentences + 1
+        if sentences >= 2 or visible_len(out) >= 16 then break end
+      else
+        out:insert(el)
+      end
+    elseif el.t ~= 'Note' then
+      out:insert(el)
+    end
+  end
+  return out
+end
+
+local function to_md(inlines)
+  local md = pandoc.write(pandoc.Pandoc({pandoc.Plain(inlines)}), 'markdown-smart')
+  return (md:gsub('\n', ' '):gsub('%s+$', ''))
+end
+
+local function index_entry(env, name, n, id, note, blocks)
+  if index_path == '' or not INDEXED[env] then return end
+  -- resolve \ref to numbers; build new Math elements so the page's own
+  -- elements (labels, tags) are left untouched
+  local body = first_sentence(blocks):walk({
+    Link = fix_link,
+    Math = function(m)
+      local t = m.text:gsub('\\label{[^}]*}', ''):gsub('\\qedhere', '')
+      return pandoc.Math(m.mathtype, t)
+    end,
+  })
+  body = unlink(body)
+  local entry = {
+    page = page, id = id, kind = env, label = name .. ' ' .. n,
+    note = note and to_md(unlink(note)) or '',
+    snippet = to_md(body),
+    text = (name .. ' ' .. n .. ' ' .. (note and stringify(note) or '') .. ' ' .. stringify(body)):lower(),
+  }
+  local f = io.open(index_path, 'a')
+  f:write(pandoc.json.encode(entry), '\n')
+  f:close()
+end
+
+-- ---------------------------------------------------------------------
 --  Div handlers
 -- ---------------------------------------------------------------------
 local function theorem_div(div, env, starred, ctx)
@@ -301,6 +409,13 @@ local function theorem_div(div, env, starred, ctx)
     end
     head:insert(pandoc.Str(' ' .. n))
   end
+  local number = nil
+  if #head > 1 then number = stringify(head[2]):gsub('^ ', '') end
+  local id = info.label
+  if not id and number then id = 'stmt-' .. number:gsub('%.', '-') end
+  if number then
+    index_entry(env, name, number, id, info.note, blocks)
+  end
   local headspan = pandoc.List({pandoc.Strong(head)})
   if info.note then
     headspan:insert(pandoc.Space())
@@ -317,7 +432,7 @@ local function theorem_div(div, env, starred, ctx)
     local link = pdf_link(info.label)
     if link then blocks:insert(1, pandoc.Div({pandoc.Plain({link})}, {class = 'yp-thm-pdf'})) end
   end
-  return pandoc.Div(blocks, {id = info.label or '', class = table.concat(classes, ' ')})
+  return pandoc.Div(blocks, {id = id or '', class = table.concat(classes, ' ')})
 end
 
 local function proof_div(div, ctx)
@@ -499,10 +614,16 @@ function Pandoc(doc)
   end
   if #banner > 0 then blocks:insert(1, pandoc.Div({pandoc.Plain(banner)}, {class = 'yp-banner'})) end
 
-  local body_class = 'yp-body yp-' .. lang
-  doc.blocks = {pandoc.Div(blocks, {class = body_class})}
+  -- data-* attributes feed the "continue reading" script in head.html
+  local body_attr = {class = 'yp-body yp-' .. lang}
+  for _, k in ipairs({'yp-book', 'yp-book-title', 'yp-crumb'}) do
+    local v = stringify(doc.meta[k] or '')
+    if v ~= '' then body_attr['data-' .. k:sub(4)] = v end
+  end
+  doc.blocks = {pandoc.Div(blocks, body_attr)}
   for _, k in ipairs({'yp-labels', 'yp-page', 'yp-lang', 'yp-numbering', 'yp-thm-offset',
-      'yp-sec-offset', 'yp-pdf', 'yp-kicker', 'yp-pdf-page'}) do
+      'yp-sec-offset', 'yp-pdf', 'yp-kicker', 'yp-pdf-page', 'yp-index',
+      'yp-book', 'yp-book-title', 'yp-crumb'}) do
     doc.meta[k] = nil
   end
   return doc
