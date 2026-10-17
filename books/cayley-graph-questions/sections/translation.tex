@@ -1,0 +1,76 @@
+\section{The translation}\label{sec:translation}
+
+\topic{Cliques are difference sets}
+
+\begin{proposition}\label{prop:clique}
+A set $X\subseteq G$ is a clique of $\Gamma(G,S)$ if and only if $X^{-1}X\setminus\{e\}\subseteq S$, and it is independent if and only if $X^{-1}X\cap S=\emptyset$.
+\end{proposition}
+
+\begin{proof}
+Two vertices are adjacent, $x\sim y$, if and only if $x^{-1}y\in S$, or equivalently $y^{-1}x\in S$, as $S=S^{-1}$.
+\end{proof}
+
+Conlon, Fox, Pham and Yepremyan use edges $\{x,y\}$ with $xy^{-1}\in S$, for which $X^{-1}X$ becomes $XX^{-1}$. Their key observation is a colouring.
+
+\begin{fact}[Conlon--Fox--Pham--Yepremyan~\cite{cfpy24}, \S1]\label{fact:entangled}
+Colour the edge $xy$ of the complete graph $K_N$ on the vertex set $G$ by $\{xy^{-1},yx^{-1}\}$. Every colour class has maximum degree at most $2$, and $\Gamma(G,S)$ is the union of the colour classes in $S$: an \term{entangled graph}.
+\end{fact}
+
+Counting cliques of a random Cayley graph thus amounts to counting vertex sets that span few colours, that is, sets $A$ with $|AA^{-1}|\leq K|A|$~\cite[\S1.1]{cfpy24}. Conlon, Fox, Pham and Yepremyan prove the count for every bounded-degree colouring of $K_N$: ``Our proof does not make use of the underlying group structure.''
+
+\topic{Hamilton cycles are words}
+
+\begin{proposition}\label{prop:ham}
+Let $n=|G|$. The graph $\Gamma(G,S)$ has a Hamilton cycle if and only if there are $s_1,\dots,s_n\in S$, repetitions allowed, with $s_1s_2\cdots s_n=e$ and with the partial products $e,s_1,s_1s_2,\dots,s_1\cdots s_{n-1}$ all distinct.
+\end{proposition}
+
+\begin{proof}
+Translate a Hamilton cycle $g_1g_2\cdots g_n$ to start at $e$, using that left multiplication is an automorphism, and put $s_i=g_i^{-1}g_{i+1}$, with indices modulo $n$.
+\end{proof}
+
+Compare R-sequencings: they are the case $S=G\setminus\{e\}$ with every $s$ used \emph{exactly once}, a rainbow cycle, whereas here letters may repeat. For the Gray code of Figure~\ref{fig:gray-code}, $S=\{e_1,e_2,e_3\}$ and the word is $e_3e_2e_3e_1e_3e_2e_3e_1$.
+
+\topic{Diameter is growth}
+
+\begin{proposition}\label{prop:diam}
+Let $B=A\cup A^{-1}\cup\{e\}$. Then $\operatorname{diam}\Gamma(G,A)\leq\ell$ if and only if $B^\ell=G$; the ball of radius $k$ around $e$ is $B^k$.
+\end{proposition}
+
+\begin{proof}
+The vertices at distance at most $k$ from $e$ are exactly the products of at most $k$ letters from $A\cup A^{-1}$.
+\end{proof}
+
+\begin{theorem}[Helfgott~\cite{hel08}]\label{thm:helfgott}
+``Every subset of $SL_2(\Z/p\Z)$ grows rapidly when it acts on itself by the group operation. It follows readily that, for every set of generators $A$ \dots, every element \dots\ can be expressed as a product of at most $O((\log p)^c)$ elements of $A\cup A^{-1}$.''
+\end{theorem}
+
+Here growth means that $|AAA|\geq|A|^{1+\delta}$ unless $AAA=G$~\cite{ps10}. Iterating, $|A^{3^k}|\geq|A|^{(1+\delta)^k}$, so $O(\log\log|G|)$ triplings reach $G$, and the radius grows like $3^k=(\log|G|)^{O(1)}$.
+
+\topic{Product-free sets are independent}
+
+\begin{proposition}\label{prop:pf}
+A set $X$ is product-free if and only if it spans no arc of the Cayley digraph $\operatorname{Cay}(G,X)$, whose arcs are $g\to gx$ for $x\in X$.
+\end{proposition}
+
+\begin{proof}
+An arc inside $X$ is an arc $x\to xy$ with $x,xy\in X$ and $y\in X$, that is, a solution of $xy=z$ in $X$.
+\end{proof}
+
+Gowers works with the bipartite Cayley graph and shows that it is \term{quasirandom}, with edges spread evenly, when $G$ has no small non-trivial representation; quasirandomness forces solutions of $ab=c$ in any three large sets~\cite[\S1]{gow08}.
+
+\topic{The dictionary}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\small
+\begin{tabular}{p{0.44\textwidth}p{0.48\textwidth}}
+\textbf{group} & \textbf{graph}\\\hline
+$X^{-1}X\setminus\{e\}\subseteq S$ & $X$ is a clique of $\Gamma(G,S)$\\
+sets with $|AA^{-1}|\leq K|A|$ & vertex sets spanning few colours\\
+word $s_1\cdots s_n=e$ with distinct partial products & Hamilton cycle\\
+$B^\ell=G$ & diameter at most $\ell$\\
+growth $|A^3|\geq|A|^{1+\delta}$ & expansion of balls\\
+product-free $X$ & $X$ spans no arc of $\operatorname{Cay}(G,X)$\\
+$\operatorname{Aut}\Gamma(G,S)=G$ & graphical regular representation
+\end{tabular}
+\end{center}

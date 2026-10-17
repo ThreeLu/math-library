@@ -112,3 +112,13 @@ books:
     source: books/ringel-graceful-harmonious
     main: main.tex
     slides: books/ringel-graceful-harmonious/slides/Ringel-Graceful-Harmonious-slides.pdf
+
+  - slug: cayley-graph-questions
+    title: Questions about Groups, Asked of Cayley Graphs
+    subtitle: Ramsey properties, Hamilton cycles, diameter and product-free sets
+    category: surveys
+    lang: en
+    status: active
+    source: books/cayley-graph-questions
+    main: main.tex
+    slides: books/cayley-graph-questions/slides/Questions-about-Groups-Cayley-Graphs-slides.pdf

@@ -1,0 +1,95 @@
+\section{Progress}\label{sec:progress}
+
+\topic{Ramsey Cayley graphs}
+
+Alon showed that random Cayley graphs have clique number $O(\log^2N)$; Green, and Green and Morris, showed that random Cayley graphs on $\Z_N$ have clique number at most $C\log N$, and $(2+o(1))\log N$ for $N$ prime; see~\cite{cfpy24}. Conlon, Fox, Pham and Yepremyan~\cite{cfpy24} showed that random Cayley graphs on every group have clique number $O(\log N\log\log N)$, proved Alon's conjecture for abelian groups of almost all orders, and constructed self-complementary $(2+o(1))$-Ramsey Cayley graphs over $\mathbb F_q^n$ for $q\equiv1\pmod4$. Schildkraut~\cite{sch25} proved Alon's conjecture for all groups of almost all orders in December 2025.
+
+Varying the density of the random generating set gives a different regime.
+
+\begin{theorem}[Alon--Pham~\cite{ap25}, Theorem~4]\label{thm:alon-pham}
+For an abelian group of order $n$ and $p\leq1/2$, random Cayley graphs in the binomial symmetric-generator model, and random Cayley sum graphs, have independence number at most $\widetilde O(p^{-3/2})$ with high probability.
+\end{theorem}
+
+Here $\widetilde O$ suppresses logarithmic factors in $n$. In a Cayley sum graph, $xy$ is an edge when $x+y$ belongs to the sampled set, so an independent set $A$ has all sums $x+y$ of distinct $x,y\in A$ outside that set: the algebraic question about avoiding sums becomes a question about independent sets. The same paper also bounds complements of large non-sumsets~\cite[Theorem~5]{ap25}. In the sparse regime the picture changes completely.
+
+\begin{theorem}[Tung~\cite{tung26}, Theorem~1.1]\label{thm:tung}
+Let $G$ be any abelian group of order $N$. Sample $\lfloor\ln N/64\rfloor$ independent uniform elements of $G$ and form the undirected Cayley graph, discarding loops. With probability tending to $1$ as $N\to\infty$, its chromatic number is at most $3$.
+\end{theorem}
+
+The number of sampled elements is logarithmic in $N$, sampling is with replacement, the graph uses the symmetrised set of non-zero samples, and the samples need not generate $G$. Algebraically, let $S$ be this symmetrised set. A proper $3$-colouring is exactly a partition
+\[
+G=A_1\sqcup A_2\sqcup A_3,\qquad (A_i-A_i)\cap S=\emptyset\quad(i=1,2,3),
+\]
+since two vertices of $A_i$ are adjacent exactly when their difference lies in $S$. So each part is independent, and some part has size at least $N/3$. Alon's question seeks small independent sets; here the graph has a large independent set because the generating set is sparse.
+
+\topic{Hamilton cycles}
+
+Christofides, Hladk\'y and M\'ath\'e~\cite{chm14} showed in 2014 that, for each $\varepsilon>0$, sufficiently large connected vertex-transitive graphs of degree at least $\varepsilon n$ are Hamiltonian. The linear degree condition was recently relaxed for Cayley graphs.
+
+\begin{theorem}[Bedert--Dragani\'c--M\"uyesser--Pavez-Sign\'e~\cite{bdmp26}]\label{thm:bdmp}
+For some absolute constant $c\geq1/200$, every sufficiently large connected $n$-vertex Cayley graph of degree $d>n^{1-c}$ has a Hamilton cycle. In particular $d>n^{199/200}$ suffices.
+\end{theorem}
+
+By Proposition~\ref{prop:ham}, for every such generating set $S=S^{-1}$ there is a word of length $n$ in $S$ whose partial products visit $G$ exactly once before returning to $e$. The proof uses the weak arithmetic regularity developed in the programme on Graham's rearrangement conjecture.
+
+\begin{theorem}[Lehner--Maghsoudi--Miraftab~\cite{lmm26}, Theorem~1.3]\label{thm:pqrs}
+If $|G|=pqrs$ for four distinct primes $p,q,r,s$, then every connected Cayley graph on $G$ has a Hamilton cycle.
+\end{theorem}
+
+The primes need not all be odd, so the theorem includes groups of even order; Morris~\cite{mor21} had proved the case of four distinct odd primes. In a different direction, Dragani\'c, Montgomery, Munh\'a Correia, Pokrovskiy and Sudakov~\cite{dmmps24} showed that $C\log n$ random generators give a Hamiltonian Cayley graph with high probability. These are exact Hamiltonicity results under extra assumptions on the order of the group or on the generating set.
+
+\topic{Long cycles}
+
+For an arbitrary connected Cayley graph we may relax the target. Consider the same word problem with length $3\leq k\leq|G|$: find $s_1,\dots,s_k\in S$ with $s_1\cdots s_k=e$ such that $e,s_1,s_1s_2,\dots,s_1\cdots s_{k-1}$ are distinct. The case $k=|G|$ is a Hamilton cycle; $k\geq c|G|$ is a cycle visiting a fixed positive fraction of the group; and $k\geq(1-o(1))|G|$ is a cycle missing a vanishing fraction of the group. The results below apply to the larger class of connected vertex-transitive graphs, and hence to Cayley graphs~\cite[\S1]{mz26}.
+
+Let $\operatorname{circ}(\Gamma)$ denote the maximum length of a cycle in $\Gamma$, and let $\Gamma$ be a connected vertex-transitive graph on sufficiently many vertices. In June 2026 (revised in July), Buci\'c, Christoph, Pokrovskiy and Steiner~\cite{bcps26} showed that $\operatorname{circ}(\Gamma)\geq n^{2/3-\varepsilon}$ for each $\varepsilon>0$. In September, Li and Methuku~\cite{lm26} improved this to $\operatorname{circ}(\Gamma)\geq n^{1-\varepsilon}$; a parallel working draft of Buci\'c, Christoph, Pokrovskiy and Steiner with the same bound is recorded in~\cite[\S1]{mz26}. An exponent approaching $1$ need not give a positive fraction of $n$: $n^{1-o(1)}$ and $(1-o(1))n$ are different guarantees.
+
+\begin{theorem}[Christoph--Hunter--Sudakov~\cite{chs26}, Theorem~1.8]\label{thm:chs}
+Every connected $d$-regular vertex-transitive graph on $n$ vertices with
+\[
+\frac{d}{(\log n)^3\log\log n}\longrightarrow\infty
+\]
+has a cycle of length $(1-o(1))n$ as $n\to\infty$.
+\end{theorem}
+
+For Cayley graphs, this gives a closed word visiting all but $o(|G|)$ group elements, provided the degree grows faster than $(\log n)^3\log\log n$. In October, Ma and Zhao obtained a linear bound with no degree assumption, and improved the almost-spanning regime.
+
+\begin{theorem}[Ma--Zhao~\cite{mz26}, Theorem~1.1]\label{thm:mz}
+There is an absolute constant $c>0$ such that every finite connected vertex-transitive graph $\Gamma$ on $n\geq3$ vertices satisfies $\operatorname{circ}(\Gamma)\geq cn$. Moreover, there is an absolute integer $d_0$ such that, if $\Gamma$ has degree $d\geq d_0$, then
+\[
+\operatorname{circ}(\Gamma)\geq(1-d^{-1/100})n .
+\]
+\end{theorem}
+
+The same constant $c$ works for all such graphs regardless of degree, and in particular for every connected Cayley graph on at least three vertices; this strengthens a bound of the form $n^{1-\varepsilon}$ to a fixed positive fraction, since $n^{1-\varepsilon}/n=n^{-\varepsilon}\to0$ for fixed $\varepsilon>0$. In the second statement, the fraction of uncovered vertices tends to zero as $d\to\infty$, with no required growth rate relative to $n$; this improves the degree condition of Theorem~\ref{thm:chs}. The estimate still allows uncovered vertices, so exact Hamiltonicity remains a stronger demand.
+
+In the language of group words: let $|G|\geq3$ and let $S=S^{-1}\subseteq G\setminus\{e\}$ generate $G$. Translating a cycle of $\operatorname{Cay}(G,S)$ to start at $e$, its edge labels give $s_1\cdots s_k=e$ with $e,s_1,s_1s_2,\dots,s_1\cdots s_{k-1}$ pairwise distinct. By Theorem~\ref{thm:mz} such a word exists with $k\geq c|G|$, and, for $|S|=d\geq d_0$, with $k\geq(1-d^{-1/100})|G|$. The generators in the word may repeat; the requirement is on distinct visited group elements, whereas R-sequencings additionally prescribe distinct edge colours. As a direct consequence, a family with no cycle longer than $(1-\delta)|G|$ for a fixed $\delta>0$ must have degrees bounded in terms of $\delta$.
+
+\topic{Directed Cayley graphs}
+
+Without the condition $S=S^{-1}$ only the prescribed directed steps are available, and the broader class is that of connected vertex-transitive digraphs. In February 2026, Buci\'c, Hendrey, Mohar, Steiner and Yepremyan~\cite{bhmsy26} showed that every such digraph on $n$ vertices has a directed cycle of length $\Omega(n^{1/3})$. In July (revised in August), Li and Methuku improved this to $\Omega(\sqrt n)$~\cite[Theorem~1.5]{lmd26}, and gave infinitely many vertex-transitive digraphs in which every directed cycle misses at least $n/12$ vertices~\cite[Theorem~1.3]{lmd26}. These examples are vertex-transitive digraphs, with no Cayley property asserted, and they do not refute the undirected Cayley Hamilton cycle conjecture.
+
+\topic{Diameter}
+
+Helfgott~\cite{hel08} proved a polylogarithmic bound on the diameter of $SL_2(\mathbb F_p)$ in 2008; Pyber and Szab\'o~\cite{ps10} and Breuillard, Green and Tao~\cite{bgt11} extended this to finite simple groups of Lie type of bounded rank; and Helfgott and Seress~\cite{hs14} showed that $\operatorname{diam}(\mathrm{Sym}(n))\leq\exp(O((\log n)^4\log\log n))$. Babai's polylogarithmic conjecture concerns non-abelian simple groups; for arbitrary finite groups, where even $\Z_p$ with generators $\{\pm1\}$ has diameter $\lfloor p/2\rfloor$, new bounds must reflect the algebraic structure.
+
+A group is \term{soluble} if its iterated commutator subgroups eventually become trivial, and its \term{exponent} $e$ is the least positive integer with $g^e=1$ for every $g\in G$. For example, $\Z_m$ has exponent $m$, while $\Z_2^r$ has exponent $2$ and order $2^r$, so exponent and order can be very different.
+
+\begin{theorem}[Eberhard--Maini--Sabatini--Tracey~\cite{emst26}, Theorem~1.2]\label{thm:emst}
+There is an absolute constant $C$ such that every finite soluble group $G$ of exponent $e$ satisfies
+\[
+\operatorname{diam}(G)\leq C\,e\,(\log|G|)^8 .
+\]
+\end{theorem}
+
+Since the diameter is maximised over generating sets, this says that for every generating set $A$, every group element is a word of length at most $Ce(\log|G|)^8$ in $A\cup A^{-1}$. The exponent factor records the obstruction already visible in cyclic groups. A subgroup $G\leq\mathrm{Sym}(n)$ is \term{transitive} if it has one orbit on the $n$ points; here $n$ is the degree of the permutation group, not $|G|$.
+
+\begin{theorem}[Eberhard--Maini--Sabatini--Tracey~\cite{emst26}, Theorem~1.7]\label{thm:emst-transitive}
+Every transitive soluble permutation group $G\leq\mathrm{Sym}(n)$ satisfies $\operatorname{diam}(G)=O(n^5)$.
+\end{theorem}
+
+For example, $S_3$ acts transitively on $3$ points, so $n=3$, while $|S_3|=6$ and its Cayley graphs have $6$ vertices; it is soluble, since its commutator subgroup is the cyclic group $A_3$. The theorem bounds word lengths in terms of the number of points being permuted rather than the number of vertices of the Cayley graph. Without the solubility assumption there is a conditional result: if Babai's conjecture holds for non-abelian finite simple groups, then every transitive permutation group of degree $n$ has diameter $n^{O(1)}$~\cite[Corollary~1.5]{emst26}.
+
+\topic{Product-free sets and regular representations}
+
+Gowers~\cite{gow08} showed in 2008 that $PSL_2(q)$ has no product-free set of size $Cn^{8/9}$, where $n=|PSL_2(q)|$, so quasirandomness answers Problem~\ref{prob:product-free} in the negative. A \term{graphical regular representation} (GRR) is a Cayley graph $\Gamma(G,S)$ with no automorphisms beyond the regular action of $G$, that is, with $\operatorname{Aut}\Gamma(G,S)=G$. Godsil classified the groups that have a GRR. Morris and Spiga~\cite{ms18} showed that almost all Cayley digraphs are directed regular representations, and Xia and Zheng~\cite{xz22} that almost all Cayley graphs are GRRs, as conjectured by Babai, Godsil, Imrich and Lov\'asz.

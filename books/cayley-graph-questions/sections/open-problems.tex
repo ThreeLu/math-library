@@ -1,0 +1,29 @@
+\section{Open problems}\label{sec:open}
+
+\begin{conjecture}[Alon; see~\cite{sch25}]\label{conj:alon-open}
+There is $C$ such that every finite group $G$ has a set $S=S^{-1}\subseteq G\setminus\{e\}$ for which no $X\subseteq G$ with $|X|>C\log|G|$ satisfies $X^{-1}X\setminus\{e\}\subseteq S$ or $X^{-1}X\cap S=\emptyset$.
+\end{conjecture}
+
+By Proposition~\ref{prop:clique}, this says that every finite group $G$ has a Cayley graph $\Gamma(G,S)$ with clique number and independence number at most $C\log|G|$. It is known for $\Z_N$ (Green; Green and Morris), for abelian groups of almost all orders~\cite{cfpy24}, and for all groups of almost all orders~\cite{sch25}. Open are the remaining orders, and an explicit construction.
+
+\begin{conjecture}[Strasser, 1959]\label{conj:strasser-open}
+For every finite group $G$ with $|G|\geq3$ and every generating set $S=S^{-1}$, there are $s_1,\dots,s_n\in S$ with $s_1\cdots s_n=e$ and distinct partial products $e,s_1,\dots,s_1\cdots s_{n-1}$.
+\end{conjecture}
+
+By Proposition~\ref{prop:ham}, this says that every connected Cayley graph on at least $3$ vertices has a Hamilton cycle. It is known for abelian groups, for degree $d>n^{199/200}$ and $n$ large (Theorem~\ref{thm:bdmp}), for groups of order $pqrs$ with four distinct primes (Theorem~\ref{thm:pqrs}), and for random generating sets~\cite{dmmps24}. Linear circumference (Theorem~\ref{thm:mz}) does not yet give a Hamilton cycle.
+
+\begin{conjecture}[Babai; Babai--Seress, 1992]\label{conj:babai-open}
+There is $C$ such that, for every finite non-abelian simple group $G$ and every generating set $A$, every element of $G$ is a product of at most $(\log|G|)^C$ elements of $A\cup A^{-1}$.
+\end{conjecture}
+
+By Proposition~\ref{prop:diam}, this says that every connected Cayley graph of a finite non-abelian simple group $G$ has diameter at most $(\log|G|)^C$. It is known for groups of Lie type of bounded rank~\cite{ps10,bgt11}, and for $\mathrm{Alt}(n)$ a quasipolynomial bound is known~\cite{hs14}. Open are the groups of unbounded rank, and the polynomial bound $n^{O(1)}$ for $\mathrm{Alt}(n)$.
+
+\begin{conjecture}[Babai; see~\cite{chm14}, \S1]\label{conj:babai-cycles}
+There are $c>0$ and infinitely many connected Cayley graphs $\Gamma$ with no cycle longer than $(1-c)|\Gamma|$.
+\end{conjecture}
+
+By Proposition~\ref{prop:ham} applied to cycles of length $k$, this says that there are infinitely many groups $G$ with generating sets $S=S^{-1}$ such that every word $s_1\cdots s_k=e$ in $S$ with distinct partial products has $k\leq(1-c)|G|$. Every connected vertex-transitive graph on $n\geq3$ vertices has a cycle of length at least $cn$ (Theorem~\ref{thm:mz}), and the degree-dependent bound of that theorem forces any family with a fixed gap to have bounded degree. Conjectures~\ref{conj:strasser-open} and~\ref{conj:babai-cycles} cannot both be true.
+
+\topic{Summary}
+
+Groups are candidates for explicit Ramsey graphs, and cliques are sets with few ``differences'' $X^{-1}X$, which can be counted in any colouring of bounded degree. Listing a group by generators is the Hamilton cycle problem, open since 1959. Short words mean small diameter, which comes from growth of products, and Babai's conjecture asks for it in all non-abelian simple groups. Product-free sets are independent sets in the Cayley digraph, and Gowers's quasirandomness answers the question of Babai and S\'os. One graph per group, and a different question for each property.

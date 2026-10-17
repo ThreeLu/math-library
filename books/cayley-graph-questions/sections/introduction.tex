@@ -1,0 +1,22 @@
+\section{Introduction}\label{sec:intro}
+
+\begin{definition}\label{def:cayley-graph}
+For a group $G$ and a set $S=S^{-1}\subseteq G\setminus\{e\}$, the \term{Cayley graph} $\Gamma(G,S)$ has vertex set $G$ and edges $\{g,gs\}$ for $g\in G$ and $s\in S$.
+\end{definition}
+
+The graph $\Gamma(G,S)$ is connected if and only if $S$ generates $G$, and it is vertex-transitive, since $x\mapsto hx$ is an automorphism for every $h\in G$. In earlier surveys of this series the arcs $g\to gs$ were coloured by $s$; here the Cayley graph itself, uncoloured, carries the information.
+
+This survey follows four questions about a group, each answered by a property of a graph.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{ll}
+\textbf{about the group} & \textbf{about the graph}\\\hline
+explicit Ramsey graphs from groups? & clique number of $\Gamma(G,S)$\\
+can $G$ be listed with steps in $S$? & Hamilton cycle in $\Gamma(G,S)$\\
+how long are words in $S$? & diameter of $\Gamma(G,S)$\\
+large product-free sets? & independent sets in $\Gamma(G,X)$
+\end{tabular}
+\end{center}
+
+Sections~\ref{sec:ramsey}--\ref{sec:product-free} describe the motivation for each question, Section~\ref{sec:translation} gives the translations, Section~\ref{sec:progress} surveys the progress, much of it from 2026, and Section~\ref{sec:open} collects open problems.

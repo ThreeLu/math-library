@@ -1,0 +1,17 @@
+\section{How long are words?}\label{sec:diameter}
+
+\begin{definition}[Helfgott--Seress~\cite{hs14}, \S1]\label{def:diameter}
+For a generating set $A$ of $G$, $\operatorname{diam}\Gamma(G,A)$ is the least $\ell$ such that every $g\in G$ is a word of length at most $\ell$ in $A\cup A^{-1}$. The \term{diameter} of $G$ is $\operatorname{diam}(G)=\max_A\operatorname{diam}\Gamma(G,A)$.
+\end{definition}
+
+Bounding diameters is a long-standing problem in computer science, since algorithms on permutation groups need short words; ``on a more playful level, bounds on the diameter of permutation groups are relevant to every permutation puzzle (e.g., Rubik's cube)''~\cite[\S1]{hs14}. Diameter is also tied to expansion: Cayley graphs of $SL_2(\mathbb F_p)$ give expander families (Bourgain and Gamburd), with applications in number theory~\cite{gre09}.
+
+\begin{example}\label{ex:sn-diameter}
+For $S_n$ with the generators $(12)$ and $(12\cdots n)^{\pm1}$, the diameter is $2,6,10,15,21$ for $n=3,\dots,7$: polynomial in $n$, while $|S_n|=n!$.
+\end{example}
+
+\begin{conjecture}[Babai; published in Babai--Seress, 1992, Conjecture~1.7; see~\cite{hs14}]\label{conj:babai}
+For every finite non-abelian simple group $G$, $\operatorname{diam}(G)\leq(\log|G|)^{O(1)}$.
+\end{conjecture}
+
+For the alternating groups this is the ``folklore'' conjecture that $\operatorname{diam}(\mathrm{Alt}(n))=n^{O(1)}$~\cite[\S1]{hs14}. The non-abelian hypothesis is essential: already $\Z_p$ with $A=\{1\}$ has diameter $\lfloor p/2\rfloor$, far from $(\log p)^{O(1)}$. The main tool is \term{growth}: if $|AAA|\geq|A|^{1+\delta}$ for every generating set $A$ that is not almost all of $G$, then $O(\log\log|G|)$ triplings fill $G$.

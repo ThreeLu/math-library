@@ -1,0 +1,9 @@
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+    \foreach \v/\x/\y in {000/0/0,001/1.6/0,011/1.6/1.6,010/0/1.6,100/0.7/0.6,101/2.3/0.6,111/2.3/2.2,110/0.7/2.2}
+      \coordinate (g\v) at (\x,\y);
+    \foreach \a/\b in {000/001,001/011,011/010,010/000,100/101,101/111,111/110,110/100,000/100,001/101,011/111,010/110}
+      \draw[gray!40] (g\a)--(g\b);
+    \draw[col1, line width=1.3pt] (g000)--(g001)--(g011)--(g010)--(g110)--(g111)--(g101)--(g100)--(g000);
+    \foreach \v/\p in {000/below left,001/below right,011/below right,010/left,100/below,101/right,111/above right,110/above left}
+      {\node[bvertex] at (g\v) {}; \node[\p=-1pt] at (g\v) {$\v$};}
+  \end{tikzpicture}

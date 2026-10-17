@@ -1,0 +1,7 @@
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+    \foreach \k in {0,...,12} \coordinate (p\k) at ({90-360*\k/13}:1.45);
+    \foreach \i in {0,...,12} \foreach \d in {1,3,4} {
+      \pgfmathtruncatemacro{\j}{mod(\i+\d,13)}
+      \draw[gray!60] (p\i)--(p\j);}
+    \foreach \k in {0,...,12} {\node[bvertex] at (p\k) {}; \node at ({90-360*\k/13}:1.72) {$\k$};}
+  \end{tikzpicture}

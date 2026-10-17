@@ -1,0 +1,22 @@
+\section{Listing a group by generators}\label{sec:hamilton}
+
+A Gray code lists the binary strings of length $n$ so that consecutive strings differ in one bit, for instance $000,001,011,010,110,111,101,100$. This is a Hamilton cycle in $\Gamma(\Z_2^n,\{e_1,\dots,e_n\})$ (Figure~\ref{fig:gray-code}). Can every group be walked through in this way?
+
+\begin{figure}[ht]
+\centering
+\input{figures/gray-code}
+\caption{A Gray code as a Hamilton cycle in the $3$-cube.}
+\label{fig:gray-code}
+\end{figure}
+
+Strasser conjectured in 1959 that every connected Cayley graph is Hamiltonian~\cite[Conjecture~1.7]{dmmps24}. Lov\'asz in 1969 \emph{asked} for a connected vertex-transitive graph without a Hamilton path; the conjecture is traditionally stated positively~\cite[\S1]{chm14}. Only five connected vertex-transitive graphs without a Hamilton cycle are known: $K_2$, the Petersen graph, the Coxeter graph, and the two graphs obtained from the last two by replacing each vertex by a triangle. None of them except $K_2$ is a Cayley graph~\cite[\S1]{chm14}.
+
+\begin{conjecture}[Lov\'asz, 1969; see~\cite{mz26}, \S1]\label{conj:lovasz}
+Every connected vertex-transitive graph has a Hamilton path.
+\end{conjecture}
+
+\begin{conjecture}[Strasser, 1959; see~\cite{dmmps24}, Conjecture~1.7]\label{conj:strasser}
+Every connected Cayley graph on at least $3$ vertices has a Hamilton cycle.
+\end{conjecture}
+
+A stronger conjecture for general vertex-transitive graphs asks for Hamilton cycles apart from the known small exceptions~\cite[Conjecture~1.6]{dmmps24}. The Cayley graph conjecture holds for abelian groups~\cite[\S1.1]{dmmps24}. In the other direction, Babai conjectured that there are infinitely many Cayley graphs with no cycle longer than $(1-c)n$~\cite[\S1]{chm14}; the 2026 bounds of Section~\ref{sec:progress} sharply constrain this competing possibility.

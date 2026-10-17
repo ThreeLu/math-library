@@ -313,9 +313,11 @@ local INDEXED = {
   corollary = true, conjecture = true, problem = true,
 }
 
--- Plain inlines for the index: links become text, nothing page-relative.
+-- Plain inlines for the index: links become text, citations are dropped
+-- (their numbers only make sense inside the book), nothing page-relative.
 local function unlink(inlines)
   return pandoc.Inlines(inlines):walk({
+    Cite = function() return {} end,
     Link = function(l) return l.content end,
     Span = function(sp) sp.identifier = ''; sp.attributes = {}; return sp end,
   })
@@ -385,7 +387,10 @@ end
 
 local function to_md(inlines)
   local md = pandoc.write(pandoc.Pandoc({pandoc.Plain(inlines)}), 'markdown-smart')
-  return (md:gsub('\n', ' '):gsub('%s+$', ''))
+  md = md:gsub('\n', ' '):gsub('%s+$', '')
+  -- spaces left in front of punctuation by a dropped citation
+  md = md:gsub('[ \u{a0}]+([,.;:%)])', '%1'):gsub('[ \u{a0}]+$', '')
+  return md
 end
 
 local function index_entry(env, name, n, id, note, blocks)

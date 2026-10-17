@@ -1,0 +1,24 @@
+\section{Ramsey graphs from groups}\label{sec:ramsey}
+
+By the theorem of Erd\H{o}s and Szekeres (1935), every graph on $N$ vertices has a clique or an independent set of size at least $\frac12\log_2N$~\cite[\S1.1]{sch25}. Erd\H{o}s (1947) showed that almost every graph has neither of size greater than $2\log_2N$~\cite[\S1]{cfpy24}. A graph is \term{$C$-Ramsey} if both its clique number and its independence number are at most $C\log N$. ``No explicit constructions of $C$-Ramsey graphs are known for any constant $C$''~\cite[\S1.1]{sch25}: random graphs work, but nobody can write one down.
+
+Cayley graphs are structured, so one can hope to prove things about them. The classical candidates are the Paley graphs.
+
+\begin{definition}[see~\cite{cfpy24}, \S1]\label{def:paley}
+For a prime $N\equiv1\pmod4$, the \term{Paley graph} $P_N$ is the Cayley graph on $\Z_N$ whose generating set is the set of non-zero squares.
+\end{definition}
+
+``It has also long been conjectured that the family of Paley graphs should be a good source of Ramsey graphs''~\cite[\S1]{cfpy24}. For example, $P_{13}$ and $P_{17}$ both have clique number $3$ and independence number $3$.
+
+\begin{figure}[ht]
+\centering
+\input{figures/paley}
+\caption{The Paley graph $P_{13}$: $x\sim y$ if and only if $x-y\in\{\pm1,\pm3,\pm4\}$.}
+\label{fig:paley}
+\end{figure}
+
+\begin{conjecture}[Alon, 1995, 2002; see~\cite{sch25}]\label{conj:alon}
+There is a constant $C$ such that every finite group has a $C$-Ramsey Cayley graph.
+\end{conjecture}
+
+Alon's conjecture was motivated ``by applications to coding theory''~\cite[\S1.1]{sch25}, and Alon and Orlitsky asked, from information theory, for self-complementary Ramsey Cayley graphs~\cite[\S1]{cfpy24}. Random generating sets do not suffice in general. In $\mathbb F_2^n$, if a subgroup $H$ lies entirely in $S$, then $H$ is a clique; so random Cayley graphs on $\mathbb F_2^n$ have clique number $\Theta(\log N\log\log N)$, as shown by Green~\cite[\S1.1]{cfpy24}.
