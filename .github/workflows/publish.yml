@@ -1,0 +1,68 @@
+# Build every book (LaTeX -> PDF + web pages) and publish the site to GitHub Pages.
+# Runs on every push to main; can also be started by hand from the Actions tab.
+name: Publish site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0            # "last updated" dates come from git log
+
+      - name: Install TeX Live and CJK fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-xetex texlive-latex-extra texlive-lang-chinese \
+            texlive-pictures texlive-science texlive-fonts-recommended \
+            latexmk fonts-noto-cjk
+
+      - name: Install pandoc
+        run: |
+          wget -q https://github.com/jgm/pandoc/releases/download/3.9.0.2/pandoc-3.9.0.2-1-amd64.deb
+          sudo dpkg -i pandoc-3.9.0.2-1-amd64.deb
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: 1.10.19
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python packages
+        run: pip install pyyaml pymupdf
+
+      - name: Build books and render site
+        run: python3 tools/build.py --render
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/_site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

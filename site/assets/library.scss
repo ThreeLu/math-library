@@ -1,0 +1,210 @@
+/*-- scss:defaults --*/
+
+$font-family-sans-serif: "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+$font-size-root: 17px;
+$body-color: #1d1d1f;
+$link-color: #1f4fbf;
+$primary: #1f4fbf;
+$navbar-bg: #ffffff;
+$navbar-fg: #1d1d1f;
+$sidebar-bg: #fafaf8;
+$toc-font-size: 0.85rem;
+
+/*-- scss:rules --*/
+
+// ---------------------------------------------------------------------
+//  Fonts. Latin Modern matches the PDFs (CM math comes from MathJax).
+//  Paths are relative to the Quarto project root; Quarto copies the files into site_libs/.
+// ---------------------------------------------------------------------
+@font-face { font-family: "LM Roman"; src: url("assets/fonts/lmroman10-regular.otf") format("opentype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "LM Roman"; src: url("assets/fonts/lmroman10-italic.otf") format("opentype"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "LM Roman"; src: url("assets/fonts/lmroman10-bold.otf") format("opentype"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "LM Roman"; src: url("assets/fonts/lmroman10-bolditalic.otf") format("opentype"); font-weight: 700; font-style: italic; font-display: swap; }
+
+:root {
+  --yp-song: "LM Roman", "Songti SC", "STSong", "SimSun", "Noto Serif SC", serif;
+  --yp-kai: "LM Roman", "Kaiti SC", "STKaiti", "KaiTi", "LXGW WenKai Screen", serif;
+  --yp-hei: "LM Roman", "Heiti SC", "STHeiti", "PingFang SC", "SimHei", "Microsoft YaHei", sans-serif;
+  --yp-blue: #0000e6;
+  --yp-red: #e00000;
+  --yp-green: #004200;
+  --yp-green-line: rgba(0, 66, 0, 0.7);
+  --yp-green-bg: rgba(0, 66, 0, 0.045);
+  --yp-rule: #1d1d1f;
+  --yp-muted: #6b6b70;
+  --yp-hwbox-bg: #f0f0f0;
+  --yp-hwbox-frame: #404040;
+  --yp-card-bg: #ffffff;
+  --yp-card-border: #e3e3e0;
+}
+
+// Reading column
+.yp-body, .yp-book-index {
+  max-width: 46rem;
+}
+.yp-body {
+  line-height: 1.75;
+  p { margin: 0.7em 0; }
+  @media (min-width: 768px) { p { text-align: justify; } }
+  mjx-container[display="true"] { margin: 0.9em 0 !important; overflow-x: auto; overflow-y: hidden; }
+}
+
+// ---------------------------------------------------------------------
+//  Chinese books: yupin-notes look
+// ---------------------------------------------------------------------
+.yp-zh {
+  font-family: var(--yp-song);
+  font-synthesis: none;              // never fake-slant CJK glyphs
+  strong, b { font-family: var(--yp-hei); font-weight: 700; }
+  em, i { font-family: var(--yp-kai); font-style: italic; }
+  h2 { font-family: var(--yp-hei); font-size: 1.2rem; font-weight: 700; margin-top: 2.2em; }
+  h3 { font-family: var(--yp-hei); font-size: 1.05rem; font-weight: 700; }
+  // enumerate: 1) 2) …; nested a) b) …
+  ol > li::marker { content: counter(list-item) ") "; }
+  ol ol > li::marker { content: counter(list-item, lower-alpha) ") "; }
+}
+.yp-zh .yp-slanted {
+  font-family: var(--yp-kai);
+  font-style: italic;
+  font-synthesis: none;
+  .yp-thm-head strong { font-style: normal; }
+}
+.yp-zh .yp-thm-note { font-family: var(--yp-song); font-style: normal; }
+.yp-zh .yp-proof-head em, .yp-zh .yp-solution summary {
+  font-family: var(--yp-kai);
+  font-size: 0.9em;
+}
+
+// Title block of a zh page uses Heiti like the PDF section heads
+html[lang|="zh"] .quarto-title h1.title { font-family: var(--yp-hei); font-size: 1.55rem; line-height: 1.45; font-weight: 700; }
+
+// ---------------------------------------------------------------------
+//  English books: plain amsthm look (Montgomery-style papers)
+// ---------------------------------------------------------------------
+.yp-en {
+  font-family: "LM Roman", "Latin Modern Roman", "Computer Modern Serif", Georgia, serif;
+  font-size: 1.08rem;
+  h2 { font-size: 1.15rem; font-weight: 700; margin-top: 2em; }
+  h3 { font-size: 1.02rem; font-weight: 700; font-style: normal; }
+}
+.yp-en .yp-slanted { font-style: italic; .yp-thm-head { font-style: normal; } }
+.yp-en .yp-upright { font-style: normal; }
+.yp-en .yp-thm-note { font-style: normal; font-weight: 400; }
+html[lang|="en"] .quarto-title h1.title {
+  font-family: "LM Roman", Georgia, serif; font-weight: 700; font-size: 1.7rem;
+}
+
+// ---------------------------------------------------------------------
+//  Statements, proofs, solutions
+// ---------------------------------------------------------------------
+.yp-thm { margin: 1.1em 0; position: relative; }
+.yp-thm > p:first-of-type, .yp-thm > .yp-thm-pdf + p { margin-top: 0; }
+.yp-thm-pdf {
+  float: right; margin-left: 0.8em;
+  font-family: $font-family-sans-serif; font-style: normal; font-size: 0.68rem; line-height: 2.2;
+  a { color: var(--yp-muted); text-decoration: none; opacity: 0; transition: opacity 0.15s; }
+  a:hover { text-decoration: underline; }
+}
+.yp-thm:hover .yp-thm-pdf a, .yp-thm:target .yp-thm-pdf a { opacity: 0.8; }
+.yp-thm:target, .yp-eq:target, .yp-qitem:has(:target) {
+  background: rgba(255, 214, 0, 0.16);
+  box-shadow: -0.5rem 0 0 rgba(255, 214, 0, 0.16), 0.5rem 0 0 rgba(255, 214, 0, 0.16);
+}
+.yp-proof { margin: 0.8em 0 1.1em; }
+.yp-qed { float: right; margin-left: 1em; }
+.yp-solution {
+  margin: 0.6em 0 0.9em;
+  border-left: 1.5px solid var(--yp-green-line);
+  background: var(--yp-green-bg);
+  summary {
+    cursor: pointer; padding: 0.15em 0.8em; color: var(--yp-green); user-select: none;
+    list-style: none;
+    &::before { content: "▸"; display: inline-block; width: 1.1em; transition: transform 0.15s; }
+  }
+  &[open] summary::before { transform: rotate(90deg); }
+  summary::-webkit-details-marker { display: none; }
+  .yp-solution-body { padding: 0.1em 0.9em 0.4em 1em; }
+}
+.yp-solution-toggle {
+  font-family: $font-family-sans-serif; font-size: 0.8rem;
+  margin: 0 0 1em; display: flex; gap: 0.6em; justify-content: flex-end;
+  button { border: 1px solid var(--yp-card-border); background: transparent; border-radius: 4px; padding: 0.15em 0.7em; color: var(--yp-muted); }
+  button:hover { color: inherit; }
+}
+
+// Boxed summary (summary environment)
+.yp-summary { border: 0.6px solid var(--yp-rule); padding: 0.3em 0.8em; margin: 1em 0 1.4em; }
+
+// Homework header box
+.yp-hwbox {
+  border: 1.4px solid var(--yp-hwbox-frame); border-radius: 6px; background: var(--yp-hwbox-bg);
+  overflow: hidden; margin: 1em 0 2em;
+  > p { margin: 0.6em 1em 0.7em; }
+}
+.yp-hwbox-title { background: var(--yp-green); color: #fff; font-family: var(--yp-hei); font-weight: 700; padding: 0.2em 1em; }
+
+// Exercise lists with A1) / A1-2) labels
+.yp-exercises, .yp-probleme { margin: 1.6em 0 1.2em; }
+.yp-qlist { margin: 0.4em 0; }
+.yp-qitem { position: relative; padding-left: 3.3em; margin: 0.5em 0; }
+.yp-qitem .yp-qitem { padding-left: 4em; }
+.yp-qlabel { position: absolute; left: 0; width: 2.9em; text-align: right; font-style: normal; }
+.yp-qitem .yp-qitem > p > .yp-qlabel, .yp-qitem .yp-qitem > .yp-qlabel { width: 3.6em; }
+
+// Colour macros
+.yp-blue { color: var(--yp-blue); }
+.yp-red { color: var(--yp-red); }
+a.yp-ref { text-decoration: none; }
+a.yp-ref:hover { text-decoration: underline; }
+
+// Page banner: lecture number · status · PDF link
+.yp-banner {
+  font-family: $font-family-sans-serif; font-size: 0.8rem; margin: -0.4em 0 1.6em;
+  display: flex; flex-wrap: wrap; gap: 0.6em; align-items: center;
+  p { margin: 0; display: flex; gap: 0.6em; align-items: center; flex-wrap: wrap; }
+}
+.yp-kicker { color: var(--yp-muted); letter-spacing: 0.04em; }
+.yp-status { border-radius: 999px; padding: 0.05em 0.65em; font-size: 0.75rem; font-family: $font-family-sans-serif; white-space: nowrap; }
+.yp-status-draft { background: #fff3d6; color: #8a5a00; }
+.yp-status-done { background: #dcf3e1; color: #1d6b32; }
+.yp-status-todo { background: #efefef; color: #777; }
+.yp-banner-pdf { margin-left: auto; }
+
+// ---------------------------------------------------------------------
+//  Book index and homepage
+// ---------------------------------------------------------------------
+.yp-book-actions { display: flex; gap: 1em; align-items: center; margin: 0.5em 0 1.8em; flex-wrap: wrap; }
+.yp-button {
+  display: inline-block; padding: 0.35em 1em; border-radius: 6px;
+  background: $primary; color: #fff !important; text-decoration: none; font-size: 0.9rem;
+}
+.yp-button:hover { filter: brightness(1.1); }
+.yp-updated { color: var(--yp-muted); font-size: 0.85rem; }
+.yp-book-index {
+  td:nth-child(1), td:nth-child(3), td:nth-child(4), th { white-space: nowrap; }
+  td:nth-child(2) a { text-decoration: none; }
+}
+
+.yp-shelf {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 1rem; margin: 0.8rem 0 2.2rem;
+}
+.yp-card {
+  border: 1px solid var(--yp-card-border); border-radius: 10px; background: var(--yp-card-bg);
+  padding: 1rem 1.1rem 0.9rem; display: flex; flex-direction: column; gap: 0.35rem;
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+.yp-card:hover { box-shadow: 0 4px 18px rgba(0, 0, 0, 0.07); transform: translateY(-1px); }
+.yp-card-title { font-size: 1.08rem; font-weight: 600; line-height: 1.35; a { color: inherit; text-decoration: none; } }
+.yp-card-sub { color: var(--yp-muted); font-size: 0.88rem; line-height: 1.4; }
+.yp-card-meta { color: var(--yp-muted); font-size: 0.78rem; margin-top: auto; padding-top: 0.4rem; }
+.yp-card-links { display: flex; gap: 0.9rem; font-size: 0.88rem; }
+.yp-card-link { text-decoration: none; font-weight: 500; }
+.yp-card-muted { background: transparent; border-style: dashed; .yp-card-title { color: var(--yp-muted); } }
+.yp-card-planned { color: var(--yp-muted); font-size: 0.8rem; font-style: italic; }
+.yp-shelf-blurb { color: var(--yp-muted); margin: -0.3rem 0 0; }
+.yp-shelved { margin: 1rem 0 3rem; summary { cursor: pointer; color: var(--yp-muted); font-weight: 500; } }
+.yp-empty { color: var(--yp-muted); font-style: italic; }
+
+// Reference list in the same face as the text
+html[lang|="en"] #refs, html[lang|="en"] #quarto-bibliography { font-family: "LM Roman", Georgia, serif; font-size: 0.95rem; }

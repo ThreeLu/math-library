@@ -99,7 +99,7 @@ CLAUDE.md           Claude Code 的入口（引用本文件）
 进度.md             讲次进度、课堂记录与工作日志（轮流工作的交接表）
 备课手册.md          暂定讲次框架，以及每讲在 Durrett 与参考讲义中的对应页码（PDF 页）
 讲义/
-  yupin-notes.cls   于品式文档类（含概率论记号宏）
+  yupin-notes.cls   于品式文档类（含概率论记号宏）；符号链接，指向仓库的 shared/latex/yupin-notes.cls，全站共用
   高等概率论.tex     主文件：封面、前言、参考书目、目录、按顺序 \input 各讲
   课程设置.tex       封面信息与作业框标题栏
   front/            preface.tex（前言）、references.tex（参考书目）
@@ -108,8 +108,8 @@ CLAUDE.md           Claude Code 的入口（引用本文件）
   figures/          TikZ 图与图片；cover-emblem.tex 为封面装饰
   模版示例.tex       每个环境的用法示例
   README.md         模版接口速查
-  build/            编译输出（只有 高等概率论.pdf 进 git）
-参考书籍/
+  build/            编译输出（不进 git；网站上的 PDF 由 GitHub Actions 重新编译）
+参考书籍/            （不进 git，体积大且有版权）
   教材/             Durrett 第五版
   名家讲义/          公开讲义（Dembo、Norris、Sousi、Driver、Axler、Tao、Weber、Levin–Peres–Wilmer 等）
   版式参考/          于品《数学分析之课程讲义》
@@ -135,5 +135,18 @@ xelatex -output-directory=build 高等概率论.tex
 xelatex -output-directory=build 高等概率论.tex
 ```
 
-- 编译后检查 `build/高等概率论.log` 里的错误、未定义引用与超过 5pt 的溢出。改动 `yupin-notes.cls` 之后，还要重新编译 `模版示例.tex`，确认每个环境仍然正常。
+- 编译后检查 `build/高等概率论.log` 里的错误、未定义引用与超过 5pt 的溢出。改动 `yupin-notes.cls`（即 `shared/latex/yupin-notes.cls`，全站共用）之后，还要重新编译 `模版示例.tex` 和其他书，确认每个环境仍然正常。
 - git：每完成一个工作单元（写完或改完一讲的一部分）提交一次，提交信息用中文写明做了什么，如“第 3 讲：Carathéodory 扩张定理与作业 B”。只在本地提交，不推送远端。参考书籍的 PDF 不进版本库。
+
+## 十一、网站
+
+本书是网站（仓库根目录的 `library.yml` 登记的一本书）的一部分。`.tex` 是唯一的源文件，网页由 `tools/build.py` 自动生成，不要手改 `site/` 下的生成文件。
+
+- 网页上的编号全部取自 `build/高等概率论.aux`，与 PDF 一致。
+- 每讲一页，作业另成一页，解答在网页上默认折叠；`进度.md` 表中的“正文”“作业”状态显示为页面顶部的标记，表中的“主题”列的第一个短语是网站侧边栏的条目名。
+- 为了让转换器正确处理，写作时额外遵守：
+  - 只用 `yupin-notes.cls` 和本文件约定的环境与宏；新的记号宏加到 cls 的记号一节（注释行含“记号”之后），不要在各讲里 `\newcommand`。
+  - 引用页码只用 `第~\pageref{…}~页`、`\egref`、`\wegref` 这几种写法（网页上换成链接）。
+  - 不用 `\vspace`、`\hspace`、`\newpage` 等调版面的命令来表达内容。
+- 本地预览网站：在仓库根目录运行 `make preview`。
+- `git push` 就是发布网站。AI 只在本地提交，推送由作者决定。

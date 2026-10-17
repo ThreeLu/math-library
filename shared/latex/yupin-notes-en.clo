@@ -1,0 +1,163 @@
+% =====================================================================
+%  yupin-notes-en.clo — English books, loaded by \documentclass[english]{yupin-notes}
+%
+%  The look follows Richard Montgomery's arXiv papers (e.g. "Spanning
+%  trees in random graphs", "A proof of Ringel's conjecture"):
+%    * plain article, 11pt, Computer/Latin Modern, wide a4 text block;
+%    * amsthm styles: Theorem, Lemma, Proposition, Corollary, Claim,
+%      Conjecture, Observation in the plain style (italic body);
+%      Definition, Remark, Example in the definition style (upright);
+%    * all statements share one counter numbered within the section:
+%      Lemma 2.1, Theorem 2.2, Definition 2.3, ...;
+%    * no coloured boxes. Solutions (for course exercises) are the only
+%      framed element, and only a thin rule.
+%
+%  The same environment names as the Chinese class are provided, so a
+%  converter, template or AI instructions work for both languages.
+% =====================================================================
+
+\LoadClass[11pt,a4paper]{article}
+
+\ifyp@letter
+  \RequirePackage[letterpaper,margin=1in]{geometry}
+\else
+  \RequirePackage[a4paper,margin=1in]{geometry}
+\fi
+\setlength{\emergencystretch}{2em}
+
+\RequirePackage{amsmath,amssymb,amsthm,mathtools}
+\RequirePackage{graphicx}
+\RequirePackage[dvipsnames,svgnames]{xcolor}
+\RequirePackage{enumitem}
+\RequirePackage{booktabs,array}
+\RequirePackage{tikz}
+\usetikzlibrary{cd,arrows.meta,calc,positioning,decorations.pathreplacing}
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{etoolbox}
+\RequirePackage{xparse}
+\RequirePackage{newunicodechar}
+\newunicodechar{★}{\ensuremath{^{\bigstar}}}
+\RequirePackage[colorlinks,linkcolor=blue!55!black,citecolor=green!40!black,urlcolor=blue!55!black]{hyperref}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+% ---------------------------------------------------------------------
+%  Structure. \lecture is a \section, so course notes and research notes
+%  share one source format; \topic is an unnumbered subsection.
+% ---------------------------------------------------------------------
+\NewDocumentCommand{\lecture}{o m}{%
+  \IfValueTF{#1}{\section[#1]{#2}}{\section{#2}}}
+\newcommand{\topic}[1]{\subsection*{#1}}
+\newcommand{\frontsection}[1]{\section*{#1}}
+
+% Emphasis. A new term is set in italics, as in a paper.
+\newcommand{\term}[1]{\emph{#1}}
+\newcommand{\blueterm}[1]{\textcolor{blue!70!black}{#1}}
+\newcommand{\red}[1]{\textcolor{red!75!black}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue!70!black}{#1}}
+
+% ---------------------------------------------------------------------
+%  Statements
+% ---------------------------------------------------------------------
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem*{lemma*}{Lemma}
+\newtheorem*{proposition*}{Proposition}
+\newtheorem*{corollary*}{Corollary}
+\newtheorem*{claim*}{Claim}
+\newtheorem*{conjecture*}{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{question}[theorem]{Question}
+\newtheorem*{definition*}{Definition}
+\newtheorem*{remark*}{Remark}
+\newtheorem*{example*}{Example}
+\newtheorem*{practice}{Exercise}
+\newtheorem*{thinking}{Problem}
+\newtheorem*{historynote}{Historical note}
+\newtheorem*{workedexample}{Worked example}
+
+% Solutions: thin rule on the left, as in the Chinese books but uncoloured.
+\newif\ifshowsolutions \showsolutionstrue
+\newtcolorbox{yp@solutionbox}{
+  breakable, enhanced, frame hidden, boxrule=0pt, arc=0pt, colback=white,
+  borderline west={0.8pt}{0pt}{black!60},
+  left=2.2mm, right=1mm, top=.5mm, bottom=.5mm,
+  before skip=.6ex plus .2ex, after skip=1ex plus .3ex, parbox=false}
+\NewDocumentEnvironment{solution}{O{Solution} +b}{%
+  \ifshowsolutions
+    \begin{yp@solutionbox}\noindent\textit{#1.}\ \ignorespaces#2\hfill$\square$\end{yp@solutionbox}%
+  \fi}{}
+
+% ---------------------------------------------------------------------
+%  Exercises (course notes): same interface as the Chinese class
+% ---------------------------------------------------------------------
+\newcounter{homework}
+\NewDocumentCommand{\homework}{s o m o}{%
+  \stepcounter{homework}%
+  \IfBooleanTF{#1}{\subsection{#3}}{%
+    \if\relax\detokenize{#3}\relax\subsection{Exercises}\else\subsection{Exercises: #3}\fi}}
+\newcommand{\exercisepart}[1]{\subsubsection*{#1}}
+\newcommand{\thinkingpart}[1][Problems]{\subsubsection*{#1}}
+\def\yp@group{A}
+\newlist{questions}{enumerate}{2}
+\setlist[questions,1]{label=\upshape\yp@group\arabic*),ref=\yp@group\arabic*,leftmargin=2.9em,align=right}
+\setlist[questions,2]{label=\upshape\yp@group\arabic{questionsi}-\arabic*),
+  ref=\yp@group\arabic{questionsi}-\arabic*,leftmargin=3.6em,align=right}
+\NewDocumentEnvironment{exercises}{m m o}{%
+  \par\addvspace{1.2ex}\noindent\textbf{Exercises #1: #2}\par
+  \IfValueT{#3}{\noindent\red{(#3)}}%
+  \gdef\yp@group{#1}\begin{questions}}
+  {\end{questions}\par\addvspace{1ex}}
+\NewDocumentEnvironment{probleme}{s O{Problem} m m}{%
+  \par\addvspace{1.2ex}\noindent
+  \textbf{#2 #3\IfBooleanT{#1}{*}\if\relax\detokenize{#4}\relax\else: #4\fi}\par
+  \gdef\yp@group{#3}\ignorespaces}
+  {\par\addvspace{1ex}}
+\newcommand{\exref}[1]{\ref{#1})}
+\newenvironment{summary}{\par\medskip\noindent\begin{minipage}{\linewidth}\itshape}{\end{minipage}\par\medskip}
+
+% Lists: (i), (ii) as in most combinatorics papers
+\setlist[enumerate,1]{label=(\roman*),itemsep=.2ex,topsep=.6ex}
+\setlist[enumerate,2]{label=(\alph*),itemsep=.1ex}
+
+% ---------------------------------------------------------------------
+%  Notation
+% ---------------------------------------------------------------------
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cB}{\mathcal{B}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cG}{\mathcal{G}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cM}{\mathcal{M}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\cS}{\mathcal{S}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\one}{\mathbf{1}}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Bin}{Bin}
+\DeclareMathOperator{\col}{col}
+\newcommand{\abs}[1]{\lvert #1\rvert}
+\newcommand{\norm}[1]{\lVert #1\rVert}
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\given}{\mid}
+\newcommand{\dd}{\,\mathrm{d}}

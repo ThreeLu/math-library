@@ -1,0 +1,18 @@
+% !TEX program = xelatex
+% Compile from this directory with the shared class on the path:
+%   TEXINPUTS=../../shared/latex//: latexmk -xelatex -outdir=build main.tex
+\documentclass[english]{yupin-notes}
+
+\title{Title of the Book}
+\author{Notes}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\input{sections/introduction}
+
+\bibliographystyle{abbrv}
+\bibliography{refs}
+\end{document}

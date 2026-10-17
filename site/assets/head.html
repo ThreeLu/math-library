@@ -1,0 +1,34 @@
+<!-- CJK fallbacks for readers without Songti / Kaiti installed -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.7.0/style.css">
+<script>
+// "Show all / hide all" for pages with collapsible solutions
+document.addEventListener("DOMContentLoaded", () => {
+  const sols = document.querySelectorAll("details.yp-solution");
+  if (sols.length < 2) return;
+  const zh = document.documentElement.lang.startsWith("zh");
+  const bar = document.createElement("div");
+  bar.className = "yp-solution-toggle";
+  const mk = (label, open) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = label;
+    b.onclick = () => sols.forEach(d => (d.open = open));
+    return b;
+  };
+  bar.append(mk(zh ? `展开全部解答（${sols.length}）` : `Show all solutions (${sols.length})`, true),
+             mk(zh ? "全部折叠" : "Hide all", false));
+  const body = document.querySelector(".yp-body");
+  const banner = body && body.querySelector(".yp-banner");
+  if (banner) banner.after(bar); else if (body) body.prepend(bar);
+  // open a solution when a link points inside it
+  const openTarget = () => {
+    const t = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    const d = t && t.closest("details");
+    if (d) d.open = true;
+  };
+  window.addEventListener("hashchange", openTarget);
+  openTarget();
+});
+</script>

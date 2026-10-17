@@ -1,0 +1,83 @@
+# =====================================================================
+#  Library registry — the single file that drives the homepage.
+#
+#  Add a book:      append an entry below.
+#  Shelve a book:   set `status: shelved`. It moves to the collapsed
+#                   "Shelved" section on the homepage; its pages and
+#                   links keep working.
+#  Plan a book:     `status: planned` with no `source` shows a card
+#                   marked "In preparation".
+#
+#  Fields
+#    slug       URL path: /books/<slug>/
+#    title      display title; `subtitle` optional
+#    category   courses | research | surveys
+#    lang       zh | en (theorem names, UI language, typography)
+#    status     active | shelved | planned
+#    source     directory holding the LaTeX sources (main file inside)
+#    main       main .tex file, relative to `source`
+#    progress   optional progress table (进度.md format)
+# =====================================================================
+
+site:
+  title: Mathematical Notes
+  description: Lecture notes, research notes and surveys, written in LaTeX and read on the web.
+  author: Your Name                    # TODO: fill in
+  github: your-github-username         # TODO: fill in
+  repo: math-library
+
+categories:
+  - id: courses
+    title: Courses
+    blurb: Graduate courses I am taking or teaching, written up as full lecture notes.
+  - id: research
+    title: Research Topics
+    blurb: Working notes on topics close to my research.
+  - id: surveys
+    title: Surveys
+    blurb: Long-form surveys, rewritten from talk slides.
+
+books:
+  - slug: advanced-probability
+    title: 高等概率论
+    subtitle: Advanced Probability · Durrett, Chapters 1–5
+    category: courses
+    lang: zh
+    status: active
+    source: books/advanced-probability/讲义
+    main: 高等概率论.tex
+    progress: books/advanced-probability/进度.md
+
+  - slug: graph-theory
+    title: Graph Theory, Probabilistic Combinatorics and Combinatorial Optimization
+    subtitle: Three graduate courses written up as one book
+    category: courses
+    lang: en
+    status: planned
+
+  - slug: rainbow-subgraphs
+    title: Rainbow Subgraphs
+    subtitle: Rainbow matchings, transversals and spanning structures
+    category: research
+    lang: en
+    status: active
+    source: books/rainbow-subgraphs
+    main: main.tex
+
+  - slug: locally-sparse-graphs
+    title: Locally Sparse Graphs
+    category: research
+    lang: en
+    status: planned
+
+  - slug: cayley-graphs
+    title: Cayley Graphs
+    category: research
+    lang: en
+    status: planned
+
+  - slug: directed-graphs
+    title: Directed Graphs
+    category: research
+    lang: en
+    status: planned
