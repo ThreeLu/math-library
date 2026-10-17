@@ -5,7 +5,7 @@
 \lecture{Riemann 积分的局限，简单函数的积分，有界函数的积分，非负可测函数的积分，Levi 单调收敛定理，积分的线性性，可积函数，Lebesgue 积分与 Riemann 积分，Fatou 引理，控制收敛定理，含参变量的积分}
 \label{lec:integration}
 
-有了测度和可测函数，我们现在来定义积分。在概率论中，积分就是期望：随机变量 $X$ 的期望 $EX$ 将被定义为 $\int X\dd P$。初等概率论中，期望有两套公式，离散型的 $\sum_xxP(X=x)$ 和有密度的 $\int xf(x)\dd x$。第~\ref{lec:distributions} 讲的 Cantor 分布既没有跳跃也没有密度，这两套公式对它都不适用。更何况 $\Omega$ 是一个抽象的集合，它上面没有“区间”，也就谈不上 Riemann 和。所以我们需要一个对任意测度空间都有意义的积分，并且它要把求和与 Riemann 积分都包括进来。
+有了测度和可测函数，我们现在来定义积分。在概率论中，积分就是期望：随机变量 $X$ 的期望 $EX$ 将被定义为 $\int X\dd\P$。初等概率论中，期望有两套公式，离散型的 $\sum_xxP(X=x)$ 和有密度的 $\int xf(x)\dd x$。第~\ref{lec:distributions} 讲的 Cantor 分布既没有跳跃也没有密度，这两套公式对它都不适用。更何况 $\Omega$ 是一个抽象的集合，它上面没有“区间”，也就谈不上 Riemann 和。所以我们需要一个对任意测度空间都有意义的积分，并且它要把求和与 Riemann 积分都包括进来。
 
 我们先回忆 Riemann 积分的长处与短处。按照定义，Riemann 积分是 Riemann 和 $\sum_kf(\xi_k)(x_k-x_{k-1})$ 的极限。用这个定义证明线性性是很简单的：$f+g$ 的 Riemann 和就是 $f$ 的 Riemann 和加上 $g$ 的 Riemann 和，取极限即可。可是涉及极限交换的性质就困难得多。比如说，设 $q_1,q_2,\dots$ 是 $[0,1]$ 中有理数的一个排列，令
 \[
@@ -744,7 +744,7 @@ $k=0$ 是上面的计算。设对 $k$ 成立，考虑 $f(x,t)=x^ke^{-tx}$。固�
 \item 证明关于积分的等式时，标准的套路是“四步法”：示性函数，简单函数，非负函数（单调收敛定理），可积函数（拆成正部与负部）。
 \item 对数学分析中的函数，Lebesgue 积分与 Riemann 积分相同（定理~\ref{thm:integration:riemann}），所以具体的积分仍然用 Newton--Leibniz 公式计算。
 \end{enumerate}
-下一讲之后，我们把这些定理翻译成期望的语言：$EX=\int X\dd P$，单调收敛定理、Fatou 引理和控制收敛定理将是我们处理随机变量极限的基本工具。
+下一讲之后，我们把这些定理翻译成期望的语言：$EX=\int X\dd\P$，单调收敛定理、Fatou 引理和控制收敛定理将是我们处理随机变量极限的基本工具。
 
 % =====================================================================
 \homework{Riemann 可积性的 Lebesgue 判别法，分层积分公式，Riemann--Lebesgue 引理与连续函数逼近}[Riemann 可积性的判别，分层积分公式，Riemann–Lebesgue 引理]
@@ -982,7 +982,7 @@ $g_n-f_n\geqslant0$，$g_n-f_n\to g-f$。同样得到 $\int g-\int f\leqslant\in
 
 于是 $\int\abs{f_n-f}\dd\mu=\int(f-f_n)^+\dd\mu+\int(f-f_n)^-\dd\mu\to0$。
 
-这个结论在概率论中的意义是：若随机变量 $X_n$ 的密度 $f_n$ 几乎处处收敛到 $X$ 的密度 $f$，则对一切 Borel 集 $B$，$\abs{P(X_n\in B)-P(X\in B)}=\abs{\int_B(f_n-f)\dd x}\leqslant\int\abs{f_n-f}\dd x\to0$，并且这个收敛关于 $B$ 是一致的。
+这个结论在概率论中的意义是：若随机变量 $X_n$ 的密度 $f_n$ 几乎处处收敛到 $X$ 的密度 $f$，则对一切 Borel 集 $B$，$\abs{\P(X_n\in B)-\P(X\in B)}=\abs{\int_B(f_n-f)\dd x}\leqslant\int\abs{f_n-f}\dd x\to0$，并且这个收敛关于 $B$ 是一致的。
 \end{solution}
 \end{questions}
 
@@ -1102,9 +1102,9 @@ $\varphi_n$ 递增，所以 $\{\varphi_n>t\}$ 递增；$\varphi_n\leqslant f$，
 \begin{solution}
 记 $G_n(t)=\mu(\{\varphi_n>t\})$。由 C2)（每个 $\varphi_n$ 写成标准表示，去掉值为 $0$ 的部分），$\int\varphi_n\dd\mu=\int_{(0,\infty)}G_n\dd t$。在 $\Omega$ 上用单调收敛定理，左边 $\uparrow\int f\dd\mu$；由 C3)，$G_n\uparrow G$ 逐点，在 $(0,\infty)$ 上用单调收敛定理，右边 $\uparrow\int G\dd t$。所以两者相等。
 \end{solution}
-\item 设 $X$ 是概率空间上取非负整数值的随机变量。证明 $\int X\dd P=\sum_{k=1}^\infty P(X\geqslant k)$。
+\item 设 $X$ 是概率空间上取非负整数值的随机变量。证明 $\int X\dd\P=\sum_{k=1}^\infty \P(X\geqslant k)$。
 \begin{solution}
-对 $t\in[k-1,k)$（$k\geqslant1$），$X>t$ 当且仅当 $X\geqslant k$（$X$ 取整数值），所以 $G(t)=P(X\geqslant k)$。$(0,\infty)$ 是 $(0,1)$ 与 $[k-1,k)$（$k\geqslant2$）的不交并，由逐项积分，$\int_{(0,\infty)}G\dd t=\sum_{k\geqslant1}P(X\geqslant k)\cdot1$。再由 C4)。这就是第~\ref{lec:expectation} 讲中尾概率公式的离散形式。
+对 $t\in[k-1,k)$（$k\geqslant1$），$X>t$ 当且仅当 $X\geqslant k$（$X$ 取整数值），所以 $G(t)=\P(X\geqslant k)$。$(0,\infty)$ 是 $(0,1)$ 与 $[k-1,k)$（$k\geqslant2$）的不交并，由逐项积分，$\int_{(0,\infty)}G\dd t=\sum_{k\geqslant1}\P(X\geqslant k)\cdot1$。再由 C4)。这就是第~\ref{lec:expectation} 讲中尾概率公式的离散形式。
 \end{solution}
 \item 设 $p>0$。证明 $\int f^p\dd\mu=\int_{(0,\infty)}pt^{p-1}\mu(\{f>t\})\dd t$。（提示：对 $f^p$ 用公式，再在每个有界区间 $[\varepsilon,N]$ 上用 Riemann 积分的换元公式与定理~\ref{thm:integration:riemann}，单调函数是 Riemann 可积的，最后用单调收敛定理令 $\varepsilon\to0$，$N\to\infty$。）
 \begin{solution}
@@ -1118,7 +1118,7 @@ $\varphi_n$ 递增，所以 $\{\varphi_n>t\}$ 递增；$\varphi_n\leqslant f$，
 \]
 两个被积函数都是有界 Borel 函数，由定理~\ref{thm:integration:riemann}，两边也是 Lebesgue 积分。令 $\varepsilon\downarrow0$，$N\uparrow\infty$，被积函数乘以区间的示性函数后单调递增，由单调收敛定理两边分别趋于 $\int_{(0,\infty)}G(s^{1/p})\dd s$ 与 $\int_{(0,\infty)}pt^{p-1}G(t)\dd t$。
 
-概率中最常用的是 $p=1,2$：$EX=\int_0^\infty P(X>t)\dd t$，$EX^2=\int_0^\infty2tP(X>t)\dd t$（$X\geqslant0$）。第~\ref{lec:product-measures} 讲会用 Fubini 定理给出另一个证明。
+概率中最常用的是 $p=1,2$：$EX=\int_0^\infty \P(X>t)\dd t$，$EX^2=\int_0^\infty2tP(X>t)\dd t$（$X\geqslant0$）。第~\ref{lec:product-measures} 讲会用 Fubini 定理给出另一个证明。
 \end{solution}
 \end{questions}
 \end{probleme}

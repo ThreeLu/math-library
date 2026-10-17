@@ -5,14 +5,14 @@
 \lecture{随机变量的分布与分布函数，分布函数的刻画与分位数变换，离散分布、有密度的分布与 Cantor 分布，耦合与随机序，二进制展开与均匀分布，正态分布的尾部估计}
 \label{lec:distributions}
 
-上一讲说随机变量是 $\Omega$ 上的函数。可是在实际的问题中，$\Omega$ 往往是抽象的，我们既不知道也不关心它具体是什么。比如说一个人的身高，我们关心的是“身高在 $170$ 到 $180$ 厘米之间的概率”，而不是这个概率是在哪个样本空间上算出来的。我们真正关心的，是 $X$ 取各种值的概率，也就是 $X$ 把 $P$ 搬到 $\R$ 上得到的那个测度，称为 $X$ 的分布。可以不夸张地说，概率论研究的主要对象是分布，而样本空间只是用来承载随机变量的舞台。只要分布相同，舞台换成什么样都可以，这一点在后面的构造中会反复用到。
+上一讲说随机变量是 $\Omega$ 上的函数。可是在实际的问题中，$\Omega$ 往往是抽象的，我们既不知道也不关心它具体是什么。比如说一个人的身高，我们关心的是“身高在 $170$ 到 $180$ 厘米之间的概率”，而不是这个概率是在哪个样本空间上算出来的。我们真正关心的，是 $X$ 取各种值的概率，也就是 $X$ 把 $\P$ 搬到 $\R$ 上得到的那个测度，称为 $X$ 的分布。可以不夸张地说，概率论研究的主要对象是分布，而样本空间只是用来承载随机变量的舞台。只要分布相同，舞台换成什么样都可以，这一点在后面的构造中会反复用到。
 
 这一讲有两个主题。第一个主题是理论的：$\R$ 上的概率分布与分布函数一一对应，并且每一个分布都可以由 $(0,1)$ 上的均匀分布经过一次单调变换得到。这一部分是前三讲测度论的直接应用。第二个主题是例子：跳跃点处处稠密的分布、既没有跳跃也没有密度的 Cantor 分布、两枚硬币的耦合、公平硬币与均匀分布之间的关系，以及正态分布的尾部。这些例子各自说明了一个道理，请同学们在读的时候注意每个例子是为了说明什么。
 
 \topic{本讲用到的前文结果}
 
 \begin{enumerate}
-\item 测度的连续性（定理~\ref{thm:measures:basic}(6)(7)）：$A_n\uparrow A$ 时 $P(A_n)\to P(A)$；$A_n\downarrow A$ 时 $P(A_n)\to P(A)$。
+\item 测度的连续性（定理~\ref{thm:measures:basic}(6)(7)）：$A_n\uparrow A$ 时 $\P(A_n)\to \P(A)$；$A_n\downarrow A$ 时 $\P(A_n)\to \P(A)$。
 \item $\R$ 上的概率测度由分布函数 $x\mapsto\mu((-\infty,x])$ 决定（推论~\ref{cor:measures:distribution-function}）。
 \item Lebesgue--Stieltjes 测度（定理~\ref{thm:extension:lebesgue-stieltjes}）：单调不减、右连续的 $F$ 对应唯一的测度 $\mu_F$，$\mu_F((a,b])=F(b)-F(a)$；单点的质量是跳跃 $F(x)-F(x-)$（第~\ref{lec:extension-of-measures} 讲的例题，第~\pageref{we:extension:atoms} 页）。
 \item Lebesgue 测度 $\lambda$，区间的测度等于长度；Cantor 集 $C$ 是 Lebesgue 零测集（习题~\exref{ex:extension:A4}）。
@@ -23,21 +23,21 @@
 \topic{分布与分布函数}
 
 \begin{definition}[分布]\label{def:distributions:law}
-设 $(\Omega,\cF,P)$ 是概率空间，$X:(\Omega,\cF)\to(S,\cS)$ 可测。称 $(S,\cS)$ 上的函数
+设 $(\Omega,\cF,\P)$ 是概率空间，$X:(\Omega,\cF)\to(S,\cS)$ 可测。称 $(S,\cS)$ 上的函数
 \[
-\mu_X(B)=P(X\in B)=P(X^{-1}(B)),\qquad B\in\cS
+\mu_X(B)=\P(X\in B)=\P(X^{-1}(B)),\qquad B\in\cS
 \]
-为 $X$ 的\term{分布}（distribution）或\term{律}（law），也记作 $P\circ X^{-1}$，称为 $P$ 在 $X$ 下的\term{像测度}（image measure, pushforward）。若两个随机元 $X,Y$（可以定义在不同的概率空间上）有相同的分布，称它们\term{同分布}（equal in distribution），记作 $X\eqd Y$。
+为 $X$ 的\term{分布}（distribution）或\term{律}（law），也记作 $\P\circ X^{-1}$，称为 $\P$ 在 $X$ 下的\term{像测度}（image measure, pushforward）。若两个随机元 $X,Y$（可以定义在不同的概率空间上）有相同的分布，称它们\term{同分布}（equal in distribution），记作 $X\eqd Y$。
 \end{definition}
 
-$\mu_X$ 是 $(S,\cS)$ 上的概率测度：$\mu_X(S)=P(\Omega)=1$；若 $B_n\in\cS$ 两两不交，则事件 $\{X\in B_n\}$ 两两不交（$X(\omega)$ 不能同时落在两个不交的集合中），且 $\{X\in\bigcup_nB_n\}=\bigcup_n\{X\in B_n\}$，于是 $\mu_X(\bigcup_nB_n)=\sum_nP(X\in B_n)=\sum_n\mu_X(B_n)$。
+$\mu_X$ 是 $(S,\cS)$ 上的概率测度：$\mu_X(S)=\P(\Omega)=1$；若 $B_n\in\cS$ 两两不交，则事件 $\{X\in B_n\}$ 两两不交（$X(\omega)$ 不能同时落在两个不交的集合中），且 $\{X\in\bigcup_nB_n\}=\bigcup_n\{X\in B_n\}$，于是 $\mu_X(\bigcup_nB_n)=\sum_nP(X\in B_n)=\sum_n\mu_X(B_n)$。
 
 \begin{example}[分布不决定随机变量]
-在 $([0,1],\cR\cap[0,1],\lambda)$ 上令 $X(\omega)=\omega$，$Y(\omega)=1-\omega$。对 $0\leqslant x\leqslant1$，$P(X\leqslant x)=\lambda([0,x])=x$，$P(Y\leqslant x)=\lambda([1-x,1])=x$。于是 $X\eqd Y$（由推论~\ref{cor:measures:distribution-function}），但除了 $\omega=1/2$ 之外处处 $X(\omega)\neq Y(\omega)$。同分布只是关于“随机规律”的陈述，与两个函数是否相等无关。
+在 $([0,1],\cR\cap[0,1],\lambda)$ 上令 $X(\omega)=\omega$，$Y(\omega)=1-\omega$。对 $0\leqslant x\leqslant1$，$\P(X\leqslant x)=\lambda([0,x])=x$，$\P(Y\leqslant x)=\lambda([1-x,1])=x$。于是 $X\eqd Y$（由推论~\ref{cor:measures:distribution-function}），但除了 $\omega=1/2$ 之外处处 $X(\omega)\neq Y(\omega)$。同分布只是关于“随机规律”的陈述，与两个函数是否相等无关。
 \end{example}
 
 \begin{definition}[分布函数]\label{def:distributions:df}
-随机变量 $X$ 的\term{分布函数}（distribution function）是 $F_X(x)=P(X\leqslant x)=\mu_X((-\infty,x])$，$x\in\R$。
+随机变量 $X$ 的\term{分布函数}（distribution function）是 $F_X(x)=\P(X\leqslant x)=\mu_X((-\infty,x])$，$x\in\R$。
 \end{definition}
 
 记 $F(x-)=\lim_{y\uparrow x}F(y)$ 为左极限。
@@ -48,15 +48,15 @@ $\mu_X$ 是 $(S,\cS)$ 上的概率测度：$\mu_X(S)=P(\Omega)=1$；若 $B_n\in\
 \item $F$ 单调不减；
 \item $\lim_{x\to\infty}F(x)=1$，$\lim_{x\to-\infty}F(x)=0$；
 \item $F$ 右连续；
-\item $F(x-)=P(X<x)$；
-\item $P(X=x)=F(x)-F(x-)$。
+\item $F(x-)=\P(X<x)$；
+\item $\P(X=x)=F(x)-F(x-)$。
 \end{enumerate}
-于是 $P(a<X\leqslant b)=F(b)-F(a)$，$P(a\leqslant X\leqslant b)=F(b)-F(a-)$，等等。
+于是 $\P(a<X\leqslant b)=F(b)-F(a)$，$\P(a\leqslant X\leqslant b)=F(b)-F(a-)$，等等。
 \end{theorem}
 \begin{proof}
 (1) 若 $x\leqslant y$，则 $\{X\leqslant x\}\subseteq\{X\leqslant y\}$，由单调性（定理~\ref{thm:measures:basic}(2)）即得。
 
-(2) 由 (1)，两个极限存在，只需沿 $x=\pm n$ 计算。$\{X\leqslant n\}\uparrow\Omega$（每个 $X(\omega)$ 是实数，终将不超过 $n$），由从下连续，$F(n)\to P(\Omega)=1$。$\{X\leqslant-n\}\downarrow\varnothing$（没有实数不超过一切 $-n$），由从上连续（概率测度有限），$F(-n)\to0$。
+(2) 由 (1)，两个极限存在，只需沿 $x=\pm n$ 计算。$\{X\leqslant n\}\uparrow\Omega$（每个 $X(\omega)$ 是实数，终将不超过 $n$），由从下连续，$F(n)\to \P(\Omega)=1$。$\{X\leqslant-n\}\downarrow\varnothing$（没有实数不超过一切 $-n$），由从上连续（概率测度有限），$F(-n)\to0$。
 
 (3) 由 (1)，只需对 $y_n=x+1/n$ 验证。$\{X\leqslant x+1/n\}\downarrow\{X\leqslant x\}$，由从上连续，$F(x+1/n)\to F(x)$。
 
@@ -73,18 +73,18 @@ $\mu_X$ 是 $(S,\cS)$ 上的概率测度：$\mu_X(S)=P(\Omega)=1$；若 $B_n\in\
 \end{proof}
 
 \begin{workedexample}\label{we:distributions:mixed}
-设 $U$ 服从 $(0,1)$ 上的均匀分布，$X=\min\{U,\frac12\}$。求 $X$ 的分布函数 $F$，并计算 $P(X=\frac12)$，$P(X<\frac12)$，$P(\frac14\leqslant X\leqslant\frac12)$。
+设 $U$ 服从 $(0,1)$ 上的均匀分布，$X=\min\{U,\frac12\}$。求 $X$ 的分布函数 $F$，并计算 $\P(X=\frac12)$，$\P(X<\frac12)$，$\P(\frac14\leqslant X\leqslant\frac12)$。
 \end{workedexample}
 \begin{solution}
-$X$ 取值于 $(0,\frac12]$。对 $x<\frac12$，$X\leqslant x$ 当且仅当 $U\leqslant x$（因为 $\frac12>x$），所以 $F(x)=P(U\leqslant x)$，即 $x\leqslant0$ 时为 $0$，$0<x<\frac12$ 时为 $x$。对 $x\geqslant\frac12$，$X\leqslant\frac12\leqslant x$ 总成立，$F(x)=1$。于是
+$X$ 取值于 $(0,\frac12]$。对 $x<\frac12$，$X\leqslant x$ 当且仅当 $U\leqslant x$（因为 $\frac12>x$），所以 $F(x)=\P(U\leqslant x)$，即 $x\leqslant0$ 时为 $0$，$0<x<\frac12$ 时为 $x$。对 $x\geqslant\frac12$，$X\leqslant\frac12\leqslant x$ 总成立，$F(x)=1$。于是
 \[
 F(x)=\begin{cases}0,&x\leqslant0,\\ x,&0<x<\frac12,\\ 1,&x\geqslant\frac12.\end{cases}
 \]
 $F$ 在 $\frac12$ 处从 $\frac12$ 跳到 $1$。由定理~\ref{thm:distributions:df-properties}，
 \[
 \begin{aligned}
-&P(X=\tfrac12)=F(\tfrac12)-F(\tfrac12-)=1-\tfrac12=\tfrac12,\qquad P(X<\tfrac12)=F(\tfrac12-)=\tfrac12,\\
-&P(\tfrac14\leqslant X\leqslant\tfrac12)=F(\tfrac12)-F(\tfrac14-)=1-\tfrac14=\tfrac34 .
+&\P(X=\tfrac12)=F(\tfrac12)-F(\tfrac12-)=1-\tfrac12=\tfrac12,\qquad \P(X<\tfrac12)=F(\tfrac12-)=\tfrac12,\\
+&\P(\tfrac14\leqslant X\leqslant\tfrac12)=F(\tfrac12)-F(\tfrac14-)=1-\tfrac14=\tfrac34 .
 \end{aligned}
 \]
 直观上，$U\geqslant\frac12$ 的那一半概率全部堆在了点 $\frac12$ 上。$X$ 既不是离散的（在 $(0,\frac12)$ 上没有原子），也没有密度（有一个原子）。这样的“混合型”分布在实际中很常见，比如保险理赔额：有正的概率是 $0$，其余部分连续分布。
@@ -99,7 +99,7 @@ $F$ 在 $\frac12$ 处从 $\frac12$ 跳到 $1$。由定理~\ref{thm:distributions
 我们给出两个证明。
 
 \begin{proof}[证明一（用 Lebesgue--Stieltjes 测度）]
-$F$ 是 Stieltjes 测度函数，由定理~\ref{thm:extension:lebesgue-stieltjes}，存在 $(\R,\cR)$ 上的测度 $\mu_F$，使 $\mu_F((a,b])=F(b)-F(a)$。由从下连续，$\mu_F(\R)=\lim_n\mu_F((-n,n])=\lim_n(F(n)-F(-n))=1$，且 $\mu_F((-\infty,x])=\lim_n\mu_F((-n,x])=F(x)-0=F(x)$。取概率空间 $(\R,\cR,\mu_F)$，$X(\omega)=\omega$，则 $P(X\leqslant x)=\mu_F((-\infty,x])=F(x)$。
+$F$ 是 Stieltjes 测度函数，由定理~\ref{thm:extension:lebesgue-stieltjes}，存在 $(\R,\cR)$ 上的测度 $\mu_F$，使 $\mu_F((a,b])=F(b)-F(a)$。由从下连续，$\mu_F(\R)=\lim_n\mu_F((-n,n])=\lim_n(F(n)-F(-n))=1$，且 $\mu_F((-\infty,x])=\lim_n\mu_F((-n,x])=F(x)-0=F(x)$。取概率空间 $(\R,\cR,\mu_F)$，$X(\omega)=\omega$，则 $\P(X\leqslant x)=\mu_F((-\infty,x])=F(x)$。
 \end{proof}
 
 第二个证明更有用，它把一切分布都归结为均匀分布。
@@ -132,18 +132,18 @@ F^{-1}(u)\leqslant x\quad\Longleftrightarrow\quad u\leqslant F(x).
 \[
 \{\omega\in(0,1): X(\omega)\leqslant x\}=\{\omega\in(0,1):\omega\leqslant F(x)\}=(0,F(x)]\cap(0,1).
 \]
-由于 $0\leqslant F(x)\leqslant1$，这个集合的 Lebesgue 测度是 $F(x)$（$F(x)=1$ 时它是 $(0,1)$，测度仍为 $1$）。所以 $P(X\leqslant x)=F(x)$。
+由于 $0\leqslant F(x)\leqslant1$，这个集合的 Lebesgue 测度是 $F(x)$（$F(x)=1$ 时它是 $(0,1)$，测度仍为 $1$）。所以 $\P(X\leqslant x)=F(x)$。
 \end{proof}
 
 \begin{remark}[分位数变换]
-证明二说明：若 $U$ 是\emph{任意}概率空间上服从 $(0,1)$ 上均匀分布的随机变量，即 $P(U\leqslant u)=u$（$0\leqslant u\leqslant1$），且 $U\in(0,1)$，则 $F^{-1}(U)$ 的分布函数是 $F$。计算机生成随机数正是这样做的：先生成均匀随机数，再作分位数变换。当 $F$ 连续且严格递增时，$F^{-1}$ 就是通常的反函数；一般情形下，$F$ 的平台（常值段）对应 $F^{-1}$ 的跳跃，$F$ 的跳跃对应 $F^{-1}$ 的平台。
+证明二说明：若 $U$ 是\emph{任意}概率空间上服从 $(0,1)$ 上均匀分布的随机变量，即 $\P(U\leqslant u)=u$（$0\leqslant u\leqslant1$），且 $U\in(0,1)$，则 $F^{-1}(U)$ 的分布函数是 $F$。计算机生成随机数正是这样做的：先生成均匀随机数，再作分位数变换。当 $F$ 连续且严格递增时，$F^{-1}$ 就是通常的反函数；一般情形下，$F$ 的平台（常值段）对应 $F^{-1}$ 的跳跃，$F$ 的跳跃对应 $F^{-1}$ 的平台。
 \end{remark}
 
 \begin{workedexample}\label{we:distributions:quantile}
 求下列分布函数的分位数函数 $F^{-1}$，并写出由 $(0,1)$ 上均匀分布的 $U$ 生成对应随机变量的方法：
 \begin{enumerate}
-\item Bernoulli 分布：$P(X=1)=p$，$P(X=0)=1-p$，$0<p<1$；
-\item 几何分布：$P(X=k)=(1-p)^{k-1}p$，$k=1,2,\dots$；
+\item Bernoulli 分布：$\P(X=1)=p$，$\P(X=0)=1-p$，$0<p<1$；
+\item 几何分布：$\P(X=k)=(1-p)^{k-1}p$，$k=1,2,\dots$；
 \item 例题（第~\pageref{we:distributions:mixed} 页）中的 $F$。
 \end{enumerate}
 \end{workedexample}
@@ -198,7 +198,7 @@ F(x)=\int_{-\infty}^xf(y)\dd y\qquad\text{对一切}\ x\in\R,
 称分布函数 $F$（或其分布）有\term{密度}（density）$f$。
 \end{definition}
 
-在建立 Lebesgue 积分之前，这里的积分可以理解为（广义）Riemann 积分，$f$ 取为分段连续函数即可。有密度的分布函数是连续的，所以 $P(X=x)=0$ 对一切 $x$ 成立。反之，给定非负、积分为 $1$ 的 $f$，上式定义的 $F$ 满足 (1)(2)(3)，从而是分布函数。
+在建立 Lebesgue 积分之前，这里的积分可以理解为（广义）Riemann 积分，$f$ 取为分段连续函数即可。有密度的分布函数是连续的，所以 $\P(X=x)=0$ 对一切 $x$ 成立。反之，给定非负、积分为 $1$ 的 $f$，上式定义的 $F$ 满足 (1)(2)(3)，从而是分布函数。
 
 \begin{example}[三个重要的密度]\label{ex:distributions:densities}
 \begin{enumerate}
@@ -240,30 +240,30 @@ F(x)=\int_{-\infty}^xf(y)\dd y\qquad\text{对一切}\ x\in\R,
 设 $\mu,\nu$ 是 $(\R,\cR)$ 上的概率测度。若 $(X,Y)$ 是某个概率空间上的随机向量，$X$ 的分布是 $\mu$，$Y$ 的分布是 $\nu$，则称 $(X,Y)$ 是 $\mu$ 与 $\nu$ 的一个\term{耦合}（coupling）。
 \end{definition}
 
-耦合总是存在的。例如设 $F,G$ 是 $\mu,\nu$ 的分布函数，由定理~\ref{thm:extension:Rd}，$(\R^2,\cR^2)$ 上存在测度 $\pi$ 使 $\pi((a_1,b_1]\times(a_2,b_2])=(F(b_1)-F(a_1))(G(b_2)-G(a_2))$；取 $X,Y$ 为两个坐标投影，则 $P(X\leqslant x)=\pi((-\infty,x]\times\R)=F(x)$，$P(Y\leqslant y)=G(y)$（用从下连续取极限）。这是“独立”的耦合，它把两个随机变量互不相干地放在一起，对比较两个分布没有什么帮助。耦合方法的关键是构造一个有用的耦合。
+耦合总是存在的。例如设 $F,G$ 是 $\mu,\nu$ 的分布函数，由定理~\ref{thm:extension:Rd}，$(\R^2,\cR^2)$ 上存在测度 $\pi$ 使 $\pi((a_1,b_1]\times(a_2,b_2])=(F(b_1)-F(a_1))(G(b_2)-G(a_2))$；取 $X,Y$ 为两个坐标投影，则 $\P(X\leqslant x)=\pi((-\infty,x]\times\R)=F(x)$，$\P(Y\leqslant y)=G(y)$（用从下连续取极限）。这是“独立”的耦合，它把两个随机变量互不相干地放在一起，对比较两个分布没有什么帮助。耦合方法的关键是构造一个有用的耦合。
 
 \begin{example}[两枚硬币]\label{ex:distributions:two-coins}
-设 $0\leqslant p\leqslant q\leqslant1$。硬币甲正面朝上的概率是 $p$，硬币乙是 $q$。各独立地掷 $n$ 次，记正面次数分别为 $S$ 与 $T$。我们直观上认为，乙更容易出现正面，所以对每个 $k$，应当有 $P(S\geqslant k)\leqslant P(T\geqslant k)$。直接比较
+设 $0\leqslant p\leqslant q\leqslant1$。硬币甲正面朝上的概率是 $p$，硬币乙是 $q$。各独立地掷 $n$ 次，记正面次数分别为 $S$ 与 $T$。我们直观上认为，乙更容易出现正面，所以对每个 $k$，应当有 $\P(S\geqslant k)\leqslant \P(T\geqslant k)$。直接比较
 \[
 \sum_{j\geqslant k}\binom njp^j(1-p)^{n-j}\quad\text{与}\quad\sum_{j\geqslant k}\binom njq^j(1-q)^{n-j}
 \]
 并不容易。耦合的证明如下。
 
-取概率空间 $\Omega=(0,1]^n$，$\cF=\cR^n\cap(0,1]^n$，$P=\lambda_n$（$n$ 维 Lebesgue 测度限制在 $(0,1]^n$ 上，由定理~\ref{thm:extension:Rd} 它在矩形上取值为各边长之积，从而 $P(\Omega)=1$）。记 $U_i(\omega)=\omega_i$，令
+取概率空间 $\Omega=(0,1]^n$，$\cF=\cR^n\cap(0,1]^n$，$\P=\lambda_n$（$n$ 维 Lebesgue 测度限制在 $(0,1]^n$ 上，由定理~\ref{thm:extension:Rd} 它在矩形上取值为各边长之积，从而 $\P(\Omega)=1$）。记 $U_i(\omega)=\omega_i$，令
 \[
 X_i=\one_{\{U_i\leqslant p\}},\qquad Y_i=\one_{\{U_i\leqslant q\}},\qquad S=\sum_{i=1}^nX_i,\qquad T=\sum_{i=1}^nY_i.
 \]
 \emph{分布是对的。}对 $a=(a_1,\dots,a_n)\in\{0,1\}^n$，$\{X_1=a_1,\dots,X_n=a_n\}=I_1\times\cdots\times I_n$，其中 $a_i=1$ 时 $I_i=(0,p]$，$a_i=0$ 时 $I_i=(p,1]$。这是一个矩形，所以
 \[
-P(X_1=a_1,\dots,X_n=a_n)=\prod_{i=1}^np^{a_i}(1-p)^{1-a_i}=p^{\sum a_i}(1-p)^{n-\sum a_i}.
+\P(X_1=a_1,\dots,X_n=a_n)=\prod_{i=1}^np^{a_i}(1-p)^{1-a_i}=p^{\sum a_i}(1-p)^{n-\sum a_i}.
 \]
-这就是“$n$ 次独立的、正面概率为 $p$ 的抛掷”的概率模型。对 $j$ 求和，$\{S=j\}$ 是 $\binom nj$ 个这样的事件的不交并，$P(S=j)=\binom njp^j(1-p)^{n-j}$，即 $S$ 服从二项分布 $\mathrm{Bin}(n,p)$。同理 $T\sim\mathrm{Bin}(n,q)$。
+这就是“$n$ 次独立的、正面概率为 $p$ 的抛掷”的概率模型。对 $j$ 求和，$\{S=j\}$ 是 $\binom nj$ 个这样的事件的不交并，$\P(S=j)=\binom njp^j(1-p)^{n-j}$，即 $S$ 服从二项分布 $\mathrm{Bin}(n,p)$。同理 $T\sim\mathrm{Bin}(n,q)$。
 
 \emph{逐点比较。}由 $p\leqslant q$，$\{U_i\leqslant p\}\subseteq\{U_i\leqslant q\}$，故 $X_i\leqslant Y_i$ 处处成立，$S\leqslant T$ 处处成立。于是 $\{S\geqslant k\}\subseteq\{T\geqslant k\}$，
 \[
-P(S\geqslant k)\leqslant P(T\geqslant k).
+\P(S\geqslant k)\leqslant \P(T\geqslant k).
 \]
-由于这两个概率只依赖于 $S$、$T$ 的分布，我们证明了关于二项分布的不等式 $P(\mathrm{Bin}(n,p)\geqslant k)\leqslant P(\mathrm{Bin}(n,q)\geqslant k)$，而证明中一个求和都没有算。
+由于这两个概率只依赖于 $S$、$T$ 的分布，我们证明了关于二项分布的不等式 $\P(\mathrm{Bin}(n,p)\geqslant k)\leqslant \P(\mathrm{Bin}(n,q)\geqslant k)$，而证明中一个求和都没有算。
 
 这里的想法是：用同一个 $U_i$ 同时“驱动”两枚硬币。$U_i\leqslant p$ 时两枚都是正面，$p<U_i\leqslant q$ 时只有乙是正面，$U_i>q$ 时两枚都是反面。
 \end{example}
@@ -271,14 +271,14 @@ P(S\geqslant k)\leqslant P(T\geqslant k).
 两枚硬币的例子是下面这个一般结论的特例。
 
 \begin{definition}[随机序]\label{def:distributions:stochastic-order}
-设 $X,Y$ 是随机变量（可以在不同的概率空间上），分布函数为 $F,G$。若 $F(x)\geqslant G(x)$ 对一切 $x$ 成立，即 $P(X>x)\leqslant P(Y>x)$ 对一切 $x$ 成立，称 $X$ \term{随机地小于} $Y$（stochastically smaller），记作 $X\preceq_{\mathrm{st}}Y$。
+设 $X,Y$ 是随机变量（可以在不同的概率空间上），分布函数为 $F,G$。若 $F(x)\geqslant G(x)$ 对一切 $x$ 成立，即 $\P(X>x)\leqslant \P(Y>x)$ 对一切 $x$ 成立，称 $X$ \term{随机地小于} $Y$（stochastically smaller），记作 $X\preceq_{\mathrm{st}}Y$。
 \end{definition}
 
 \begin{theorem}[随机序的耦合刻画]\label{thm:distributions:stochastic-coupling}
 设 $F,G$ 是分布函数。则 $F(x)\geqslant G(x)$ 对一切 $x$ 成立，当且仅当存在同一概率空间上的随机变量 $X,Y$，$F_X=F$，$F_Y=G$，且 $X\leqslant Y$ 处处成立。
 \end{theorem}
 \begin{proof}
-充分性：若 $X\leqslant Y$，则 $\{Y\leqslant x\}\subseteq\{X\leqslant x\}$，所以 $G(x)=P(Y\leqslant x)\leqslant P(X\leqslant x)=F(x)$。
+充分性：若 $X\leqslant Y$，则 $\{Y\leqslant x\}\subseteq\{X\leqslant x\}$，所以 $G(x)=\P(Y\leqslant x)\leqslant \P(X\leqslant x)=F(x)$。
 
 必要性：设 $F\geqslant G$。在 $((0,1),\cR\cap(0,1),\lambda)$ 上令 $X(\omega)=F^{-1}(\omega)$，$Y(\omega)=G^{-1}(\omega)$。由定理~\ref{thm:distributions:characterization} 证明二，$F_X=F$，$F_Y=G$。对 $u\in(0,1)$，若 $G(x)\geqslant u$，则 $F(x)\geqslant G(x)\geqslant u$，所以 $\{x:G(x)\geqslant u\}\subseteq\{x:F(x)\geqslant u\}$，取下确界得 $F^{-1}(u)\leqslant G^{-1}(u)$，即 $X\leqslant Y$ 处处成立。
 \end{proof}
@@ -310,7 +310,7 @@ P(S\geqslant k)\leqslant P(T\geqslant k).
 \[
 \{\xi_1=a_1,\dots,\xi_n=a_n\}=\Bigl[\frac k{2^n},\frac{k+1}{2^n}\Bigr),\qquad k=\sum_{i=1}^na_i2^{n-i},
 \]
-从而 $P(\xi_1=a_1,\dots,\xi_n=a_n)=2^{-n}$。
+从而 $\P(\xi_1=a_1,\dots,\xi_n=a_n)=2^{-n}$。
 \end{enumerate}
 \end{proposition}
 \begin{proof}
@@ -326,44 +326,44 @@ P(S\geqslant k)\leqslant P(T\geqslant k).
 这个命题有两层意义。第一，它\emph{构造}了“无穷次公平抛硬币”的概率模型：$\xi_1,\xi_2,\dots$ 定义在同一个概率空间上，任何有限次的结果都是等可能的。第二，下面的定理说明，这个性质反过来刻画了均匀分布，与概率空间的具体选择无关。
 
 \begin{remark}[证明思路]
-要证明 $P(U\leqslant x)=x$。$U$ 的前 $n$ 位二进制数字决定了 $U$ 落在哪个长为 $2^{-n}$ 的小区间里，而每个小区间的概率是 $2^{-n}$。所以对二进有理数 $d=k2^{-n}$，$P(U\leqslant d)$ 与 $d$ 相差至多“一个小区间的端点”，得到 \eqref{eq:distributions:dyadic}；对一般的 $x$，用二进有理数从两边夹逼。
+要证明 $\P(U\leqslant x)=x$。$U$ 的前 $n$ 位二进制数字决定了 $U$ 落在哪个长为 $2^{-n}$ 的小区间里，而每个小区间的概率是 $2^{-n}$。所以对二进有理数 $d=k2^{-n}$，$\P(U\leqslant d)$ 与 $d$ 相差至多“一个小区间的端点”，得到 \eqref{eq:distributions:dyadic}；对一般的 $x$，用二进有理数从两边夹逼。
 \end{remark}
 
 \begin{theorem}[公平硬币给出均匀分布]\label{thm:distributions:coins-to-uniform}
-设 $(\Omega,\cF,P)$ 是概率空间，$\xi_1,\xi_2,\dots:\Omega\to\{0,1\}$ 是随机变量，并且对任意 $n$ 与 $a_1,\dots,a_n\in\{0,1\}$，
+设 $(\Omega,\cF,\P)$ 是概率空间，$\xi_1,\xi_2,\dots:\Omega\to\{0,1\}$ 是随机变量，并且对任意 $n$ 与 $a_1,\dots,a_n\in\{0,1\}$，
 \begin{equation}\label{eq:distributions:fair}
-P(\xi_1=a_1,\dots,\xi_n=a_n)=2^{-n}.
+\P(\xi_1=a_1,\dots,\xi_n=a_n)=2^{-n}.
 \end{equation}
-令 $U=\sum_{n=1}^\infty\xi_n2^{-n}$。则 $U$ 是随机变量，并且 $U$ 服从 $[0,1]$ 上的均匀分布：$P(U\leqslant x)=x$ 对一切 $x\in[0,1]$ 成立。
+令 $U=\sum_{n=1}^\infty\xi_n2^{-n}$。则 $U$ 是随机变量，并且 $U$ 服从 $[0,1]$ 上的均匀分布：$\P(U\leqslant x)=x$ 对一切 $x\in[0,1]$ 成立。
 \end{theorem}
 \begin{proof}
 \emph{可测性。}部分和 $U_n=\sum_{i\leqslant n}\xi_i2^{-i}$ 是随机变量，$U_n\uparrow U$ 处处成立（级数非负，且 $U\leqslant\sum_n2^{-n}=1$），由定理~\ref{thm:random-variables:limits}，$U$ 是取值于 $[0,1]$ 的随机变量。
 
-\emph{二进有理点处的估计。}固定 $n$。对 $0\leqslant j<2^n$，令 $a^{(j)}\in\{0,1\}^n$ 为 $j$ 的 $n$ 位二进制表示，$E_j=\{(\xi_1,\dots,\xi_n)=a^{(j)}\}$。$E_0,\dots,E_{2^n-1}$ 两两不交，并为 $\Omega$，由 \eqref{eq:distributions:fair}，$P(E_j)=2^{-n}$。在 $E_j$ 上，$U_n=j2^{-n}$，而 $0\leqslant U-U_n\leqslant\sum_{i>n}2^{-i}=2^{-n}$，所以
+\emph{二进有理点处的估计。}固定 $n$。对 $0\leqslant j<2^n$，令 $a^{(j)}\in\{0,1\}^n$ 为 $j$ 的 $n$ 位二进制表示，$E_j=\{(\xi_1,\dots,\xi_n)=a^{(j)}\}$。$E_0,\dots,E_{2^n-1}$ 两两不交，并为 $\Omega$，由 \eqref{eq:distributions:fair}，$\P(E_j)=2^{-n}$。在 $E_j$ 上，$U_n=j2^{-n}$，而 $0\leqslant U-U_n\leqslant\sum_{i>n}2^{-i}=2^{-n}$，所以
 \[
 E_j\subseteq\{j2^{-n}\leqslant U\leqslant(j+1)2^{-n}\}.
 \]
 现在设 $d=k2^{-n}$，$0\leqslant k\leqslant2^n$。若 $j\geqslant k$，则在 $E_j$ 上 $U\geqslant j2^{-n}\geqslant d$；所以 $\{U<d\}\subseteq\bigcup_{j<k}E_j$。若 $j<k$，则在 $E_j$ 上 $U\leqslant(j+1)2^{-n}\leqslant d$；所以 $\bigcup_{j<k}E_j\subseteq\{U\leqslant d\}$。取概率，
 \begin{equation}\label{eq:distributions:dyadic}
-P(U<d)\leqslant k2^{-n}=d\leqslant P(U\leqslant d).
+\P(U<d)\leqslant k2^{-n}=d\leqslant \P(U\leqslant d).
 \end{equation}
 
 \emph{一般的 $x$。}设 $0<x<1$。由于二进有理数在 $[0,1]$ 中稠密，对充分大的 $m$ 可以取二进有理数 $d_m,d_m'\in[0,1]$，使 $x-2^{-m}<d_m'<x<d_m<x+2^{-m}$。由 \eqref{eq:distributions:dyadic} 与单调性，
 \[
-d_m'\leqslant P(U\leqslant d_m')\leqslant P(U\leqslant x)\leqslant P(U<d_m)\leqslant d_m.
+d_m'\leqslant \P(U\leqslant d_m')\leqslant \P(U\leqslant x)\leqslant \P(U<d_m)\leqslant d_m.
 \]
-令 $m\to\infty$ 得 $P(U\leqslant x)=x$。$x=1$ 时 $U\leqslant1$ 处处成立；$x=0$ 时，$P(U\leqslant0)\leqslant P(U<2^{-m})\leqslant2^{-m}$ 对一切 $m$ 成立，故为 $0$。
+令 $m\to\infty$ 得 $\P(U\leqslant x)=x$。$x=1$ 时 $U\leqslant1$ 处处成立；$x=0$ 时，$\P(U\leqslant0)\leqslant \P(U<2^{-m})\leqslant2^{-m}$ 对一切 $m$ 成立，故为 $0$。
 \end{proof}
 
 \begin{remark}
-条件 \eqref{eq:distributions:fair} 就是以后要定义的“$\xi_1,\xi_2,\dots$ 独立同分布，$P(\xi_n=0)=P(\xi_n=1)=1/2$”。定理的证明只用到 \eqref{eq:distributions:fair} 这个关于有限维分布的条件，这与第~\ref{lec:measures} 讲 $C[0,1]$ 的例子是同一个道理：有限维分布决定了一切。作为推论，$P(\text{从某项起}\ \xi_n\ \text{全为}\ 1)=0$：该事件包含于 $\bigcup_N\bigcap_{n\geqslant N}\{\xi_n=1\}$，而 $P(\xi_N=\cdots=\xi_{N+m}=1)=2^{-m-1}$。所以“二进制展开的歧义”只发生在一个零概率事件上。
+条件 \eqref{eq:distributions:fair} 就是以后要定义的“$\xi_1,\xi_2,\dots$ 独立同分布，$\P(\xi_n=0)=\P(\xi_n=1)=1/2$”。定理的证明只用到 \eqref{eq:distributions:fair} 这个关于有限维分布的条件，这与第~\ref{lec:measures} 讲 $C[0,1]$ 的例子是同一个道理：有限维分布决定了一切。作为推论，$\P(\text{从某项起}\ \xi_n\ \text{全为}\ 1)=0$：该事件包含于 $\bigcup_N\bigcap_{n\geqslant N}\{\xi_n=1\}$，而 $\P(\xi_N=\cdots=\xi_{N+m}=1)=2^{-m-1}$。所以“二进制展开的歧义”只发生在一个零概率事件上。
 \end{remark}
 
 \topic{正态分布的尾部估计}
 
-正态分布是概率论中最重要的分布，中心极限定理会告诉我们原因。它的分布函数 $\Phi$ 没有初等的表达式，可是在很多问题中，比如以后的重对数律，我们需要知道 $P(X\geqslant x)$ 在 $x$ 很大时有多小。下面的定理说，它可以被两个初等函数紧紧地夹住，大约是 $\varphi(x)/x$。
+正态分布是概率论中最重要的分布，中心极限定理会告诉我们原因。它的分布函数 $\Phi$ 没有初等的表达式，可是在很多问题中，比如以后的重对数律，我们需要知道 $\P(X\geqslant x)$ 在 $x$ 很大时有多小。下面的定理说，它可以被两个初等函数紧紧地夹住，大约是 $\varphi(x)/x$。
 
-设 $X$ 服从标准正态分布，即对 Borel 集 $B$，$P(X\in B)=\frac1{\sqrt{2\pi}}\int_Be^{-x^2/2}\dd x$。记 $\varphi(x)=(2\pi)^{-1/2}e^{-x^2/2}$，$\overline\Phi(x)=P(X\geqslant x)=\int_x^\infty\varphi(y)\dd y$。
+设 $X$ 服从标准正态分布，即对 Borel 集 $B$，$\P(X\in B)=\frac1{\sqrt{2\pi}}\int_Be^{-x^2/2}\dd x$。记 $\varphi(x)=(2\pi)^{-1/2}e^{-x^2/2}$，$\overline\Phi(x)=\P(X\geqslant x)=\int_x^\infty\varphi(y)\dd y$。
 
 \begin{theorem}[Gauss 尾部估计]\label{thm:distributions:gaussian-tail}
 对一切 $x>0$，
@@ -398,19 +398,19 @@ h'(y)=(-y^{-2}+3y^{-4})\varphi(y)+(y^{-1}-y^{-3})(-y)\varphi(y)=-(1-3y^{-4})\var
 \end{proof}
 
 \begin{example}
-取 $x=3$。$\varphi(3)=e^{-4.5}/\sqrt{2\pi}\approx0.004432$，定理给出 $0.001313\leqslant P(X\geqslant3)\leqslant0.001477$，而真实值约为 $0.001350$。第二个上界给出 $\frac12e^{-4.5}\approx0.005554$，粗糙得多，但它在 $x$ 较小时也有效，并且形式简单：例如 $x=0$ 时它给出精确值 $1/2$，而 $\varphi(x)/x$ 在 $x\to0$ 时趋于无穷。两类界各有用处：前者刻画精确的渐近，后者（以及它的变形）在大偏差与集中不等式中经常出现。
+取 $x=3$。$\varphi(3)=e^{-4.5}/\sqrt{2\pi}\approx0.004432$，定理给出 $0.001313\leqslant \P(X\geqslant3)\leqslant0.001477$，而真实值约为 $0.001350$。第二个上界给出 $\frac12e^{-4.5}\approx0.005554$，粗糙得多，但它在 $x$ 较小时也有效，并且形式简单：例如 $x=0$ 时它给出精确值 $1/2$，而 $\varphi(x)/x$ 在 $x\to0$ 时趋于无穷。两类界各有用处：前者刻画精确的渐近，后者（以及它的变形）在大偏差与集中不等式中经常出现。
 \end{example}
 
 \topic{本讲小结}
 
 \begin{enumerate}
-\item 随机变量 $X$ 的分布 $\mu_X=P\circ X^{-1}$ 是 $\R$ 上的概率测度，由分布函数 $F(x)=P(X\leqslant x)$ 决定。概率论研究的主要对象是分布，样本空间可以随意更换。
-\item 分布函数恰好是满足“单调不减、右连续、$F(-\infty)=0$、$F(\infty)=1$”的函数（定理~\ref{thm:distributions:df-properties}、\ref{thm:distributions:characterization}）。跳跃给出原子：$P(X=x)=F(x)-F(x-)$。
+\item 随机变量 $X$ 的分布 $\mu_X=\P\circ X^{-1}$ 是 $\R$ 上的概率测度，由分布函数 $F(x)=\P(X\leqslant x)$ 决定。概率论研究的主要对象是分布，样本空间可以随意更换。
+\item 分布函数恰好是满足“单调不减、右连续、$F(-\infty)=0$、$F(\infty)=1$”的函数（定理~\ref{thm:distributions:df-properties}、\ref{thm:distributions:characterization}）。跳跃给出原子：$\P(X=x)=F(x)-F(x-)$。
 \item 分位数变换：若 $U$ 是 $(0,1)$ 上的均匀随机变量，则 $F^{-1}(U)$ 的分布函数是 $F$。一切分布都可以由均匀分布得到。
 \item 分布有三种基本类型：离散的（可以有稠密的跳跃点）、有密度的、奇异连续的（Cantor 分布）。一般的分布是三者的混合（作业 D，以及第~\ref{lec:absolute-continuity} 讲）。
 \item 耦合：把两个分布放在同一个概率空间上作逐点比较。随机序等价于存在 $X\leqslant Y$ 的耦合（定理~\ref{thm:distributions:stochastic-coupling}）。
 \item 一个均匀随机数的二进制各位就是无穷次公平抛硬币，反之亦然（命题~\ref{prop:distributions:binary-digits}、定理~\ref{thm:distributions:coins-to-uniform}）。这是第~\ref{lec:independence} 讲构造独立序列的出发点。
-\item 标准正态尾部 $P(X\geqslant x)\approx\varphi(x)/x$（定理~\ref{thm:distributions:gaussian-tail}）。
+\item 标准正态尾部 $\P(X\geqslant x)\approx\varphi(x)/x$（定理~\ref{thm:distributions:gaussian-tail}）。
 \end{enumerate}
 
 % =====================================================================
@@ -444,35 +444,35 @@ $F^{-1}$ 单调不减（引理~\ref{lem:distributions:quantile}），所以在 $
 
 \item\label{ex:distributions:A2} 设 $X$ 的分布函数为 $F$，$Y=F(X)$。
 \begin{questions}
-\item 设 $F$ 连续。证明 $Y$ 服从 $(0,1)$ 上的均匀分布：$P(Y\leqslant y)=y$，$y\in[0,1]$。
+\item 设 $F$ 连续。证明 $Y$ 服从 $(0,1)$ 上的均匀分布：$\P(Y\leqslant y)=y$，$y\in[0,1]$。
 \begin{solution}
 设 $y\in(0,1)$，$a=F^{-1}(y)$。由引理~\ref{lem:distributions:quantile}，$F(X)\geqslant y$ 当且仅当 $X\geqslant a$。所以
 \[
-P(Y\geqslant y)=P(X\geqslant a)=1-F(a-)=1-F(a)=1-y,
+\P(Y\geqslant y)=\P(X\geqslant a)=1-F(a-)=1-F(a)=1-y,
 \]
-其中用了 $F$ 在 $a$ 处连续与 A1-4)。于是 $P(Y<y)=y$ 对 $y\in(0,1)$ 成立。对 $y\in(0,1)$，$\{Y\leqslant y\}=\bigcap_n\{Y<y+\frac1n\}$（$n$ 充分大使 $y+\frac1n<1$），由从上连续 $P(Y\leqslant y)=\lim_n(y+\frac1n)=y$。$y=1$ 时 $Y\leqslant1$ 总成立；$y=0$ 时 $P(Y\leqslant0)\leqslant P(Y<\frac1n)=\frac1n\to0$。
+其中用了 $F$ 在 $a$ 处连续与 A1-4)。于是 $\P(Y<y)=y$ 对 $y\in(0,1)$ 成立。对 $y\in(0,1)$，$\{Y\leqslant y\}=\bigcap_n\{Y<y+\frac1n\}$（$n$ 充分大使 $y+\frac1n<1$），由从上连续 $\P(Y\leqslant y)=\lim_n(y+\frac1n)=y$。$y=1$ 时 $Y\leqslant1$ 总成立；$y=0$ 时 $\P(Y\leqslant0)\leqslant \P(Y<\frac1n)=\frac1n\to0$。
 \end{solution}
 \item 若 $F$ 不连续，结论是否成立？
 \begin{solution}
-不成立。设 $F$ 在 $x_0$ 处有跳跃 $p=P(X=x_0)>0$。则 $P(Y=F(x_0))\geqslant P(X=x_0)=p>0$，而均匀分布没有原子。最极端的例子是 $X\equiv0$，$Y=F(0)=1$ 恒成立。
+不成立。设 $F$ 在 $x_0$ 处有跳跃 $p=\P(X=x_0)>0$。则 $\P(Y=F(x_0))\geqslant \P(X=x_0)=p>0$，而均匀分布没有原子。最极端的例子是 $X\equiv0$，$Y=F(0)=1$ 恒成立。
 \end{solution}
 \end{questions}
 
-\item\label{ex:distributions:A3} 设 $X$ 有连续密度 $f$，$P(\alpha<X<\beta)=1$，$g$ 在 $(\alpha,\beta)$ 上可微且 $g'>0$。
+\item\label{ex:distributions:A3} 设 $X$ 有连续密度 $f$，$\P(\alpha<X<\beta)=1$，$g$ 在 $(\alpha,\beta)$ 上可微且 $g'>0$。
 \begin{questions}
 \item 证明 $g(X)$ 在 $(g(\alpha),g(\beta))$ 上有密度 $f(g^{-1}(y))/g'(g^{-1}(y))$，在这个区间之外密度为 $0$。（这里 $g(\alpha)=\lim_{x\downarrow\alpha}g(x)$，$g(\beta)$ 类似。）
 \begin{solution}
 思路：先求分布函数，再求导。
 
-记 $G(y)=P(g(X)\leqslant y)$。$g$ 在 $(\alpha,\beta)$ 上严格递增、连续，是到 $(g(\alpha),g(\beta))$ 上的双射。对 $y\in(g(\alpha),g(\beta))$，由于 $X\in(\alpha,\beta)$ a.s.，
+记 $G(y)=\P(g(X)\leqslant y)$。$g$ 在 $(\alpha,\beta)$ 上严格递增、连续，是到 $(g(\alpha),g(\beta))$ 上的双射。对 $y\in(g(\alpha),g(\beta))$，由于 $X\in(\alpha,\beta)$ a.s.，
 \[
-G(y)=P(X\leqslant g^{-1}(y))=F(g^{-1}(y)).
+G(y)=\P(X\leqslant g^{-1}(y))=F(g^{-1}(y)).
 \]
 $F$ 有连续导数 $f$（微积分基本定理），$g^{-1}$ 可微且 $(g^{-1})'(y)=1/g'(g^{-1}(y))$（反函数求导，用到 $g'>0$），由链式法则
 \[
 G'(y)=\frac{f(g^{-1}(y))}{g'(g^{-1}(y))}=:h(y).
 \]
-$y\leqslant g(\alpha)$ 时 $G(y)=0$，$y\geqslant g(\beta)$ 时 $G(y)=1$。在 $(g(\alpha),g(\beta))$ 中取 $y_0<y$，由微积分基本定理 $G(y)-G(y_0)=\int_{y_0}^yh$；令 $y_0\downarrow g(\alpha)$，$G(y_0)\to P(X\leqslant\alpha)=0$，于是 $G(y)=\int_{g(\alpha)}^yh$。所以 $h$（区间外令为 $0$）是 $g(X)$ 的密度。
+$y\leqslant g(\alpha)$ 时 $G(y)=0$，$y\geqslant g(\beta)$ 时 $G(y)=1$。在 $(g(\alpha),g(\beta))$ 中取 $y_0<y$，由微积分基本定理 $G(y)-G(y_0)=\int_{y_0}^yh$；令 $y_0\downarrow g(\alpha)$，$G(y_0)\to \P(X\leqslant\alpha)=0$，于是 $G(y)=\int_{g(\alpha)}^yh$。所以 $h$（区间外令为 $0$）是 $g(X)$ 的密度。
 \end{solution}
 \item $g(x)=ax+b$（$a>0$）时，密度是什么？
 \begin{solution}
@@ -494,9 +494,9 @@ $g^{-1}(y)=(y-b)/a$，$g'\equiv a$，所以密度是 $\frac1af\bigl(\frac{y-b}a\
 \begin{solution}
 $x\mapsto x^2$ 不是单调的，不能直接用 A3。对 $y>0$，
 \[
-P(X^2\leqslant y)=P(-\sqrt y\leqslant X\leqslant\sqrt y)=F(\sqrt y)-F(-\sqrt y),
+\P(X^2\leqslant y)=\P(-\sqrt y\leqslant X\leqslant\sqrt y)=F(\sqrt y)-F(-\sqrt y),
 \]
-这里用了 $F$ 连续（有密度），$P(X=-\sqrt y)=0$。$y\leqslant0$ 时概率为 $0$（$y=0$ 时是 $P(X=0)=0$）。对 $y>0$ 求导，
+这里用了 $F$ 连续（有密度），$\P(X=-\sqrt y)=0$。$y\leqslant0$ 时概率为 $0$（$y=0$ 时是 $\P(X=0)=0$）。对 $y>0$ 求导，
 \[
 \frac{d}{dy}\bigl(F(\sqrt y)-F(-\sqrt y)\bigr)=\frac{f(\sqrt y)+f(-\sqrt y)}{2\sqrt y}.
 \]
@@ -508,7 +508,7 @@ P(X^2\leqslant y)=P(-\sqrt y\leqslant X\leqslant\sqrt y)=F(\sqrt y)-F(-\sqrt y),
 \end{solution}
 \end{questions}
 
-\item\label{ex:distributions:A5} 用定理~\ref{thm:distributions:gaussian-tail} 给出 $P(X\geqslant4)$ 的上下界，其中 $X$ 服从标准正态分布。
+\item\label{ex:distributions:A5} 用定理~\ref{thm:distributions:gaussian-tail} 给出 $\P(X\geqslant4)$ 的上下界，其中 $X$ 服从标准正态分布。
 \begin{solution}
 $\varphi(4)=e^{-8}/\sqrt{2\pi}\approx0.00033546/2.50663\approx1.3383\times10^{-4}$。
 \[
@@ -522,21 +522,21 @@ $\varphi(4)=e^{-8}/\sqrt{2\pi}\approx0.00033546/2.50663\approx1.3383\times10^{-4
 
 \item\label{ex:distributions:A6} 设 $X$ 服从参数为 $\lambda$ 的指数分布。
 \begin{questions}
-\item 证明\term{无记忆性}：$P(X>s+t\mid X>s)=P(X>t)$，$s,t\geqslant0$。
+\item 证明\term{无记忆性}：$\P(X>s+t\mid X>s)=\P(X>t)$，$s,t\geqslant0$。
 \begin{solution}
-对 $x\geqslant0$，$P(X>x)=1-F(x)=e^{-\lambda x}$。$\{X>s+t\}\subseteq\{X>s\}$，所以
+对 $x\geqslant0$，$\P(X>x)=1-F(x)=e^{-\lambda x}$。$\{X>s+t\}\subseteq\{X>s\}$，所以
 \[
-P(X>s+t\mid X>s)=\frac{P(X>s+t)}{P(X>s)}=\frac{e^{-\lambda(s+t)}}{e^{-\lambda s}}=e^{-\lambda t}=P(X>t).
+\P(X>s+t\mid X>s)=\frac{\P(X>s+t)}{\P(X>s)}=\frac{e^{-\lambda(s+t)}}{e^{-\lambda s}}=e^{-\lambda t}=\P(X>t).
 \]
 直观上，若 $X$ 是一个灯泡的寿命，已经用了 $s$ 小时的灯泡，剩余寿命的分布与新灯泡一样。
 \end{solution}
-\item 证明 $\lceil X\rceil$ 服从\term{几何分布}：$P(\lceil X\rceil=k)=(1-p)^{k-1}p$，$k\geqslant1$，并求 $p$。
+\item 证明 $\lceil X\rceil$ 服从\term{几何分布}：$\P(\lceil X\rceil=k)=(1-p)^{k-1}p$，$k\geqslant1$，并求 $p$。
 \begin{solution}
-$\lceil\cdot\rceil$ 单调，是 Borel 函数，$\lceil X\rceil$ 是随机变量。$P(X\leqslant0)=F(0)=0$，所以 $X>0$ a.s.，$\lceil X\rceil\geqslant1$ a.s.。对 $k\geqslant1$，$\lceil X\rceil=k$ 当且仅当 $k-1<X\leqslant k$，
+$\lceil\cdot\rceil$ 单调，是 Borel 函数，$\lceil X\rceil$ 是随机变量。$\P(X\leqslant0)=F(0)=0$，所以 $X>0$ a.s.，$\lceil X\rceil\geqslant1$ a.s.。对 $k\geqslant1$，$\lceil X\rceil=k$ 当且仅当 $k-1<X\leqslant k$，
 \[
-P(\lceil X\rceil=k)=F(k)-F(k-1)=e^{-\lambda(k-1)}-e^{-\lambda k}=(e^{-\lambda})^{k-1}(1-e^{-\lambda}).
+\P(\lceil X\rceil=k)=F(k)-F(k-1)=e^{-\lambda(k-1)}-e^{-\lambda k}=(e^{-\lambda})^{k-1}(1-e^{-\lambda}).
 \]
-所以 $p=1-e^{-\lambda}$。几何分布是指数分布的离散版本，它也有无记忆性：$P(\lceil X\rceil>m+n\mid\lceil X\rceil>m)=(1-p)^n$。
+所以 $p=1-e^{-\lambda}$。几何分布是指数分布的离散版本，它也有无记忆性：$\P(\lceil X\rceil>m+n\mid\lceil X\rceil>m)=(1-p)^n$。
 \end{solution}
 \end{questions}
 
@@ -544,17 +544,17 @@ P(\lceil X\rceil=k)=F(k)-F(k-1)=e^{-\lambda(k-1)}-e^{-\lambda k}=(e^{-\lambda})^
 \begin{solution}
 对 Borel 集 $B$，$f^{-1}(B)$ 是 Borel 集，所以
 \[
-P(f(X)\in B)=P(X\in f^{-1}(B))=\mu_X(f^{-1}(B))=\mu_Y(f^{-1}(B))=P(f(Y)\in B).
+\P(f(X)\in B)=\P(X\in f^{-1}(B))=\mu_X(f^{-1}(B))=\mu_Y(f^{-1}(B))=\P(f(Y)\in B).
 \]
-注意 $X,Y$ 可以在不同的概率空间上，等式两端的 $P$ 也是不同的；我们只用到了它们的分布相同。
+注意 $X,Y$ 可以在不同的概率空间上，等式两端的 $\P$ 也是不同的；我们只用到了它们的分布相同。
 \end{solution}
 
 \item\label{ex:distributions:A8} 设 $X$ 是随机变量，$F$ 是它的分布函数。求 $\max\{X,0\}$、$\abs X$、$-X$ 的分布函数（用 $F$ 表示）。
 \begin{solution}
 \begin{itemize}
-\item $\max\{X,0\}\geqslant0$。$x<0$ 时 $P(\max\{X,0\}\leqslant x)=0$；$x\geqslant0$ 时，$\max\{X,0\}\leqslant x\iff X\leqslant x$，概率为 $F(x)$。
-\item $\abs X$：$x<0$ 时为 $0$；$x\geqslant0$ 时 $P(-x\leqslant X\leqslant x)=F(x)-F((-x)-)$。
-\item $-X$：$P(-X\leqslant x)=P(X\geqslant-x)=1-P(X<-x)=1-F((-x)-)$。
+\item $\max\{X,0\}\geqslant0$。$x<0$ 时 $\P(\max\{X,0\}\leqslant x)=0$；$x\geqslant0$ 时，$\max\{X,0\}\leqslant x\iff X\leqslant x$，概率为 $F(x)$。
+\item $\abs X$：$x<0$ 时为 $0$；$x\geqslant0$ 时 $\P(-x\leqslant X\leqslant x)=F(x)-F((-x)-)$。
+\item $-X$：$\P(-X\leqslant x)=\P(X\geqslant-x)=1-\P(X<-x)=1-F((-x)-)$。
 \end{itemize}
 后两个公式中出现了左极限，这是因为事件包含端点 $-x$。若 $F$ 连续，左极限可以换成 $F(-x)$。
 \end{solution}
@@ -571,13 +571,13 @@ P(f(X)\in B)=P(X\in f^{-1}(B))=\mu_X(f^{-1}(B))=\mu_Y(f^{-1}(B))=P(f(Y)\in B).
 令 $y\downarrow x$，$\limsup_{y\downarrow x}\abs{F(y)-F(x)}\leqslant2\varepsilon$。$\varepsilon$ 任意，$F$ 在 $x$ 右连续。这是“一致收敛保持连续性”的论证。
 \end{solution}
 
-\item\label{ex:distributions:A10} 关于\egref{ex:distributions:two-coins} 中的不等式 $P(\mathrm{Bin}(n,p)\geqslant k)\leqslant P(\mathrm{Bin}(n,q)\geqslant k)$（$p\leqslant q$）。
+\item\label{ex:distributions:A10} 关于\egref{ex:distributions:two-coins} 中的不等式 $\P(\mathrm{Bin}(n,p)\geqslant k)\leqslant \P(\mathrm{Bin}(n,q)\geqslant k)$（$p\leqslant q$）。
 \begin{questions}
 \item 不用耦合，直接证明 $n=2$，$k=1$ 与 $k=2$ 时的不等式。
 \begin{solution}
-$P(\mathrm{Bin}(2,p)\geqslant1)=1-(1-p)^2$，$P(\mathrm{Bin}(2,p)\geqslant2)=p^2$，两者在 $p\in[0,1]$ 上都是递增函数，所以 $p\leqslant q$ 时不等式成立。
+$\P(\mathrm{Bin}(2,p)\geqslant1)=1-(1-p)^2$，$\P(\mathrm{Bin}(2,p)\geqslant2)=p^2$，两者在 $p\in[0,1]$ 上都是递增函数，所以 $p\leqslant q$ 时不等式成立。
 \end{solution}
-\item 证明：对 $k\geqslant1$，$p\mapsto P(\mathrm{Bin}(n,p)\geqslant k)$ 的导数为 $n\binom{n-1}{k-1}p^{k-1}(1-p)^{n-k}\geqslant0$，从而得到另一个证明。
+\item 证明：对 $k\geqslant1$，$p\mapsto \P(\mathrm{Bin}(n,p)\geqslant k)$ 的导数为 $n\binom{n-1}{k-1}p^{k-1}(1-p)^{n-k}\geqslant0$，从而得到另一个证明。
 \begin{solution}
 对 $\sum_{j=k}^n\binom njp^j(1-p)^{n-j}$ 逐项求导：
 \[
@@ -585,7 +585,7 @@ $P(\mathrm{Bin}(2,p)\geqslant1)=1-(1-p)^2$，$P(\mathrm{Bin}(2,p)\geqslant2)=p^2
 \]
 利用 $j\binom nj=n\binom{n-1}{j-1}$，$(n-j)\binom nj=n\binom{n-1}j$，并记 $a_j=\binom{n-1}jp^j(1-p)^{n-1-j}$（$a_n=0$），上式等于 $n(a_{j-1}-a_j)$。对 $j=k,\dots,n$ 求和，逐项相消：
 \[
-\frac{d}{dp}P(\mathrm{Bin}(n,p)\geqslant k)=n(a_{k-1}-a_n)=n\binom{n-1}{k-1}p^{k-1}(1-p)^{n-k}\geqslant0 .
+\frac{d}{dp}\P(\mathrm{Bin}(n,p)\geqslant k)=n(a_{k-1}-a_n)=n\binom{n-1}{k-1}p^{k-1}(1-p)^{n-k}\geqslant0 .
 \]
 所以概率是 $p$ 的不减函数。与耦合的证明比较：这里需要一点组合恒等式的技巧，而耦合的证明一个求和都没有算，并且可以推广到许多没有显式公式的情形。
 \end{solution}
@@ -593,25 +593,25 @@ $P(\mathrm{Bin}(2,p)\geqslant1)=1-(1-p)^2$，$P(\mathrm{Bin}(2,p)\geqslant2)=p^2
 \end{exercises}
 
 \begin{probleme}{B}{Cantor 分布的概率构造}
-设 $(\Omega,\cF,P)$ 上的 $\xi_1,\xi_2,\dots$ 满足 \eqref{eq:distributions:fair}。令 $X=\sum_{n=1}^\infty2\xi_n3^{-n}$。本题证明 $X$ 服从 Cantor 分布。记 $F$ 为 Cantor 函数，$C_n$、$C$ 如\egref{ex:distributions:cantor}。
+设 $(\Omega,\cF,\P)$ 上的 $\xi_1,\xi_2,\dots$ 满足 \eqref{eq:distributions:fair}。令 $X=\sum_{n=1}^\infty2\xi_n3^{-n}$。本题证明 $X$ 服从 Cantor 分布。记 $F$ 为 Cantor 函数，$C_n$、$C$ 如\egref{ex:distributions:cantor}。
 \begin{questions}
 \item 证明 $X$ 是随机变量，取值于 $C$。（提示：前 $n$ 位决定了 $X$ 落在 $C_n$ 的哪一个区间中。）
 \begin{solution}
 部分和 $\sum_{k\leqslant n}2\xi_k3^{-k}$ 是随机变量，单调递增趋于 $X$，由定理~\ref{thm:random-variables:limits}，$X$ 是随机变量。$X(\omega)$ 的三进制展开的各位是 $2\xi_n(\omega)\in\{0,2\}$，由习题 A4-2)（第~\ref{lec:extension-of-measures} 讲），$X(\omega)\in C$。
 \end{solution}
-\item 设 $J$ 是 $C_n$ 从左数第 $j$ 个区间。证明 $\{X\in J\}=\{(\xi_1,\dots,\xi_n)=b^{(j-1)}\}$，其中 $b^{(j-1)}$ 是 $j-1$ 的 $n$ 位二进制表示。从而 $P(X\in J)=2^{-n}$。
+\item 设 $J$ 是 $C_n$ 从左数第 $j$ 个区间。证明 $\{X\in J\}=\{(\xi_1,\dots,\xi_n)=b^{(j-1)}\}$，其中 $b^{(j-1)}$ 是 $j-1$ 的 $n$ 位二进制表示。从而 $\P(X\in J)=2^{-n}$。
 \begin{solution}
 由第~\ref{lec:extension-of-measures} 讲习题 A4-2) 的第一步，$C_n$ 的区间是 $[c(\varepsilon),c(\varepsilon)+3^{-n}]$，$\varepsilon\in\{0,2\}^n$，$c(\varepsilon)=\sum_{k\leqslant n}\varepsilon_k3^{-k}$。不同 $\varepsilon$ 的 $c(\varepsilon)$ 的大小顺序就是 $\varepsilon$ 的字典序（第一个不同的位置决定大小，与 A4-3) 中单射性的论证相同），也就是 $\varepsilon/2$ 作为 $n$ 位二进制数的大小顺序。所以从左数第 $j$ 个区间对应 $\varepsilon/2=b^{(j-1)}$。
 
-令 $c_n=\sum_{k\leqslant n}2\xi_k3^{-k}$，则 $0\leqslant X-c_n\leqslant\sum_{k>n}2\cdot3^{-k}=3^{-n}$，所以 $X$ 落在标号为 $(2\xi_1,\dots,2\xi_n)$ 的区间中。$C_n$ 的区间两两不交，$X\in J$ 当且仅当 $(\xi_1,\dots,\xi_n)=b^{(j-1)}$。由 \eqref{eq:distributions:fair}，$P(X\in J)=2^{-n}$。
+令 $c_n=\sum_{k\leqslant n}2\xi_k3^{-k}$，则 $0\leqslant X-c_n\leqslant\sum_{k>n}2\cdot3^{-k}=3^{-n}$，所以 $X$ 落在标号为 $(2\xi_1,\dots,2\xi_n)$ 的区间中。$C_n$ 的区间两两不交，$X\in J$ 当且仅当 $(\xi_1,\dots,\xi_n)=b^{(j-1)}$。由 \eqref{eq:distributions:fair}，$\P(X\in J)=2^{-n}$。
 \end{solution}
-\item 设 $J=[s,s+3^{-n}]$ 是 $C_n$ 的第 $j$ 个区间。证明 $P(X\leqslant s)=(j-1)2^{-n}$，$P(X\leqslant s+3^{-n})=j2^{-n}$，并与 $F$ 在这两点的值比较。
+\item 设 $J=[s,s+3^{-n}]$ 是 $C_n$ 的第 $j$ 个区间。证明 $\P(X\leqslant s)=(j-1)2^{-n}$，$\P(X\leqslant s+3^{-n})=j2^{-n}$，并与 $F$ 在这两点的值比较。
 \begin{solution}
 设 $J_1,\dots,J_{2^n}$ 是 $C_n$ 的区间（从左到右）。$X$ 恰好落在其中一个。若 $X\in J_i$，$i<j$，则 $X<s$；若 $i>j$，则 $X>s+3^{-n}$；若 $i=j$，则 $s\leqslant X\leqslant s+3^{-n}$。所以
 \[
 \{X\leqslant s\}=\bigcup_{i<j}\{X\in J_i\}\cup\{X=s\},\qquad\{X\leqslant s+3^{-n}\}=\bigcup_{i\leqslant j}\{X\in J_i\}.
 \]
-$\{X=s\}$ 的概率为 $0$：对每个 $m\geqslant n$，它含于“$X$ 落在 $C_m$ 中含 $s$ 的那个区间”，概率为 $2^{-m}$（由 B2)，注意 $s\in C$ 只属于 $C_m$ 的一个区间）。由 B2)，$P(X\leqslant s)=(j-1)2^{-n}$，$P(X\leqslant s+3^{-n})=j2^{-n}$。
+$\{X=s\}$ 的概率为 $0$：对每个 $m\geqslant n$，它含于“$X$ 落在 $C_m$ 中含 $s$ 的那个区间”，概率为 $2^{-m}$（由 B2)，注意 $s\in C$ 只属于 $C_m$ 的一个区间）。由 B2)，$\P(X\leqslant s)=(j-1)2^{-n}$，$\P(X\leqslant s+3^{-n})=j2^{-n}$。
 
 另一方面，由\egref{ex:distributions:cantor} 的构造，$F_m$（$m\geqslant n$）在 $J$ 的两个端点处分别取 $(j-1)2^{-n}$ 与 $j2^{-n}$，所以 $F$ 也是。两者相等。
 \end{solution}
@@ -625,13 +625,13 @@ $x<0$ 时二者都是 $0$，$x\geqslant1$ 时都是 $1$。设 $0\leqslant x<1$�
 
 $n$ 任意，所以 $F_X=F$。
 \end{solution}
-\item 令 $X'=\sum_{n\geqslant1}2\xi_{n+1}3^{-n}$，则 $X=\frac23\xi_1+\frac13X'$，且 $\xi_2,\xi_3,\dots$ 也满足 \eqref{eq:distributions:fair}。仿照 B2)--B4)，证明对 $x\in[0,1]$，$P(\xi_1=0,\ X'\leqslant x)=\frac12F(x)$，$P(\xi_1=1,\ X'\leqslant x)=\frac12F(x)$。由此推出 Cantor 函数的\term{自相似性}：$F(x/3)=\frac12F(x)$，$F(\frac23+\frac x3)=\frac12+\frac12F(x)$。
+\item 令 $X'=\sum_{n\geqslant1}2\xi_{n+1}3^{-n}$，则 $X=\frac23\xi_1+\frac13X'$，且 $\xi_2,\xi_3,\dots$ 也满足 \eqref{eq:distributions:fair}。仿照 B2)--B4)，证明对 $x\in[0,1]$，$\P(\xi_1=0,\ X'\leqslant x)=\frac12F(x)$，$\P(\xi_1=1,\ X'\leqslant x)=\frac12F(x)$。由此推出 Cantor 函数的\term{自相似性}：$F(x/3)=\frac12F(x)$，$F(\frac23+\frac x3)=\frac12+\frac12F(x)$。
 \begin{solution}
-\emph{$\xi_2,\xi_3,\dots$ 满足 \eqref{eq:distributions:fair}。}$P(\xi_2=a_1,\dots,\xi_{n+1}=a_n)=\sum_{a_0\in\{0,1\}}P(\xi_1=a_0,\xi_2=a_1,\dots)=2\cdot2^{-n-1}=2^{-n}$。
+\emph{$\xi_2,\xi_3,\dots$ 满足 \eqref{eq:distributions:fair}。}$\P(\xi_2=a_1,\dots,\xi_{n+1}=a_n)=\sum_{a_0\in\{0,1\}}\P(\xi_1=a_0,\xi_2=a_1,\dots)=2\cdot2^{-n-1}=2^{-n}$。
 
-\emph{联合概率。}把 B2) 中的事件换成 $\{\xi_1=0\}\cap\{(\xi_2,\dots,\xi_{n+1})=b^{(j-1)}\}$，它的概率是 $2^{-n-1}$，所以 $P(\xi_1=0,X'\in J)=\frac12\cdot2^{-n}$。B3)、B4) 的论证逐字照搬（每个概率都乘以 $\frac12$），得到 $P(\xi_1=0,X'\leqslant x)=\frac12F(x)$。$\xi_1=1$ 的情形相同。
+\emph{联合概率。}把 B2) 中的事件换成 $\{\xi_1=0\}\cap\{(\xi_2,\dots,\xi_{n+1})=b^{(j-1)}\}$，它的概率是 $2^{-n-1}$，所以 $\P(\xi_1=0,X'\in J)=\frac12\cdot2^{-n}$。B3)、B4) 的论证逐字照搬（每个概率都乘以 $\frac12$），得到 $\P(\xi_1=0,X'\leqslant x)=\frac12F(x)$。$\xi_1=1$ 的情形相同。
 
-\emph{自相似。}设 $x\in[0,1]$。若 $\xi_1=1$，则 $X\geqslant\frac23>\frac x3$；若 $\xi_1=0$，则 $X=\frac13X'$，$X\leqslant\frac x3\iff X'\leqslant x$。所以 $F(\frac x3)=P(X\leqslant\frac x3)=P(\xi_1=0,X'\leqslant x)=\frac12F(x)$。同样，$\xi_1=0$ 时 $X\leqslant\frac13\leqslant\frac23+\frac x3$；$\xi_1=1$ 时 $X=\frac23+\frac13X'$。所以 $F(\frac23+\frac x3)=P(\xi_1=0)+P(\xi_1=1,X'\leqslant x)=\frac12+\frac12F(x)$。
+\emph{自相似。}设 $x\in[0,1]$。若 $\xi_1=1$，则 $X\geqslant\frac23>\frac x3$；若 $\xi_1=0$，则 $X=\frac13X'$，$X\leqslant\frac x3\iff X'\leqslant x$。所以 $F(\frac x3)=\P(X\leqslant\frac x3)=\P(\xi_1=0,X'\leqslant x)=\frac12F(x)$。同样，$\xi_1=0$ 时 $X\leqslant\frac13\leqslant\frac23+\frac x3$；$\xi_1=1$ 时 $X=\frac23+\frac13X'$。所以 $F(\frac23+\frac x3)=\P(\xi_1=0)+\P(\xi_1=1,X'\leqslant x)=\frac12+\frac12F(x)$。
 
 自相似性说的是：Cantor 函数在 $[0,\frac13]$ 上的图像是整个图像横向压缩为 $\frac13$、纵向压缩为 $\frac12$；在 $[\frac23,1]$ 上是同样压缩后再向上平移 $\frac12$。
 \end{solution}
@@ -643,7 +643,7 @@ $n$ 任意，所以 $F_X=F$。
 \[
 \{U<y\}\subseteq\{(\xi_n)\leqslant_{\mathrm{lex}}b\}\subseteq\{U\leqslant y\}.
 \]
-由定理~\ref{thm:distributions:coins-to-uniform}，$U$ 均匀分布，两端的概率都是 $y$。于是由 B4)，$F(x)=P(X\leqslant x)=y=\sum_n(\varepsilon_n/2)2^{-n}$。
+由定理~\ref{thm:distributions:coins-to-uniform}，$U$ 均匀分布，两端的概率都是 $y$。于是由 B4)，$F(x)=\P(X\leqslant x)=y=\sum_n(\varepsilon_n/2)2^{-n}$。
 
 这说明：Cantor 函数把 $x$ 的三进制展开（数字 $0,2$）“读成”二进制展开（数字 $0,1$）。$X$ 与 $U$ 由同一串硬币驱动，$F(X)=U$。
 \end{solution}
@@ -655,7 +655,7 @@ $n$ 任意，所以 $F_X=F$。
 \[
 d_{TV}(\mu,\nu)=\sup_{A\subseteq D}\abs{\mu(A)-\nu(A)}.
 \]
-本题证明 \term{耦合不等式}（coupling inequality）及其等号成立条件：$d_{TV}(\mu,\nu)=\min\{P(X\neq Y):(X,Y)\ \text{是}\ \mu,\nu\ \text{的耦合}\}$。
+本题证明 \term{耦合不等式}（coupling inequality）及其等号成立条件：$d_{TV}(\mu,\nu)=\min\{\P(X\neq Y):(X,Y)\ \text{是}\ \mu,\nu\ \text{的耦合}\}$。
 \begin{questions}
 \item 证明 $d_{TV}(\mu,\nu)=\frac12\sum_{x\in D}\abs{\mu(x)-\nu(x)}=1-\sum_{x\in D}\min\{\mu(x),\nu(x)\}$，并且上确界在 $A=\{x:\mu(x)>\nu(x)\}$ 处取到。
 \begin{solution}
@@ -668,16 +668,16 @@ d_{TV}(\mu,\nu)=\sup_{A\subseteq D}\abs{\mu(A)-\nu(A)}.
 \]
 （丢掉了非正的项，又加上了非负的项）。同理 $\nu(A)-\mu(A)\leqslant\nu(B')-\mu(B')$。又 $\sum_x(\mu(x)-\nu(x))=1-1=0$，所以 $\mu(B)-\nu(B)=\nu(B')-\mu(B')$，两者之和是 $\sum_x\abs{\mu(x)-\nu(x)}$。于是 $d_{TV}=\mu(B)-\nu(B)=\frac12\sum_x\abs{\mu(x)-\nu(x)}$，在 $A=B$ 处取到。最后，$\mu(B)-\nu(B)=\sum_x(\mu(x)-\min\{\mu(x),\nu(x)\})=1-\sum_x\min\{\mu(x),\nu(x)\}$（$x\notin B$ 时括号内为 $0$）。
 \end{solution}
-\item 设 $(X,Y)$ 是任意耦合。证明对任意 $A$，$\mu(A)-\nu(A)=P(X\in A)-P(Y\in A)\leqslant P(X\in A,Y\notin A)\leqslant P(X\neq Y)$。从而 $d_{TV}(\mu,\nu)\leqslant P(X\neq Y)$。
+\item 设 $(X,Y)$ 是任意耦合。证明对任意 $A$，$\mu(A)-\nu(A)=\P(X\in A)-\P(Y\in A)\leqslant \P(X\in A,Y\notin A)\leqslant \P(X\neq Y)$。从而 $d_{TV}(\mu,\nu)\leqslant \P(X\neq Y)$。
 \begin{solution}
-$P(X\in A)=P(X\in A,Y\in A)+P(X\in A,Y\notin A)$，$P(Y\in A)=P(X\in A,Y\in A)+P(X\notin A,Y\in A)$，相减得
+$\P(X\in A)=\P(X\in A,Y\in A)+\P(X\in A,Y\notin A)$，$\P(Y\in A)=\P(X\in A,Y\in A)+\P(X\notin A,Y\in A)$，相减得
 \[
 \begin{aligned}
-P(X\in A)-P(Y\in A)&=P(X\in A,Y\notin A)-P(X\notin A,Y\in A)\\
-&\leqslant P(X\in A,Y\notin A).
+\P(X\in A)-\P(Y\in A)&=\P(X\in A,Y\notin A)-\P(X\notin A,Y\in A)\\
+&\leqslant \P(X\in A,Y\notin A).
 \end{aligned}
 \]
-而 $\{X\in A,Y\notin A\}\subseteq\{X\neq Y\}$。交换 $X,Y$ 得 $\nu(A)-\mu(A)\leqslant P(X\neq Y)$。对 $A$ 取上确界即得。
+而 $\{X\in A,Y\notin A\}\subseteq\{X\neq Y\}$。交换 $X,Y$ 得 $\nu(A)-\mu(A)\leqslant \P(X\neq Y)$。对 $A$ 取上确界即得。
 \end{solution}
 \item 记 $m(x)=\min\{\mu(x),\nu(x)\}$，$\delta=d_{TV}(\mu,\nu)$，设 $0<\delta<1$。在可数集 $D\times D$ 上定义
 \[
@@ -694,11 +694,11 @@ $\pi\geqslant0$。由 C1)，$\sum_y(\nu(y)-m(y))=1-\sum_ym(y)=\delta$，同理 $
 \]
 再对 $x$ 求和，$\sum_{x,y}\pi(x,y)=1$。
 \end{solution}
-\item 取离散概率空间 $(D\times D,2^{D\times D},\pi)$ 与坐标投影 $(X,Y)$。证明 $P(X\neq Y)\leqslant\delta$，从而等号成立。（提示：$\mu(x)-m(x)$ 与 $\nu(x)-m(x)$ 不能同时为正。）处理 $\delta=0$ 与 $\delta=1$ 的情形。
+\item 取离散概率空间 $(D\times D,2^{D\times D},\pi)$ 与坐标投影 $(X,Y)$。证明 $\P(X\neq Y)\leqslant\delta$，从而等号成立。（提示：$\mu(x)-m(x)$ 与 $\nu(x)-m(x)$ 不能同时为正。）处理 $\delta=0$ 与 $\delta=1$ 的情形。
 \begin{solution}
-由 C3)，$(X,Y)$ 是 $\mu,\nu$ 的耦合。在对角线上，$m(x)$ 等于 $\mu(x)$ 或 $\nu(x)$，所以 $(\mu(x)-m(x))(\nu(x)-m(x))=0$，$\pi(x,x)=m(x)$。于是 $P(X=Y)=\sum_xm(x)=1-\delta$，$P(X\neq Y)=\delta$。结合 C2)，这个耦合达到了下界，“$\min$”是取得到的。
+由 C3)，$(X,Y)$ 是 $\mu,\nu$ 的耦合。在对角线上，$m(x)$ 等于 $\mu(x)$ 或 $\nu(x)$，所以 $(\mu(x)-m(x))(\nu(x)-m(x))=0$，$\pi(x,x)=m(x)$。于是 $\P(X=Y)=\sum_xm(x)=1-\delta$，$\P(X\neq Y)=\delta$。结合 C2)，这个耦合达到了下界，“$\min$”是取得到的。
 
-$\delta=0$：$\mu=\nu$，取 $X=Y$（$\pi(x,x)=\mu(x)$）。$\delta=1$：$\sum m=0$，任何耦合（比如 $\pi(x,y)=\mu(x)\nu(y)$）都有 $P(X\neq Y)\leqslant1=\delta$。
+$\delta=0$：$\mu=\nu$，取 $X=Y$（$\pi(x,x)=\mu(x)$）。$\delta=1$：$\sum m=0$，任何耦合（比如 $\pi(x,y)=\mu(x)\nu(y)$）都有 $\P(X\neq Y)\leqslant1=\delta$。
 
 这个耦合的想法是：尽量让 $X=Y$，能重合的概率是 $\sum_xm(x)$；剩下的部分各自独立地抽取。
 \end{solution}
@@ -834,38 +834,38 @@ I_j&=\int_x^\infty y^{-2j-1}\cdot y\varphi(y)\dd y=\Bigl[-y^{-2j-1}\varphi(y)\Bi
 \begin{probleme}{G}{分拆二进制各位}
 在 $([0,1),\lambda)$ 上，$\xi_n$ 是二进制各位（命题~\ref{prop:distributions:binary-digits}）。取一个双射 $\N\times\N\to\N$，$(k,m)\mapsto n(k,m)$，令 $U_k=\sum_{m\geqslant1}\xi_{n(k,m)}2^{-m}$。
 \begin{questions}
-\item 设 $N$ 是正整数，$b_1,\dots,b_N\in\{0,1\}$，$i_1<\cdots<i_N$ 是正整数。证明 $P(\xi_{i_1}=b_1,\dots,\xi_{i_N}=b_N)=2^{-N}$。（提示：把事件写成 $\{\xi_1,\dots,\xi_{i_N}\}$ 的若干取值组合的不交并，数一数组合的个数。）
+\item 设 $N$ 是正整数，$b_1,\dots,b_N\in\{0,1\}$，$i_1<\cdots<i_N$ 是正整数。证明 $\P(\xi_{i_1}=b_1,\dots,\xi_{i_N}=b_N)=2^{-N}$。（提示：把事件写成 $\{\xi_1,\dots,\xi_{i_N}\}$ 的若干取值组合的不交并，数一数组合的个数。）
 \begin{solution}
 记 $L=i_N$。事件 $\{\xi_{i_1}=b_1,\dots,\xi_{i_N}=b_N\}$ 是 $\{\xi_1=a_1,\dots,\xi_L=a_L\}$ 的不交并，其中 $a\in\{0,1\}^L$ 取遍满足 $a_{i_k}=b_k$（$k=1,\dots,N$）的那些序列。这样的 $a$ 有 $2^{L-N}$ 个（其余 $L-N$ 个位置任意），每个对应的事件概率为 $2^{-L}$（命题~\ref{prop:distributions:binary-digits}(2)），所以概率为 $2^{L-N}\cdot2^{-L}=2^{-N}$。
 \end{solution}
 \item 证明对每个 $k$，$\{\xi_{n(k,m)}\}_{m\geqslant1}$ 满足 \eqref{eq:distributions:fair}，从而 $U_k$ 服从均匀分布。
 \begin{solution}
-固定 $k$，令 $\eta_m=\xi_{n(k,m)}$。$n(k,1),\dots,n(k,M)$ 是 $M$ 个不同的正整数（双射），按大小排列后用 G1)，$P(\eta_1=a_1,\dots,\eta_M=a_M)=2^{-M}$。由定理~\ref{thm:distributions:coins-to-uniform}，$U_k=\sum_m\eta_m2^{-m}$ 服从均匀分布。
+固定 $k$，令 $\eta_m=\xi_{n(k,m)}$。$n(k,1),\dots,n(k,M)$ 是 $M$ 个不同的正整数（双射），按大小排列后用 G1)，$\P(\eta_1=a_1,\dots,\eta_M=a_M)=2^{-M}$。由定理~\ref{thm:distributions:coins-to-uniform}，$U_k=\sum_m\eta_m2^{-m}$ 服从均匀分布。
 \end{solution}
-\item 设 $x_1,\dots,x_K$ 都是形如 $j2^{-M}$ 的二进有理数。证明 $P(U_1<x_1,\dots,U_K<x_K)=x_1\cdots x_K$。
+\item 设 $x_1,\dots,x_K$ 都是形如 $j2^{-M}$ 的二进有理数。证明 $\P(U_1<x_1,\dots,U_K<x_K)=x_1\cdots x_K$。
 \begin{solution}
 写 $x_k=j_k2^{-M}$，$0\leqslant j_k\leqslant2^M$。令 $J_k=\sum_{m\leqslant M}\xi_{n(k,m)}2^{M-m}$ 为 $U_k$ 的前 $M$ 位组成的整数。与定理~\ref{thm:distributions:coins-to-uniform} 的证明相同：若 $J_k\geqslant j_k$，则 $U_k\geqslant J_k2^{-M}\geqslant x_k$；若 $J_k<j_k$，则 $U_k\leqslant(J_k+1)2^{-M}\leqslant x_k$，等号只在 $U_k$ 第 $M$ 位以后全为 $1$ 时成立，这是概率为零的事件（定理~\ref{thm:distributions:coins-to-uniform} 后的注记，对 $\eta_m$ 用）。所以 $\{U_k<x_k\}$ 与 $\{J_k<j_k\}$ 只差一个零概率事件，
 \[
-P(U_1<x_1,\dots,U_K<x_K)=P(J_1<j_1,\dots,J_K<j_K).
+\P(U_1<x_1,\dots,U_K<x_K)=\P(J_1<j_1,\dots,J_K<j_K).
 \]
 右边的事件由 $KM$ 个不同下标的 $\xi_{n(k,m)}$（$k\leqslant K$，$m\leqslant M$）决定，它是 $\prod_kj_k$ 种取值组合的不交并，由 G1) 每种组合的概率为 $2^{-KM}$。所以概率为 $\prod_kj_k2^{-M}=\prod_kx_k$。
 \end{solution}
-\item 由 G3) 与逼近论证证明：对一切 $x_1,\dots,x_K\in[0,1]$，$P(U_1\leqslant x_1,\dots,U_K\leqslant x_K)=x_1\cdots x_K$。
+\item 由 G3) 与逼近论证证明：对一切 $x_1,\dots,x_K\in[0,1]$，$\P(U_1\leqslant x_1,\dots,U_K\leqslant x_K)=x_1\cdots x_K$。
 \begin{solution}
-由 G2)，$P(U_k=y)=0$ 对一切 $y$ 成立，所以把 $\leqslant$ 换成 $<$ 不改变概率。对每个 $k$ 取二进有理数 $d_k'\leqslant x_k\leqslant d_k$，$d_k'$、$d_k$ 与 $x_k$ 相差不超过 $2^{-M}$（$x_k=1$ 时取 $d_k=1$）。由单调性与 G3)，
+由 G2)，$\P(U_k=y)=0$ 对一切 $y$ 成立，所以把 $\leqslant$ 换成 $<$ 不改变概率。对每个 $k$ 取二进有理数 $d_k'\leqslant x_k\leqslant d_k$，$d_k'$、$d_k$ 与 $x_k$ 相差不超过 $2^{-M}$（$x_k=1$ 时取 $d_k=1$）。由单调性与 G3)，
 \[
 \begin{aligned}
-\prod_kd_k'&=P(U_k<d_k',\ k\leqslant K)\leqslant P(U_k<x_k,\ k\leqslant K)\\
-&\leqslant P(U_k<d_k,\ k\leqslant K)=\prod_kd_k .
+\prod_kd_k'&=\P(U_k<d_k',\ k\leqslant K)\leqslant \P(U_k<x_k,\ k\leqslant K)\\
+&\leqslant \P(U_k<d_k,\ k\leqslant K)=\prod_kd_k .
 \end{aligned}
 \]
 令 $M\to\infty$，两端都趋于 $\prod_kx_k$。
 \end{solution}
-\item 结合分位数变换，说明：给定任意一列分布函数 $G_1,G_2,\dots$，可以在 $([0,1),\lambda)$ 上构造随机变量 $Y_k=G_k^{-1}(U_k)$，使对任意 $K$ 与 $y_1,\dots,y_K$，$P(Y_1\leqslant y_1,\dots,Y_K\leqslant y_K)=\prod_kG_k(y_k)$。以后我们会说：$Y_1,Y_2,\dots$ 是独立的，分布分别为 $G_k$。（注意 $U_k$ 可能等于 $0$，这时 $G_k^{-1}(0)$ 需要另外约定，但这只发生在零概率事件上。）
+\item 结合分位数变换，说明：给定任意一列分布函数 $G_1,G_2,\dots$，可以在 $([0,1),\lambda)$ 上构造随机变量 $Y_k=G_k^{-1}(U_k)$，使对任意 $K$ 与 $y_1,\dots,y_K$，$\P(Y_1\leqslant y_1,\dots,Y_K\leqslant y_K)=\prod_kG_k(y_k)$。以后我们会说：$Y_1,Y_2,\dots$ 是独立的，分布分别为 $G_k$。（注意 $U_k$ 可能等于 $0$，这时 $G_k^{-1}(0)$ 需要另外约定，但这只发生在零概率事件上。）
 \begin{solution}
 在 $\{0<U_k<1\}$ 上令 $Y_k=G_k^{-1}(U_k)$，在其余（零概率）的地方令 $Y_k=0$。由第~\ref{lec:random-variables} 讲习题~\exref{ex:random-variables:A1}（拼接）与 $G_k^{-1}$ 单调，$Y_k$ 是随机变量。在 $\{0<U_k<1\}$ 上，由引理~\ref{lem:distributions:quantile}，$Y_k\leqslant y_k\iff U_k\leqslant G_k(y_k)$。所以 $\bigcap_{k\leqslant K}\{Y_k\leqslant y_k\}$ 与 $\bigcap_{k\leqslant K}\{U_k\leqslant G_k(y_k)\}$ 只差一个零概率事件，由 G4)，
 \[
-P(Y_1\leqslant y_1,\dots,Y_K\leqslant y_K)=\prod_{k=1}^KG_k(y_k).
+\P(Y_1\leqslant y_1,\dots,Y_K\leqslant y_K)=\prod_{k=1}^KG_k(y_k).
 \]
 这样，一个均匀随机数就产生了任意多个“互不影响”的随机变量，分布可以任意指定。第~\ref{lec:independence} 讲构造独立随机变量序列时，用的就是这个方法。
 \end{solution}

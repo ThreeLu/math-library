@@ -19,7 +19,7 @@ Z_n=\frac{S_n-n/2}{\sqrt n/2}.
 \]
 中心极限定理说：$n$ 很大时，$Z_n$ 的直方图越来越像标准正态分布的钟形曲线，即
 \[
-P(Z_n\leqslant x)\to\Phi(x)=\int_{-\infty}^x\frac1{\sqrt{2\pi}}e^{-t^2/2}\dd t .
+\P(Z_n\leqslant x)\to\Phi(x)=\int_{-\infty}^x\frac1{\sqrt{2\pi}}e^{-t^2/2}\dd t .
 \]
 请注意：这里\emph{不是} $Z_n$ 本身收敛到某个随机变量。对一个具体的抛硬币序列，$Z_1,Z_2,Z_3,\dots$ 会一直上下乱跳，永远不会稳定下来。收敛的只是它的\emph{分布}，也就是“$Z_n$ 落在各个区间里的概率”。这就是\term{依分布收敛}（也叫\term{弱收敛}），记作 $Z_n\Rightarrow N(0,1)$。
 
@@ -50,7 +50,7 @@ P(Z_n\leqslant x)\to\Phi(x)=\int_{-\infty}^x\frac1{\sqrt{2\pi}}e^{-t^2/2}\dd t .
 \toprule
 测度论的说法 & 概率论的说法 & 意思\\
 \midrule
-测度空间 $(\Omega,\cF,\mu)$，$\mu(\Omega)=1$ & 概率空间 $(\Omega,\cF,P)$ & 全部可能的结果，及其概率\\
+测度空间 $(\Omega,\cF,\mu)$，$\mu(\Omega)=1$ & 概率空间 $(\Omega,\cF,\P)$ & 全部可能的结果，及其概率\\
 $\cF$ 中的集合 & 事件 & 可以问“发生了没有”的事情\\
 可测函数 & 随机变量 & 由试验结果决定的数\\
 像测度 $\mu\circ X^{-1}$ & 分布 $\mu_X$ & $X$ 落在各处的概率\\
@@ -69,11 +69,11 @@ Radon--Nikodym 导数 & 密度；以后的条件期望 & 一个测度相对另�
 \begin{enumerate}
 \item \textbf{几乎必然收敛} $X_n\to X$ a.s.：对几乎每一个样本点 $\omega$，数列 $X_n(\omega)$ 收敛到 $X(\omega)$。这就是“几乎处处的逐点收敛”。\\
 \emph{例子}：强大数定律，$S_n/n\to\frac12$ a.s.
-\item \textbf{依概率收敛} $X_n\to X$ in probability：对每个 $\varepsilon>0$，$P(\abs{X_n-X}>\varepsilon)\to0$。也就是说，对每个大的 $n$，“$X_n$ 与 $X$ 相差较大”这件事的概率很小。它比几乎必然收敛弱：允许每个 $\omega$ 都“偶尔”偏离一下，只要偏离的时刻越来越稀少。\\
+\item \textbf{依概率收敛} $X_n\to X$ in probability：对每个 $\varepsilon>0$，$\P(\abs{X_n-X}>\varepsilon)\to0$。也就是说，对每个大的 $n$，“$X_n$ 与 $X$ 相差较大”这件事的概率很小。它比几乎必然收敛弱：允许每个 $\omega$ 都“偶尔”偏离一下，只要偏离的时刻越来越稀少。\\
 \emph{例子}：弱大数定律。
 \item \textbf{$L^p$ 收敛} $X_n\to X$ in $L^p$：$E\abs{X_n-X}^p\to0$。这是“平均意义下”的收敛。\\
 \emph{例子}：$E(S_n/n-\frac12)^2=\frac1{4n}\to0$。
-\item \textbf{依分布收敛} $X_n\Rightarrow X$：$P(X_n\leqslant x)\to P(X\leqslant x)$（在 $X$ 的分布函数的连续点 $x$ 处）。它只比较\emph{分布}，根本不比较 $X_n$ 与 $X$ 的值；$X_n$ 与 $X$ 甚至可以定义在不同的概率空间上。\\
+\item \textbf{依分布收敛} $X_n\Rightarrow X$：$\P(X_n\leqslant x)\to \P(X\leqslant x)$（在 $X$ 的分布函数的连续点 $x$ 处）。它只比较\emph{分布}，根本不比较 $X_n$ 与 $X$ 的值；$X_n$ 与 $X$ 甚至可以定义在不同的概率空间上。\\
 \emph{例子}：中心极限定理。
 \end{enumerate}
 

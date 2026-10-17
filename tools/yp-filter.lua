@@ -20,7 +20,7 @@
 --    yp-thm-offset  numbered statements before this page (global mode)
 --    yp-sec-offset  sections before this page (section mode)
 --    yp-pdf         URL of the book PDF
---    yp-kicker, yp-status, yp-pdf-page   banner contents
+--    yp-kicker, yp-pdf-page   banner contents
 -- =====================================================================
 
 local stringify = pandoc.utils.stringify
@@ -187,7 +187,7 @@ local function take_head(blocks)
   for _, el in ipairs(first.content) do
     local m = marker(el)
     if m and info[m] == nil and (m == 'note' or m == 'group' or m == 'title'
-        or m == 'resume' or m == 'hwtitle') then
+        or m == 'resume') then
       info[m] = el.content
     elseif el.t == 'Span' and el.attributes['label'] and not info.label then
       info.label = el.attributes['label']
@@ -421,14 +421,8 @@ local function handle_div(div, ctx)
   if cls == 'ypexercises' then return exercises_div(div, ctx) end
   if cls == 'ypprobleme' then return probleme_div(div, ctx) end
   if cls == 'ypquestions' then return questions_div(div, ctx) end
-  if cls == 'summary' or cls == 'yphwbox' then
-    local blocks = pandoc.List(div.content)
-    local info = take_head(blocks)
-    blocks = walk_blocks(blocks, ctx)
-    if info.hwtitle then
-      blocks:insert(1, pandoc.Div({pandoc.Plain(info.hwtitle)}, {class = 'yp-hwbox-title'}))
-    end
-    return pandoc.Div(blocks, {class = cls == 'summary' and 'yp-summary' or 'yp-hwbox'})
+  if cls == 'summary' then
+    return pandoc.Div(walk_blocks(pandoc.List(div.content), ctx), {class = 'yp-summary'})
   end
   div.content = walk_blocks(pandoc.List(div.content), ctx)
   return div
@@ -494,15 +488,10 @@ function Pandoc(doc)
     end
   end
 
-  -- Banner: lecture number, review status, link into the PDF.
+  -- Banner: lecture number and a link into the PDF.
   local banner = pandoc.List()
   local kicker = stringify(doc.meta['yp-kicker'] or '')
   if kicker ~= '' then banner:insert(pandoc.Span({pandoc.Str(kicker)}, {class = 'yp-kicker'})) end
-  local status = stringify(doc.meta['yp-status'] or '')
-  if status ~= '' then
-    local cls = (status == '完成' or status == 'reviewed') and 'yp-status-done' or 'yp-status-draft'
-    banner:insert(pandoc.Span({pandoc.Str(status)}, {class = 'yp-status ' .. cls}))
-  end
   local pdfpage = stringify(doc.meta['yp-pdf-page'] or '')
   if pdf_url ~= '' and pdfpage ~= '' then
     banner:insert(pandoc.Link({pandoc.Str(lang == 'zh' and '在 PDF 中打开' or 'Open in PDF')},
@@ -513,7 +502,7 @@ function Pandoc(doc)
   local body_class = 'yp-body yp-' .. lang
   doc.blocks = {pandoc.Div(blocks, {class = body_class})}
   for _, k in ipairs({'yp-labels', 'yp-page', 'yp-lang', 'yp-numbering', 'yp-thm-offset',
-      'yp-sec-offset', 'yp-pdf', 'yp-kicker', 'yp-status', 'yp-pdf-page'}) do
+      'yp-sec-offset', 'yp-pdf', 'yp-kicker', 'yp-pdf-page'}) do
     doc.meta[k] = nil
   end
   return doc

@@ -22,8 +22,8 @@
 site:
   title: Mathematical Notes
   description: Lecture notes, research notes and surveys, written in LaTeX and read on the web.
-  author: Your Name                    # TODO: fill in
-  github: your-github-username         # TODO: fill in
+  author: threelu
+  github: threelu
   repo: math-library
 
 categories:

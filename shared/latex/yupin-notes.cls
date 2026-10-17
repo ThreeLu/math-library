@@ -387,6 +387,7 @@
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\Q}{\mathbb{Q}}
 \newcommand{\C}{\mathbb{C}}
+\renewcommand{\P}{\mathbb{P}}                       % 概率测度，全站统一写作 \P（排作 ℙ）
 % 花体字母 \cA … \cZ
 \newcommand{\cA}{\mathcal{A}}
 \newcommand{\cB}{\mathcal{B}}
@@ -424,7 +425,7 @@
 \newcommand{\iid}{i.i.d.}
 \newcommand{\eqd}{\stackrel{d}{=}}                   % 同分布
 \newcommand{\toas}{\xrightarrow{\text{a.s.}}}
-\newcommand{\toP}{\xrightarrow{P}}
+\newcommand{\toP}{\xrightarrow{\P}}
 \newcommand{\toLp}[1][p]{\xrightarrow{L^{#1}}}
 \newcommand{\dd}{\,\mathrm{d}}                       % 积分中的 d：\int f\dd\mu
 \newcommand{\abs}[1]{\lvert #1\rvert}

@@ -5,9 +5,9 @@
 \lecture{可测映射与随机变量，可测性的判别与运算，乘积 \texorpdfstring{$\sigma$}{σ}-代数与截口，广义实值随机变量，不可数个随机变量的上确界与经验分布函数，由随机变量生成的 \texorpdfstring{$\sigma$}{σ}-代数，简单函数逼近，函数形式的单调类定理，Doob--Dynkin 引理}
 \label{lec:random-variables}
 
-初等概率论把随机变量说成是“取值随机的量”。这个名字其实有些误导：随机变量既不随机，也不是变量，它是从样本空间 $\Omega$ 到 $\R$ 的一个完全确定的函数 $X$。随机性全部来自 $\omega$ 的选取：先按照概率 $P$ 随机地选出一个样本点 $\omega$，然后读出数值 $X(\omega)$。所以同一个样本空间上可以同时定义许多随机变量，比如说把硬币抛 $n$ 次，第一次的结果、正面的总数、最长的连续正面的长度，都是同一个 $\omega$ 的函数。
+初等概率论把随机变量说成是“取值随机的量”。这个名字其实有些误导：随机变量既不随机，也不是变量，它是从样本空间 $\Omega$ 到 $\R$ 的一个完全确定的函数 $X$。随机性全部来自 $\omega$ 的选取：先按照概率 $\P$ 随机地选出一个样本点 $\omega$，然后读出数值 $X(\omega)$。所以同一个样本空间上可以同时定义许多随机变量，比如说把硬币抛 $n$ 次，第一次的结果、正面的总数、最长的连续正面的长度，都是同一个 $\omega$ 的函数。
 
-对这个函数，我们只提一个要求：对每个 Borel 集 $B$，“$X$ 落在 $B$ 中”必须是一个事件，否则我们就无法谈论 $P(X\in B)$。这个要求只涉及 $\sigma$-代数 $\cF$，与概率测度 $P$ 无关。所以这一讲的全部内容都不涉及 $P$，它研究的是可测函数这一类对象本身：怎样判断一个函数可测，可测函数经过哪些运算仍然可测。结论是，分析中能够遇到的一切运算，包括四则运算、复合连续函数、取上下确界与极限，都不会破坏可测性。
+对这个函数，我们只提一个要求：对每个 Borel 集 $B$，“$X$ 落在 $B$ 中”必须是一个事件，否则我们就无法谈论 $\P(X\in B)$。这个要求只涉及 $\sigma$-代数 $\cF$，与概率测度 $\P$ 无关。所以这一讲的全部内容都不涉及 $\P$，它研究的是可测函数这一类对象本身：怎样判断一个函数可测，可测函数经过哪些运算仍然可测。结论是，分析中能够遇到的一切运算，包括四则运算、复合连续函数、取上下确界与极限，都不会破坏可测性。
 
 \topic{本讲用到的前文结果}
 
@@ -33,7 +33,7 @@ X^{-1}(B^c)=(X^{-1}(B))^c,\qquad X^{-1}\Bigl(\bigcup_iB_i\Bigr)=\bigcup_iX^{-1}(
 \[
 X^{-1}(B)\in\cF\qquad\text{对一切}\ B\in\cS,
 \]
-则称 $X$ 是从 $(\Omega,\cF)$ 到 $(S,\cS)$ 的\term{可测映射}（measurable map），也说 $X$ 是 $\cF/\cS$-可测的，或者在不致混淆时说 $X$ 是 \term{$\cF$-可测的}，记作 $X\in\cF$。当 $(\Omega,\cF,P)$ 是概率空间时，可测映射也称为\term{随机元}（random element）。特别地：
+则称 $X$ 是从 $(\Omega,\cF)$ 到 $(S,\cS)$ 的\term{可测映射}（measurable map），也说 $X$ 是 $\cF/\cS$-可测的，或者在不致混淆时说 $X$ 是 \term{$\cF$-可测的}，记作 $X\in\cF$。当 $(\Omega,\cF,\P)$ 是概率空间时，可测映射也称为\term{随机元}（random element）。特别地：
 \begin{enumerate}
 \item $(S,\cS)=(\R,\cR)$ 时，$X$ 称为\term{随机变量}（random variable）；
 \item $(S,\cS)=(\R^d,\cR^d)$ 时，$X$ 称为 $d$ 维\term{随机向量}（random vector）；
@@ -44,7 +44,7 @@ X^{-1}(B)\in\cF\qquad\text{对一切}\ B\in\cS,
 请比较拓扑空间之间连续映射的定义：连续映射是开集的原像为开集的映射，可测映射是可测集的原像为可测集的映射。两个定义形式完全相同，只是把“开集的全体”换成了“$\sigma$-代数”。这个类比在下面很多地方都有帮助。
 
 \begin{remark}[随机变量的概念与概率测度无关]
-定义中根本没有出现 $P$。同一个函数 $X$，在同一个可测空间上配以不同的概率测度，就有不同的“随机规律”。例如在 $([0,1],\cR\cap[0,1])$ 上令 $X(\omega)=\omega$。若 $P$ 是 $[0,1]$ 上的 Lebesgue 测度，则 $P(X\leqslant x)=x$（$0\leqslant x\leqslant1$），$X$ 是“均匀分布的”；若 $P=\delta_{1/2}$，则 $X=1/2$ 几乎必然成立，$X$ 是“常数”。反过来，可测性依赖于 $\sigma$-代数：一个函数可以对 $\cF$ 可测，而对更小的 $\cG\subseteq\cF$ 不可测。以后讨论条件期望与鞅时，我们会在同一个 $\Omega$ 上同时使用多个 $\sigma$-代数，那时“对哪个 $\sigma$-代数可测”就成为核心问题。
+定义中根本没有出现 $\P$。同一个函数 $X$，在同一个可测空间上配以不同的概率测度，就有不同的“随机规律”。例如在 $([0,1],\cR\cap[0,1])$ 上令 $X(\omega)=\omega$。若 $\P$ 是 $[0,1]$ 上的 Lebesgue 测度，则 $\P(X\leqslant x)=x$（$0\leqslant x\leqslant1$），$X$ 是“均匀分布的”；若 $\P=\delta_{1/2}$，则 $X=1/2$ 几乎必然成立，$X$ 是“常数”。反过来，可测性依赖于 $\sigma$-代数：一个函数可以对 $\cF$ 可测，而对更小的 $\cG\subseteq\cF$ 不可测。以后讨论条件期望与鞅时，我们会在同一个 $\Omega$ 上同时使用多个 $\sigma$-代数，那时“对哪个 $\sigma$-代数可测”就成为核心问题。
 \end{remark}
 
 \begin{example}\label{ex:random-variables:basic}
@@ -260,7 +260,7 @@ $\lim_nX_n(\omega)$ 存在且有限，当且仅当 $U(\omega)=\limsup_nX_n(\omeg
 \end{remark}
 
 \begin{definition}[几乎必然收敛]\label{def:random-variables:as}
-设 $(\Omega,\cF,P)$ 是概率空间，$X_n,X$ 是随机变量。若 $P(\{\omega:X_n(\omega)\to X(\omega)\})=1$，称 $X_n$ \term{几乎必然收敛}（converges almost surely）于 $X$，记作 $X_n\to X$ a.s.
+设 $(\Omega,\cF,\P)$ 是概率空间，$X_n,X$ 是随机变量。若 $\P(\{\omega:X_n(\omega)\to X(\omega)\})=1$，称 $X_n$ \term{几乎必然收敛}（converges almost surely）于 $X$，记作 $X_n\to X$ a.s.
 \end{definition}
 
 由定理~\ref{thm:random-variables:limits} 的证明，$\{X_n\to X\}=\bigcap_{k}\bigcup_N\bigcap_{n\geqslant N}\{\abs{X_n-X}<1/k\}\in\cF$，所以这个定义中的概率有意义。当极限只在一个零测集之外存在时，常令 $X_\infty=\limsup_nX_n$，它是广义实值随机变量，a.s. 等于极限。
@@ -298,7 +298,7 @@ X_t(\omega)=\lim_nX_{d_n}(\omega)\leqslant\sup_{s\in D}X_s(\omega).
 对 $t\in T$ 取上确界得 $\sup_{t\in T}X_t(\omega)\leqslant\sup_{s\in D}X_s(\omega)$。下确界同理。$D$ 是可数集，由定理~\ref{thm:random-variables:limits}，$\sup_{t\in D}X_t$ 与 $\inf_{t\in D}X_t$ 是广义实值随机变量。
 \end{proof}
 
-我们来看一个统计中的重要例子。设 $X_1,\dots,X_n$ 是概率空间 $(\Omega,\cF,P)$ 上的随机变量，我们把它们想成对某个量的 $n$ 次观测，比如 $n$ 个人的身高。令
+我们来看一个统计中的重要例子。设 $X_1,\dots,X_n$ 是概率空间 $(\Omega,\cF,\P)$ 上的随机变量，我们把它们想成对某个量的 $n$ 次观测，比如 $n$ 个人的身高。令
 \[
 F_n(x)=F_n(x,\omega)=\frac1n\sum_{i=1}^n\one_{\{X_i(\omega)\leqslant x\}},\qquad x\in\R,
 \]
@@ -499,7 +499,7 @@ $f|_E$ 对迹 $\sigma$-代数 $\cS\cap E=\{C\cap E:C\in\cS\}$ 可测，意思是
 
 \item\label{ex:random-variables:A3} 设 $f:\R\to\R$ 连续，$X_n\to X$ a.s.。证明 $f(X_n)\to f(X)$ a.s.
 \begin{solution}
-令 $\Omega_0=\{X_n\to X\}$，$P(\Omega_0)=1$。对 $\omega\in\Omega_0$，数列 $X_n(\omega)\to X(\omega)$，由 $f$ 的连续性 $f(X_n(\omega))\to f(X(\omega))$。所以 $\{f(X_n)\to f(X)\}\supseteq\Omega_0$。左边是事件（$f(X_n)$、$f(X)$ 是随机变量，定义~\ref{def:random-variables:as} 后的说明），概率不小于 $P(\Omega_0)=1$。
+令 $\Omega_0=\{X_n\to X\}$，$\P(\Omega_0)=1$。对 $\omega\in\Omega_0$，数列 $X_n(\omega)\to X(\omega)$，由 $f$ 的连续性 $f(X_n(\omega))\to f(X(\omega))$。所以 $\{f(X_n)\to f(X)\}\supseteq\Omega_0$。左边是事件（$f(X_n)$、$f(X)$ 是随机变量，定义~\ref{def:random-variables:as} 后的说明），概率不小于 $\P(\Omega_0)=1$。
 \end{solution}
 
 \item\label{ex:random-variables:A4} 称 $f:\R^d\to\R$ \term{下半连续}（lower semicontinuous），若对一切 $x$，$\liminf_{y\to x}f(y)\geqslant f(x)$。证明 $f$ 下半连续当且仅当对一切 $a$，$\{x:f(x)\leqslant a\}$ 是闭集，从而下半连续函数是 Borel 函数。

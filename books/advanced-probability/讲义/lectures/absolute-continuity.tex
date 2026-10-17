@@ -7,7 +7,7 @@
 
 第~\ref{lec:distributions} 讲中我们见到了三类分布：离散分布，有密度的分布，以及 Cantor 分布。现在有了积分，我们可以回答那里留下的一个问题：什么样的分布有密度？
 
-设随机变量 $X$ 有密度 $f$，即 $P(X\in B)=\int_Bf\dd\lambda$ 对一切 Borel 集 $B$ 成立。若 $\lambda(B)=0$，那么在零测集上的积分为零，于是 $P(X\in B)=0$。所以有密度的随机变量必须满足一个必要条件：\emph{Lebesgue 测度为零的集合，$X$ 落进去的概率也为零}。离散分布与 Cantor 分布都不满足这个条件：前者把全部概率放在一个可数集上，后者把全部概率放在 Cantor 集上，而这两个集合的长度都是零。这一讲的中心结果 Radon--Nikodym 定理说，这个必要条件也是充分的。用 $P$、$Q$ 表示两个测度，“$Q(A)=0$ 蕴含 $P(A)=0$”称为 $P$ 关于 $Q$ \emph{绝对连续}，记作 $P\ll Q$。于是 Radon--Nikodym 定理可以说成：\emph{$P\ll Q$ 当且仅当 $P$ 关于 $Q$ 有密度}。
+设随机变量 $X$ 有密度 $f$，即 $\P(X\in B)=\int_Bf\dd\lambda$ 对一切 Borel 集 $B$ 成立。若 $\lambda(B)=0$，那么在零测集上的积分为零，于是 $\P(X\in B)=0$。所以有密度的随机变量必须满足一个必要条件：\emph{Lebesgue 测度为零的集合，$X$ 落进去的概率也为零}。离散分布与 Cantor 分布都不满足这个条件：前者把全部概率放在一个可数集上，后者把全部概率放在 Cantor 集上，而这两个集合的长度都是零。这一讲的中心结果 Radon--Nikodym 定理说，这个必要条件也是充分的。用 $P$、$Q$ 表示两个测度，“$Q(A)=0$ 蕴含 $\P(A)=0$”称为 $P$ 关于 $Q$ \emph{绝对连续}，记作 $P\ll Q$。于是 Radon--Nikodym 定理可以说成：\emph{$P\ll Q$ 当且仅当 $P$ 关于 $Q$ 有密度}。
 
 这一讲还要回答数学分析中的一个问题。我们知道，若 $F$ 在 $[a,b]$ 上连续可微，则 Newton--Leibniz 公式 $F(b)-F(a)=\int_a^bF'(x)\dd x$ 成立。有了 Lebesgue 积分，自然要问这个公式对什么样的 $F$ 成立。Cantor 函数给出了一个反例：它连续，几乎处处可导且导数为零，但 $F(1)-F(0)=1$。我们会看到，使 Newton--Leibniz 公式成立的恰好是\emph{绝对连续函数}，而函数的绝对连续与测度的绝对连续本质上是同一件事。
 
@@ -93,11 +93,11 @@ F_X(x)=\int_{(-\infty,x]}f\dd\lambda\ \ \forall x\in\R\qquad\Longleftrightarrow\
 下面这个例子从随机变量的角度重新看 Cantor 分布。我们在第~\ref{lec:distributions} 讲中知道，若 $\xi_1,\xi_2,\dots$ 是“公平的硬币”，那么把它们当成二进制的各位，$\sum_n\xi_n2^{-n}$ 服从均匀分布。现在我们把它们当成三进制的各位，但只允许用数字 $0$ 和 $2$。
 
 \begin{example}[用硬币构造的奇异分布]\label{ex:ac:cantor-coins}
-设 $(\Omega,\cF,P)$ 上的随机变量 $\xi_1,\xi_2,\dots$ 取值于 $\{0,1\}$，并且满足 \eqref{eq:distributions:fair}：对任意 $n$ 与 $a\in\{0,1\}^n$，$P((\xi_1,\dots,\xi_n)=a)=2^{-n}$。令
+设 $(\Omega,\cF,\P)$ 上的随机变量 $\xi_1,\xi_2,\dots$ 取值于 $\{0,1\}$，并且满足 \eqref{eq:distributions:fair}：对任意 $n$ 与 $a\in\{0,1\}^n$，$\P((\xi_1,\dots,\xi_n)=a)=2^{-n}$。令
 \[
 X=\sum_{n=1}^\infty\frac{2\xi_n}{3^n}.
 \]
-部分和是随机变量，单调递增地收敛到 $X\leqslant\sum_n2\cdot3^{-n}=1$，由定理~\ref{thm:random-variables:limits}，$X$ 是随机变量。我们证明：(i) $X(\omega)\in C$ 对每个 $\omega$ 成立，其中 $C$ 是 Cantor 集；(ii) $P(X=x)=0$ 对每个 $x\in\R$ 成立；(iii) $\mu_X\perp\lambda$。
+部分和是随机变量，单调递增地收敛到 $X\leqslant\sum_n2\cdot3^{-n}=1$，由定理~\ref{thm:random-variables:limits}，$X$ 是随机变量。我们证明：(i) $X(\omega)\in C$ 对每个 $\omega$ 成立，其中 $C$ 是 Cantor 集；(ii) $\P(X=x)=0$ 对每个 $x\in\R$ 成立；(iii) $\mu_X\perp\lambda$。
 
 对 $a=(a_1,\dots,a_n)\in\{0,1\}^n$，令 $s(a)=\sum_{k=1}^n2a_k3^{-k}$，$J(a)=[s(a),s(a)+3^{-n}]$。我们先用归纳法证明：$\{J(a):a\in\{0,1\}^n\}$ 恰好是 $C_n$ 的 $2^n$ 个区间（$C_n$ 如习题~\exref{ex:extension:A4}）。$n=0$ 时约定 $J(\varnothing)=[0,1]=C_0$。设结论对 $n$ 成立，$J(a)$ 是 $C_n$ 的一个区间。$C_{n+1}$ 在 $J(a)$ 中的部分是去掉中间三分之一后剩下的左、右两段，即
 \[
@@ -107,9 +107,9 @@ X=\sum_{n=1}^\infty\frac{2\xi_n}{3^n}.
 
 (i) 设 $(\xi_1(\omega),\dots,\xi_n(\omega))=a$。则 $X(\omega)-s(a)=\sum_{k>n}2\xi_k(\omega)3^{-k}\in[0,\sum_{k>n}2\cdot3^{-k}]=[0,3^{-n}]$，即 $X(\omega)\in J(a)\subseteq C_n$。这对每个 $n$ 成立，所以 $X(\omega)\in\bigcap_nC_n=C$。
 
-(ii) 固定 $x$ 与 $n$。$C_n$ 的各个区间两两不交。若 $x$ 不属于任何 $J(a)$，则由 (i)，$\{X=x\}=\varnothing$。若 $x\in J(a)$，则 $\{X=x\}\subseteq\{X\in J(a)\}\subseteq\{(\xi_1,\dots,\xi_n)=a\}$，后一个包含关系是因为：若 $(\xi_1(\omega),\dots,\xi_n(\omega))=b\neq a$，则由 (i) 的证明 $X(\omega)\in J(b)$，而 $J(b)\cap J(a)=\varnothing$。所以 $P(X=x)\leqslant2^{-n}$。令 $n\to\infty$ 得 $P(X=x)=0$。
+(ii) 固定 $x$ 与 $n$。$C_n$ 的各个区间两两不交。若 $x$ 不属于任何 $J(a)$，则由 (i)，$\{X=x\}=\varnothing$。若 $x\in J(a)$，则 $\{X=x\}\subseteq\{X\in J(a)\}\subseteq\{(\xi_1,\dots,\xi_n)=a\}$，后一个包含关系是因为：若 $(\xi_1(\omega),\dots,\xi_n(\omega))=b\neq a$，则由 (i) 的证明 $X(\omega)\in J(b)$，而 $J(b)\cap J(a)=\varnothing$。所以 $\P(X=x)\leqslant2^{-n}$。令 $n\to\infty$ 得 $\P(X=x)=0$。
 
-(iii) 由 (i)，$\mu_X(C)=P(X\in C)=1$，即 $\mu_X(C^c)=0$；而 $\lambda(C)=0$。
+(iii) 由 (i)，$\mu_X(C)=\P(X\in C)=1$，即 $\mu_X(C^c)=0$；而 $\lambda(C)=0$。
 
 所以 $X$ 的分布没有原子，不是离散的；它与 Lebesgue 测度奇异，也没有密度（由下面的命题~\ref{prop:ac:ac-and-singular}）。第~\ref{lec:distributions} 讲作业 B 证明了它恰好就是 Cantor 分布。这个构造的直观是：第一枚硬币决定 $X$ 落在 $[0,1/3]$ 还是 $[2/3,1]$，第二枚硬币决定落在所选区间的左三分之一还是右三分之一，如此下去。每一步都把质量平分给两个更小的区间，而中间的三分之一永远分不到质量，于是全部质量被挤进了 Cantor 集。
 \end{example}
@@ -359,7 +359,7 @@ $\R$ 上的概率测度 $\mu$ 有密度（即存在非负 Borel 函数 $f$ 使 $
 这个例题说明：混合型的分布关于 Lebesgue 测度没有密度，但只要换一个参照测度（把它的原子也放进参照测度里），它就有密度。在统计中处理“有正概率为零、其余连续”的数据时，正是这样做的。
 \end{solution}
 
-所以绝对连续型的随机变量一定有密度函数，并且“有密度”这个性质可以只通过零测集来检验：只要对每个 Lebesgue 零测集 $N$ 都有 $P(X\in N)=0$ 就行了。我们提醒同学们注意术语：初等概率论中常把有密度的随机变量叫做“连续型随机变量”，但在测度论中，“连续”只是说分布函数连续，即没有原子。Cantor 分布是连续的，但不是绝对连续的。
+所以绝对连续型的随机变量一定有密度函数，并且“有密度”这个性质可以只通过零测集来检验：只要对每个 Lebesgue 零测集 $N$ 都有 $\P(X\in N)=0$ 就行了。我们提醒同学们注意术语：初等概率论中常把有密度的随机变量叫做“连续型随机变量”，但在测度论中，“连续”只是说分布函数连续，即没有原子。Cantor 分布是连续的，但不是绝对连续的。
 
 \begin{theorem}[分布的分解]\label{thm:ac:decomposition-distributions}
 设 $\mu$ 是 $\R$ 上的概率测度。则 $\mu$ 可以唯一地写成
@@ -472,7 +472,7 @@ F(b)-F(a)=\int_a^bF'(x)\dd x .
 \end{remark}
 
 \begin{example}
-设 $X$ 服从 $(0,1)$ 上的均匀分布，$Y=X^2$。$Y$ 的分布函数是 $F_Y(y)=P(X\leqslant\sqrt y)=\sqrt y$（$0\leqslant y\leqslant1$），在 $y<0$ 时为 $0$，在 $y>1$ 时为 $1$。在 $[0,1]$ 上，$\sqrt y=\int_{[0,y]}\frac1{2\sqrt t}\dd t$（由第~\ref{lec:integration} 讲，在 $[\varepsilon,y]$ 上用 Newton--Leibniz 公式，再用单调收敛定理令 $\varepsilon\downarrow0$），所以由定理~\ref{thm:ac:stieltjes-ac}，$Y$ 有密度 $f_Y(y)=\frac1{2\sqrt y}\one_{(0,1)}(y)$。注意 $F_Y$ 在 $[0,1]$ 上绝对连续但不是 Lipschitz 的，它的导数在 $0$ 附近无界。实际计算密度时，我们总是这样做：先求分布函数，验证它是某个函数的积分（通常是逐段求导再用 Newton--Leibniz 公式），这个函数就是密度。
+设 $X$ 服从 $(0,1)$ 上的均匀分布，$Y=X^2$。$Y$ 的分布函数是 $F_Y(y)=\P(X\leqslant\sqrt y)=\sqrt y$（$0\leqslant y\leqslant1$），在 $y<0$ 时为 $0$，在 $y>1$ 时为 $1$。在 $[0,1]$ 上，$\sqrt y=\int_{[0,y]}\frac1{2\sqrt t}\dd t$（由第~\ref{lec:integration} 讲，在 $[\varepsilon,y]$ 上用 Newton--Leibniz 公式，再用单调收敛定理令 $\varepsilon\downarrow0$），所以由定理~\ref{thm:ac:stieltjes-ac}，$Y$ 有密度 $f_Y(y)=\frac1{2\sqrt y}\one_{(0,1)}(y)$。注意 $F_Y$ 在 $[0,1]$ 上绝对连续但不是 Lipschitz 的，它的导数在 $0$ 附近无界。实际计算密度时，我们总是这样做：先求分布函数，验证它是某个函数的积分（通常是逐段求导再用 Newton--Leibniz 公式），这个函数就是密度。
 \end{example}
 
 \topic{本讲小结}
@@ -613,11 +613,11 @@ $\Omega^+=\{f\geqslant0\}$，$\Omega^-=\{f<0\}$ 是 Hahn 分解。于是 $\alpha
 \begin{solution}
 都按“先求分布函数，再写成积分”的方法（本讲最后一个例子）。
 
-\emph{$-\log X$。}对 $y\geqslant0$，$P(-\log X\leqslant y)=P(X\geqslant e^{-y})=1-e^{-y}$；$y<0$ 时为 $0$。$1-e^{-y}=\int_{[0,y]}e^{-t}\dd t$，由定理~\ref{thm:ac:stieltjes-ac}，密度是 $e^{-y}\one_{(0,\infty)}(y)$，即参数为 $1$ 的指数分布。
+\emph{$-\log X$。}对 $y\geqslant0$，$\P(-\log X\leqslant y)=\P(X\geqslant e^{-y})=1-e^{-y}$；$y<0$ 时为 $0$。$1-e^{-y}=\int_{[0,y]}e^{-t}\dd t$，由定理~\ref{thm:ac:stieltjes-ac}，密度是 $e^{-y}\one_{(0,\infty)}(y)$，即参数为 $1$ 的指数分布。
 
-\emph{$X^3$。}对 $0\leqslant y\leqslant1$，$P(X^3\leqslant y)=P(X\leqslant y^{1/3})=y^{1/3}$。在 $[\varepsilon,y]$ 上用 Newton--Leibniz 公式，再由单调收敛定理令 $\varepsilon\downarrow0$，$y^{1/3}=\int_{[0,y]}\frac13t^{-2/3}\dd t$。密度是 $\frac13y^{-2/3}\one_{(0,1)}(y)$（在 $0$ 附近无界但可积）。
+\emph{$X^3$。}对 $0\leqslant y\leqslant1$，$\P(X^3\leqslant y)=\P(X\leqslant y^{1/3})=y^{1/3}$。在 $[\varepsilon,y]$ 上用 Newton--Leibniz 公式，再由单调收敛定理令 $\varepsilon\downarrow0$，$y^{1/3}=\int_{[0,y]}\frac13t^{-2/3}\dd t$。密度是 $\frac13y^{-2/3}\one_{(0,1)}(y)$（在 $0$ 附近无界但可积）。
 
-\emph{$T=\tan(\pi(X-\frac12))$。}$x\mapsto\tan(\pi(x-\frac12))$ 是 $(0,1)$ 到 $\R$ 的严格递增双射，逆为 $y\mapsto\frac12+\frac1\pi\arctan y$。所以 $P(T\leqslant y)=\frac12+\frac1\pi\arctan y=\int_{-\infty}^y\frac{\dd t}{\pi(1+t^2)}$（反常积分，由单调收敛定理也是 Lebesgue 积分）。密度 $\frac1{\pi(1+y^2)}$，这是 \term{Cauchy 分布}。
+\emph{$T=\tan(\pi(X-\frac12))$。}$x\mapsto\tan(\pi(x-\frac12))$ 是 $(0,1)$ 到 $\R$ 的严格递增双射，逆为 $y\mapsto\frac12+\frac1\pi\arctan y$。所以 $\P(T\leqslant y)=\frac12+\frac1\pi\arctan y=\int_{-\infty}^y\frac{\dd t}{\pi(1+t^2)}$（反常积分，由单调收敛定理也是 Lebesgue 积分）。密度 $\frac1{\pi(1+y^2)}$，这是 \term{Cauchy 分布}。
 \end{solution}
 
 \item\label{ex:ac:A11} 在\egref{ex:ac:cantor-coins} 中，令 $Y=\sum_n\xi_n2^{-n}$。证明 $Y$ 服从 $[0,1]$ 上的均匀分布，而 $X$ 服从 Cantor 分布。$Y$ 与 $X$ 是同一串硬币的函数，一个的分布绝对连续，另一个的分布奇异。二者之间有什么函数关系？（与第~\ref{lec:random-variables} 讲思考题 E 中的 Cantor 函数比较。）

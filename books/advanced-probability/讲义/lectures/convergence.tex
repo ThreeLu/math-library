@@ -16,8 +16,8 @@
 \toprule
 名称 & 定义 & 一句话\\
 \midrule
-几乎必然收敛 & $P(\{\omega:X_n(\omega)\to X(\omega)\})=1$ & 几乎每条样本路径都收敛\\
-依概率收敛 & 对每个 $\varepsilon>0$，$P(\abs{X_n-X}>\varepsilon)\to0$ & 大偏差的概率趋于零\\
+几乎必然收敛 & $\P(\{\omega:X_n(\omega)\to X(\omega)\})=1$ & 几乎每条样本路径都收敛\\
+依概率收敛 & 对每个 $\varepsilon>0$，$\P(\abs{X_n-X}>\varepsilon)\to0$ & 大偏差的概率趋于零\\
 $L^p$ 收敛 & $E\abs{X_n-X}^p\to0$ & 平均偏差趋于零\\
 依分布收敛 & 在 $F$ 的连续点 $x$ 处 $F_n(x)\to F(x)$ & 直方图越来越像\\
 \bottomrule
@@ -29,12 +29,12 @@ $L^p$ 收敛 & $E\abs{X_n-X}^p\to0$ & 平均偏差趋于零\\
 
 \begin{enumerate}
 \item 几乎必然收敛的定义（定义~\ref{def:random-variables:as}）；事件 $\{X_n\to X\}$ 是可测的。
-\item 测度的连续性（命题~\ref{prop:measures:additivity-continuity}）：$A_n\downarrow A$ 蕴含 $P(A_n)\downarrow P(A)$；集合的上极限 $\limsup_nA_n=\{A_n\ \text{i.o.}\}$（定义~\ref{def:set-systems:limsup}）。
-\item 第一 Borel--Cantelli 引理（定理~\ref{thm:expectation:borel-cantelli}）：$\sum_nP(A_n)<\infty$ 蕴含 $P(A_n\ \text{i.o.})=0$。
-\item Markov 不等式（推论~\ref{cor:expectation:chebyshev}）：$P(\abs Y\geqslant\varepsilon)\leqslant E\abs Y^p/\varepsilon^p$。矩的单调性（推论~\ref{cor:expectation:lyapunov}）。
+\item 测度的连续性（命题~\ref{prop:measures:additivity-continuity}）：$A_n\downarrow A$ 蕴含 $\P(A_n)\downarrow \P(A)$；集合的上极限 $\limsup_nA_n=\{A_n\ \text{i.o.}\}$（定义~\ref{def:set-systems:limsup}）。
+\item 第一 Borel--Cantelli 引理（定理~\ref{thm:expectation:borel-cantelli}）：$\sum_nP(A_n)<\infty$ 蕴含 $\P(A_n\ \text{i.o.})=0$。
+\item Markov 不等式（推论~\ref{cor:expectation:chebyshev}）：$\P(\abs Y\geqslant\varepsilon)\leqslant E\abs Y^p/\varepsilon^p$。矩的单调性（推论~\ref{cor:expectation:lyapunov}）。
 \item 控制收敛定理与有界收敛定理（定理~\ref{thm:expectation:limits}）。
 \item 分布函数的性质（定理~\ref{thm:distributions:df-properties}），单调函数至多有可数个间断点（命题~\ref{prop:distributions:jumps}），分位数函数（定义~\ref{def:distributions:quantile}，引理~\ref{lem:distributions:quantile}：$F^{-1}(u)\leqslant x\iff u\leqslant F(x)$）。
-\item 独立事件与记录（推论~\ref{cor:independence:records-count}）：独立的记录事件 $A_k$，$P(A_k)=\frac1k$，几乎必然发生无穷多次。弱大数定律的特例（命题~\ref{prop:independence:bernoulli}）。
+\item 独立事件与记录（推论~\ref{cor:independence:records-count}）：独立的记录事件 $A_k$，$\P(A_k)=\frac1k$，几乎必然发生无穷多次。弱大数定律的特例（命题~\ref{prop:independence:bernoulli}）。
 \end{enumerate}
 
 \topic{几乎必然收敛}
@@ -54,9 +54,9 @@ $L^p$ 收敛 & $E\abs{X_n-X}^p\to0$ & 平均偏差趋于零\\
 \begin{lemma}[几乎必然收敛的刻画]\label{lem:convergence:as-criterion}
 $X_n\to X$ a.s.，当且仅当对每个 $\varepsilon>0$，
 \[
-P\bigl(\abs{X_n-X}>\varepsilon\ \text{对无穷多个}\ n\ \text{成立}\bigr)=0,
+\P\bigl(\abs{X_n-X}>\varepsilon\ \text{对无穷多个}\ n\ \text{成立}\bigr)=0,
 \]
-也当且仅当对每个 $\varepsilon>0$，$\lim_{n\to\infty}P\bigl(\sup_{m\geqslant n}\abs{X_m-X}>\varepsilon\bigr)=0$。
+也当且仅当对每个 $\varepsilon>0$，$\lim_{n\to\infty}\P\bigl(\sup_{m\geqslant n}\abs{X_m-X}>\varepsilon\bigr)=0$。
 \end{lemma}
 \begin{proof}
 记 $E_n(\varepsilon)=\{\abs{X_n-X}>\varepsilon\}$，$B_n(\varepsilon)=\{\sup_{m\geqslant n}\abs{X_m-X}>\varepsilon\}=\bigcup_{m\geqslant n}E_m(\varepsilon)$。
@@ -67,16 +67,16 @@ P\bigl(\abs{X_n-X}>\varepsilon\ \text{对无穷多个}\ n\ \text{成立}\bigr)=0
 \]
 若右边每一项概率为零，则可数并的概率为零，即 $X_n\to X$ a.s.。反之，若 $X_n\to X$ a.s.，则对任意 $\varepsilon>0$，取 $k$ 使 $\frac1k<\varepsilon$，$\limsup_nE_n(\varepsilon)\subseteq\limsup_nE_n(1/k)\subseteq\{X_n\not\to X\}$，概率为零。
 
-\emph{第二个等价。}$B_n(\varepsilon)$ 关于 $n$ 单调递减，$\bigcap_nB_n(\varepsilon)=\bigcap_n\bigcup_{m\geqslant n}E_m(\varepsilon)=\limsup_nE_n(\varepsilon)$。由测度从上连续（概率测度是有限的），$P(B_n(\varepsilon))\downarrow P(\limsup_nE_n(\varepsilon))$。所以 $P(B_n(\varepsilon))\to0$ 当且仅当 $P(\limsup_nE_n(\varepsilon))=0$。
+\emph{第二个等价。}$B_n(\varepsilon)$ 关于 $n$ 单调递减，$\bigcap_nB_n(\varepsilon)=\bigcap_n\bigcup_{m\geqslant n}E_m(\varepsilon)=\limsup_nE_n(\varepsilon)$。由测度从上连续（概率测度是有限的），$\P(B_n(\varepsilon))\downarrow \P(\limsup_nE_n(\varepsilon))$。所以 $\P(B_n(\varepsilon))\to0$ 当且仅当 $\P(\limsup_nE_n(\varepsilon))=0$。
 \end{proof}
 
 \topic{依概率收敛}
 
 \begin{definition}[依概率收敛]\label{def:convergence:probability}
-若对每个 $\varepsilon>0$，$\lim_{n\to\infty}P(\abs{X_n-X}>\varepsilon)=0$，称 $X_n$ \term{依概率收敛}（converges in probability）于 $X$，记作 $X_n\toP X$ 或 $X_n\to X$ in probability。
+若对每个 $\varepsilon>0$，$\lim_{n\to\infty}\P(\abs{X_n-X}>\varepsilon)=0$，称 $X_n$ \term{依概率收敛}（converges in probability）于 $X$，记作 $X_n\toP X$ 或 $X_n\to X$ in probability。
 \end{definition}
 
-这个定义是“对每个固定的大 $n$”来说的：在时刻 $n$，$X_n$ 与 $X$ 相差超过 $\varepsilon$ 的样本点只占很小的比例。它并没有说某一个固定的样本点 $\omega$ 处，$X_n(\omega)$ 最终会一直靠近 $X(\omega)$。对比引理~\ref{lem:convergence:as-criterion} 的第二个刻画：几乎必然收敛要求 $P(\sup_{m\geqslant n}\abs{X_m-X}>\varepsilon)\to0$，即“从时刻 $n$ 起\emph{永远}不再大偏差”的概率趋于 $1$；依概率收敛只要求“\emph{在时刻 $n$} 没有大偏差”的概率趋于 $1$。下面的例子把这个区别显示得很清楚。
+这个定义是“对每个固定的大 $n$”来说的：在时刻 $n$，$X_n$ 与 $X$ 相差超过 $\varepsilon$ 的样本点只占很小的比例。它并没有说某一个固定的样本点 $\omega$ 处，$X_n(\omega)$ 最终会一直靠近 $X(\omega)$。对比引理~\ref{lem:convergence:as-criterion} 的第二个刻画：几乎必然收敛要求 $\P(\sup_{m\geqslant n}\abs{X_m-X}>\varepsilon)\to0$，即“从时刻 $n$ 起\emph{永远}不再大偏差”的概率趋于 $1$；依概率收敛只要求“\emph{在时刻 $n$} 没有大偏差”的概率趋于 $1$。下面的例子把这个区别显示得很清楚。
 
 \begin{example}[滑动的方块：依概率收敛但处处不收敛]\label{ex:convergence:typewriter}
 在 $([0,1),\lambda)$ 上，把 $n\geqslant1$ 唯一地写成 $n=2^k+j$，$k\geqslant0$，$0\leqslant j<2^k$，令
@@ -85,7 +85,7 @@ X_n=\one_{[j2^{-k},(j+1)2^{-k})}.
 \]
 按 $n$ 的顺序列出前几个：$X_1=\one_{[0,1)}$；$X_2=\one_{[0,\frac12)}$，$X_3=\one_{[\frac12,1)}$；$X_4=\one_{[0,\frac14)}$，$X_5=\one_{[\frac14,\frac12)}$，$X_6=\one_{[\frac12,\frac34)}$，$X_7=\one_{[\frac34,1)}$；…… 一块宽为 $2^{-k}$ 的方块从左到右扫过 $[0,1)$，扫完一遍，宽度减半，再扫一遍。
 
-\emph{依概率收敛到 $0$。}对 $0<\varepsilon<1$，$P(\abs{X_n}>\varepsilon)=P(X_n=1)=2^{-k}$，而 $n\to\infty$ 时 $k\to\infty$，所以 $X_n\toP0$。
+\emph{依概率收敛到 $0$。}对 $0<\varepsilon<1$，$\P(\abs{X_n}>\varepsilon)=\P(X_n=1)=2^{-k}$，而 $n\to\infty$ 时 $k\to\infty$，所以 $X_n\toP0$。
 
 \emph{处处不收敛。}固定 $\omega\in[0,1)$。在第 $k$ 轮（$2^k\leqslant n<2^{k+1}$）中，方块扫过整个 $[0,1)$，恰好有一个 $j$ 使 $\omega\in[j2^{-k},(j+1)2^{-k})$，这时 $X_n(\omega)=1$；这一轮中其余的 $X_n(\omega)=0$（$k\geqslant1$ 时一轮中有不止一个 $n$）。所以数列 $X_n(\omega)$ 中有无穷多个 $1$ 与无穷多个 $0$，不收敛。
 
@@ -93,7 +93,7 @@ X_n=\one_{[j2^{-k},(j+1)2^{-k})}.
 \end{example}
 
 \begin{example}[独立的小概率事件]\label{ex:convergence:independent-events}
-上面的例子是在 $[0,1)$ 上人为构造的，下面的例子来自真实的概率模型。设 $A_1,A_2,\dots$ 是 Rényi 记录定理中的记录事件：它们独立，$P(A_k)=\frac1k$。令 $X_k=\one_{A_k}$。对 $0<\varepsilon<1$，$P(\abs{X_k}>\varepsilon)=\frac1k\to0$，所以 $X_k\toP0$。可是由推论~\ref{cor:independence:records-count}(3)，几乎必然地有无穷多个记录，即 $X_k=1$ 对无穷多个 $k$ 成立，于是 $X_k\not\to0$ a.s.（实际上几乎必然不收敛）。用运动员的话说：创造记录越来越难，在任何一个给定的年份，几乎不会创造记录；可是记录永远不会停止。
+上面的例子是在 $[0,1)$ 上人为构造的，下面的例子来自真实的概率模型。设 $A_1,A_2,\dots$ 是 Rényi 记录定理中的记录事件：它们独立，$\P(A_k)=\frac1k$。令 $X_k=\one_{A_k}$。对 $0<\varepsilon<1$，$\P(\abs{X_k}>\varepsilon)=\frac1k\to0$，所以 $X_k\toP0$。可是由推论~\ref{cor:independence:records-count}(3)，几乎必然地有无穷多个记录，即 $X_k=1$ 对无穷多个 $k$ 成立，于是 $X_k\not\to0$ a.s.（实际上几乎必然不收敛）。用运动员的话说：创造记录越来越难，在任何一个给定的年份，几乎不会创造记录；可是记录永远不会停止。
 \end{example}
 
 \begin{example}[弱大数定律]
@@ -115,7 +115,7 @@ X_n=\one_{[j2^{-k},(j+1)2^{-k})}.
 若 $X_n\toP X$，则存在子列 $n_1<n_2<\cdots$，使 $X_{n_k}\to X$ a.s.
 \end{theorem}
 \begin{proof}
-\emph{挑子列。}由依概率收敛，对每个 $k$，存在 $N_k$，使 $n\geqslant N_k$ 时 $P(\abs{X_n-X}>2^{-k})\leqslant2^{-k}$。取 $n_1=N_1$，$n_k=\max\{N_k,n_{k-1}+1\}$，则 $n_k$ 严格递增，并且 $P(\abs{X_{n_k}-X}>2^{-k})\leqslant2^{-k}$。
+\emph{挑子列。}由依概率收敛，对每个 $k$，存在 $N_k$，使 $n\geqslant N_k$ 时 $\P(\abs{X_n-X}>2^{-k})\leqslant2^{-k}$。取 $n_1=N_1$，$n_k=\max\{N_k,n_{k-1}+1\}$，则 $n_k$ 严格递增，并且 $\P(\abs{X_{n_k}-X}>2^{-k})\leqslant2^{-k}$。
 
 \emph{Borel--Cantelli。}$\sum_k2^{-k}<\infty$，由第一 Borel--Cantelli 引理，几乎必然地只有有限个 $k$ 使 $\abs{X_{n_k}-X}>2^{-k}$。所以对几乎每个 $\omega$，存在 $K(\omega)$，$k\geqslant K(\omega)$ 时 $\abs{X_{n_k}(\omega)-X(\omega)}\leqslant2^{-k}\to0$。
 \end{proof}
@@ -128,7 +128,7 @@ $X_n\toP X$，当且仅当 $X_n$ 的每个子列都有一个几乎必然收敛�
 \begin{proof}
 必要性：$X_n$ 的子列仍依概率收敛到 $X$，对它用子列定理。
 
-充分性：如若不然，存在 $\varepsilon>0$，$\delta>0$ 与一个子列 $n_k$，使 $P(\abs{X_{n_k}-X}>\varepsilon)\geqslant\delta$ 对一切 $k$ 成立（这是“$P(\abs{X_n-X}>\varepsilon)\not\to0$”的含义）。按假设，$X_{n_k}$ 有子列 $X_{n_{k_l}}\to X$ a.s.，由定理~\ref{thm:convergence:as-implies-p}，$P(\abs{X_{n_{k_l}}-X}>\varepsilon)\to0$，与 $\geqslant\delta$ 矛盾。
+充分性：如若不然，存在 $\varepsilon>0$，$\delta>0$ 与一个子列 $n_k$，使 $\P(\abs{X_{n_k}-X}>\varepsilon)\geqslant\delta$ 对一切 $k$ 成立（这是“$\P(\abs{X_n-X}>\varepsilon)\not\to0$”的含义）。按假设，$X_{n_k}$ 有子列 $X_{n_{k_l}}\to X$ a.s.，由定理~\ref{thm:convergence:as-implies-p}，$\P(\abs{X_{n_{k_l}}-X}>\varepsilon)\to0$，与 $\geqslant\delta$ 矛盾。
 \end{proof}
 
 \begin{corollary}[依概率收敛的运算]\label{cor:convergence:continuous-mapping}
@@ -161,7 +161,7 @@ $L^p$ 收敛是“平均意义下”的收敛：偏差 $\abs{X_n-X}^p$ 的期望
 若 $X_n\toLp X$（$p>0$），则 $X_n\toP X$。若 $0<q<p$，则 $L^p$ 收敛蕴含 $L^q$ 收敛。
 \end{theorem}
 \begin{proof}
-由 Markov 不等式，$P(\abs{X_n-X}>\varepsilon)\leqslant\frac{E\abs{X_n-X}^p}{\varepsilon^p}\to0$。由矩的单调性（推论~\ref{cor:expectation:lyapunov}），$(E\abs{X_n-X}^q)^{1/q}\leqslant(E\abs{X_n-X}^p)^{1/p}\to0$。
+由 Markov 不等式，$\P(\abs{X_n-X}>\varepsilon)\leqslant\frac{E\abs{X_n-X}^p}{\varepsilon^p}\to0$。由矩的单调性（推论~\ref{cor:expectation:lyapunov}），$(E\abs{X_n-X}^q)^{1/q}\leqslant(E\abs{X_n-X}^p)^{1/p}\to0$。
 \end{proof}
 
 \begin{example}[几乎必然收敛但不 $L^1$ 收敛]\label{ex:convergence:as-not-L1}
@@ -169,7 +169,7 @@ $L^p$ 收敛是“平均意义下”的收敛：偏差 $\abs{X_n-X}^p$ 的期望
 \end{example}
 
 \begin{example}[$L^p$ 收敛但不几乎必然收敛]\label{ex:convergence:Lp-not-as}
-滑动的方块（\egref{ex:convergence:typewriter}）：$E\abs{X_n}^p=P(X_n=1)=2^{-k}\to0$，所以对一切 $p>0$，$X_n\toLp0$；可是它处处不收敛。
+滑动的方块（\egref{ex:convergence:typewriter}）：$E\abs{X_n}^p=\P(X_n=1)=2^{-k}\to0$，所以对一切 $p>0$，$X_n\toLp0$；可是它处处不收敛。
 \end{example}
 
 \begin{example}[均方收敛与弱大数定律]
@@ -191,7 +191,7 @@ $L^p$ 收敛是“平均意义下”的收敛：偏差 $\abs{X_n-X}^p$ 的期望
 
 前三种收敛都比较 $X_n$ 与 $X$ 的\emph{值}：要计算 $\abs{X_n-X}$，$X_n$ 与 $X$ 必须定义在同一个概率空间上。可是在很多问题中，我们只关心分布。比如中心极限定理说，抛 $n$ 次硬币，标准化的正面次数 $Z_n$ 的分布接近标准正态分布。$Z_n$ 本身并不收敛到任何东西：对一个具体的抛硬币序列，$Z_1,Z_2,\dots$ 会一直上下波动（这是以后重对数律的内容）。又如二项分布 $B(n,\lambda/n)$ 在 $n$ 很大时接近 Poisson 分布，二项随机变量与 Poisson 随机变量甚至没有理由放在同一个概率空间上。我们需要一种只比较分布的收敛。
 
-最自然的想法是要求 $P(X_n\leqslant x)\to P(X\leqslant x)$ 对一切 $x$ 成立。下面的例子说明这个要求太苛刻了。
+最自然的想法是要求 $\P(X_n\leqslant x)\to \P(X\leqslant x)$ 对一切 $x$ 成立。下面的例子说明这个要求太苛刻了。
 
 \begin{example}[为什么只要求在连续点处收敛]\label{ex:convergence:why-continuity}
 设 $X_n=\frac1n$（常数），$X=0$。无论按哪种理解，$X_n$ 都应该收敛到 $X$：$\abs{X_n-X}=\frac1n\to0$ 处处成立。$X_n$ 的分布函数是 $F_n(x)=\one\{x\geqslant\frac1n\}$，$X$ 的分布函数是 $F(x)=\one\{x\geqslant0\}$。对 $x>0$，$n$ 充分大时 $F_n(x)=1=F(x)$；对 $x<0$，$F_n(x)=0=F(x)$。可是在 $x=0$ 处，$F_n(0)=0$ 对一切 $n$ 成立，而 $F(0)=1$。所以 $F_n(x)\to F(x)$ 恰好在 $F$ 的跳跃点 $x=0$ 处失败。原因是：$X_n$ 从右边逼近 $0$，“$X_n\leqslant0$”永远不成立，而 $X\leqslant0$ 是成立的。在跳跃点处，分布函数对“从哪一侧逼近”非常敏感，这不是我们想要描述的现象。所以定义中只要求在 $F$ 的连续点处收敛。
@@ -212,19 +212,19 @@ $L^p$ 收敛是“平均意义下”的收敛：偏差 $\abs{X_n-X}^p$ 的期望
 
 \emph{第一步：单点概率收敛。}固定整数 $k\geqslant0$。对 $n\geqslant k$，
 \[
-P(X_n=k)=\binom nk\Bigl(\frac\lambda n\Bigr)^k\Bigl(1-\frac\lambda n\Bigr)^{n-k}=\frac{n(n-1)\cdots(n-k+1)}{n^k}\cdot\frac{\lambda^k}{k!}\cdot\Bigl(1-\frac\lambda n\Bigr)^n\cdot\Bigl(1-\frac\lambda n\Bigr)^{-k}.
+\P(X_n=k)=\binom nk\Bigl(\frac\lambda n\Bigr)^k\Bigl(1-\frac\lambda n\Bigr)^{n-k}=\frac{n(n-1)\cdots(n-k+1)}{n^k}\cdot\frac{\lambda^k}{k!}\cdot\Bigl(1-\frac\lambda n\Bigr)^n\cdot\Bigl(1-\frac\lambda n\Bigr)^{-k}.
 \]
-$k$ 固定，$n\to\infty$ 时：第一个因子是 $k$ 个趋于 $1$ 的因子 $\frac{n-i}n$ 之积，趋于 $1$；第三个因子趋于 $e^{-\lambda}$；第四个因子趋于 $1$。所以 $P(X_n=k)\to e^{-\lambda}\frac{\lambda^k}{k!}=P(X=k)$。
+$k$ 固定，$n\to\infty$ 时：第一个因子是 $k$ 个趋于 $1$ 的因子 $\frac{n-i}n$ 之积，趋于 $1$；第三个因子趋于 $e^{-\lambda}$；第四个因子趋于 $1$。所以 $\P(X_n=k)\to e^{-\lambda}\frac{\lambda^k}{k!}=\P(X=k)$。
 
-\emph{第二步：分布函数收敛。}对 $x<0$，$F_{X_n}(x)=0=F_X(x)$。对 $x\geqslant0$，$F_{X_n}(x)=\sum_{k=0}^{\lfloor x\rfloor}P(X_n=k)$ 是固定个数（$\lfloor x\rfloor+1$ 个）的项之和，由第一步，它趋于 $\sum_{k=0}^{\lfloor x\rfloor}P(X=k)=F_X(x)$。所以 $F_{X_n}(x)\to F_X(x)$ 对一切 $x$ 成立，当然在连续点处成立。
+\emph{第二步：分布函数收敛。}对 $x<0$，$F_{X_n}(x)=0=F_X(x)$。对 $x\geqslant0$，$F_{X_n}(x)=\sum_{k=0}^{\lfloor x\rfloor}\P(X_n=k)$ 是固定个数（$\lfloor x\rfloor+1$ 个）的项之和，由第一步，它趋于 $\sum_{k=0}^{\lfloor x\rfloor}\P(X=k)=F_X(x)$。所以 $F_{X_n}(x)\to F_X(x)$ 对一切 $x$ 成立，当然在连续点处成立。
 \end{example}
 
 \begin{example}[离散分布逼近连续分布]\label{ex:convergence:discrete-uniform}
-设 $X_n$ 在 $\{\frac1n,\frac2n,\dots,\frac nn\}$ 上均匀分布，$U$ 在 $[0,1]$ 上均匀分布。对 $x\in[0,1]$，$F_{X_n}(x)=\frac{\lfloor nx\rfloor}n$，而 $nx-1<\lfloor nx\rfloor\leqslant nx$，所以 $\abs{F_{X_n}(x)-x}\leqslant\frac1n\to0$；$x<0$ 与 $x>1$ 时两边相等。所以 $X_n\Rightarrow U$。注意 $P(X_n\in\Q)=1$，$P(U\in\Q)=0$：依分布收敛\emph{不}蕴含对一切 Borel 集 $B$ 有 $P(X_n\in B)\to P(U\in B)$。直观上，离散的点越来越密，“看起来”越来越像均匀分布，可是在每一个具体的有理点上，二者的差别永远存在。这也说明了为什么在定义中只用区间 $(-\infty,x]$ 来比较。
+设 $X_n$ 在 $\{\frac1n,\frac2n,\dots,\frac nn\}$ 上均匀分布，$U$ 在 $[0,1]$ 上均匀分布。对 $x\in[0,1]$，$F_{X_n}(x)=\frac{\lfloor nx\rfloor}n$，而 $nx-1<\lfloor nx\rfloor\leqslant nx$，所以 $\abs{F_{X_n}(x)-x}\leqslant\frac1n\to0$；$x<0$ 与 $x>1$ 时两边相等。所以 $X_n\Rightarrow U$。注意 $\P(X_n\in\Q)=1$，$\P(U\in\Q)=0$：依分布收敛\emph{不}蕴含对一切 Borel 集 $B$ 有 $\P(X_n\in B)\to \P(U\in B)$。直观上，离散的点越来越密，“看起来”越来越像均匀分布，可是在每一个具体的有理点上，二者的差别永远存在。这也说明了为什么在定义中只用区间 $(-\infty,x]$ 来比较。
 \end{example}
 
 \begin{example}[最大值的极限分布]\label{ex:convergence:max-uniform}
-设 $U_1,\dots,U_n$ 独立，在 $[0,1]$ 上均匀分布，$M_n=\max_iU_i$。直观上 $M_n$ 很接近 $1$，差距大约是 $\frac1n$。令 $Y_n=n(1-M_n)$。对 $t\geqslant0$，由第~\ref{lec:independence} 讲习题 A10，$P(Y_n>t)=P(M_n<1-\frac tn)=(1-\frac tn)^n$（$n\geqslant t$），它趋于 $e^{-t}$。所以 $P(Y_n\leqslant t)\to1-e^{-t}$（$t\geqslant0$），$t<0$ 时两边都是 $0$。于是 $Y_n\Rightarrow Y$，$Y$ 服从参数为 $1$ 的指数分布。
+设 $U_1,\dots,U_n$ 独立，在 $[0,1]$ 上均匀分布，$M_n=\max_iU_i$。直观上 $M_n$ 很接近 $1$，差距大约是 $\frac1n$。令 $Y_n=n(1-M_n)$。对 $t\geqslant0$，由第~\ref{lec:independence} 讲习题 A10，$\P(Y_n>t)=\P(M_n<1-\frac tn)=(1-\frac tn)^n$（$n\geqslant t$），它趋于 $e^{-t}$。所以 $\P(Y_n\leqslant t)\to1-e^{-t}$（$t\geqslant0$），$t<0$ 时两边都是 $0$。于是 $Y_n\Rightarrow Y$，$Y$ 服从参数为 $1$ 的指数分布。
 \end{example}
 
 \begin{example}[质量逃到无穷：没有极限分布]\label{ex:convergence:escape}
@@ -246,15 +246,15 @@ $k$ 固定，$n\to\infty$ 时：第一个因子是 $k$ 个趋于 $1$ 的因子 $
 
 \emph{上界。}若 $X_n\leqslant x$ 且 $\abs{X_n-X}\leqslant\varepsilon$，则 $X\leqslant X_n+\varepsilon\leqslant x+\varepsilon$。所以
 \[
-\{X_n\leqslant x\}\subseteq\{X\leqslant x+\varepsilon\}\cup\{\abs{X_n-X}>\varepsilon\},\qquad F_n(x)\leqslant F(x+\varepsilon)+P(\abs{X_n-X}>\varepsilon).
+\{X_n\leqslant x\}\subseteq\{X\leqslant x+\varepsilon\}\cup\{\abs{X_n-X}>\varepsilon\},\qquad F_n(x)\leqslant F(x+\varepsilon)+\P(\abs{X_n-X}>\varepsilon).
 \]
 
 \emph{下界。}若 $X\leqslant x-\varepsilon$ 且 $\abs{X_n-X}\leqslant\varepsilon$，则 $X_n\leqslant x$。所以
 \[
-\{X\leqslant x-\varepsilon\}\subseteq\{X_n\leqslant x\}\cup\{\abs{X_n-X}>\varepsilon\},\qquad F(x-\varepsilon)\leqslant F_n(x)+P(\abs{X_n-X}>\varepsilon).
+\{X\leqslant x-\varepsilon\}\subseteq\{X_n\leqslant x\}\cup\{\abs{X_n-X}>\varepsilon\},\qquad F(x-\varepsilon)\leqslant F_n(x)+\P(\abs{X_n-X}>\varepsilon).
 \]
 
-\emph{取极限。}令 $n\to\infty$，$P(\abs{X_n-X}>\varepsilon)\to0$，得
+\emph{取极限。}令 $n\to\infty$，$\P(\abs{X_n-X}>\varepsilon)\to0$，得
 \[
 F(x-\varepsilon)\leqslant\liminf_nF_n(x)\leqslant\limsup_nF_n(x)\leqslant F(x+\varepsilon).
 \]
@@ -269,7 +269,7 @@ F(x-\varepsilon)\leqslant\liminf_nF_n(x)\leqslant\limsup_nF_n(x)\leqslant F(x+\v
 \begin{proof}
 常数 $c$ 的分布函数是 $\one\{x\geqslant c\}$，它只在 $c$ 处不连续。对 $\varepsilon>0$，$c-\varepsilon$ 与 $c+\frac\varepsilon2$ 都是连续点，所以 $F_{X_n}(c-\varepsilon)\to0$，$F_{X_n}(c+\frac\varepsilon2)\to1$。于是
 \[
-P(\abs{X_n-c}>\varepsilon)\leqslant P(X_n\leqslant c-\varepsilon)+P(X_n>c+\tfrac\varepsilon2)=F_{X_n}(c-\varepsilon)+1-F_{X_n}(c+\tfrac\varepsilon2)\to0 .\qedhere
+\P(\abs{X_n-c}>\varepsilon)\leqslant \P(X_n\leqslant c-\varepsilon)+\P(X_n>c+\tfrac\varepsilon2)=F_{X_n}(c-\varepsilon)+1-F_{X_n}(c+\tfrac\varepsilon2)\to0 .\qedhere
 \]
 \end{proof}
 
@@ -370,7 +370,7 @@ $L^p\not\Rightarrow$ 几乎必然 & 滑动的方块（\egref{ex:convergence:Lp-n
 \item 几乎必然收敛：几乎每条样本路径 $X_n(\omega)$ 都收敛。等价于“从某时刻起永远不再有大偏差”的概率趋于 $1$（引理~\ref{lem:convergence:as-criterion}）。强大数定律是这种收敛。
 \item 依概率收敛：在每个大的时刻，有大偏差的概率很小。允许每条路径偶尔偏离，只要偏离越来越稀少；滑动的方块是典型例子。弱大数定律是这种收敛。处理它的方法是子列：先取几乎必然收敛的子列，再用子列刻画回来。
 \item $L^p$ 收敛：平均偏差趋于零。它比依概率收敛强（Markov 不等式），与几乎必然收敛互不蕴含。
-\item 依分布收敛：只比较分布，$P(X_n\leqslant x)\to P(X\leqslant x)$（在连续点处）。它最弱，等价于对一切有界连续 $f$，$Ef(X_n)\to Ef(X)$。中心极限定理与 Poisson 逼近是这种收敛。
+\item 依分布收敛：只比较分布，$\P(X_n\leqslant x)\to \P(X\leqslant x)$（在连续点处）。它最弱，等价于对一切有界连续 $f$，$Ef(X_n)\to Ef(X)$。中心极限定理与 Poisson 逼近是这种收敛。
 \end{enumerate}
 下一讲用这些概念讨论大数定律：在什么条件下 $(X_1+\cdots+X_n)/n$ 依概率收敛或几乎必然收敛到 $EX_1$。
 
@@ -389,13 +389,13 @@ $L^p\not\Rightarrow$ 几乎必然 & 滑动的方块（\egref{ex:convergence:Lp-n
 
 记 $D_n=\min\{\abs{X_n-X},1\}$，$0\leqslant D_n\leqslant1$。对 $0<\varepsilon<1$，在 $\{\abs{X_n-X}\leqslant\varepsilon\}$ 上 $D_n\leqslant\varepsilon$，在其补集上 $D_n\leqslant1$。所以
 \[
-d(X_n,X)=ED_n\leqslant\varepsilon+P(\abs{X_n-X}>\varepsilon).
+d(X_n,X)=ED_n\leqslant\varepsilon+\P(\abs{X_n-X}>\varepsilon).
 \]
 令 $n\to\infty$，$\limsup_nd(X_n,X)\leqslant\varepsilon$。$\varepsilon$ 任意，所以 $d(X_n,X)\to0$。（也可以用命题~\ref{prop:convergence:dct-probability}：$D_n\toP0$ 并且 $D_n\leqslant1$。）
 \end{solution}
 \item 证明“当”：若 $d(X_n,X)\to0$，则 $X_n\toP X$。
 \begin{solution}
-对 $0<\varepsilon<1$，$\{\abs{X_n-X}>\varepsilon\}=\{D_n>\varepsilon\}$（因为 $\varepsilon<1$）。由 Markov 不等式，$P(\abs{X_n-X}>\varepsilon)\leqslant\frac{ED_n}\varepsilon=\frac{d(X_n,X)}\varepsilon\to0$。$\varepsilon\geqslant1$ 时，概率不超过 $\varepsilon=\frac12$ 时的概率，也趋于零。
+对 $0<\varepsilon<1$，$\{\abs{X_n-X}>\varepsilon\}=\{D_n>\varepsilon\}$（因为 $\varepsilon<1$）。由 Markov 不等式，$\P(\abs{X_n-X}>\varepsilon)\leqslant\frac{ED_n}\varepsilon=\frac{d(X_n,X)}\varepsilon\to0$。$\varepsilon\geqslant1$ 时，概率不超过 $\varepsilon=\frac12$ 时的概率，也趋于零。
 \end{solution}
 \end{questions}
 
@@ -409,11 +409,11 @@ d(X_n,X)=ED_n\leqslant\varepsilon+P(\abs{X_n-X}>\varepsilon).
 
 上界：若 $X_n+Y_n\leqslant x$ 且 $\abs{Y_n-c}\leqslant\varepsilon$，则 $X_n\leqslant x-c+\varepsilon$。所以
 \[
-P(X_n+Y_n\leqslant x)\leqslant P(X_n\leqslant x-c+\varepsilon)+P(\abs{Y_n-c}>\varepsilon)\to F(x-c+\varepsilon).
+\P(X_n+Y_n\leqslant x)\leqslant \P(X_n\leqslant x-c+\varepsilon)+\P(\abs{Y_n-c}>\varepsilon)\to F(x-c+\varepsilon).
 \]
 下界：若 $X_n\leqslant x-c-\varepsilon$ 且 $\abs{Y_n-c}\leqslant\varepsilon$，则 $X_n+Y_n\leqslant x$。所以
 \[
-P(X_n+Y_n\leqslant x)\geqslant P(X_n\leqslant x-c-\varepsilon)-P(\abs{Y_n-c}>\varepsilon)\to F(x-c-\varepsilon).
+\P(X_n+Y_n\leqslant x)\geqslant \P(X_n\leqslant x-c-\varepsilon)-\P(\abs{Y_n-c}>\varepsilon)\to F(x-c-\varepsilon).
 \]
 于是 $F(x-c-\varepsilon)\leqslant\liminf\leqslant\limsup\leqslant F(x-c+\varepsilon)$。令 $\varepsilon\downarrow0$（沿使 $x-c\pm\varepsilon$ 为连续点的值），由 $F$ 在 $x-c$ 处连续即得。
 \end{solution}
@@ -421,9 +421,9 @@ P(X_n+Y_n\leqslant x)\geqslant P(X_n\leqslant x-c-\varepsilon)-P(\abs{Y_n-c}>\va
 \begin{solution}
 思路：$X_n$ 依分布收敛，所以它“大部分时候不太大”；$Y_n$ 又很小，乘积就很小。
 
-固定 $\varepsilon>0$，$\eta>0$。取 $M>0$ 使 $\pm M$ 都是 $F$ 的连续点，并且 $P(\abs X\geqslant M)<\eta$（$F(M)\to1$，$F(-M)\to0$）。由 $X_n\Rightarrow X$，$P(\abs{X_n}>M)\leqslant1-F_{X_n}(M)+F_{X_n}(-M)\to1-F(M)+F(-M)\leqslant P(\abs X\geqslant M)<\eta$。若 $\abs{X_nY_n}>\varepsilon$，则 $\abs{X_n}>M$ 或 $\abs{Y_n}>\varepsilon/M$，所以
+固定 $\varepsilon>0$，$\eta>0$。取 $M>0$ 使 $\pm M$ 都是 $F$ 的连续点，并且 $\P(\abs X\geqslant M)<\eta$（$F(M)\to1$，$F(-M)\to0$）。由 $X_n\Rightarrow X$，$\P(\abs{X_n}>M)\leqslant1-F_{X_n}(M)+F_{X_n}(-M)\to1-F(M)+F(-M)\leqslant \P(\abs X\geqslant M)<\eta$。若 $\abs{X_nY_n}>\varepsilon$，则 $\abs{X_n}>M$ 或 $\abs{Y_n}>\varepsilon/M$，所以
 \[
-P(\abs{X_nY_n}>\varepsilon)\leqslant P(\abs{X_n}>M)+P(\abs{Y_n}>\varepsilon/M).
+\P(\abs{X_nY_n}>\varepsilon)\leqslant \P(\abs{X_n}>M)+\P(\abs{Y_n}>\varepsilon/M).
 \]
 令 $n\to\infty$，$\limsup_nP(\abs{X_nY_n}>\varepsilon)\leqslant\eta$。$\eta$ 任意，结论成立。
 \end{solution}
@@ -434,7 +434,7 @@ P(\abs{X_nY_n}>\varepsilon)\leqslant P(\abs{X_n}>M)+P(\abs{Y_n}>\varepsilon/M).
 对 $x\in\R$，当 $n$ 充分大使 $x+\log n>0$ 时，由独立性，
 \[
 \begin{aligned}
-P(M_n-\log n\leqslant x)&=P(X_1\leqslant x+\log n)^n=\bigl(1-e^{-x-\log n}\bigr)^n\\
+\P(M_n-\log n\leqslant x)&=\P(X_1\leqslant x+\log n)^n=\bigl(1-e^{-x-\log n}\bigr)^n\\
 &=\Bigl(1-\frac{e^{-x}}n\Bigr)^n\to\exp(-e^{-x}).
 \end{aligned}
 \]
@@ -448,23 +448,23 @@ P(M_n-\log n\leqslant x)&=P(X_1\leqslant x+\log n)^n=\bigl(1-e^{-x-\log n}\bigr)
 这里用到了一个常用的技巧：要证明一列\emph{分布}弱收敛，可以在一个概率空间上构造具有这些分布的随机变量，使它们几乎必然收敛。
 \end{solution}
 
-\item\label{ex:convergence:A5} 设 $X_1,X_2,\dots$ 独立，$P(X_n=1)=p_n$，$P(X_n=0)=1-p_n$。
+\item\label{ex:convergence:A5} 设 $X_1,X_2,\dots$ 独立，$\P(X_n=1)=p_n$，$\P(X_n=0)=1-p_n$。
 \begin{questions}
 \item 证明 $X_n\toP0$ 当且仅当 $p_n\to0$。
 \begin{solution}
-对 $0<\varepsilon<1$，$P(\abs{X_n}>\varepsilon)=P(X_n=1)=p_n$。所以 $X_n\toP0$ 当且仅当 $p_n\to0$。（$\varepsilon\geqslant1$ 时概率为零。）这一问不需要独立性。
+对 $0<\varepsilon<1$，$\P(\abs{X_n}>\varepsilon)=\P(X_n=1)=p_n$。所以 $X_n\toP0$ 当且仅当 $p_n\to0$。（$\varepsilon\geqslant1$ 时概率为零。）这一问不需要独立性。
 \end{solution}
 \item 证明 $X_n\to0$ a.s. 当且仅当 $\sum_np_n<\infty$。
 \begin{solution}
-$X_n$ 只取 $0,1$，所以 $X_n(\omega)\to0$ 当且仅当只有有限个 $n$ 使 $X_n(\omega)=1$。令 $A_n=\{X_n=1\}$，于是 $X_n\to0$ a.s. 当且仅当 $P(A_n\ \text{i.o.})=0$。
+$X_n$ 只取 $0,1$，所以 $X_n(\omega)\to0$ 当且仅当只有有限个 $n$ 使 $X_n(\omega)=1$。令 $A_n=\{X_n=1\}$，于是 $X_n\to0$ a.s. 当且仅当 $\P(A_n\ \text{i.o.})=0$。
 
-若 $\sum_np_n<\infty$，由第一 Borel--Cantelli 引理，$P(A_n\ \text{i.o.})=0$。
+若 $\sum_np_n<\infty$，由第一 Borel--Cantelli 引理，$\P(A_n\ \text{i.o.})=0$。
 
 若 $\sum_np_n=\infty$，用推论~\ref{cor:independence:records-count}(3) 的证明：固定 $m$，由独立性，
 \[
-P\Bigl(\bigcap_{n=m}^NA_n^c\Bigr)=\prod_{n=m}^N(1-p_n)\leqslant\exp\Bigl(-\sum_{n=m}^Np_n\Bigr)\to0\quad(N\to\infty),
+\P\Bigl(\bigcap_{n=m}^NA_n^c\Bigr)=\prod_{n=m}^N(1-p_n)\leqslant\exp\Bigl(-\sum_{n=m}^Np_n\Bigr)\to0\quad(N\to\infty),
 \]
-其中用到 $1-p\leqslant e^{-p}$，所以乘积不超过 $\prod_ne^{-p_n}$。所以 $P(\bigcup_{n\geqslant m}A_n)=1$ 对一切 $m$ 成立，$P(A_n\ \text{i.o.})=1$，$X_n\not\to0$ a.s.。
+其中用到 $1-p\leqslant e^{-p}$，所以乘积不超过 $\prod_ne^{-p_n}$。所以 $\P(\bigcup_{n\geqslant m}A_n)=1$ 对一切 $m$ 成立，$\P(A_n\ \text{i.o.})=1$，$X_n\not\to0$ a.s.。
 
 例如 $p_n=\frac1n$ 时，$X_n$ 依概率收敛到 $0$ 而不几乎必然收敛；$p_n=\frac1{n^2}$ 时两种收敛都成立。
 \end{solution}
@@ -475,9 +475,9 @@ P\Bigl(\bigcap_{n=m}^NA_n^c\Bigr)=\prod_{n=m}^N(1-p_n)\leqslant\exp\Bigl(-\sum_{
 设 $F,G$ 分别是 $X,Y$ 的分布函数，$D$ 是二者的间断点集的并，它是可数集。对 $x\notin D$，$F(x)=\lim_nF_{X_n}(x)=G(x)$。对任意 $x$，取 $x_k\downarrow x$，$x_k\notin D$（$D$ 可数，它的补集在 $\R$ 中稠密），由右连续性，$F(x)=\lim_kF(x_k)=\lim_kG(x_k)=G(x)$。分布函数相同，分布相同（推论~\ref{cor:measures:distribution-function}）。
 \end{solution}
 
-\item\label{ex:convergence:A7} 设 $\lambda>0$，$N_n$ 服从参数为 $p_n=\lambda/n$ 的几何分布：$P(N_n>k)=(1-p_n)^k$，$k=0,1,2,\dots$。证明 $N_n/n\Rightarrow Y$，$Y$ 服从参数为 $\lambda$ 的指数分布。
+\item\label{ex:convergence:A7} 设 $\lambda>0$，$N_n$ 服从参数为 $p_n=\lambda/n$ 的几何分布：$\P(N_n>k)=(1-p_n)^k$，$k=0,1,2,\dots$。证明 $N_n/n\Rightarrow Y$，$Y$ 服从参数为 $\lambda$ 的指数分布。
 \begin{solution}
-对 $t\geqslant0$，$P(N_n/n>t)=P(N_n>nt)=P(N_n>\lfloor nt\rfloor)=(1-\frac\lambda n)^{\lfloor nt\rfloor}$（$N_n$ 取整数值，$N_n>nt$ 当且仅当 $N_n>\lfloor nt\rfloor$）。取对数：$\lfloor nt\rfloor\log(1-\frac\lambda n)$。由 $nt-1<\lfloor nt\rfloor\leqslant nt$ 与 $n\log(1-\frac\lambda n)\to-\lambda$，得 $\lfloor nt\rfloor\log(1-\frac\lambda n)\to-\lambda t$。所以 $P(N_n/n>t)\to e^{-\lambda t}$，即 $P(N_n/n\leqslant t)\to1-e^{-\lambda t}$；$t<0$ 时两边为 $0$。直观上，每次成功的概率很小时，等待时间（以 $n$ 次为单位）近似服从指数分布。
+对 $t\geqslant0$，$\P(N_n/n>t)=\P(N_n>nt)=\P(N_n>\lfloor nt\rfloor)=(1-\frac\lambda n)^{\lfloor nt\rfloor}$（$N_n$ 取整数值，$N_n>nt$ 当且仅当 $N_n>\lfloor nt\rfloor$）。取对数：$\lfloor nt\rfloor\log(1-\frac\lambda n)$。由 $nt-1<\lfloor nt\rfloor\leqslant nt$ 与 $n\log(1-\frac\lambda n)\to-\lambda$，得 $\lfloor nt\rfloor\log(1-\frac\lambda n)\to-\lambda t$。所以 $\P(N_n/n>t)\to e^{-\lambda t}$，即 $\P(N_n/n\leqslant t)\to1-e^{-\lambda t}$；$t<0$ 时两边为 $0$。直观上，每次成功的概率很小时，等待时间（以 $n$ 次为单位）近似服从指数分布。
 \end{solution}
 \end{exercises}
 
@@ -495,9 +495,9 @@ P\Bigl(\bigcap_{n=m}^NA_n^c\Bigr)=\prod_{n=m}^N(1-p_n)\leqslant\exp\Bigl(-\sum_{
 \emph{零距离。}$d(X,Y)=0$ 当且仅当非负随机变量 $\min\{\abs{X-Y},1\}$ 几乎必然为零（命题~\ref{prop:expectation:basic}(4)），即 $X=Y$ a.s.
 \end{solution}
 
-\item 称 $X_n$ \term{依概率 Cauchy}，若对每个 $\varepsilon>0$，$\lim_{m,n\to\infty}P(\abs{X_n-X_m}>\varepsilon)=0$。证明存在子列 $n_1<n_2<\cdots$，使 $P(\abs{X_{n_{k+1}}-X_{n_k}}>2^{-k})\leqslant2^{-k}$。
+\item 称 $X_n$ \term{依概率 Cauchy}，若对每个 $\varepsilon>0$，$\lim_{m,n\to\infty}\P(\abs{X_n-X_m}>\varepsilon)=0$。证明存在子列 $n_1<n_2<\cdots$，使 $\P(\abs{X_{n_{k+1}}-X_{n_k}}>2^{-k})\leqslant2^{-k}$。
 \begin{solution}
-对每个 $k$，由定义取 $N_k$ 使 $m,n\geqslant N_k$ 时 $P(\abs{X_n-X_m}>2^{-k})\leqslant2^{-k}$。令 $n_k=\max\{N_1,\dots,N_k\}+k$，则 $n_k$ 严格递增，且 $n_k,n_{k+1}\geqslant N_k$，所以 $P(\abs{X_{n_{k+1}}-X_{n_k}}>2^{-k})\leqslant2^{-k}$。
+对每个 $k$，由定义取 $N_k$ 使 $m,n\geqslant N_k$ 时 $\P(\abs{X_n-X_m}>2^{-k})\leqslant2^{-k}$。令 $n_k=\max\{N_1,\dots,N_k\}+k$，则 $n_k$ 严格递增，且 $n_k,n_{k+1}\geqslant N_k$，所以 $\P(\abs{X_{n_{k+1}}-X_{n_k}}>2^{-k})\leqslant2^{-k}$。
 \end{solution}
 
 \item 证明 B2 中的子列几乎必然收敛到某个随机变量 $X$。
@@ -513,9 +513,9 @@ P\Bigl(\bigcap_{n=m}^NA_n^c\Bigr)=\prod_{n=m}^N(1-p_n)\leqslant\exp\Bigl(-\sum_{
 \begin{solution}
 固定 $\varepsilon>0$。对任意 $n$ 与 $k$，$\{\abs{X_n-X}>\varepsilon\}\subseteq\{\abs{X_n-X_{n_k}}>\frac\varepsilon2\}\cup\{\abs{X_{n_k}-X}>\frac\varepsilon2\}$。所以
 \[
-P(\abs{X_n-X}>\varepsilon)\leqslant P(\abs{X_n-X_{n_k}}>\tfrac\varepsilon2)+P(\abs{X_{n_k}-X}>\tfrac\varepsilon2).
+\P(\abs{X_n-X}>\varepsilon)\leqslant \P(\abs{X_n-X_{n_k}}>\tfrac\varepsilon2)+\P(\abs{X_{n_k}-X}>\tfrac\varepsilon2).
 \]
-给定 $\eta>0$，由依概率 Cauchy，取 $N$ 使 $m,n\geqslant N$ 时第一项（以 $m=n_k$）$<\eta$；由 B3 与定理~\ref{thm:convergence:as-implies-p}，取 $k$ 充分大使 $n_k\geqslant N$ 且第二项 $<\eta$。于是 $n\geqslant N$ 时 $P(\abs{X_n-X}>\varepsilon)<2\eta$。
+给定 $\eta>0$，由依概率 Cauchy，取 $N$ 使 $m,n\geqslant N$ 时第一项（以 $m=n_k$）$<\eta$；由 B3 与定理~\ref{thm:convergence:as-implies-p}，取 $k$ 充分大使 $n_k\geqslant N$ 且第二项 $<\eta$。于是 $n\geqslant N$ 时 $\P(\abs{X_n-X}>\varepsilon)<2\eta$。
 
 \emph{注。}B1--B4 说明：把几乎必然相等的随机变量看成同一个，全体随机变量在度量 $d$ 下构成一个完备的度量空间，其中的收敛就是依概率收敛。而几乎必然收敛不是任何度量下的收敛（这由滑动的方块可以看出，有兴趣的读者可以思考为什么）。
 \end{solution}
@@ -523,35 +523,35 @@ P(\abs{X_n-X}>\varepsilon)\leqslant P(\abs{X_n-X_{n_k}}>\tfrac\varepsilon2)+P(\a
 \end{probleme}
 
 \begin{probleme}{C}{依分布收敛与开集、闭集}
-设 $X_n\Rightarrow X$。本题证明：对开集 $G$，$\liminf_nP(X_n\in G)\geqslant P(X\in G)$；对闭集 $K$，$\limsup_nP(X_n\in K)\leqslant P(X\in K)$；对边界概率为零的集合，概率收敛。这是 \term{Portmanteau 定理}的一部分。
+设 $X_n\Rightarrow X$。本题证明：对开集 $G$，$\liminf_nP(X_n\in G)\geqslant \P(X\in G)$；对闭集 $K$，$\limsup_nP(X_n\in K)\leqslant \P(X\in K)$；对边界概率为零的集合，概率收敛。这是 \term{Portmanteau 定理}的一部分。
 \begin{questions}
-\item 设 $G$ 是开集。用 Skorokhod 表示定理与 Fatou 引理证明 $\liminf_nP(X_n\in G)\geqslant P(X\in G)$。
+\item 设 $G$ 是开集。用 Skorokhod 表示定理与 Fatou 引理证明 $\liminf_nP(X_n\in G)\geqslant \P(X\in G)$。
 \begin{solution}
 由 Skorokhod 表示定理，取 $Y_n\eqd X_n$，$Y\eqd X$，$Y_n\to Y$ a.s.。在 $Y_n\to Y$ 的点处，若 $Y\in G$，由 $G$ 是开集，$n$ 充分大时 $Y_n\in G$。所以 $\one_G(Y)\leqslant\liminf_n\one_G(Y_n)$ a.s.。由 Fatou 引理，
 \[
-P(X\in G)=E\one_G(Y)\leqslant E\liminf_n\one_G(Y_n)\leqslant\liminf_nE\one_G(Y_n)=\liminf_nP(X_n\in G).
+\P(X\in G)=E\one_G(Y)\leqslant E\liminf_n\one_G(Y_n)\leqslant\liminf_nE\one_G(Y_n)=\liminf_nP(X_n\in G).
 \]
 \end{solution}
-\item 设 $K$ 是闭集。证明 $\limsup_nP(X_n\in K)\leqslant P(X\in K)$。
+\item 设 $K$ 是闭集。证明 $\limsup_nP(X_n\in K)\leqslant \P(X\in K)$。
 \begin{solution}
-$K^c$ 是开集，由 C1，$\liminf_nP(X_n\in K^c)\geqslant P(X\in K^c)$。而 $P(X_n\in K)=1-P(X_n\in K^c)$，取上极限，$\limsup_nP(X_n\in K)=1-\liminf_nP(X_n\in K^c)\leqslant1-P(X\in K^c)=P(X\in K)$。
+$K^c$ 是开集，由 C1，$\liminf_nP(X_n\in K^c)\geqslant \P(X\in K^c)$。而 $\P(X_n\in K)=1-\P(X_n\in K^c)$，取上极限，$\limsup_nP(X_n\in K)=1-\liminf_nP(X_n\in K^c)\leqslant1-\P(X\in K^c)=\P(X\in K)$。
 \end{solution}
-\item 设 $B$ 是 Borel 集，$\partial B=\overline B\setminus B^\circ$ 是它的边界（$\overline B$ 为闭包，$B^\circ$ 为内部）。若 $P(X\in\partial B)=0$，证明 $P(X_n\in B)\to P(X\in B)$。
+\item 设 $B$ 是 Borel 集，$\partial B=\overline B\setminus B^\circ$ 是它的边界（$\overline B$ 为闭包，$B^\circ$ 为内部）。若 $\P(X\in\partial B)=0$，证明 $\P(X_n\in B)\to \P(X\in B)$。
 \begin{solution}
 $B^\circ\subseteq B\subseteq\overline B$，$B^\circ$ 开，$\overline B$ 闭。由 C1、C2，
 \[
 \begin{aligned}
-P(X\in B^\circ)&\leqslant\liminf_nP(X_n\in B^\circ)\leqslant\liminf_nP(X_n\in B)\\
-&\leqslant\limsup_nP(X_n\in B)\leqslant\limsup_nP(X_n\in\overline B)\leqslant P(X\in\overline B).
+\P(X\in B^\circ)&\leqslant\liminf_nP(X_n\in B^\circ)\leqslant\liminf_nP(X_n\in B)\\
+&\leqslant\limsup_nP(X_n\in B)\leqslant\limsup_nP(X_n\in\overline B)\leqslant \P(X\in\overline B).
 \end{aligned}
 \]
-由 $P(X\in\partial B)=0$，$P(X\in\overline B)=P(X\in B^\circ)$，两端相等，并且都等于 $P(X\in B)$。
+由 $\P(X\in\partial B)=0$，$\P(X\in\overline B)=\P(X\in B^\circ)$，两端相等，并且都等于 $\P(X\in B)$。
 \end{solution}
-\item 用 C3 解释\egref{ex:convergence:discrete-uniform}：为什么 $P(X_n\in\Q)\not\to P(U\in\Q)$ 并不与依分布收敛矛盾？又用 C3 重新说明定义中“在连续点处”的要求。
+\item 用 C3 解释\egref{ex:convergence:discrete-uniform}：为什么 $\P(X_n\in\Q)\not\to \P(U\in\Q)$ 并不与依分布收敛矛盾？又用 C3 重新说明定义中“在连续点处”的要求。
 \begin{solution}
-$\Q\cap[0,1]$ 的闭包是 $[0,1]$，内部是空集，所以边界包含 $[0,1]$，$P(U\in\partial\Q)=1\neq0$，C3 不适用。
+$\Q\cap[0,1]$ 的闭包是 $[0,1]$，内部是空集，所以边界包含 $[0,1]$，$\P(U\in\partial\Q)=1\neq0$，C3 不适用。
 
-对 $B=(-\infty,x]$，$\partial B=\{x\}$，$P(X\in\partial B)=P(X=x)=F(x)-F(x-)$。它为零当且仅当 $x$ 是 $F$ 的连续点。所以 C3 在 $B=(-\infty,x]$ 时恰好就是定义：在连续点处 $F_n(x)\to F(x)$。
+对 $B=(-\infty,x]$，$\partial B=\{x\}$，$\P(X\in\partial B)=\P(X=x)=F(x)-F(x-)$。它为零当且仅当 $x$ 是 $F$ 的连续点。所以 C3 在 $B=(-\infty,x]$ 时恰好就是定义：在连续点处 $F_n(x)\to F(x)$。
 \end{solution}
 \end{questions}
 \end{probleme}
@@ -562,7 +562,7 @@ $\Q\cap[0,1]$ 的闭包是 $[0,1]$，内部是空集，所以边界包含 $[0,1]
 \begin{questions}
 \item 举例说明：$X_n\Rightarrow X$ 并不能推出 $EX_n\to EX$。
 \begin{solution}
-设 $P(X_n=n)=\frac1n$，$P(X_n=0)=1-\frac1n$。则 $P(X_n\neq0)\to0$，$X_n\toP0$，从而 $X_n\Rightarrow0$；但 $EX_n=1\not\to0$。有界连续函数 $f$ 的期望 $Ef(X_n)=f(n)\frac1n+f(0)(1-\frac1n)\to f(0)$ 收敛，可是 $f(x)=x$ 不是有界的。
+设 $\P(X_n=n)=\frac1n$，$\P(X_n=0)=1-\frac1n$。则 $\P(X_n\neq0)\to0$，$X_n\toP0$，从而 $X_n\Rightarrow0$；但 $EX_n=1\not\to0$。有界连续函数 $f$ 的期望 $Ef(X_n)=f(n)\frac1n+f(0)(1-\frac1n)\to f(0)$ 收敛，可是 $f(x)=x$ 不是有界的。
 \end{solution}
 \item 设 $X_n\Rightarrow X$，并且存在 $p>1$ 使 $\sup_nE\abs{X_n}^p<\infty$。证明 $EX_n\to EX$。
 \begin{solution}
@@ -578,27 +578,27 @@ $\Q\cap[0,1]$ 的闭包是 $[0,1]$，内部是空集，所以边界包含 $[0,1]
 \begin{probleme}{E}{用耦合估计 Poisson 逼近的误差}
 \egref{ex:convergence:binomial-poisson} 证明了 $B(n,\lambda/n)\Rightarrow$ Poisson$(\lambda)$。本题用第~\ref{lec:distributions} 讲的耦合思想给出更强的结论：对一切 Borel 集 $B$，
 \[
-\bigl\lvert P(S\in B)-P(T\in B)\bigr\rvert\leqslant np^2,
+\bigl\lvert \P(S\in B)-\P(T\in B)\bigr\rvert\leqslant np^2,
 \]
 其中 $S\sim B(n,p)$，$T\sim$ Poisson$(np)$。取 $p=\lambda/n$，误差 $\leqslant\lambda^2/n$。
 \begin{questions}
-\item 设 $0<p<1$，$U$ 在 $(0,1)$ 上均匀分布。令 $X=\one\{U>1-p\}$；令 $Y=0$（$U\leqslant e^{-p}$），$Y=1$（$e^{-p}<U\leqslant e^{-p}(1+p)$），$Y=G^{-1}(U)$（其余情形），其中 $G$ 是 Poisson$(p)$ 的分布函数。证明 $X\sim$ Bernoulli$(p)$，$Y\sim$ Poisson$(p)$，并且 $P(X\neq Y)\leqslant p^2$。
+\item 设 $0<p<1$，$U$ 在 $(0,1)$ 上均匀分布。令 $X=\one\{U>1-p\}$；令 $Y=0$（$U\leqslant e^{-p}$），$Y=1$（$e^{-p}<U\leqslant e^{-p}(1+p)$），$Y=G^{-1}(U)$（其余情形），其中 $G$ 是 Poisson$(p)$ 的分布函数。证明 $X\sim$ Bernoulli$(p)$，$Y\sim$ Poisson$(p)$，并且 $\P(X\neq Y)\leqslant p^2$。
 \begin{solution}
-\emph{分布。}$P(X=1)=P(U>1-p)=p$。$Y$ 就是 $G^{-1}(U)$：Poisson$(p)$ 的分布函数在 $[0,1)$ 上取值 $e^{-p}$，在 $[1,2)$ 上取值 $e^{-p}(1+p)$，由引理~\ref{lem:distributions:quantile}，$G^{-1}(u)=0$ 当且仅当 $u\leqslant G(0)=e^{-p}$，$G^{-1}(u)\leqslant1$ 当且仅当 $u\leqslant e^{-p}(1+p)$。所以 $Y=G^{-1}(U)$，它服从 Poisson$(p)$（分位数变换）。
+\emph{分布。}$\P(X=1)=\P(U>1-p)=p$。$Y$ 就是 $G^{-1}(U)$：Poisson$(p)$ 的分布函数在 $[0,1)$ 上取值 $e^{-p}$，在 $[1,2)$ 上取值 $e^{-p}(1+p)$，由引理~\ref{lem:distributions:quantile}，$G^{-1}(u)=0$ 当且仅当 $u\leqslant G(0)=e^{-p}$，$G^{-1}(u)\leqslant1$ 当且仅当 $u\leqslant e^{-p}(1+p)$。所以 $Y=G^{-1}(U)$，它服从 Poisson$(p)$（分位数变换）。
 
 \emph{不相等的概率。}由 $e^{-p}\geqslant1-p$：在 $U\leqslant1-p$ 上 $X=0=Y$；在 $e^{-p}<U\leqslant e^{-p}(1+p)$ 上 $X=1=Y$（这里 $U>e^{-p}\geqslant1-p$）。所以 $\{X\neq Y\}\subseteq\{1-p<U\leqslant e^{-p}\}\cup\{U>e^{-p}(1+p)\}$，
 \[
-P(X\neq Y)\leqslant(e^{-p}-1+p)+(1-e^{-p}-pe^{-p})=p(1-e^{-p})\leqslant p^2,
+\P(X\neq Y)\leqslant(e^{-p}-1+p)+(1-e^{-p}-pe^{-p})=p(1-e^{-p})\leqslant p^2,
 \]
 最后一步用 $1-e^{-p}\leqslant p$。
 \end{solution}
-\item 设 $(X_i,Y_i)$，$i=1,\dots,n$，是 E1 中构造的 $n$ 个独立的副本（用 $n$ 个独立的均匀随机变量 $U_1,\dots,U_n$，由定理~\ref{thm:independence:existence} 它们存在）。令 $S=\sum_iX_i$，$T=\sum_iY_i$。证明 $S\sim B(n,p)$，$T\sim$ Poisson$(np)$，并且 $P(S\neq T)\leqslant np^2$。
+\item 设 $(X_i,Y_i)$，$i=1,\dots,n$，是 E1 中构造的 $n$ 个独立的副本（用 $n$ 个独立的均匀随机变量 $U_1,\dots,U_n$，由定理~\ref{thm:independence:existence} 它们存在）。令 $S=\sum_iX_i$，$T=\sum_iY_i$。证明 $S\sim B(n,p)$，$T\sim$ Poisson$(np)$，并且 $\P(S\neq T)\leqslant np^2$。
 \begin{solution}
-$X_i$ 是 $U_i$ 的函数，独立，都服从 Bernoulli$(p)$，所以 $S\sim B(n,p)$（第~\ref{lec:independence} 讲中二项分布的例子）。$Y_i$ 独立，都服从 Poisson$(p)$，由\egref{ex:independence:poisson-sum} 与归纳法，$T\sim$ Poisson$(np)$。若 $S\neq T$，则至少有一个 $i$ 使 $X_i\neq Y_i$，所以 $P(S\neq T)\leqslant\sum_iP(X_i\neq Y_i)\leqslant np^2$。
+$X_i$ 是 $U_i$ 的函数，独立，都服从 Bernoulli$(p)$，所以 $S\sim B(n,p)$（第~\ref{lec:independence} 讲中二项分布的例子）。$Y_i$ 独立，都服从 Poisson$(p)$，由\egref{ex:independence:poisson-sum} 与归纳法，$T\sim$ Poisson$(np)$。若 $S\neq T$，则至少有一个 $i$ 使 $X_i\neq Y_i$，所以 $\P(S\neq T)\leqslant\sum_iP(X_i\neq Y_i)\leqslant np^2$。
 \end{solution}
-\item 证明对一切 Borel 集 $B$，$\abs{P(S\in B)-P(T\in B)}\leqslant np^2$。
+\item 证明对一切 Borel 集 $B$，$\abs{\P(S\in B)-\P(T\in B)}\leqslant np^2$。
 \begin{solution}
-$P(S\in B)-P(T\in B)=P(S\in B,T\notin B)-P(T\in B,S\notin B)$，两项都不超过 $P(S\neq T)$，所以差的绝对值不超过 $P(S\neq T)\leqslant np^2$。（这就是第~\ref{lec:distributions} 讲作业 C 中的耦合不等式。）
+$\P(S\in B)-\P(T\in B)=\P(S\in B,T\notin B)-\P(T\in B,S\notin B)$，两项都不超过 $\P(S\neq T)$，所以差的绝对值不超过 $\P(S\neq T)\leqslant np^2$。（这就是第~\ref{lec:distributions} 讲作业 C 中的耦合不等式。）
 \end{solution}
 \item 与\egref{ex:convergence:binomial-poisson} 比较，说明 E3 的结论强在哪里。
 \begin{solution}

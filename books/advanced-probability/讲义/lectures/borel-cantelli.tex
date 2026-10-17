@@ -9,18 +9,18 @@
 
 要说明 $S_n/n\to\mu$ a.s.，就要说明“偏离超过 $\varepsilon$”这件事只发生有限次，即
 \[
-P\Bigl(\Bigl\lvert\frac{S_n}n-\mu\Bigr\rvert>\varepsilon\ \text{对无穷多个}\ n\ \text{成立}\Bigr)=0 .
+\P\Bigl(\Bigl\lvert\frac{S_n}n-\mu\Bigr\rvert>\varepsilon\ \text{对无穷多个}\ n\ \text{成立}\Bigr)=0 .
 \]
 所以我们需要判断“一列事件发生无穷多次”的概率。这一讲的两个 Borel--Cantelli 引理就是为此而设的：第一个说，若 $\sum_nP(A_n)<\infty$，则几乎必然只有有限个 $A_n$ 发生；第二个说，若事件独立且 $\sum_nP(A_n)=\infty$，则几乎必然有无穷多个 $A_n$ 发生。它们简单得出人意料，却是证明几乎必然结论的最基本的工具。
 
 \topic{本讲用到的前文结果}
 
 \begin{enumerate}
-\item 集合列的上极限 $\limsup_nA_n=\bigcap_m\bigcup_{n\geqslant m}A_n$ 是“$A_n$ 发生无穷多次”，记作 $\{A_n\ \text{i.o.}\}$；$\one_{\limsup A_n}=\limsup\one_{A_n}$；$(\limsup A_n)^c=\liminf A_n^c$（命题~\ref{prop:set-systems:limsup}）。$P(\limsup A_n)\geqslant\limsup P(A_n)$，$P(\liminf A_n)\leqslant\liminf P(A_n)$（命题~\ref{prop:measures:fatou-sets}）。
+\item 集合列的上极限 $\limsup_nA_n=\bigcap_m\bigcup_{n\geqslant m}A_n$ 是“$A_n$ 发生无穷多次”，记作 $\{A_n\ \text{i.o.}\}$；$\one_{\limsup A_n}=\limsup\one_{A_n}$；$(\limsup A_n)^c=\liminf A_n^c$（命题~\ref{prop:set-systems:limsup}）。$\P(\limsup A_n)\geqslant\limsup \P(A_n)$，$\P(\liminf A_n)\leqslant\liminf \P(A_n)$（命题~\ref{prop:measures:fatou-sets}）。
 \item 第一 Borel--Cantelli 引理（定理~\ref{thm:expectation:borel-cantelli}）。
-\item 几乎必然收敛的刻画（引理~\ref{lem:convergence:as-criterion}）：$X_n\to X$ a.s.\ 当且仅当对每个 $\varepsilon>0$，$P(\abs{X_n-X}>\varepsilon\ \text{i.o.})=0$。子列定理与子列刻画（定理~\ref{thm:convergence:subsequence}、\ref{thm:convergence:subsequence-criterion}）。
+\item 几乎必然收敛的刻画（引理~\ref{lem:convergence:as-criterion}）：$X_n\to X$ a.s.\ 当且仅当对每个 $\varepsilon>0$，$\P(\abs{X_n-X}>\varepsilon\ \text{i.o.})=0$。子列定理与子列刻画（定理~\ref{thm:convergence:subsequence}、\ref{thm:convergence:subsequence-criterion}）。
 \item 独立性（第~\ref{lec:independence} 讲）：独立事件的补事件仍独立（命题~\ref{prop:independence:complements}）；独立随机变量乘积的期望（定理~\ref{thm:independence:expectation}）；分组定理（推论~\ref{cor:independence:functions}）；Rényi 记录定理（定理~\ref{thm:independence:records}）。
-\item 期望与尾概率：$\sum_{n\geqslant1}P(\abs X\geqslant n)\leqslant E\abs X\leqslant1+\sum_{n\geqslant1}P(\abs X\geqslant n)$（命题~\ref{prop:expectation:tail-sum}）。
+\item 期望与尾概率：$\sum_{n\geqslant1}\P(\abs X\geqslant n)\leqslant E\abs X\leqslant1+\sum_{n\geqslant1}\P(\abs X\geqslant n)$（命题~\ref{prop:expectation:tail-sum}）。
 \item 不等式 $1-x\leqslant e^{-x}$（$x\in\R$），以及 Chebyshev 不等式。
 \end{enumerate}
 
@@ -29,13 +29,13 @@ P\Bigl(\Bigl\lvert\frac{S_n}n-\mu\Bigr\rvert>\varepsilon\ \text{对无穷多个}
 我们把第~\ref{lec:expectation} 讲的定理~\ref{thm:expectation:borel-cantelli} 再写一遍。
 
 \begin{theorem}[第一 Borel--Cantelli 引理]\label{thm:borel-cantelli:first}
-若 $\sum_{n=1}^\infty P(A_n)<\infty$，则 $P(A_n\ \text{i.o.})=0$。
+若 $\sum_{n=1}^\infty \P(A_n)<\infty$，则 $\P(A_n\ \text{i.o.})=0$。
 \end{theorem}
 \begin{proof}
 令 $N=\sum_k\one_{A_k}$ 为发生了的事件的个数。由逐项积分，$EN=\sum_kP(A_k)<\infty$，所以 $N<\infty$ a.s.；而 $\{N=\infty\}=\{A_n\ \text{i.o.}\}$。
 \end{proof}
 
-它的第一个典型应用是第~\ref{lec:convergence} 讲的子列定理：依概率收敛的序列有几乎必然收敛的子列。证明的办法是选子列 $n_k$ 使 $P(\abs{X_{n_k}-X}>2^{-k})\leqslant2^{-k}$，这些概率可以求和。由子列定理还得到：$X_n\toP X$ 当且仅当每个子列都有几乎必然收敛到 $X$ 的子列（定理~\ref{thm:convergence:subsequence-criterion}）。
+它的第一个典型应用是第~\ref{lec:convergence} 讲的子列定理：依概率收敛的序列有几乎必然收敛的子列。证明的办法是选子列 $n_k$ 使 $\P(\abs{X_{n_k}-X}>2^{-k})\leqslant2^{-k}$，这些概率可以求和。由子列定理还得到：$X_n\toP X$ 当且仅当每个子列都有几乎必然收敛到 $X$ 的子列（定理~\ref{thm:convergence:subsequence-criterion}）。
 
 \begin{remark}[几乎必然收敛不来自任何拓扑]
 在任何拓扑空间中都有下面的事实：若数列 $y_n$ 的每个子列都有子列收敛到 $y$，则 $y_n\to y$。（如若不然，存在 $y$ 的开邻域 $G$ 与子列 $y_{n_m}\notin G$，这个子列的任何子列都不收敛到 $y$。）若几乎必然收敛是某个拓扑中的收敛，那么由子列刻画，依概率收敛的序列就都几乎必然收敛了。而滑动方块依概率收敛却不几乎必然收敛。所以，几乎必然收敛不是任何拓扑（更不是任何度量）下的收敛。相比之下，依概率收敛是一个度量下的收敛（第~\ref{lec:convergence} 讲作业 B）。
@@ -57,7 +57,7 @@ P\Bigl(\Bigl\lvert\frac{S_n}n-\mu\Bigr\rvert>\varepsilon\ \text{对无穷多个}
 \end{theorem}
 
 \begin{remark}[证明思路]
-用 Chebyshev 不等式估计 $P(\abs{S_n/n-\mu}>\varepsilon)$，要使它关于 $n$ 可求和。二阶矩只给出 $\frac C{n\varepsilon^2}$，不可求和；四阶矩给出 $\frac C{n^2\varepsilon^4}$，可求和。然后用第一 Borel--Cantelli 引理与几乎必然收敛的刻画。
+用 Chebyshev 不等式估计 $\P(\abs{S_n/n-\mu}>\varepsilon)$，要使它关于 $n$ 可求和。二阶矩只给出 $\frac C{n\varepsilon^2}$，不可求和；四阶矩给出 $\frac C{n^2\varepsilon^4}$，可求和。然后用第一 Borel--Cantelli 引理与几乎必然收敛的刻画。
 \end{remark}
 
 \begin{proof}
@@ -68,45 +68,45 @@ P\Bigl(\Bigl\lvert\frac{S_n}n-\mu\Bigr\rvert>\varepsilon\ \text{对无穷多个}
 ES_n^4=nEX_1^4+3n(n-1)(EX_1^2)^2\leqslant Cn^2 .
 \]
 
-\emph{第二步：Chebyshev 不等式。}$P(\abs{S_n}>n\varepsilon)\leqslant\frac{ES_n^4}{(n\varepsilon)^4}\leqslant\frac C{n^2\varepsilon^4}$。
+\emph{第二步：Chebyshev 不等式。}$\P(\abs{S_n}>n\varepsilon)\leqslant\frac{ES_n^4}{(n\varepsilon)^4}\leqslant\frac C{n^2\varepsilon^4}$。
 
-\emph{第三步。}由第一 Borel--Cantelli 引理，$P(\abs{S_n/n}>\varepsilon\ \text{i.o.})=0$。$\varepsilon$ 任意，由引理~\ref{lem:convergence:as-criterion}，$S_n/n\to0$ a.s.
+\emph{第三步。}由第一 Borel--Cantelli 引理，$\P(\abs{S_n/n}>\varepsilon\ \text{i.o.})=0$。$\varepsilon$ 任意，由引理~\ref{lem:convergence:as-criterion}，$S_n/n\to0$ a.s.
 \end{proof}
 
 第一 Borel--Cantelli 引理的逆命题在一般情形下不成立。
 
 \begin{example}\label{ex:borel-cantelli:no-converse}
-在 $((0,1),\cR,\lambda)$ 上令 $A_n=(0,a_n)$，$a_n\to0$。则 $\limsup_nA_n=\varnothing$：每个 $\omega>0$ 只属于有限个 $A_n$（$a_n<\omega$ 时 $\omega\notin A_n$）。但若 $a_n\geqslant\frac1n$，则 $\sum_nP(A_n)=\infty$。这些事件是“套在一起”的：一个发生，前面更大的都发生，它们之间的强烈依赖使得“和发散”不能推出“无穷多次发生”。所以对一般的事件，除了命题~\ref{prop:measures:fatou-sets} 的 $P(\limsup A_n)\geqslant\limsup P(A_n)$ 之外，几乎说不了什么。
+在 $((0,1),\cR,\lambda)$ 上令 $A_n=(0,a_n)$，$a_n\to0$。则 $\limsup_nA_n=\varnothing$：每个 $\omega>0$ 只属于有限个 $A_n$（$a_n<\omega$ 时 $\omega\notin A_n$）。但若 $a_n\geqslant\frac1n$，则 $\sum_nP(A_n)=\infty$。这些事件是“套在一起”的：一个发生，前面更大的都发生，它们之间的强烈依赖使得“和发散”不能推出“无穷多次发生”。所以对一般的事件，除了命题~\ref{prop:measures:fatou-sets} 的 $\P(\limsup A_n)\geqslant\limsup \P(A_n)$ 之外，几乎说不了什么。
 \end{example}
 
 \topic{第二 Borel--Cantelli 引理}
 
-对独立的事件，情形完全不同：$P(\limsup A_n)>0$ 的必要条件 $\sum P(A_n)=\infty$ 也是 $P(\limsup A_n)=1$ 的充分条件。
+对独立的事件，情形完全不同：$\P(\limsup A_n)>0$ 的必要条件 $\sum \P(A_n)=\infty$ 也是 $\P(\limsup A_n)=1$ 的充分条件。
 
 \begin{theorem}[第二 Borel--Cantelli 引理]\label{thm:borel-cantelli:second}
-若事件 $A_1,A_2,\dots$ 独立，$\sum_nP(A_n)=\infty$，则 $P(A_n\ \text{i.o.})=1$。
+若事件 $A_1,A_2,\dots$ 独立，$\sum_nP(A_n)=\infty$，则 $\P(A_n\ \text{i.o.})=1$。
 \end{theorem}
 \begin{proof}
 设 $M<N$。由独立性（补事件仍独立，命题~\ref{prop:independence:complements}）与 $1-x\leqslant e^{-x}$，
 \[
 \begin{aligned}
-P\Bigl(\bigcap_{n=M}^NA_n^c\Bigr)&=\prod_{n=M}^N\bigl(1-P(A_n)\bigr)\leqslant\prod_{n=M}^N\exp(-P(A_n))\\
+\P\Bigl(\bigcap_{n=M}^NA_n^c\Bigr)&=\prod_{n=M}^N\bigl(1-\P(A_n)\bigr)\leqslant\prod_{n=M}^N\exp(-\P(A_n))\\
 &=\exp\Bigl(-\sum_{n=M}^NP(A_n)\Bigr)\to0\quad(N\to\infty).
 \end{aligned}
 \]
-$\bigcap_{n=M}^NA_n^c\downarrow\bigcap_{n\geqslant M}A_n^c$（$N\to\infty$），由测度的连续性 $P(\bigcap_{n\geqslant M}A_n^c)=0$，即 $P(\bigcup_{n\geqslant M}A_n)=1$ 对一切 $M$ 成立。$\bigcup_{n\geqslant M}A_n\downarrow\limsup_nA_n$，所以 $P(\limsup_nA_n)=1$。
+$\bigcap_{n=M}^NA_n^c\downarrow\bigcap_{n\geqslant M}A_n^c$（$N\to\infty$），由测度的连续性 $\P(\bigcap_{n\geqslant M}A_n^c)=0$，即 $\P(\bigcup_{n\geqslant M}A_n)=1$ 对一切 $M$ 成立。$\bigcup_{n\geqslant M}A_n\downarrow\limsup_nA_n$，所以 $\P(\limsup_nA_n)=1$。
 \end{proof}
 
-于是对独立的事件有一个“$0$-$1$ 律”：$P(A_n\ \text{i.o.})$ 只能是 $0$ 或 $1$，按 $\sum P(A_n)$ 收敛或发散而定。第~\ref{lec:independence} 讲中我们已经见过两个例子：记录无穷多次出现（推论~\ref{cor:independence:records-count}(3)，$\sum\frac1k=\infty$），以及独立的 Bernoulli 序列 $X_n\to0$ a.s.\ 当且仅当 $\sum p_n<\infty$（第~\ref{lec:convergence} 讲习题~\exref{ex:convergence:A5}）。下面是一个典型的应用：强大数定律需要有限的期望。
+于是对独立的事件有一个“$0$-$1$ 律”：$\P(A_n\ \text{i.o.})$ 只能是 $0$ 或 $1$，按 $\sum \P(A_n)$ 收敛或发散而定。第~\ref{lec:independence} 讲中我们已经见过两个例子：记录无穷多次出现（推论~\ref{cor:independence:records-count}(3)，$\sum\frac1k=\infty$），以及独立的 Bernoulli 序列 $X_n\to0$ a.s.\ 当且仅当 $\sum p_n<\infty$（第~\ref{lec:convergence} 讲习题~\exref{ex:convergence:A5}）。下面是一个典型的应用：强大数定律需要有限的期望。
 
 \begin{theorem}[强大数定律需要有限的期望]\label{thm:borel-cantelli:necessity}
-设 $X_1,X_2,\dots$ 是 i.i.d.，$E\abs{X_1}=\infty$。则 $P(\abs{X_n}\geqslant n\ \text{i.o.})=1$，从而
+设 $X_1,X_2,\dots$ 是 i.i.d.，$E\abs{X_1}=\infty$。则 $\P(\abs{X_n}\geqslant n\ \text{i.o.})=1$，从而
 \[
-P\Bigl(\lim_{n\to\infty}\frac{S_n}n\ \text{存在且有限}\Bigr)=0 .
+\P\Bigl(\lim_{n\to\infty}\frac{S_n}n\ \text{存在且有限}\Bigr)=0 .
 \]
 \end{theorem}
 \begin{proof}
-\emph{第一步。}由命题~\ref{prop:expectation:tail-sum}，$E\abs{X_1}\leqslant1+\sum_{n\geqslant1}P(\abs{X_1}\geqslant n)$，所以 $\sum_nP(\abs{X_n}\geqslant n)=\sum_nP(\abs{X_1}\geqslant n)=\infty$（同分布）。事件 $\{\abs{X_n}\geqslant n\}$ 独立，由第二 Borel--Cantelli 引理，$P(\abs{X_n}\geqslant n\ \text{i.o.})=1$。
+\emph{第一步。}由命题~\ref{prop:expectation:tail-sum}，$E\abs{X_1}\leqslant1+\sum_{n\geqslant1}\P(\abs{X_1}\geqslant n)$，所以 $\sum_nP(\abs{X_n}\geqslant n)=\sum_nP(\abs{X_1}\geqslant n)=\infty$（同分布）。事件 $\{\abs{X_n}\geqslant n\}$ 独立，由第二 Borel--Cantelli 引理，$\P(\abs{X_n}\geqslant n\ \text{i.o.})=1$。
 
 \emph{第二步。}设 $\omega$ 使 $S_n(\omega)/n\to L$，$L$ 有限。则
 \[
@@ -135,10 +135,10 @@ P\Bigl(\lim_{n\to\infty}\frac{S_n}n\ \text{存在且有限}\Bigr)=0 .
 
 \emph{第一步：方差。}两两独立的示性函数两两不相关，由上一讲定理~\ref{thm:weak-laws:variance-sum}，$\Var(S_n)=\sum_m\Var(X_m)\leqslant\sum_mEX_m^2=\sum_mEX_m=ES_n$（$X_m^2=X_m$）。由 Chebyshev 不等式，
 \[
-P(\abs{S_n-ES_n}>\delta ES_n)\leqslant\frac{\Var(S_n)}{\delta^2(ES_n)^2}\leqslant\frac1{\delta^2ES_n}.
+\P(\abs{S_n-ES_n}>\delta ES_n)\leqslant\frac{\Var(S_n)}{\delta^2(ES_n)^2}\leqslant\frac1{\delta^2ES_n}.
 \]
 
-\emph{第二步：子列。}$ES_n\uparrow\infty$。令 $n_k=\inf\{n:ES_n\geqslant k^2\}$，$T_k=S_{n_k}$。由于每次 $ES_n$ 至多增加 $1$（$P(A_n)\leqslant1$），$k^2\leqslant ET_k\leqslant k^2+1$。由第一步，$P(\abs{T_k-ET_k}>\delta ET_k)\leqslant\frac1{\delta^2k^2}$，可以对 $k$ 求和。由第一 Borel--Cantelli 引理，几乎必然地只有有限个 $k$ 使 $\abs{T_k/ET_k-1}>\delta$。取 $\delta=\frac1j$，$j=1,2,\dots$，可数个概率为零的事件之并概率为零，所以 $T_k/ET_k\to1$ a.s.
+\emph{第二步：子列。}$ES_n\uparrow\infty$。令 $n_k=\inf\{n:ES_n\geqslant k^2\}$，$T_k=S_{n_k}$。由于每次 $ES_n$ 至多增加 $1$（$\P(A_n)\leqslant1$），$k^2\leqslant ET_k\leqslant k^2+1$。由第一步，$\P(\abs{T_k-ET_k}>\delta ET_k)\leqslant\frac1{\delta^2k^2}$，可以对 $k$ 求和。由第一 Borel--Cantelli 引理，几乎必然地只有有限个 $k$ 使 $\abs{T_k/ET_k-1}>\delta$。取 $\delta=\frac1j$，$j=1,2,\dots$，可数个概率为零的事件之并概率为零，所以 $T_k/ET_k\to1$ a.s.
 
 \emph{第三步：夹逼。}取 $\omega$ 使 $T_k(\omega)/ET_k\to1$。若 $n_k\leqslant n<n_{k+1}$，由 $S_n$ 与 $ES_n$ 关于 $n$ 单调不减，
 \[
@@ -150,7 +150,7 @@ P(\abs{S_n-ES_n}>\delta ES_n)\leqslant\frac{\Var(S_n)}{\delta^2(ES_n)^2}\leqslan
 这个证明的启示是：要证明非负单调的 $X_n$ 满足 $X_n/c_n\to1$ a.s.（$c_n$ 单调递增），只需对一个子列 $n(k)$ 证明，只要这个子列满足 $c_{n(k+1)}/c_{n(k)}\to1$。
 
 \begin{example}[记录的个数]\label{ex:borel-cantelli:records}
-设 $X_1,X_2,\dots$ 是 i.i.d.，分布函数连续，$A_k=\{X_k>\max_{j<k}X_j\}$ 为第 $k$ 次创造记录，$R_n=\sum_{m\leqslant n}\one_{A_m}$ 为前 $n$ 次中记录的个数。由 Rényi 记录定理（定理~\ref{thm:independence:records}），$A_k$ 独立，$P(A_k)=\frac1k$。由定理~\ref{thm:borel-cantelli:pairwise} 与 $\sum_{m\leqslant n}\frac1m\sim\log n$（上一讲 \eqref{eq:weak-laws:harmonic}），
+设 $X_1,X_2,\dots$ 是 i.i.d.，分布函数连续，$A_k=\{X_k>\max_{j<k}X_j\}$ 为第 $k$ 次创造记录，$R_n=\sum_{m\leqslant n}\one_{A_m}$ 为前 $n$ 次中记录的个数。由 Rényi 记录定理（定理~\ref{thm:independence:records}），$A_k$ 独立，$\P(A_k)=\frac1k$。由定理~\ref{thm:borel-cantelli:pairwise} 与 $\sum_{m\leqslant n}\frac1m\sim\log n$（上一讲 \eqref{eq:weak-laws:harmonic}），
 \[
 \frac{R_n}{\log n}\to1\quad\text{a.s.}
 \]
@@ -158,15 +158,15 @@ P(\abs{S_n-ES_n}>\delta ES_n)\leqslant\frac{\Var(S_n)}{\delta^2(ES_n)^2}\leqslan
 \end{example}
 
 \begin{workedexample}[最长的连续正面]\label{we:borel-cantelli:head-runs}
-设 $X_1,X_2,\dots$ 是 i.i.d.，$P(X_i=1)=P(X_i=0)=\frac12$（$1$ 表示正面）。令 $L_n$ 为前 $n$ 次中最长的连续正面的长度。证明
+设 $X_1,X_2,\dots$ 是 i.i.d.，$\P(X_i=1)=\P(X_i=0)=\frac12$（$1$ 表示正面）。令 $L_n$ 为前 $n$ 次中最长的连续正面的长度。证明
 \[
 \frac{L_n}{\log_2n}\to1\quad\text{a.s.}
 \]
 \end{workedexample}
 \begin{solution}
-本例中 $\log$ 都以 $2$ 为底。令 $\ell_n=\max\{m\geqslant0:\ X_{n-m+1}=\cdots=X_n=1\}$ 为“到第 $n$ 次为止”的连续正面的长度（$m\leqslant n$），则 $L_n=\max_{k\leqslant n}\ell_k$。对 $0\leqslant r\leqslant n$，$P(\ell_n\geqslant r)=P(X_{n-r+1}=\cdots=X_n=1)=2^{-r}$。
+本例中 $\log$ 都以 $2$ 为底。令 $\ell_n=\max\{m\geqslant0:\ X_{n-m+1}=\cdots=X_n=1\}$ 为“到第 $n$ 次为止”的连续正面的长度（$m\leqslant n$），则 $L_n=\max_{k\leqslant n}\ell_k$。对 $0\leqslant r\leqslant n$，$\P(\ell_n\geqslant r)=\P(X_{n-r+1}=\cdots=X_n=1)=2^{-r}$。
 
-\emph{上界：$\limsup_nL_n/\log n\leqslant1$ a.s.}固定 $\varepsilon>0$，令 $r_n=\lceil(1+\varepsilon)\log n\rceil$。当 $r_n\leqslant n$ 时 $P(\ell_n\geqslant r_n)=2^{-r_n}\leqslant n^{-(1+\varepsilon)}$；当 $r_n>n$ 时 $\ell_n\geqslant r_n$ 不可能。所以 $\sum_nP(\ell_n\geqslant r_n)<\infty$，由第一 Borel--Cantelli 引理，几乎必然存在 $N(\omega)$，使 $n\geqslant N$ 时 $\ell_n<(1+\varepsilon)\log n+1$。于是对 $n\geqslant N$，
+\emph{上界：$\limsup_nL_n/\log n\leqslant1$ a.s.}固定 $\varepsilon>0$，令 $r_n=\lceil(1+\varepsilon)\log n\rceil$。当 $r_n\leqslant n$ 时 $\P(\ell_n\geqslant r_n)=2^{-r_n}\leqslant n^{-(1+\varepsilon)}$；当 $r_n>n$ 时 $\ell_n\geqslant r_n$ 不可能。所以 $\sum_nP(\ell_n\geqslant r_n)<\infty$，由第一 Borel--Cantelli 引理，几乎必然存在 $N(\omega)$，使 $n\geqslant N$ 时 $\ell_n<(1+\varepsilon)\log n+1$。于是对 $n\geqslant N$，
 \[
 L_n=\max\Bigl\{\max_{k<N}\ell_k,\ \max_{N\leqslant k\leqslant n}\ell_k\Bigr\}\leqslant\max\{N,\ (1+\varepsilon)\log n+1\},
 \]
@@ -174,7 +174,7 @@ L_n=\max\Bigl\{\max_{k<N}\ell_k,\ \max_{N\leqslant k\leqslant n}\ell_k\Bigr\}\le
 
 \emph{下界：$\liminf_nL_n/\log n\geqslant1$ a.s.}固定 $\varepsilon\in(0,1)$，令 $k=k_n=\lfloor(1-\varepsilon)\log n\rfloor+1$。把前 $n$ 次分成 $\lfloor n/k\rfloor$ 个互不相交的、长度为 $k$ 的段。若某一段全是正面，则 $L_n\geqslant k>(1-\varepsilon)\log n$。各段由不相交的 $X_i$ 决定，由分组定理它们独立；每段全是正面的概率是 $2^{-k}\geqslant2^{-(1-\varepsilon)\log n-1}=\frac12n^{-(1-\varepsilon)}$。所以
 \[
-P\bigl(L_n\leqslant(1-\varepsilon)\log n\bigr)\leqslant P(\text{没有一段全是正面})=(1-2^{-k})^{\lfloor n/k\rfloor}\leqslant\exp\Bigl(-\Bigl\lfloor\frac nk\Bigr\rfloor\cdot\frac{n^{-(1-\varepsilon)}}2\Bigr).
+\P\bigl(L_n\leqslant(1-\varepsilon)\log n\bigr)\leqslant \P(\text{没有一段全是正面})=(1-2^{-k})^{\lfloor n/k\rfloor}\leqslant\exp\Bigl(-\Bigl\lfloor\frac nk\Bigr\rfloor\cdot\frac{n^{-(1-\varepsilon)}}2\Bigr).
 \]
 $n$ 充分大时 $k\leqslant\log n$，$\lfloor n/k\rfloor\geqslant\frac n{\log n}-1\geqslant\frac n{2\log n}$，于是右边不超过 $\exp\bigl(-\frac{n^\varepsilon}{4\log n}\bigr)$。这关于 $n$ 可求和（$n^\varepsilon/(4\log n)\geqslant2\log n$ 对充分大的 $n$ 成立，从而这一项不超过 $n^{-2}$）。由第一 Borel--Cantelli 引理，几乎必然地 $n$ 充分大时 $L_n>(1-\varepsilon)\log n$，$\liminf_nL_n/\log n\geqslant1-\varepsilon$。
 
@@ -187,8 +187,8 @@ $n$ 充分大时 $k\leqslant\log n$，$\lfloor n/k\rfloor\geqslant\frac n{\log n
 
 \begin{enumerate}
 \item 证明几乎必然收敛，归结为证明“偏离超过 $\varepsilon$ 的事件只发生有限次”。
-\item 第一 Borel--Cantelli 引理：$\sum P(A_n)<\infty$ 蕴含 $P(A_n\ \text{i.o.})=0$，对事件之间的关系没有任何要求。它给出了子列定理、四阶矩的强大数定律（定理~\ref{thm:borel-cantelli:fourth-moment}）。
-\item 第二 Borel--Cantelli 引理：独立且 $\sum P(A_n)=\infty$ 蕴含 $P(A_n\ \text{i.o.})=1$。对两两独立的事件，还有 $\sum_{m\leqslant n}\one_{A_m}/\sum_{m\leqslant n}P(A_m)\to1$ a.s.（定理~\ref{thm:borel-cantelli:pairwise}）。它给出了：强大数定律需要 $E\abs{X_1}<\infty$（定理~\ref{thm:borel-cantelli:necessity}），记录的个数 $\sim\log n$ a.s.，最长的连续正面 $\sim\log_2n$ a.s.
+\item 第一 Borel--Cantelli 引理：$\sum \P(A_n)<\infty$ 蕴含 $\P(A_n\ \text{i.o.})=0$，对事件之间的关系没有任何要求。它给出了子列定理、四阶矩的强大数定律（定理~\ref{thm:borel-cantelli:fourth-moment}）。
+\item 第二 Borel--Cantelli 引理：独立且 $\sum \P(A_n)=\infty$ 蕴含 $\P(A_n\ \text{i.o.})=1$。对两两独立的事件，还有 $\sum_{m\leqslant n}\one_{A_m}/\sum_{m\leqslant n}\P(A_m)\to1$ a.s.（定理~\ref{thm:borel-cantelli:pairwise}）。它给出了：强大数定律需要 $E\abs{X_1}<\infty$（定理~\ref{thm:borel-cantelli:necessity}），记录的个数 $\sim\log n$ a.s.，最长的连续正面 $\sim\log_2n$ a.s.
 \item 技巧：要得到可求和的估计，可以用更高阶的矩（四阶矩），或者只在一个稀疏的子列上估计，再用单调性夹逼（$n_k\approx$ 使 $ES_{n_k}\approx k^2$）。下一讲的强大数定律把这两种想法与截断法结合起来。
 \end{enumerate}
 
@@ -205,7 +205,7 @@ $n$ 充分大时 $k\leqslant\log n$，$\lfloor n/k\rfloor\geqslant\frac n{\log n
 \begin{solution}
 思路：$f$ 只在紧集上一致连续，所以先把 $X$ 限制在一个大区间里。
 
-给定 $\varepsilon>0$，$\eta>0$。取 $M$ 使 $P(\abs X>M)<\eta$（$\{\abs X>M\}\downarrow\varnothing$）。$f$ 在 $[-M-1,M+1]$ 上一致连续，取 $\delta\in(0,1)$ 使 $x,y\in[-M-1,M+1]$，$\abs{x-y}<\delta$ 时 $\abs{f(x)-f(y)}<\varepsilon$。若 $\abs{X}\leqslant M$ 且 $\abs{X_n-X}<\delta$，则 $X,X_n\in[-M-1,M+1]$，$\abs{f(X_n)-f(X)}<\varepsilon$。所以
+给定 $\varepsilon>0$，$\eta>0$。取 $M$ 使 $\P(\abs X>M)<\eta$（$\{\abs X>M\}\downarrow\varnothing$）。$f$ 在 $[-M-1,M+1]$ 上一致连续，取 $\delta\in(0,1)$ 使 $x,y\in[-M-1,M+1]$，$\abs{x-y}<\delta$ 时 $\abs{f(x)-f(y)}<\varepsilon$。若 $\abs{X}\leqslant M$ 且 $\abs{X_n-X}<\delta$，则 $X,X_n\in[-M-1,M+1]$，$\abs{f(X_n)-f(X)}<\varepsilon$。所以
 \[
 \{\abs{f(X_n)-f(X)}\geqslant\varepsilon\}\subseteq\{\abs X>M\}\cup\{\abs{X_n-X}\geqslant\delta\},
 \]
@@ -220,7 +220,7 @@ $\limsup_nP(\abs{f(X_n)-f(X)}\geqslant\varepsilon)\leqslant\eta$，$\eta$ 任意
 
 窗口不相交：$n_k-n_{k-1}\geqslant\lceil2\log_2(k-1)\rceil\geqslant2\log_2(k-1)$，而 $r_k\leqslant(1-\varepsilon)\log_2(k(2\log_2k+1))+1$，$k$ 充分大时它小于 $2\log_2(k-1)$，于是 $n_k-r_k+1>n_{k-1}$。由分组定理，$B_k$（$k$ 充分大）独立。
 
-概率之和发散：$P(B_k)=2^{-r_k}\geqslant\frac12n_k^{-(1-\varepsilon)}\geqslant\frac12(3k\log_2k)^{-(1-\varepsilon)}$（$k$ 充分大时 $n_k\leqslant3k\log_2k$），而 $\sum_k(k\log_2k)^{-(1-\varepsilon)}=\infty$（指数 $1-\varepsilon<1$）。
+概率之和发散：$\P(B_k)=2^{-r_k}\geqslant\frac12n_k^{-(1-\varepsilon)}\geqslant\frac12(3k\log_2k)^{-(1-\varepsilon)}$（$k$ 充分大时 $n_k\leqslant3k\log_2k$），而 $\sum_k(k\log_2k)^{-(1-\varepsilon)}=\infty$（指数 $1-\varepsilon<1$）。
 
 由第二 Borel--Cantelli 引理，几乎必然有无穷多个 $k$ 使 $\ell_{n_k}\geqslant(1-\varepsilon)\log_2n_k$，所以 $\limsup_n\ell_n/\log_2n\geqslant1-\varepsilon$。
 
@@ -255,67 +255,67 @@ $\limsup_n\abs{EX_n-EX}\leqslant2\varepsilon_M(C+2c)$，令 $M\to\infty$ 即得�
 条件 (b) 的典型例子是 $g(x)=\abs x^p$（$p>1$）：$p$ 阶矩一致有界蕴含期望收敛。这是以后“一致可积”概念的雏形。
 \end{solution}
 
-\item\label{ex:borel-cantelli:A5} 设 $A_1,A_2,\dots$ 独立，$P(A_n)<1$ 对一切 $n$ 成立。证明：若 $P(\bigcup_nA_n)=1$，则 $\sum_nP(A_n)=\infty$，从而 $P(A_n\ \text{i.o.})=1$。
+\item\label{ex:borel-cantelli:A5} 设 $A_1,A_2,\dots$ 独立，$\P(A_n)<1$ 对一切 $n$ 成立。证明：若 $\P(\bigcup_nA_n)=1$，则 $\sum_nP(A_n)=\infty$，从而 $\P(A_n\ \text{i.o.})=1$。
 \begin{solution}
-由独立性与连续性，$0=P(\bigcap_nA_n^c)=\prod_{n=1}^\infty(1-P(A_n))$（部分积的极限）。设 $\sum_nP(A_n)<\infty$，取 $N$ 使 $\sum_{n>N}P(A_n)<1$。对 $m>N$，由 $\prod_{n=N+1}^m(1-p_n)\geqslant1-\sum_{n=N+1}^mp_n$（对 $m$ 归纳：$(1-s)(1-p)\geqslant1-s-p$），
+由独立性与连续性，$0=\P(\bigcap_nA_n^c)=\prod_{n=1}^\infty(1-\P(A_n))$（部分积的极限）。设 $\sum_nP(A_n)<\infty$，取 $N$ 使 $\sum_{n>N}\P(A_n)<1$。对 $m>N$，由 $\prod_{n=N+1}^m(1-p_n)\geqslant1-\sum_{n=N+1}^mp_n$（对 $m$ 归纳：$(1-s)(1-p)\geqslant1-s-p$），
 \[
-\prod_{n=1}^m(1-P(A_n))\geqslant\prod_{n=1}^N(1-P(A_n))\cdot\Bigl(1-\sum_{n>N}P(A_n)\Bigr)>0,
+\prod_{n=1}^m(1-\P(A_n))\geqslant\prod_{n=1}^N(1-\P(A_n))\cdot\Bigl(1-\sum_{n>N}\P(A_n)\Bigr)>0,
 \]
-其中用了每个 $1-P(A_n)>0$。令 $m\to\infty$，无穷乘积大于零，矛盾。所以 $\sum P(A_n)=\infty$，由第二 Borel--Cantelli 引理即得。条件 $P(A_n)<1$ 是必要的：若 $P(A_1)=1$，则 $P(\bigcup A_n)=1$ 平凡地成立。
+其中用了每个 $1-\P(A_n)>0$。令 $m\to\infty$，无穷乘积大于零，矛盾。所以 $\sum \P(A_n)=\infty$，由第二 Borel--Cantelli 引理即得。条件 $\P(A_n)<1$ 是必要的：若 $\P(A_1)=1$，则 $\P(\bigcup A_n)=1$ 平凡地成立。
 \end{solution}
 
 \item\label{ex:borel-cantelli:A6} 第一 Borel--Cantelli 引理的一个推广。
 \begin{questions}
-\item 若 $P(A_n)\to0$，$\sum_nP(A_n\cap A_{n+1}^c)<\infty$，证明 $P(A_n\ \text{i.o.})=0$。
+\item 若 $\P(A_n)\to0$，$\sum_nP(A_n\cap A_{n+1}^c)<\infty$，证明 $\P(A_n\ \text{i.o.})=0$。
 \begin{solution}
-由第一 Borel--Cantelli 引理，几乎必然地只有有限个 $n$ 使 $A_n\cap A_{n+1}^c$ 发生。设 $\omega$ 是这样的点，并且 $\omega\in A_n$ 对无穷多个 $n$ 成立。取 $n_0$ 使 $n\geqslant n_0$ 时 $\omega\notin A_n\cap A_{n+1}^c$，即 $\omega\in A_n\Rightarrow\omega\in A_{n+1}$。再取 $m\geqslant n_0$ 使 $\omega\in A_m$，则 $\omega\in A_n$ 对一切 $n\geqslant m$ 成立，即 $\omega\in\liminf A_n$。所以 $\{A_n\ \text{i.o.}\}$ 除去一个零概率事件后含于 $\liminf A_n$，而 $P(\liminf A_n)\leqslant\liminf P(A_n)=0$（命题~\ref{prop:measures:fatou-sets}）。
+由第一 Borel--Cantelli 引理，几乎必然地只有有限个 $n$ 使 $A_n\cap A_{n+1}^c$ 发生。设 $\omega$ 是这样的点，并且 $\omega\in A_n$ 对无穷多个 $n$ 成立。取 $n_0$ 使 $n\geqslant n_0$ 时 $\omega\notin A_n\cap A_{n+1}^c$，即 $\omega\in A_n\Rightarrow\omega\in A_{n+1}$。再取 $m\geqslant n_0$ 使 $\omega\in A_m$，则 $\omega\in A_n$ 对一切 $n\geqslant m$ 成立，即 $\omega\in\liminf A_n$。所以 $\{A_n\ \text{i.o.}\}$ 除去一个零概率事件后含于 $\liminf A_n$，而 $\P(\liminf A_n)\leqslant\liminf \P(A_n)=0$（命题~\ref{prop:measures:fatou-sets}）。
 \end{solution}
 \item 举例说明有的序列可以用 (1) 而不能用第一 Borel--Cantelli 引理。
 \begin{solution}
-取\egref{ex:borel-cantelli:no-converse}：$A_n=(0,\frac1n)$。$\sum_nP(A_n)=\infty$，第一 Borel--Cantelli 引理不能用。但 $A_n\cap A_{n+1}^c=[\frac1{n+1},\frac1n)$，$\sum_n(\frac1n-\frac1{n+1})=1<\infty$，并且 $P(A_n)\to0$，(1) 给出 $P(A_n\ \text{i.o.})=0$。
+取\egref{ex:borel-cantelli:no-converse}：$A_n=(0,\frac1n)$。$\sum_nP(A_n)=\infty$，第一 Borel--Cantelli 引理不能用。但 $A_n\cap A_{n+1}^c=[\frac1{n+1},\frac1n)$，$\sum_n(\frac1n-\frac1{n+1})=1<\infty$，并且 $\P(A_n)\to0$，(1) 给出 $\P(A_n\ \text{i.o.})=0$。
 \end{solution}
 \end{questions}
 
 \item\label{ex:borel-cantelli:A7} 设 $\Omega$ 可数，$\cF=2^\Omega$。证明：$X_n\toP X$ 蕴含 $X_n\to X$ a.s.
 \begin{solution}
-令 $\Omega_+=\{\omega:P(\{\omega\})>0\}$，$\Omega\setminus\Omega_+$ 是可数个零概率单点之并，概率为零。对 $\omega\in\Omega_+$ 与 $\varepsilon>0$，
+令 $\Omega_+=\{\omega:\P(\{\omega\})>0\}$，$\Omega\setminus\Omega_+$ 是可数个零概率单点之并，概率为零。对 $\omega\in\Omega_+$ 与 $\varepsilon>0$，
 \[
-P(\{\omega\})\one_{\{\abs{X_n(\omega)-X(\omega)}>\varepsilon\}}\leqslant P(\abs{X_n-X}>\varepsilon)\to0,
+\P(\{\omega\})\one_{\{\abs{X_n(\omega)-X(\omega)}>\varepsilon\}}\leqslant \P(\abs{X_n-X}>\varepsilon)\to0,
 \]
-而左边只能是 $0$ 或 $P(\{\omega\})>0$，所以 $n$ 充分大时 $\abs{X_n(\omega)-X(\omega)}\leqslant\varepsilon$。于是 $X_n(\omega)\to X(\omega)$ 对一切 $\omega\in\Omega_+$ 成立。在离散的概率空间上，两种收敛没有区别；滑动方块那样的例子需要“连续”的样本空间。
+而左边只能是 $0$ 或 $\P(\{\omega\})>0$，所以 $n$ 充分大时 $\abs{X_n(\omega)-X(\omega)}\leqslant\varepsilon$。于是 $X_n(\omega)\to X(\omega)$ 对一切 $\omega\in\Omega_+$ 成立。在离散的概率空间上，两种收敛没有区别；滑动方块那样的例子需要“连续”的样本空间。
 \end{solution}
 
 \item\label{ex:borel-cantelli:A8} 设 $X_n$ 是任意一列随机变量。证明存在常数 $c_n\to\infty$ 使 $X_n/c_n\to0$ a.s.
 \begin{solution}
-$P(\abs{X_n}>x)\to0$（$x\to\infty$），所以可以取 $c_n\geqslant n$ 使 $P(\abs{X_n}>c_n/n)\leqslant2^{-n}$。由第一 Borel--Cantelli 引理，几乎必然地 $n$ 充分大时 $\abs{X_n}\leqslant c_n/n$，即 $\abs{X_n/c_n}\leqslant\frac1n\to0$。
+$\P(\abs{X_n}>x)\to0$（$x\to\infty$），所以可以取 $c_n\geqslant n$ 使 $\P(\abs{X_n}>c_n/n)\leqslant2^{-n}$。由第一 Borel--Cantelli 引理，几乎必然地 $n$ 充分大时 $\abs{X_n}\leqslant c_n/n$，即 $\abs{X_n/c_n}\leqslant\frac1n\to0$。
 \end{solution}
 
 \item\label{ex:borel-cantelli:A9} 设 $X_1,X_2,\dots$ 独立。证明 $\sup_nX_n<\infty$ a.s.\ 当且仅当存在 $A$ 使 $\sum_nP(X_n>A)<\infty$。
 \begin{solution}
 “$\Leftarrow$”：由第一 Borel--Cantelli 引理，几乎必然地只有有限个 $n$ 使 $X_n>A$，于是 $\sup_nX_n\leqslant\max\{A,\ \text{有限个实数}\}<\infty$。
 
-“$\Rightarrow$”：若对一切 $A$ 都有 $\sum_nP(X_n>A)=\infty$，则对 $A=1,2,\dots$，由第二 Borel--Cantelli 引理（$\{X_n>A\}$ 独立），$P(X_n>A\ \text{i.o.})=1$。可数个概率为 $1$ 的事件之交概率为 $1$，在其上 $\sup_nX_n\geqslant A$ 对一切 $A$ 成立，即 $\sup_nX_n=\infty$ a.s.，矛盾。
+“$\Rightarrow$”：若对一切 $A$ 都有 $\sum_nP(X_n>A)=\infty$，则对 $A=1,2,\dots$，由第二 Borel--Cantelli 引理（$\{X_n>A\}$ 独立），$\P(X_n>A\ \text{i.o.})=1$。可数个概率为 $1$ 的事件之交概率为 $1$，在其上 $\sup_nX_n\geqslant A$ 对一切 $A$ 成立，即 $\sup_nX_n=\infty$ a.s.，矛盾。
 \end{solution}
 
-\item\label{ex:borel-cantelli:A10} 设 $X_1,X_2,\dots$ 是 i.i.d.，$P(X_i>x)=e^{-x}$（$x\geqslant0$），$M_n=\max_{m\leqslant n}X_m$。
+\item\label{ex:borel-cantelli:A10} 设 $X_1,X_2,\dots$ 是 i.i.d.，$\P(X_i>x)=e^{-x}$（$x\geqslant0$），$M_n=\max_{m\leqslant n}X_m$。
 \begin{questions}
 \item 证明 $\limsup_nX_n/\log n=1$ a.s.
 \begin{solution}
-$P(X_n>(1+\varepsilon)\log n)=n^{-(1+\varepsilon)}$，可求和，由第一 Borel--Cantelli 引理，$X_n\leqslant(1+\varepsilon)\log n$ 对充分大的 $n$ 成立，$\limsup\leqslant1+\varepsilon$。$P(X_n>(1-\varepsilon)\log n)=n^{-(1-\varepsilon)}$，不可求和，事件独立，由第二 Borel--Cantelli 引理，$X_n>(1-\varepsilon)\log n$ 无穷多次，$\limsup\geqslant1-\varepsilon$。$\varepsilon$ 取遍 $\frac1j$。
+$\P(X_n>(1+\varepsilon)\log n)=n^{-(1+\varepsilon)}$，可求和，由第一 Borel--Cantelli 引理，$X_n\leqslant(1+\varepsilon)\log n$ 对充分大的 $n$ 成立，$\limsup\leqslant1+\varepsilon$。$\P(X_n>(1-\varepsilon)\log n)=n^{-(1-\varepsilon)}$，不可求和，事件独立，由第二 Borel--Cantelli 引理，$X_n>(1-\varepsilon)\log n$ 无穷多次，$\limsup\geqslant1-\varepsilon$。$\varepsilon$ 取遍 $\frac1j$。
 \end{solution}
 \item 证明 $M_n/\log n\to1$ a.s.
 \begin{solution}
 \emph{上界。}由 A10-1)，几乎必然存在 $N$，$n\geqslant N$ 时 $X_n\leqslant(1+\varepsilon)\log n$，于是 $M_n\leqslant\max\{M_N,(1+\varepsilon)\log n\}$，$\limsup M_n/\log n\leqslant1+\varepsilon$。
 
-\emph{下界。}由独立性，$P(M_n\leqslant(1-\varepsilon)\log n)=(1-n^{-(1-\varepsilon)})^n\leqslant\exp(-n^\varepsilon)$，可求和。由第一 Borel--Cantelli 引理，$n$ 充分大时 $M_n>(1-\varepsilon)\log n$。
+\emph{下界。}由独立性，$\P(M_n\leqslant(1-\varepsilon)\log n)=(1-n^{-(1-\varepsilon)})^n\leqslant\exp(-n^\varepsilon)$，可求和。由第一 Borel--Cantelli 引理，$n$ 充分大时 $M_n>(1-\varepsilon)\log n$。
 
 $X_n$ 的上极限与 $M_n$ 的极限是同一个尺度 $\log n$；而 $X_n$ 本身的下极限是 $0$。
 \end{solution}
 \end{questions}
 
-\item\label{ex:borel-cantelli:A11} 设 $X_1,X_2,\dots$ 是 i.i.d.，分布函数为 $F$，$\lambda_n\uparrow\infty$，$A_n=\{\max_{m\leqslant n}X_m>\lambda_n\}$。证明 $P(A_n\ \text{i.o.})=0$ 或 $1$，按 $\sum_n(1-F(\lambda_n))<\infty$ 或 $=\infty$ 而定。
+\item\label{ex:borel-cantelli:A11} 设 $X_1,X_2,\dots$ 是 i.i.d.，分布函数为 $F$，$\lambda_n\uparrow\infty$，$A_n=\{\max_{m\leqslant n}X_m>\lambda_n\}$。证明 $\P(A_n\ \text{i.o.})=0$ 或 $1$，按 $\sum_n(1-F(\lambda_n))<\infty$ 或 $=\infty$ 而定。
 \begin{solution}
-令 $B_n=\{X_n>\lambda_n\}$，它们独立，$P(B_n)=1-F(\lambda_n)$。由两个 Borel--Cantelli 引理，$P(B_n\ \text{i.o.})$ 为 $0$ 或 $1$，按 $\sum(1-F(\lambda_n))$ 收敛或发散而定。只需证明 $\{A_n\ \text{i.o.}\}=\{B_n\ \text{i.o.}\}$。
+令 $B_n=\{X_n>\lambda_n\}$，它们独立，$\P(B_n)=1-F(\lambda_n)$。由两个 Borel--Cantelli 引理，$\P(B_n\ \text{i.o.})$ 为 $0$ 或 $1$，按 $\sum(1-F(\lambda_n))$ 收敛或发散而定。只需证明 $\{A_n\ \text{i.o.}\}=\{B_n\ \text{i.o.}\}$。
 
 $B_n\subseteq A_n$，所以“$\supseteq$”成立。反之，设 $\omega$ 只属于有限个 $B_m$，记 $K=\max\{X_m(\omega):\omega\in B_m\}$（若没有这样的 $m$，令 $K=-\infty$）。若 $\omega\in A_n$，则存在 $m\leqslant n$ 使 $X_m(\omega)>\lambda_n\geqslant\lambda_m$，即 $\omega\in B_m$，从而 $\lambda_n<X_m(\omega)\leqslant K$。而 $\lambda_n\to\infty$，所以这只对有限个 $n$ 成立，$\omega$ 只属于有限个 $A_n$。
 \end{solution}
@@ -324,7 +324,7 @@ $B_n\subseteq A_n$，所以“$\supseteq$”成立。反之，设 $\omega$ 只�
 \begin{solution}
 思路：仿照定理~\ref{thm:borel-cantelli:pairwise} 的证明。不同之处在于 $ES_n=\Lambda_n=\lambda_1+\cdots+\lambda_n$ 的增量 $\lambda_n$ 可能很大，所以子列要取两个。
 
-\emph{方差。}Poisson 分布的方差等于期望，由独立性 $\Var(S_n)=\Lambda_n$。由 Chebyshev 不等式，$P(\abs{S_n-\Lambda_n}>\delta\Lambda_n)\leqslant\frac1{\delta^2\Lambda_n}$。
+\emph{方差。}Poisson 分布的方差等于期望，由独立性 $\Var(S_n)=\Lambda_n$。由 Chebyshev 不等式，$\P(\abs{S_n-\Lambda_n}>\delta\Lambda_n)\leqslant\frac1{\delta^2\Lambda_n}$。
 
 \emph{子列。}令 $n_k=\inf\{n:\Lambda_n\geqslant k^2\}$，$m_k=n_{k+1}-1$。区间 $[n_k,m_k]$（$k=1,2,\dots$，其中有些可能是空的）覆盖了一切充分大的 $n$。对非空的区间，$\Lambda_{m_k}\geqslant\Lambda_{n_k}\geqslant k^2$，$\Lambda_{m_k}<(k+1)^2$。对子列 $n_k$ 与 $m_k$（只取非空区间对应的 $k$），Chebyshev 估计都不超过 $\frac1{\delta^2k^2}$，可求和，由第一 Borel--Cantelli 引理，$S_{n_k}/\Lambda_{n_k}\to1$，$S_{m_k}/\Lambda_{m_k}\to1$ a.s.
 
@@ -337,7 +337,7 @@ $B_n\subseteq A_n$，所以“$\supseteq$”成立。反之，设 $\omega$ 只�
 
 \item\label{ex:borel-cantelli:A13} 设 $X_n$ 是第 $n$ 次 St.\ Petersburg 游戏的收益（上一讲的例题，第~\pageref{we:weak-laws:st-petersburg} 页）。证明 $\limsup_nX_n/(n\log_2n)=\infty$ a.s.，从而对 $S_n$ 也成立。这说明上一讲证明的 $S_n/(n\log_2n)\toP1$ 不能加强为几乎必然收敛。
 \begin{solution}
-对 $x\geqslant2$，取正整数 $m$ 使 $2^{m-1}<x\leqslant2^m$，$P(X_1\geqslant x)=P(X_1\geqslant2^m)=2^{-m+1}\geqslant\frac1x$。固定 $c>0$，$\sum_nP(X_n\geqslant cn\log_2n)\geqslant\sum_{n\geqslant n_0}\frac1{cn\log_2n}=\infty$，事件独立，由第二 Borel--Cantelli 引理，$X_n\geqslant cn\log_2n$ 无穷多次，$\limsup_nX_n/(n\log_2n)\geqslant c$。$c$ 取遍正整数即得。$X_i\geqslant0$，$S_n\geqslant X_n$，所以对 $S_n$ 也成立。若 $S_n/(n\log_2n)\to1$ a.s.，则上极限为 $1$，矛盾。
+对 $x\geqslant2$，取正整数 $m$ 使 $2^{m-1}<x\leqslant2^m$，$\P(X_1\geqslant x)=\P(X_1\geqslant2^m)=2^{-m+1}\geqslant\frac1x$。固定 $c>0$，$\sum_nP(X_n\geqslant cn\log_2n)\geqslant\sum_{n\geqslant n_0}\frac1{cn\log_2n}=\infty$，事件独立，由第二 Borel--Cantelli 引理，$X_n\geqslant cn\log_2n$ 无穷多次，$\limsup_nX_n/(n\log_2n)\geqslant c$。$c$ 取遍正整数即得。$X_i\geqslant0$，$S_n\geqslant X_n$，所以对 $S_n$ 也成立。若 $S_n/(n\log_2n)\to1$ a.s.，则上极限为 $1$，矛盾。
 \end{solution}
 \end{exercises}
 
@@ -346,7 +346,7 @@ $B_n\subseteq A_n$，所以“$\supseteq$”成立。反之，设 $\omega$ 只�
 \begin{questions}
 \item 证明 $Y_n/n\to0$ a.s.\ 当且仅当 $E\abs{Y_1}<\infty$。
 \begin{solution}
-由引理~\ref{lem:convergence:as-criterion}，$Y_n/n\to0$ a.s.\ 当且仅当对一切 $\varepsilon>0$，$P(\abs{Y_n}>n\varepsilon\ \text{i.o.})=0$。事件 $\{\abs{Y_n}>n\varepsilon\}$ 独立，由两个 Borel--Cantelli 引理，这当且仅当 $\sum_nP(\abs{Y_1}>n\varepsilon)=\sum_nP(\abs{Y_1}/\varepsilon>n)<\infty$，由命题~\ref{prop:expectation:tail-sum}，当且仅当 $E\abs{Y_1}/\varepsilon<\infty$。对一切 $\varepsilon$ 成立，当且仅当 $E\abs{Y_1}<\infty$。
+由引理~\ref{lem:convergence:as-criterion}，$Y_n/n\to0$ a.s.\ 当且仅当对一切 $\varepsilon>0$，$\P(\abs{Y_n}>n\varepsilon\ \text{i.o.})=0$。事件 $\{\abs{Y_n}>n\varepsilon\}$ 独立，由两个 Borel--Cantelli 引理，这当且仅当 $\sum_nP(\abs{Y_1}>n\varepsilon)=\sum_nP(\abs{Y_1}/\varepsilon>n)<\infty$，由命题~\ref{prop:expectation:tail-sum}，当且仅当 $E\abs{Y_1}/\varepsilon<\infty$。对一切 $\varepsilon$ 成立，当且仅当 $E\abs{Y_1}<\infty$。
 \end{solution}
 \item 证明 $\max_{m\leqslant n}Y_m/n\to0$ a.s.\ 当且仅当 $EY_1^+<\infty$。
 \begin{solution}
@@ -358,15 +358,15 @@ $B_n\subseteq A_n$，所以“$\supseteq$”成立。反之，设 $\omega$ 只�
 \end{solution}
 \item 证明 $\max_{m\leqslant n}Y_m/n\toP0$ 当且仅当 $xP(Y_1>x)\to0$（$x\to\infty$）。
 \begin{solution}
-由 B2) 的第一句，只需看 $P(\max_{m\leqslant n}Y_m>n\varepsilon)$。由独立性，记 $p=P(Y_1>n\varepsilon)$，
+由 B2) 的第一句，只需看 $\P(\max_{m\leqslant n}Y_m>n\varepsilon)$。由独立性，记 $p=\P(Y_1>n\varepsilon)$，
 \[
-P\Bigl(\max_{m\leqslant n}Y_m>n\varepsilon\Bigr)=1-(1-p)^n,\qquad 1-e^{-np}\leqslant1-(1-p)^n\leqslant np .
+\P\Bigl(\max_{m\leqslant n}Y_m>n\varepsilon\Bigr)=1-(1-p)^n,\qquad 1-e^{-np}\leqslant1-(1-p)^n\leqslant np .
 \]
-（右边：$(1-p)^n\geqslant1-np$；左边：$1-p\leqslant e^{-p}$。）若 $xP(Y_1>x)\to0$，则 $np=\frac1\varepsilon(n\varepsilon)P(Y_1>n\varepsilon)\to0$。反之，若左边对一切 $\varepsilon$ 趋于零，则 $nP(Y_1>n\varepsilon)\to0$；对实数 $x\in[n,n+1)$，$xP(Y_1>x)\leqslant(n+1)P(Y_1>n)\to0$（$\varepsilon=1$）。
+（右边：$(1-p)^n\geqslant1-np$；左边：$1-p\leqslant e^{-p}$。）若 $xP(Y_1>x)\to0$，则 $np=\frac1\varepsilon(n\varepsilon)\P(Y_1>n\varepsilon)\to0$。反之，若左边对一切 $\varepsilon$ 趋于零，则 $nP(Y_1>n\varepsilon)\to0$；对实数 $x\in[n,n+1)$，$xP(Y_1>x)\leqslant(n+1)\P(Y_1>n)\to0$（$\varepsilon=1$）。
 \end{solution}
 \item 证明 $Y_n/n\toP0$ 总成立，不需要任何条件。
 \begin{solution}
-$P(\abs{Y_n}>n\varepsilon)=P(\abs{Y_1}>n\varepsilon)\to0$，因为 $\{\abs{Y_1}>n\varepsilon\}\downarrow\varnothing$。
+$\P(\abs{Y_n}>n\varepsilon)=\P(\abs{Y_1}>n\varepsilon)\to0$，因为 $\{\abs{Y_1}>n\varepsilon\}\downarrow\varnothing$。
 
 四个结论放在一起看：同一个“最后一项除以 $n$”，依概率收敛总成立，几乎必然收敛却要求有限的期望；“前 $n$ 项的最大值除以 $n$”，依概率收敛的条件 $xP(Y_1>x)\to0$ 正是上一讲弱大数定律的条件，几乎必然收敛的条件 $EY_1^+<\infty$（对 $\abs Y$ 就是 $E\abs Y<\infty$）正是下一讲强大数定律的条件。这不是巧合：大数定律成立的障碍，正是个别的巨大的项。
 \end{solution}
@@ -374,38 +374,38 @@ $P(\abs{Y_n}>n\varepsilon)=P(\abs{Y_1}>n\varepsilon)\to0$，因为 $\{\abs{Y_1}>
 \end{probleme}
 
 \begin{probleme}{C}{Kochen--Stone 引理}
-设 $\sum_kP(A_k)=\infty$，记 $s_n=\sum_{k\leqslant n}P(A_k)$。本题证明：若
+设 $\sum_kP(A_k)=\infty$，记 $s_n=\sum_{k\leqslant n}\P(A_k)$。本题证明：若
 \[
-\limsup_{n\to\infty}\frac{s_n^2}{\sum_{1\leqslant j,k\leqslant n}P(A_j\cap A_k)}=\alpha>0,
+\limsup_{n\to\infty}\frac{s_n^2}{\sum_{1\leqslant j,k\leqslant n}\P(A_j\cap A_k)}=\alpha>0,
 \]
-则 $P(A_n\ \text{i.o.})\geqslant\alpha$。$\alpha=1$ 的情形包含了第二 Borel--Cantelli 引理。
+则 $\P(A_n\ \text{i.o.})\geqslant\alpha$。$\alpha=1$ 的情形包含了第二 Borel--Cantelli 引理。
 \begin{questions}
-\item 设 $m\leqslant n$，$N_{m,n}=\sum_{k=m}^n\one_{A_k}$。用第~\ref{lec:expectation} 讲习题~\exref{ex:expectation:A5}（$Y\geqslant0$ 时 $P(Y>0)\geqslant(EY)^2/EY^2$）证明
+\item 设 $m\leqslant n$，$N_{m,n}=\sum_{k=m}^n\one_{A_k}$。用第~\ref{lec:expectation} 讲习题~\exref{ex:expectation:A5}（$Y\geqslant0$ 时 $\P(Y>0)\geqslant(EY)^2/EY^2$）证明
 \[
-P\Bigl(\bigcup_{k=m}^nA_k\Bigr)\geqslant\frac{\bigl(\sum_{k=m}^nP(A_k)\bigr)^2}{\sum_{m\leqslant j,k\leqslant n}P(A_j\cap A_k)} .
+\P\Bigl(\bigcup_{k=m}^nA_k\Bigr)\geqslant\frac{\bigl(\sum_{k=m}^nP(A_k)\bigr)^2}{\sum_{m\leqslant j,k\leqslant n}\P(A_j\cap A_k)} .
 \]
 \begin{solution}
-$\{N_{m,n}>0\}=\bigcup_{k=m}^nA_k$，$EN_{m,n}=\sum_{k=m}^nP(A_k)$，$EN_{m,n}^2=E\sum_{j,k}\one_{A_j}\one_{A_k}=\sum_{m\leqslant j,k\leqslant n}P(A_j\cap A_k)$。代入即得（分母为零时 $N_{m,n}=0$ a.s.，分子也为零，约定不等式平凡成立）。
+$\{N_{m,n}>0\}=\bigcup_{k=m}^nA_k$，$EN_{m,n}=\sum_{k=m}^nP(A_k)$，$EN_{m,n}^2=E\sum_{j,k}\one_{A_j}\one_{A_k}=\sum_{m\leqslant j,k\leqslant n}\P(A_j\cap A_k)$。代入即得（分母为零时 $N_{m,n}=0$ a.s.，分子也为零，约定不等式平凡成立）。
 \end{solution}
-\item 固定 $m$，证明 $P(\bigcup_{k\geqslant m}A_k)\geqslant\alpha$，从而 $P(A_n\ \text{i.o.})\geqslant\alpha$。
+\item 固定 $m$，证明 $\P(\bigcup_{k\geqslant m}A_k)\geqslant\alpha$，从而 $\P(A_n\ \text{i.o.})\geqslant\alpha$。
 \begin{solution}
-记 $D_n=\sum_{1\leqslant j,k\leqslant n}P(A_j\cap A_k)$。C1) 中的分母不超过 $D_n$，分子是 $(s_n-s_{m-1})^2$。所以对 $n\geqslant m$，
+记 $D_n=\sum_{1\leqslant j,k\leqslant n}\P(A_j\cap A_k)$。C1) 中的分母不超过 $D_n$，分子是 $(s_n-s_{m-1})^2$。所以对 $n\geqslant m$，
 \[
-P\Bigl(\bigcup_{k\geqslant m}A_k\Bigr)\geqslant\frac{(s_n-s_{m-1})^2}{D_n}=\frac{s_n^2}{D_n}\Bigl(1-\frac{s_{m-1}}{s_n}\Bigr)^2 .
+\P\Bigl(\bigcup_{k\geqslant m}A_k\Bigr)\geqslant\frac{(s_n-s_{m-1})^2}{D_n}=\frac{s_n^2}{D_n}\Bigl(1-\frac{s_{m-1}}{s_n}\Bigr)^2 .
 \]
-$s_n\to\infty$，第二个因子趋于 $1$；沿着使 $s_n^2/D_n\to\alpha$ 的子列取极限，右边趋于 $\alpha$。$\bigcup_{k\geqslant m}A_k\downarrow\limsup A_k$，由连续性 $P(A_n\ \text{i.o.})\geqslant\alpha$。
+$s_n\to\infty$，第二个因子趋于 $1$；沿着使 $s_n^2/D_n\to\alpha$ 的子列取极限，右边趋于 $\alpha$。$\bigcup_{k\geqslant m}A_k\downarrow\limsup A_k$，由连续性 $\P(A_n\ \text{i.o.})\geqslant\alpha$。
 \end{solution}
-\item 设 $A_k$ 两两独立。证明 $\alpha=1$，从而 $P(A_n\ \text{i.o.})=1$。
+\item 设 $A_k$ 两两独立。证明 $\alpha=1$，从而 $\P(A_n\ \text{i.o.})=1$。
 \begin{solution}
-$D_n=\sum_kP(A_k)+\sum_{j\neq k}P(A_j)P(A_k)\leqslant s_n+s_n^2$，所以 $s_n^2/D_n\geqslant\frac{s_n^2}{s_n^2+s_n}\to1$，$\alpha=1$（$\alpha\leqslant1$ 总成立，因为 $D_n\geqslant s_n^2$ 由 Cauchy--Schwarz：$EN^2\geqslant(EN)^2$）。所以第二 Borel--Cantelli 引理对两两独立的事件也成立（这也可以由定理~\ref{thm:borel-cantelli:pairwise} 得到）。
+$D_n=\sum_kP(A_k)+\sum_{j\neq k}\P(A_j)\P(A_k)\leqslant s_n+s_n^2$，所以 $s_n^2/D_n\geqslant\frac{s_n^2}{s_n^2+s_n}\to1$，$\alpha=1$（$\alpha\leqslant1$ 总成立，因为 $D_n\geqslant s_n^2$ 由 Cauchy--Schwarz：$EN^2\geqslant(EN)^2$）。所以第二 Borel--Cantelli 引理对两两独立的事件也成立（这也可以由定理~\ref{thm:borel-cantelli:pairwise} 得到）。
 \end{solution}
 \item 举一个不独立的例子，说明 C2) 能给出有用的结论。
 \begin{solution}
-设 $X_1,X_2,\dots$ 是独立的公平硬币，$A_k=\{X_k=X_{k+1}=1\}$（第 $k$、$k+1$ 次都是正面）。$A_k$ 与 $A_{k+1}$ 不独立，但 $\abs{j-k}\geqslant2$ 时独立。$P(A_k)=\frac14$，$s_n=\frac n4$。$P(A_k\cap A_{k+1})=\frac18$。于是
+设 $X_1,X_2,\dots$ 是独立的公平硬币，$A_k=\{X_k=X_{k+1}=1\}$（第 $k$、$k+1$ 次都是正面）。$A_k$ 与 $A_{k+1}$ 不独立，但 $\abs{j-k}\geqslant2$ 时独立。$\P(A_k)=\frac14$，$s_n=\frac n4$。$\P(A_k\cap A_{k+1})=\frac18$。于是
 \[
-D_n\leqslant\sum_{j\neq k}P(A_j)P(A_k)+\sum_kP(A_k)+2\sum_kP(A_k\cap A_{k+1})\leqslant s_n^2+\frac n4+\frac n4,
+D_n\leqslant\sum_{j\neq k}\P(A_j)\P(A_k)+\sum_kP(A_k)+2\sum_kP(A_k\cap A_{k+1})\leqslant s_n^2+\frac n4+\frac n4,
 \]
-$s_n^2/D_n\to1$，所以 $P(A_k\ \text{i.o.})=1$：连续两次正面会无穷多次出现。（这里也可以只看 $A_1,A_3,A_5,\dots$，它们独立，用第二 Borel--Cantelli 引理；Kochen--Stone 引理的好处是不需要找这样的独立子列。）
+$s_n^2/D_n\to1$，所以 $\P(A_k\ \text{i.o.})=1$：连续两次正面会无穷多次出现。（这里也可以只看 $A_1,A_3,A_5,\dots$，它们独立，用第二 Borel--Cantelli 引理；Kochen--Stone 引理的好处是不需要找这样的独立子列。）
 \end{solution}
 \end{questions}
 \end{probleme}
@@ -419,7 +419,7 @@ $s_n^2/D_n\to1$，所以 $P(A_k\ \text{i.o.})=1$：连续两次正面会无穷�
 \begin{solution}
 由 Chebyshev 不等式，
 \[
-P\bigl(\abs{X_{n_k}-EX_{n_k}}>\delta n_k^\alpha\bigr)\leqslant\frac{Bn_k^\beta}{\delta^2n_k^{2\alpha}}=\frac B{\delta^2}n_k^{-(2\alpha-\beta)}\leqslant\frac{C}{\delta^2}k^{-\gamma(2\alpha-\beta)}
+\P\bigl(\abs{X_{n_k}-EX_{n_k}}>\delta n_k^\alpha\bigr)\leqslant\frac{Bn_k^\beta}{\delta^2n_k^{2\alpha}}=\frac B{\delta^2}n_k^{-(2\alpha-\beta)}\leqslant\frac{C}{\delta^2}k^{-\gamma(2\alpha-\beta)}
 \]
 （$n_k\geqslant\frac12k^\gamma$ 对 $k\geqslant1$ 成立）。$\gamma(2\alpha-\beta)>1$，可求和，由第一 Borel--Cantelli 引理，$(X_{n_k}-EX_{n_k})/n_k^\alpha\to0$ a.s.；又 $EX_{n_k}/n_k^\alpha\to a$。（$\gamma>1$ 保证 $n_k$ 严格递增，$k$ 充分大时。）
 \end{solution}
@@ -443,17 +443,17 @@ $n_{k+1}/n_k=\lfloor(k+1)^\gamma\rfloor/\lfloor k^\gamma\rfloor\to1$，两端都
 \[
 \limsup_{n\to\infty}\frac{X_n}{\sqrt{2\log n}}=1,\qquad\frac{M_n}{\sqrt{2\log n}}\to1\qquad\text{a.s.}
 \]
-记 $\varphi(x)=\frac1{\sqrt{2\pi}}e^{-x^2/2}$。由定理~\ref{thm:distributions:gaussian-tail}，$x>0$ 时 $(\frac1x-\frac1{x^3})\varphi(x)\leqslant P(X_1>x)\leqslant\frac{\varphi(x)}x$。
+记 $\varphi(x)=\frac1{\sqrt{2\pi}}e^{-x^2/2}$。由定理~\ref{thm:distributions:gaussian-tail}，$x>0$ 时 $(\frac1x-\frac1{x^3})\varphi(x)\leqslant \P(X_1>x)\leqslant\frac{\varphi(x)}x$。
 \begin{questions}
 \item 设 $\varepsilon>0$，$x_n=\sqrt{2(1+\varepsilon)\log n}$。证明 $\sum_nP(X_n>x_n)<\infty$，从而 $\limsup_nX_n/\sqrt{2\log n}\leqslant\sqrt{1+\varepsilon}$。
 \begin{solution}
-$n\geqslant3$ 时 $x_n\geqslant1$，$P(X_n>x_n)\leqslant\varphi(x_n)\leqslant e^{-x_n^2/2}=n^{-(1+\varepsilon)}$，可求和。由第一 Borel--Cantelli 引理，$X_n\leqslant x_n$ 对充分大的 $n$ 成立，$X_n/\sqrt{2\log n}\leqslant\sqrt{1+\varepsilon}$。
+$n\geqslant3$ 时 $x_n\geqslant1$，$\P(X_n>x_n)\leqslant\varphi(x_n)\leqslant e^{-x_n^2/2}=n^{-(1+\varepsilon)}$，可求和。由第一 Borel--Cantelli 引理，$X_n\leqslant x_n$ 对充分大的 $n$ 成立，$X_n/\sqrt{2\log n}\leqslant\sqrt{1+\varepsilon}$。
 \end{solution}
 \item 设 $0<\varepsilon<1$，$y_n=\sqrt{2(1-\varepsilon)\log n}$。证明 $\sum_nP(X_n>y_n)=\infty$，从而 $\limsup_nX_n/\sqrt{2\log n}\geqslant\sqrt{1-\varepsilon}$。
 \begin{solution}
 $y_n\to\infty$，$n$ 充分大时 $\frac1{y_n}-\frac1{y_n^3}\geqslant\frac1{2y_n}$，于是
 \[
-P(X_n>y_n)\geqslant\frac{\varphi(y_n)}{2y_n}=\frac{n^{-(1-\varepsilon)}}{2\sqrt{2\pi}\sqrt{2(1-\varepsilon)\log n}}\geqslant\frac{c}{n^{1-\varepsilon}\sqrt{\log n}} .
+\P(X_n>y_n)\geqslant\frac{\varphi(y_n)}{2y_n}=\frac{n^{-(1-\varepsilon)}}{2\sqrt{2\pi}\sqrt{2(1-\varepsilon)\log n}}\geqslant\frac{c}{n^{1-\varepsilon}\sqrt{\log n}} .
 \]
 因为 $n^{\varepsilon}/\sqrt{\log n}\to\infty$，右边 $n$ 充分大时不小于 $\frac cn$，级数发散。事件独立，由第二 Borel--Cantelli 引理，$X_n>y_n$ 无穷多次。
 \end{solution}
@@ -463,13 +463,13 @@ P(X_n>y_n)\geqslant\frac{\varphi(y_n)}{2y_n}=\frac{n^{-(1-\varepsilon)}}{2\sqrt{
 
 \emph{下界。}由独立性与 E2) 中的估计，
 \[
-P(M_n\leqslant y_n)=(1-P(X_1>y_n))^n\leqslant\exp\Bigl(-\frac{cn^\varepsilon}{\sqrt{\log n}}\Bigr),
+\P(M_n\leqslant y_n)=(1-\P(X_1>y_n))^n\leqslant\exp\Bigl(-\frac{cn^\varepsilon}{\sqrt{\log n}}\Bigr),
 \]
 可求和（$n$ 充分大时它不超过 $n^{-2}$）。由第一 Borel--Cantelli 引理，$n$ 充分大时 $M_n>y_n$。
 \end{solution}
 \item 解释：这个结论说明了正态分布的“尾部有多轻”。与习题 A10 中的指数分布比较。
 \begin{solution}
-$n$ 个独立的标准正态随机变量中最大的那个大约是 $\sqrt{2\log n}$，增长得非常慢：$n=10^6$ 时约为 $5.3$。指数分布的最大值约为 $\log n$，$n=10^6$ 时约为 $13.8$。尾部越轻，最大值增长越慢：$P(X>x)$ 约为 $e^{-x^2/2}$ 时，令 $nP(X>x)\approx1$ 解出 $x\approx\sqrt{2\log n}$；约为 $e^{-x}$ 时解出 $x\approx\log n$。这个“$nP(X>x)\approx1$”的启发式计算，加上两个 Borel--Cantelli 引理，就是研究极值的基本方法。重对数律 $\limsup S_n/\sqrt{2n\log\log n}=1$ 是这个结论在随机游走上的推广。
+$n$ 个独立的标准正态随机变量中最大的那个大约是 $\sqrt{2\log n}$，增长得非常慢：$n=10^6$ 时约为 $5.3$。指数分布的最大值约为 $\log n$，$n=10^6$ 时约为 $13.8$。尾部越轻，最大值增长越慢：$\P(X>x)$ 约为 $e^{-x^2/2}$ 时，令 $nP(X>x)\approx1$ 解出 $x\approx\sqrt{2\log n}$；约为 $e^{-x}$ 时解出 $x\approx\log n$。这个“$nP(X>x)\approx1$”的启发式计算，加上两个 Borel--Cantelli 引理，就是研究极值的基本方法。重对数律 $\limsup S_n/\sqrt{2n\log\log n}=1$ 是这个结论在随机游走上的推广。
 \end{solution}
 \end{questions}
 \end{probleme}

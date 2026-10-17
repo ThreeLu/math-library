@@ -48,7 +48,7 @@
 \begin{enumerate}
 \item 若 $\mu(\Omega)<\infty$，称 $\mu$ 为\term{有限测度}（finite measure）。
 \item 若存在 $A_1,A_2,\dots\in\cF$ 使 $\bigcup_nA_n=\Omega$ 且 $\mu(A_n)<\infty$ 对一切 $n$ 成立，称 $\mu$ 为 \term{$\sigma$-有限测度}（$\sigma$-finite measure）。
-\item 若 $\mu(\Omega)=1$，称 $\mu$ 为\term{概率测度}（probability measure），通常记作 $P$；此时 $(\Omega,\cF,P)$ 称为\term{概率空间}（probability space），$P(A)$ 称为事件 $A$ 的\term{概率}（probability）。
+\item 若 $\mu(\Omega)=1$，称 $\mu$ 为\term{概率测度}（probability measure），通常记作 $\P$；此时 $(\Omega,\cF,\P)$ 称为\term{概率空间}（probability space），$\P(A)$ 称为事件 $A$ 的\term{概率}（probability）。
 \end{enumerate}
 \end{definition}
 
@@ -65,24 +65,24 @@
 \begin{example}[离散概率空间]\label{ex:measures:discrete}
 设 $\Omega$ 是可数集，$\cF=2^\Omega$，$p:\Omega\to[0,1]$ 满足 $\sum_{\omega\in\Omega}p(\omega)=1$。令
 \[
-P(A)=\sum_{\omega\in A}p(\omega),\qquad A\subseteq\Omega.
+\P(A)=\sum_{\omega\in A}p(\omega),\qquad A\subseteq\Omega.
 \]
-则 $P$ 是概率测度。$P(\Omega)=1$，$P(\varnothing)=0$；若 $A_n$ 两两不交，则 $\bigcup_nA_n$ 中每个 $\omega$ 恰好属于一个 $A_n$，于是按 $n$ 分组求和，由非负项级数可以任意重排与分组，$P(\bigcup_nA_n)=\sum_n\sum_{\omega\in A_n}p(\omega)=\sum_nP(A_n)$。
+则 $\P$ 是概率测度。$\P(\Omega)=1$，$\P(\varnothing)=0$；若 $A_n$ 两两不交，则 $\bigcup_nA_n$ 中每个 $\omega$ 恰好属于一个 $A_n$，于是按 $n$ 分组求和，由非负项级数可以任意重排与分组，$\P(\bigcup_nA_n)=\sum_n\sum_{\omega\in A_n}p(\omega)=\sum_nP(A_n)$。
 
-反之，$(\Omega,2^\Omega)$ 上的任何概率测度 $P$ 都是这种形式：令 $p(\omega)=P(\{\omega\})$，由可数可加性，$P(A)=\sum_{\omega\in A}P(\{\omega\})$，因为 $A$ 是可数个单点集的不交并。这包括了初等概率论中的全部离散模型：掷硬币、掷骰子、二项分布、Poisson 分布等等。
+反之，$(\Omega,2^\Omega)$ 上的任何概率测度 $\P$ 都是这种形式：令 $p(\omega)=\P(\{\omega\})$，由可数可加性，$\P(A)=\sum_{\omega\in A}\P(\{\omega\})$，因为 $A$ 是可数个单点集的不交并。这包括了初等概率论中的全部离散模型：掷硬币、掷骰子、二项分布、Poisson 分布等等。
 
-这里的一般性是需要的，不能总假定每个点等可能。比如古埃及人用羊的距骨（astragalus）做骰子，它可能以四种方式落地：宽的一面朝上记 $4$ 点，相对的一面记 $3$ 点，窄的侧面记 $6$ 点，另一个弯曲的侧面记 $1$ 点。没有理由认为四种结果等可能，所以要用四个数 $p_1,p_3,p_4,p_6\geqslant0$（和为 $1$）来描述这个骰子，$\Omega=\{1,3,4,6\}$，$P(A)=\sum_{i\in A}p_i$。
+这里的一般性是需要的，不能总假定每个点等可能。比如古埃及人用羊的距骨（astragalus）做骰子，它可能以四种方式落地：宽的一面朝上记 $4$ 点，相对的一面记 $3$ 点，窄的侧面记 $6$ 点，另一个弯曲的侧面记 $1$ 点。没有理由认为四种结果等可能，所以要用四个数 $p_1,p_3,p_4,p_6\geqslant0$（和为 $1$）来描述这个骰子，$\Omega=\{1,3,4,6\}$，$\P(A)=\sum_{i\in A}p_i$。
 \end{example}
 
 \begin{example}[测度的非负线性组合与限制]\label{ex:measures:combination}
 \begin{enumerate}
 \item 设 $\mu_1,\mu_2,\dots$ 是 $(\Omega,\cF)$ 上的测度，$a_1,a_2,\dots\in[0,\infty)$。则 $\mu=\sum_na_n\mu_n$（即 $\mu(A)=\sum_na_n\mu_n(A)$）是测度：若 $A_k$ 两两不交，则 $\mu(\bigcup_kA_k)=\sum_na_n\sum_k\mu_n(A_k)=\sum_k\sum_na_n\mu_n(A_k)=\sum_k\mu(A_k)$，中间一步是非负二重级数交换次序。例如 $\sum_np_n\delta_{x_n}$（$p_n\geqslant0$，$\sum p_n=1$）是 $\R$ 上集中在 $\{x_1,x_2,\dots\}$ 上的离散概率测度。
-\item 设 $B\in\cF$。则 $\mu_B(A)=\mu(A\cap B)$ 是测度，称为 $\mu$ 在 $B$ 上的\term{限制}（restriction）。若 $P$ 是概率测度且 $P(B)>0$，则 $P(A\mid B)=P(A\cap B)/P(B)$ 是概率测度，称为给定 $B$ 时的\term{条件概率}（conditional probability）。
+\item 设 $B\in\cF$。则 $\mu_B(A)=\mu(A\cap B)$ 是测度，称为 $\mu$ 在 $B$ 上的\term{限制}（restriction）。若 $\P$ 是概率测度且 $\P(B)>0$，则 $\P(A\mid B)=\P(A\cap B)/\P(B)$ 是概率测度，称为给定 $B$ 时的\term{条件概率}（conditional probability）。
 \end{enumerate}
 \end{example}
 
 \begin{example}[$0$-$1$ 测度]\label{ex:measures:zero-one}
-设 $\Omega$ 不可数，$\cF$ 为可数－余可数 $\sigma$-代数（\egref{ex:set-systems:countable-cocountable}）。令 $P(A)=0$（$A$ 可数），$P(A)=1$（$A^c$ 可数）。由于 $\Omega$ 不可数，$A$ 与 $A^c$ 不能同时可数，所以 $P$ 定义合理。它是概率测度，证明留作习题~\exref{ex:measures:A1}。
+设 $\Omega$ 不可数，$\cF$ 为可数－余可数 $\sigma$-代数（\egref{ex:set-systems:countable-cocountable}）。令 $\P(A)=0$（$A$ 可数），$\P(A)=1$（$A^c$ 可数）。由于 $\Omega$ 不可数，$A$ 与 $A^c$ 不能同时可数，所以 $\P$ 定义合理。它是概率测度，证明留作习题~\exref{ex:measures:A1}。
 \end{example}
 
 我们再看两个反面的例子，它们说明可数可加性确实是一个实质性的要求。
@@ -92,7 +92,7 @@ P(A)=\sum_{\omega\in A}p(\omega),\qquad A\subseteq\Omega.
 \end{example}
 
 \begin{example}[$\N$ 上不存在“均匀”的概率测度]
-设 $P$ 是 $(\N,2^\N)$ 上的概率测度。若 $P(\{n\})=c$ 对一切 $n$ 成立，则 $1=P(\N)=\sum_nc$，而右边在 $c=0$ 时为 $0$，在 $c>0$ 时为 $\infty$，矛盾。所以“随机取一个正整数，每个数机会均等”在可数可加的框架里不是一个概率模型。初学者常常对此感到意外，因为日常语言中“随机取一个正整数”似乎是有意义的。这是概率论的公理化与直观第一次发生冲突的地方：Kolmogorov 的体系选择了可数可加性，换来的是可以对事件取极限，付出的代价是一些直观上“均匀”的模型不再存在。在有限可加的框架里，这样的“概率”是存在的（本讲作业 E），但它几乎无法用来做分析。
+设 $\P$ 是 $(\N,2^\N)$ 上的概率测度。若 $\P(\{n\})=c$ 对一切 $n$ 成立，则 $1=\P(\N)=\sum_nc$，而右边在 $c=0$ 时为 $0$，在 $c>0$ 时为 $\infty$，矛盾。所以“随机取一个正整数，每个数机会均等”在可数可加的框架里不是一个概率模型。初学者常常对此感到意外，因为日常语言中“随机取一个正整数”似乎是有意义的。这是概率论的公理化与直观第一次发生冲突的地方：Kolmogorov 的体系选择了可数可加性，换来的是可以对事件取极限，付出的代价是一些直观上“均匀”的模型不再存在。在有限可加的框架里，这样的“概率”是存在的（本讲作业 E），但它几乎无法用来做分析。
 \end{example}
 
 \topic{测度的基本性质}
@@ -139,7 +139,7 @@ P(A)=\sum_{\omega\in A}p(\omega),\qquad A\subseteq\Omega.
 取 $\N$ 上的计数测度，$A_n=\{n,n+1,n+2,\dots\}$。则 $A_n\downarrow\varnothing$，但 $\#(A_n)=\infty$ 对一切 $n$ 成立，不收敛到 $\#(\varnothing)=0$。同样，$\R$ 上的 Lebesgue 测度（第~\ref{lec:extension-of-measures} 讲构造）满足 $\lambda([n,\infty))=\infty$，而 $[n,\infty)\downarrow\varnothing$。
 \end{example}
 
-对概率测度，(3) 和 (7) 中的有限性条件自动成立，特别地 $P(A^c)=1-P(A)$。
+对概率测度，(3) 和 (7) 中的有限性条件自动成立，特别地 $\P(A^c)=1-\P(A)$。
 
 \begin{workedexample}\label{we:measures:rationals}
 设 $\lambda$ 是 $\R$ 上的 Lebesgue 测度，即满足 $\lambda((a,b])=b-a$ 的测度（它的存在性是第~\ref{lec:extension-of-measures} 讲的内容，这里先承认）。证明：
@@ -160,16 +160,16 @@ P(A)=\sum_{\omega\in A}p(\omega),\qquad A\subseteq\Omega.
 \end{solution}
 
 \begin{workedexample}\label{we:measures:coin-continuity}
-设 $P$ 是无穷次抛公平硬币的概率（第~\ref{lec:set-systems} 讲的 $\Omega=\{0,1\}^\N$，$\cF=\sigma(\{A_n\})$，$A_n=\{\omega_n=1\}$），它满足：前 $n$ 次结果为任意给定的 $\varepsilon_1,\dots,\varepsilon_n$ 的概率都是 $2^{-n}$。（这样的 $P$ 的存在性在第~\ref{lec:independence} 讲证明，这里先承认。）证明：
+设 $\P$ 是无穷次抛公平硬币的概率（第~\ref{lec:set-systems} 讲的 $\Omega=\{0,1\}^\N$，$\cF=\sigma(\{A_n\})$，$A_n=\{\omega_n=1\}$），它满足：前 $n$ 次结果为任意给定的 $\varepsilon_1,\dots,\varepsilon_n$ 的概率都是 $2^{-n}$。（这样的 $\P$ 的存在性在第~\ref{lec:independence} 讲证明，这里先承认。）证明：
 \begin{enumerate}
 \item 永远不出现正面的概率是 $0$；
-\item 正面出现无穷多次的概率是 $1$，即 $P(\limsup_nA_n)=1$。
+\item 正面出现无穷多次的概率是 $1$，即 $\P(\limsup_nA_n)=1$。
 \end{enumerate}
 \end{workedexample}
 \begin{solution}
-(1) 令 $B_n=A_1^c\cap\cdots\cap A_n^c$ 为“前 $n$ 次都是反面”，则 $P(B_n)=2^{-n}$，$B_n\downarrow B=\bigcap_nA_n^c$，后者正是“永远不出现正面”。由从上连续（定理~\ref{thm:measures:basic}(7)，概率测度自动满足有限性），$P(B)=\lim_n2^{-n}=0$。
+(1) 令 $B_n=A_1^c\cap\cdots\cap A_n^c$ 为“前 $n$ 次都是反面”，则 $\P(B_n)=2^{-n}$，$B_n\downarrow B=\bigcap_nA_n^c$，后者正是“永远不出现正面”。由从上连续（定理~\ref{thm:measures:basic}(7)，概率测度自动满足有限性），$\P(B)=\lim_n2^{-n}=0$。
 
-(2) 由命题~\ref{prop:set-systems:limsup}(3)，$(\limsup_nA_n)^c=\liminf_nA_n^c=\bigcup_N\bigcap_{n\geqslant N}A_n^c$，即“从某次起全是反面”。对固定的 $N$，$C_N=\bigcap_{n\geqslant N}A_n^c$ 是“第 $N$ 次起全是反面”。$C_N\subseteq A_N^c\cap\cdots\cap A_{N+k}^c$，后者的概率是“$k+1$ 次指定结果”的概率之和：前 $N-1$ 次任意，共 $2^{N-1}$ 种，每种概率 $2^{-(N+k)}$，合计 $2^{-(k+1)}$。令 $k\to\infty$ 得 $P(C_N)=0$。由次可加性，$P(\bigcup_NC_N)\leqslant\sum_N0=0$。所以 $P(\limsup_nA_n)=1-0=1$。
+(2) 由命题~\ref{prop:set-systems:limsup}(3)，$(\limsup_nA_n)^c=\liminf_nA_n^c=\bigcup_N\bigcap_{n\geqslant N}A_n^c$，即“从某次起全是反面”。对固定的 $N$，$C_N=\bigcap_{n\geqslant N}A_n^c$ 是“第 $N$ 次起全是反面”。$C_N\subseteq A_N^c\cap\cdots\cap A_{N+k}^c$，后者的概率是“$k+1$ 次指定结果”的概率之和：前 $N-1$ 次任意，共 $2^{N-1}$ 种，每种概率 $2^{-(N+k)}$，合计 $2^{-(k+1)}$。令 $k\to\infty$ 得 $\P(C_N)=0$。由次可加性，$\P(\bigcup_NC_N)\leqslant\sum_N0=0$。所以 $\P(\limsup_nA_n)=1-0=1$。
 
 这个例题里，每一步都是“一个事件被一列概率趋于零的事件包住”，于是概率为零；可数个概率为零的事件并起来仍然概率为零。这是概率论中最常用的推理。
 \end{solution}
@@ -217,7 +217,7 @@ P(A)=\sum_{\omega\in A}p(\omega),\qquad A\subseteq\Omega.
 \end{proof}
 
 \begin{definition}[零测集与几乎处处]\label{def:measures:null}
-设 $(\Omega,\cF,\mu)$ 是测度空间。若 $N\in\cF$ 且 $\mu(N)=0$，称 $N$ 为\term{零测集}（null set）。若某个关于 $\omega$ 的性质在一个零测集之外成立，即存在零测集 $N$，使该性质对一切 $\omega\notin N$ 成立，则称该性质\term{几乎处处}（almost everywhere，a.e.）成立；当 $\mu=P$ 是概率测度时，称它\term{几乎必然}（almost surely，a.s.）成立，也说以概率 $1$ 成立。
+设 $(\Omega,\cF,\mu)$ 是测度空间。若 $N\in\cF$ 且 $\mu(N)=0$，称 $N$ 为\term{零测集}（null set）。若某个关于 $\omega$ 的性质在一个零测集之外成立，即存在零测集 $N$，使该性质对一切 $\omega\notin N$ 成立，则称该性质\term{几乎处处}（almost everywhere，a.e.）成立；当 $\mu=\P$ 是概率测度时，称它\term{几乎必然}（almost surely，a.s.）成立，也说以概率 $1$ 成立。
 \end{definition}
 
 由次可加性，可数个零测集的并仍是零测集。注意定义中不要求“性质成立的点的集合”本身属于 $\cF$，只要求它包含一个可测集的补集。
@@ -300,7 +300,7 @@ P(A)=\sum_{\omega\in A}p(\omega),\qquad A\subseteq\Omega.
 $\cP=\{(-\infty,x]:x\in\R\}$ 是 $\pi$-类（\egref{ex:set-systems:pi-examples}），$\sigma(\cP)=\cR$（命题~\ref{prop:set-systems:borel-generators}），且 $\mu(\R)=\nu(\R)=1$。由定理~\ref{thm:measures:uniqueness-finite} 即得。$d$ 维情形：$\{(-\infty,x_1]\times\cdots\times(-\infty,x_d]\}$ 对交集封闭（交集是把各坐标取最小值），它生成 $\cR^d$（习题~\exref{ex:set-systems:A5}），同样由定理~\ref{thm:measures:uniqueness-finite} 得到。
 \end{proof}
 
-这个推论虽然简单，但是其重要性不言而喻：一个随机变量的分布完全由函数 $x\mapsto P(X\leqslant x)$ 决定。$\cR$ 中的集合多得无法描述，而我们只要知道一个单变量的单调函数，就知道了每一个 Borel 集的概率。第~\ref{lec:distributions} 讲将从这里出发。
+这个推论虽然简单，但是其重要性不言而喻：一个随机变量的分布完全由函数 $x\mapsto \P(X\leqslant x)$ 决定。$\cR$ 中的集合多得无法描述，而我们只要知道一个单变量的单调函数，就知道了每一个 Borel 集的概率。第~\ref{lec:distributions} 讲将从这里出发。
 
 \topic{例子：\texorpdfstring{$C[0,1]$}{C[0,1]} 上的概率测度★}
 
@@ -314,7 +314,7 @@ d(f,g)=\sup_{t\in[0,1]}\abs{f(t)-g(t)}.
 
 为什么要看这个例子？设想我们要描述一个“随机连续函数”，比如说花粉颗粒在时间段 $[0,1]$ 内的位置（这就是 Brown 运动）。物理上可以测量、从而可以写出概率的，只是有限个时刻的位置，比如
 \[
-P\bigl(f(t_1)\leqslant x_1,\dots,f(t_k)\leqslant x_k\bigr).
+\P\bigl(f(t_1)\leqslant x_1,\dots,f(t_k)\leqslant x_k\bigr).
 \]
 这样的量称为\term{有限维分布}（finite-dimensional distribution）。可是我们真正关心的事件往往涉及无穷多个时刻，例如“整个时间段内位置都不超过 $1$”，即 $\{f:\sup_tf(t)\leqslant1\}$。于是一个很基本的问题是：有限维分布是否足以决定这类事件的概率？令
 \[
@@ -410,65 +410,65 @@ $\cB(C)=\sigma(\cP)$。
 \exercisepart{基本习题}
 
 \begin{exercises}{A}{课堂内容的补充}
-\item\label{ex:measures:A1} 证明\egref{ex:measures:zero-one} 中的 $P$ 是概率测度。
+\item\label{ex:measures:A1} 证明\egref{ex:measures:zero-one} 中的 $\P$ 是概率测度。
 \begin{solution}
 记 $\cF$ 为可数－余可数 $\sigma$-代数，$\Omega$ 不可数。
 
 \emph{两个余可数集一定相交。}若 $A^c,B^c$ 都可数，则 $(A\cap B)^c=A^c\cup B^c$ 可数，而 $\Omega$ 不可数，所以 $A\cap B\neq\varnothing$。
 
-$P(\varnothing)=0$（空集可数），$P(\Omega)=1$（$\Omega^c=\varnothing$ 可数）。设 $A_1,A_2,\dots\in\cF$ 两两不交。
+$\P(\varnothing)=0$（空集可数），$\P(\Omega)=1$（$\Omega^c=\varnothing$ 可数）。设 $A_1,A_2,\dots\in\cF$ 两两不交。
 \begin{itemize}
 \item 若每个 $A_n$ 都可数，则 $\bigcup_nA_n$ 可数，两边都是 $0$。
-\item 若某个 $A_{n_0}$ 余可数，由上面的事实，其余的 $A_n$（与 $A_{n_0}$ 不交）都不能是余可数的，只能是可数的，$P(A_n)=0$；而 $\bigcup_nA_n\supseteq A_{n_0}$，补集包含于 $A_{n_0}^c$，可数。于是左边是 $1$，右边是 $1+0+0+\cdots=1$。
+\item 若某个 $A_{n_0}$ 余可数，由上面的事实，其余的 $A_n$（与 $A_{n_0}$ 不交）都不能是余可数的，只能是可数的，$\P(A_n)=0$；而 $\bigcup_nA_n\supseteq A_{n_0}$，补集包含于 $A_{n_0}^c$，可数。于是左边是 $1$，右边是 $1+0+0+\cdots=1$。
 \end{itemize}
-所以 $P$ 可数可加。
+所以 $\P$ 可数可加。
 \end{solution}
 
-\item\label{ex:measures:A2} 设 $P$ 是概率测度，$A_1,\dots,A_n\in\cF$。
+\item\label{ex:measures:A2} 设 $\P$ 是概率测度，$A_1,\dots,A_n\in\cF$。
 \begin{questions}
 \item 用归纳法证明\term{容斥原理}（inclusion–exclusion principle）：
 \[
-P\Bigl(\bigcup_{i=1}^nA_i\Bigr)=\sum_{k=1}^n(-1)^{k-1}\sum_{1\leqslant i_1<\cdots<i_k\leqslant n}P(A_{i_1}\cap\cdots\cap A_{i_k}).
+\P\Bigl(\bigcup_{i=1}^nA_i\Bigr)=\sum_{k=1}^n(-1)^{k-1}\sum_{1\leqslant i_1<\cdots<i_k\leqslant n}\P(A_{i_1}\cap\cdots\cap A_{i_k}).
 \]
 \begin{solution}
 把右边写成对非空指标集 $S\subseteq\{1,\dots,n\}$ 的求和更方便：记 $A_S=\bigcap_{i\in S}A_i$，要证
 \[
-P\Bigl(\bigcup_{i=1}^nA_i\Bigr)=\sum_{\varnothing\neq S\subseteq\{1,\dots,n\}}(-1)^{\abs S-1}P(A_S).
+\P\Bigl(\bigcup_{i=1}^nA_i\Bigr)=\sum_{\varnothing\neq S\subseteq\{1,\dots,n\}}(-1)^{\abs S-1}\P(A_S).
 \]
-$n=1$ 时两边都是 $P(A_1)$。设对 $n$ 个集合成立，考虑 $n+1$ 个。令 $B=A_1\cup\cdots\cup A_n$。由定理~\ref{thm:measures:basic}(4)，
+$n=1$ 时两边都是 $\P(A_1)$。设对 $n$ 个集合成立，考虑 $n+1$ 个。令 $B=A_1\cup\cdots\cup A_n$。由定理~\ref{thm:measures:basic}(4)，
 \[
-P(B\cup A_{n+1})=P(B)+P(A_{n+1})-P(B\cap A_{n+1}).
+\P(B\cup A_{n+1})=\P(B)+\P(A_{n+1})-\P(B\cap A_{n+1}).
 \]
 而 $B\cap A_{n+1}=\bigcup_{i\leqslant n}(A_i\cap A_{n+1})$ 是 $n$ 个集合的并，对它和 $B$ 都用归纳假设：
 \[
 \begin{aligned}
-P(B)&=\sum_{\varnothing\neq S\subseteq\{1..n\}}(-1)^{\abs S-1}P(A_S),\\
-P(B\cap A_{n+1})&=\sum_{\varnothing\neq S\subseteq\{1..n\}}(-1)^{\abs S-1}P(A_{S\cup\{n+1\}}).
+\P(B)&=\sum_{\varnothing\neq S\subseteq\{1..n\}}(-1)^{\abs S-1}\P(A_S),\\
+\P(B\cap A_{n+1})&=\sum_{\varnothing\neq S\subseteq\{1..n\}}(-1)^{\abs S-1}\P(A_{S\cup\{n+1\}}).
 \end{aligned}
 \]
 现在看 $\{1,\dots,n+1\}$ 的非空子集 $T$ 在右边以什么系数出现：
 \begin{itemize}
-\item $n+1\notin T$：只在 $P(B)$ 中出现，系数 $(-1)^{\abs T-1}$；
-\item $T=\{n+1\}$：只在 $P(A_{n+1})$ 中出现，系数 $1=(-1)^{1-1}$；
-\item $n+1\in T$，$\abs T\geqslant2$：写 $T=S\cup\{n+1\}$，只在 $-P(B\cap A_{n+1})$ 中出现，系数 $-(-1)^{\abs S-1}=(-1)^{\abs S}=(-1)^{\abs T-1}$。
+\item $n+1\notin T$：只在 $\P(B)$ 中出现，系数 $(-1)^{\abs T-1}$；
+\item $T=\{n+1\}$：只在 $\P(A_{n+1})$ 中出现，系数 $1=(-1)^{1-1}$；
+\item $n+1\in T$，$\abs T\geqslant2$：写 $T=S\cup\{n+1\}$，只在 $-\P(B\cap A_{n+1})$ 中出现，系数 $-(-1)^{\abs S-1}=(-1)^{\abs S}=(-1)^{\abs T-1}$。
 \end{itemize}
 三种情形的系数都是 $(-1)^{\abs T-1}$，这正是 $n+1$ 时的公式。
 \end{solution}
-\item 证明 \term{Bonferroni 不等式}：$\sum_iP(A_i)-\sum_{i<j}P(A_i\cap A_j)\leqslant P(\bigcup_iA_i)\leqslant\sum_iP(A_i)$。
+\item 证明 \term{Bonferroni 不等式}：$\sum_iP(A_i)-\sum_{i<j}\P(A_i\cap A_j)\leqslant \P(\bigcup_iA_i)\leqslant\sum_iP(A_i)$。
 \begin{solution}
 右边的不等式是次可加性（定理~\ref{thm:measures:basic}(5)）。左边对 $n$ 归纳。$n=1$ 时是等式。设对 $n$ 成立，仍记 $B=A_1\cup\cdots\cup A_n$。由次可加性，
 \[
-P(B\cap A_{n+1})=P\Bigl(\bigcup_{i\leqslant n}(A_i\cap A_{n+1})\Bigr)\leqslant\sum_{i\leqslant n}P(A_i\cap A_{n+1}).
+\P(B\cap A_{n+1})=\P\Bigl(\bigcup_{i\leqslant n}(A_i\cap A_{n+1})\Bigr)\leqslant\sum_{i\leqslant n}\P(A_i\cap A_{n+1}).
 \]
 于是
 \[
 \begin{aligned}
-P(B\cup A_{n+1})&=P(B)+P(A_{n+1})-P(B\cap A_{n+1})\\
-&\geqslant\Bigl[\sum_{i\leqslant n}P(A_i)-\sum_{i<j\leqslant n}P(A_i\cap A_j)\Bigr]\\
-&\qquad+P(A_{n+1})-\sum_{i\leqslant n}P(A_i\cap A_{n+1}),
+\P(B\cup A_{n+1})&=\P(B)+\P(A_{n+1})-\P(B\cap A_{n+1})\\
+&\geqslant\Bigl[\sum_{i\leqslant n}\P(A_i)-\sum_{i<j\leqslant n}\P(A_i\cap A_j)\Bigr]\\
+&\qquad+\P(A_{n+1})-\sum_{i\leqslant n}\P(A_i\cap A_{n+1}),
 \end{aligned}
 \]
-右边正是 $n+1$ 时的 $\sum_iP(A_i)-\sum_{i<j}P(A_i\cap A_j)$。
+右边正是 $n+1$ 时的 $\sum_iP(A_i)-\sum_{i<j}\P(A_i\cap A_j)$。
 
 直观上，容斥原理的部分和交替地给出上界和下界：只取第一项是上界，取两项是下界。
 \end{solution}
@@ -487,11 +487,11 @@ P(B\cup A_{n+1})&=P(B)+P(A_{n+1})-P(B\cap A_{n+1})\\
 \begin{questions}
 \item 举例说明其中的两个不等式可以是严格的。
 \begin{solution}
-取 $\Omega=\{1,2\}$，$P(\{1\})=P(\{2\})=\frac12$；$n$ 为奇数时 $A_n=\{1\}$，偶数时 $A_n=\{2\}$。没有点从某项起总在 $A_n$ 中，所以 $\liminf_nA_n=\varnothing$；每个点都在无穷多个 $A_n$ 中，所以 $\limsup_nA_n=\Omega$。于是
+取 $\Omega=\{1,2\}$，$\P(\{1\})=\P(\{2\})=\frac12$；$n$ 为奇数时 $A_n=\{1\}$，偶数时 $A_n=\{2\}$。没有点从某项起总在 $A_n$ 中，所以 $\liminf_nA_n=\varnothing$；每个点都在无穷多个 $A_n$ 中，所以 $\limsup_nA_n=\Omega$。于是
 \[
 \begin{aligned}
-P(\liminf_nA_n)&=0<\tfrac12=\liminf_nP(A_n),\\
-P(\limsup_nA_n)&=1>\tfrac12=\limsup_nP(A_n).
+\P(\liminf_nA_n)&=0<\tfrac12=\liminf_nP(A_n),\\
+\P(\limsup_nA_n)&=1>\tfrac12=\limsup_nP(A_n).
 \end{aligned}
 \]
 \end{solution}

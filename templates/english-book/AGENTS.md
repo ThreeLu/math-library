@@ -9,6 +9,7 @@ Write the way Richard Montgomery writes his arXiv papers (e.g. *Spanning trees i
 - **Structure of a topic.** Introduction (the problem, its history with precise attributions, the results covered) → *Proof outline* or *Overview* before any technical section → *Preliminaries* (notation, probabilistic tools, known lemmas with citations) → technical sections, each built around one or two lemmas → *Concluding remarks* with open problems.
 - **Explain the idea before the proof.** Before a long proof, say in a paragraph what the proof does and why it should work. Name the key objects (absorbers, switchers, templates, …) and keep the names fixed.
 - **Voice.** First person plural ("we show", "we will use"). Plain declarative sentences. No rhetorical questions, no "it is worth noting", no "crucially", no summaries that repeat what was just said.
+- **Probability.** Write $\mathbb{P}$ as `\P` and $\mathbb{E}$ as `\E` (both defined in the class).
 - **Constants.** State hierarchies as $1/n \ll \varepsilon \ll \alpha$ and say once, in the notation section, what $\ll$ means.
 - **Citations.** Every result not proved here gets a reference with \cite. Attribute precisely ("Keevash, Pokrovskiy, Sudakov and Yepremyan~\cite{...} proved ...").
 

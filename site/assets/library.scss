@@ -32,8 +32,6 @@ $toc-font-size: 0.85rem;
   --yp-green-bg: rgba(0, 66, 0, 0.045);
   --yp-rule: #1d1d1f;
   --yp-muted: #6b6b70;
-  --yp-hwbox-bg: #f0f0f0;
-  --yp-hwbox-frame: #404040;
   --yp-card-bg: #ffffff;
   --yp-card-border: #e3e3e0;
 }
@@ -135,13 +133,6 @@ html[lang|="en"] .quarto-title h1.title {
 // Boxed summary (summary environment)
 .yp-summary { border: 0.6px solid var(--yp-rule); padding: 0.3em 0.8em; margin: 1em 0 1.4em; }
 
-// Homework header box
-.yp-hwbox {
-  border: 1.4px solid var(--yp-hwbox-frame); border-radius: 6px; background: var(--yp-hwbox-bg);
-  overflow: hidden; margin: 1em 0 2em;
-  > p { margin: 0.6em 1em 0.7em; }
-}
-.yp-hwbox-title { background: var(--yp-green); color: #fff; font-family: var(--yp-hei); font-weight: 700; padding: 0.2em 1em; }
 
 // Exercise lists with A1) / A1-2) labels
 .yp-exercises, .yp-probleme { margin: 1.6em 0 1.2em; }
@@ -157,17 +148,14 @@ html[lang|="en"] .quarto-title h1.title {
 a.yp-ref { text-decoration: none; }
 a.yp-ref:hover { text-decoration: underline; }
 
-// Page banner: lecture number · status · PDF link
+// Page banner: lecture number · PDF link
 .yp-banner {
   font-family: $font-family-sans-serif; font-size: 0.8rem; margin: -0.4em 0 1.6em;
   display: flex; flex-wrap: wrap; gap: 0.6em; align-items: center;
   p { margin: 0; display: flex; gap: 0.6em; align-items: center; flex-wrap: wrap; }
 }
 .yp-kicker { color: var(--yp-muted); letter-spacing: 0.04em; }
-.yp-status { border-radius: 999px; padding: 0.05em 0.65em; font-size: 0.75rem; font-family: $font-family-sans-serif; white-space: nowrap; }
-.yp-status-draft { background: #fff3d6; color: #8a5a00; }
-.yp-status-done { background: #dcf3e1; color: #1d6b32; }
-.yp-status-todo { background: #efefef; color: #777; }
+.yp-todo { color: var(--yp-muted); }
 .yp-banner-pdf { margin-left: auto; }
 
 // ---------------------------------------------------------------------

@@ -19,7 +19,7 @@
 
 \begin{enumerate}
 \item 两两不相关的随机变量方差可加（定理~\ref{thm:weak-laws:variance-sum}）；两两独立且平方可积的随机变量两两不相关（定理~\ref{thm:independence:expectation} 用于两个随机变量）；独立（两两独立）随机变量的函数仍独立（两两独立）。
-\item 尾概率公式（定理~\ref{thm:product:tail-formula}）：$E\abs X=\int_0^\infty P(\abs X>y)\dd y$，$EY^2=\int_0^\infty2yP(\abs Y>y)\dd y$。
+\item 尾概率公式（定理~\ref{thm:product:tail-formula}）：$E\abs X=\int_0^\infty \P(\abs X>y)\dd y$，$EY^2=\int_0^\infty2yP(\abs Y>y)\dd y$。
 \item 第一 Borel--Cantelli 引理（定理~\ref{thm:borel-cantelli:first}）；几乎必然收敛的刻画（引理~\ref{lem:convergence:as-criterion}）。
 \item 强大数定律需要有限的期望（定理~\ref{thm:borel-cantelli:necessity}）。
 \item Tonelli 定理：非负二重级数（以及级数与积分）可以交换次序（定理~\ref{thm:product:tonelli}，或第~\ref{lec:integration} 讲的逐项积分）。
@@ -49,11 +49,11 @@
 在定理~\ref{thm:strong-laws:slln} 的假设下，令 $Y_k=X_k\one_{\{\abs{X_k}\leqslant k\}}$，$T_n=Y_1+\cdots+Y_n$。若 $T_n/n\to\mu$ a.s.，则 $S_n/n\to\mu$ a.s.
 \end{lemma}
 \begin{proof}
-函数 $y\mapsto P(\abs{X_1}>y)$ 单调不增，所以 $P(\abs{X_1}>k)\leqslant\int_{k-1}^kP(\abs{X_1}>y)\dd y$。由同分布与尾概率公式，
+函数 $y\mapsto \P(\abs{X_1}>y)$ 单调不增，所以 $\P(\abs{X_1}>k)\leqslant\int_{k-1}^kP(\abs{X_1}>y)\dd y$。由同分布与尾概率公式，
 \[
-\sum_{k=1}^\infty P(\abs{X_k}>k)=\sum_{k=1}^\infty P(\abs{X_1}>k)\leqslant\int_0^\infty P(\abs{X_1}>y)\dd y=E\abs{X_1}<\infty .
+\sum_{k=1}^\infty \P(\abs{X_k}>k)=\sum_{k=1}^\infty \P(\abs{X_1}>k)\leqslant\int_0^\infty \P(\abs{X_1}>y)\dd y=E\abs{X_1}<\infty .
 \]
-由第一 Borel--Cantelli 引理，$P(X_k\neq Y_k\ \text{i.o.})=0$。对这个零概率事件之外的 $\omega$，只有有限个 $k$ 使 $X_k(\omega)\neq Y_k(\omega)$，所以 $R(\omega)=\sum_k\abs{X_k(\omega)-Y_k(\omega)}<\infty$，并且 $\abs{S_n(\omega)-T_n(\omega)}\leqslant R(\omega)$ 对一切 $n$ 成立。于是 $\abs{S_n/n-T_n/n}\leqslant R/n\to0$。
+由第一 Borel--Cantelli 引理，$\P(X_k\neq Y_k\ \text{i.o.})=0$。对这个零概率事件之外的 $\omega$，只有有限个 $k$ 使 $X_k(\omega)\neq Y_k(\omega)$，所以 $R(\omega)=\sum_k\abs{X_k(\omega)-Y_k(\omega)}<\infty$，并且 $\abs{S_n(\omega)-T_n(\omega)}\leqslant R(\omega)$ 对一切 $n$ 成立。于是 $\abs{S_n/n-T_n/n}\leqslant R/n\to0$。
 \end{proof}
 
 \begin{lemma}\label{lem:strong-laws:sum-bound}
@@ -71,13 +71,13 @@
 在引理~\ref{lem:strong-laws:truncation} 的记号下，$\sum_{k=1}^\infty\frac{\Var(Y_k)}{k^2}\leqslant\sum_{k=1}^\infty\frac{EY_k^2}{k^2}\leqslant4E\abs{X_1}<\infty$。
 \end{lemma}
 \begin{proof}
-$\Var(Y_k)\leqslant EY_k^2$。由尾概率公式（$p=2$），并注意 $y\geqslant k$ 时 $P(\abs{Y_k}>y)=0$，$y<k$ 时 $P(\abs{Y_k}>y)\leqslant P(\abs{X_1}>y)$，
+$\Var(Y_k)\leqslant EY_k^2$。由尾概率公式（$p=2$），并注意 $y\geqslant k$ 时 $\P(\abs{Y_k}>y)=0$，$y<k$ 时 $\P(\abs{Y_k}>y)\leqslant \P(\abs{X_1}>y)$，
 \[
 EY_k^2=\int_0^\infty2yP(\abs{Y_k}>y)\dd y\leqslant\int_0^\infty\one_{\{y<k\}}2yP(\abs{X_1}>y)\dd y .
 \]
 各项非负，由逐项积分（关于 $k$ 的求和是关于 $\N$ 上计数测度的积分，Tonelli 定理），
 \[
-\sum_{k=1}^\infty\frac{EY_k^2}{k^2}\leqslant\int_0^\infty\Bigl(\sum_{k>y}\frac1{k^2}\Bigr)2yP(\abs{X_1}>y)\dd y\leqslant4\int_0^\infty P(\abs{X_1}>y)\dd y=4E\abs{X_1},
+\sum_{k=1}^\infty\frac{EY_k^2}{k^2}\leqslant\int_0^\infty\Bigl(\sum_{k>y}\frac1{k^2}\Bigr)2yP(\abs{X_1}>y)\dd y\leqslant4\int_0^\infty \P(\abs{X_1}>y)\dd y=4E\abs{X_1},
 \]
 其中用了引理~\ref{lem:strong-laws:sum-bound}。
 \end{proof}
@@ -87,7 +87,7 @@ EY_k^2=\int_0^\infty2yP(\abs{Y_k}>y)\dd y\leqslant\int_0^\infty\one_{\{y<k\}}2yP
 
 \emph{第二步：子列上的估计。}固定 $\alpha>1$，令 $k(n)=\lfloor\alpha^n\rfloor$。$Y_k$ 是两两独立的随机变量的函数，两两独立，有界从而平方可积，两两不相关。由 Chebyshev 不等式与方差的可加性，对 $\varepsilon>0$，
 \[
-\sum_{n=1}^\infty P\bigl(\abs{T_{k(n)}-ET_{k(n)}}>\varepsilon k(n)\bigr)\leqslant\frac1{\varepsilon^2}\sum_{n=1}^\infty\frac{\Var(T_{k(n)})}{k(n)^2}=\frac1{\varepsilon^2}\sum_{n=1}^\infty\frac1{k(n)^2}\sum_{m=1}^{k(n)}\Var(Y_m).
+\sum_{n=1}^\infty \P\bigl(\abs{T_{k(n)}-ET_{k(n)}}>\varepsilon k(n)\bigr)\leqslant\frac1{\varepsilon^2}\sum_{n=1}^\infty\frac{\Var(T_{k(n)})}{k(n)^2}=\frac1{\varepsilon^2}\sum_{n=1}^\infty\frac1{k(n)^2}\sum_{m=1}^{k(n)}\Var(Y_m).
 \]
 交换两个非负求和的次序（Tonelli），右边等于 $\frac1{\varepsilon^2}\sum_{m=1}^\infty\Var(Y_m)\sum_{n:\,k(n)\geqslant m}k(n)^{-2}$。由于 $\lfloor\alpha^n\rfloor\geqslant\alpha^n/2$（$n\geqslant1$），并且 $k(n)\geqslant m$ 蕴含 $\alpha^n\geqslant m$，对几何级数求和（首项不超过 $m^{-2}$）：
 \[
@@ -95,7 +95,7 @@ EY_k^2=\int_0^\infty2yP(\abs{Y_k}>y)\dd y\leqslant\int_0^\infty\one_{\{y<k\}}2yP
 \]
 所以由引理~\ref{lem:strong-laws:variance}，
 \[
-\sum_{n=1}^\infty P\bigl(\abs{T_{k(n)}-ET_{k(n)}}>\varepsilon k(n)\bigr)\leqslant\frac4{\varepsilon^2(1-\alpha^{-2})}\sum_{m=1}^\infty\frac{\Var(Y_m)}{m^2}<\infty .
+\sum_{n=1}^\infty \P\bigl(\abs{T_{k(n)}-ET_{k(n)}}>\varepsilon k(n)\bigr)\leqslant\frac4{\varepsilon^2(1-\alpha^{-2})}\sum_{m=1}^\infty\frac{\Var(Y_m)}{m^2}<\infty .
 \]
 由第一 Borel--Cantelli 引理与引理~\ref{lem:convergence:as-criterion}（$\varepsilon$ 取遍 $\frac1j$），$(T_{k(n)}-ET_{k(n)})/k(n)\to0$ a.s.
 
@@ -117,9 +117,9 @@ EY_k^2=\int_0^\infty2yP(\abs{Y_k}>y)\dd y\leqslant\int_0^\infty\one_{\{y<k\}}2yP
 \end{remark}
 
 \begin{example}[概率的频率解释]\label{ex:strong-laws:frequency}
-设一个随机试验独立地重复进行，$A$ 是一个事件，$\xi_k=\one\{\text{第}\ k\ \text{次试验中}\ A\ \text{发生}\}$。$\xi_k$ 是 i.i.d.，$E\xi_1=P(A)$。由强大数定律，
+设一个随机试验独立地重复进行，$A$ 是一个事件，$\xi_k=\one\{\text{第}\ k\ \text{次试验中}\ A\ \text{发生}\}$。$\xi_k$ 是 i.i.d.，$E\xi_1=\P(A)$。由强大数定律，
 \[
-\frac{\xi_1+\cdots+\xi_n}n\to P(A)\quad\text{a.s.}
+\frac{\xi_1+\cdots+\xi_n}n\to \P(A)\quad\text{a.s.}
 \]
 即 $A$ 发生的频率几乎必然收敛到它的概率。这就是初等概率论中“概率是频率的极限”这句话的精确含义。注意顺序：我们先用测度论定义了概率，再证明了频率收敛到它；而不是用频率的极限来定义概率。后者在逻辑上有困难，因为“频率收敛”本身需要一个概率模型来陈述。Borel 正规数定理（定理~\ref{thm:independence:borel-normal}）是 $A=\{\text{二进制数字为}\ 1\}$ 的特例。
 \end{example}
@@ -167,7 +167,7 @@ N_t=\sup\{n:\ T_n\leqslant t\}
 直观上，平均每个灯泡用 $\mu$ 小时，所以单位时间内大约换 $1/\mu$ 个。
 
 \begin{remark}[随机下标]
-上面的证明用到了一个一般的事实：若 $Y_n\to Y_\infty$ a.s.，$N(t)\to\infty$ a.s.，则 $Y_{N(t)}\to Y_\infty$ a.s.。这对依概率收敛不成立。例如，设 $Y_n\in\{0,1\}$ 独立，$P(Y_n=1)=a_n\to0$，$\sum_na_n=\infty$，则 $Y_n\toP0$；但令 $N(n)=\inf\{m\geqslant n:Y_m=1\}$（由第二 Borel--Cantelli 引理，几乎必然有限且趋于无穷），则 $Y_{N(n)}=1$ 恒成立。这又一次说明，几乎必然收敛是关于每条“样本路径”的性质，所以经得起随机的时间变换；依概率收敛只是关于每个固定时刻的分布的性质。
+上面的证明用到了一个一般的事实：若 $Y_n\to Y_\infty$ a.s.，$N(t)\to\infty$ a.s.，则 $Y_{N(t)}\to Y_\infty$ a.s.。这对依概率收敛不成立。例如，设 $Y_n\in\{0,1\}$ 独立，$\P(Y_n=1)=a_n\to0$，$\sum_na_n=\infty$，则 $Y_n\toP0$；但令 $N(n)=\inf\{m\geqslant n:Y_m=1\}$（由第二 Borel--Cantelli 引理，几乎必然有限且趋于无穷），则 $Y_{N(n)}=1$ 恒成立。这又一次说明，几乎必然收敛是关于每条“样本路径”的性质，所以经得起随机的时间变换；依概率收敛只是关于每个固定时刻的分布的性质。
 \end{remark}
 
 \topic{Glivenko--Cantelli 定理}
@@ -201,7 +201,7 @@ F_n(x)&\geqslant F_n(x_{j-1,k})\geqslant F(x_{j-1,k})-\tfrac1k\geqslant F(x_{j,k
 \topic{Shannon 定理}
 
 \begin{workedexample}[Shannon 定理，渐近等分性]\label{we:strong-laws:shannon}
-设 $X_1,X_2,\dots$ 独立，取值于字母表 $\{1,\dots,r\}$，$P(X_i=k)=p(k)>0$。把 $X_1,X_2,\dots$ 想成一个信息源依次发出的字母（在 i.i.d.\ 的情形，这就是一只在打字机上乱敲的猴子）。令
+设 $X_1,X_2,\dots$ 独立，取值于字母表 $\{1,\dots,r\}$，$\P(X_i=k)=p(k)>0$。把 $X_1,X_2,\dots$ 想成一个信息源依次发出的字母（在 i.i.d.\ 的情形，这就是一只在打字机上乱敲的猴子）。令
 \[
 \pi_n(\omega)=p(X_1(\omega))\cdots p(X_n(\omega))
 \]
@@ -209,7 +209,7 @@ F_n(x)&\geqslant F_n(x_{j-1,k})\geqslant F(x_{j-1,k})-\tfrac1k\geqslant F(x_{j,k
 \[
 -\frac1n\log\pi_n\to H\equiv-\sum_{k=1}^rp(k)\log p(k)\quad\text{a.s.},
 \]
-并由此证明对任意 $\varepsilon>0$，$P\bigl(e^{-n(H+\varepsilon)}\leqslant\pi_n\leqslant e^{-n(H-\varepsilon)}\bigr)\to1$。
+并由此证明对任意 $\varepsilon>0$，$\P\bigl(e^{-n(H+\varepsilon)}\leqslant\pi_n\leqslant e^{-n(H-\varepsilon)}\bigr)\to1$。
 \end{workedexample}
 \begin{solution}
 $-\log\pi_n=\sum_{i=1}^n\bigl(-\log p(X_i)\bigr)$。$Z_i=-\log p(X_i)$ 是独立随机变量的函数，i.i.d.，只取有限个值，所以可积，
@@ -218,7 +218,7 @@ EZ_1=\sum_{k=1}^rP(X_1=k)\bigl(-\log p(k)\bigr)=-\sum_kp(k)\log p(k)=H .
 \]
 由强大数定律，$-\frac1n\log\pi_n=\frac1n\sum_iZ_i\to H$ a.s.
 
-几乎必然收敛蕴含依概率收敛（定理~\ref{thm:convergence:as-implies-p}），所以 $P\bigl(\abs{-\frac1n\log\pi_n-H}\leqslant\varepsilon\bigr)\to1$；而 $\abs{-\frac1n\log\pi_n-H}\leqslant\varepsilon$ 就是 $e^{-n(H+\varepsilon)}\leqslant\pi_n\leqslant e^{-n(H-\varepsilon)}$。
+几乎必然收敛蕴含依概率收敛（定理~\ref{thm:convergence:as-implies-p}），所以 $\P\bigl(\abs{-\frac1n\log\pi_n-H}\leqslant\varepsilon\bigr)\to1$；而 $\abs{-\frac1n\log\pi_n-H}\leqslant\varepsilon$ 就是 $e^{-n(H+\varepsilon)}\leqslant\pi_n\leqslant e^{-n(H-\varepsilon)}$。
 
 $H$ 称为信息源的\term{熵}（entropy），它衡量信息源有多“随机”。这个结论称为\term{渐近等分性}（asymptotic equipartition property）：$n$ 很大时，几乎可以肯定，我们观察到的那个长度为 $n$ 的字母串的概率大约是 $e^{-nH}$。所以“典型的”字母串大约有 $e^{nH}$ 个（课外知识 E），它们几乎等可能；而全部字母串有 $r^n=e^{n\log r}$ 个，$H\leqslant\log r$（第~\ref{lec:expectation} 讲作业 C），等号仅在均匀分布时成立。这正是数据压缩的原理：只需给典型的字母串编号，每个字母大约用 $H/\log2$ 个比特就够了。
 \end{solution}
@@ -242,7 +242,7 @@ $H$ 称为信息源的\term{熵}（entropy），它衡量信息源有多“随�
 \begin{exercises}{A}{课堂内容的补充}
 \item\label{ex:strong-laws:A1} 设 $X_0=(1,0)\in\R^2$，归纳地令 $X_{n+1}$ 是在以原点为中心、半径为 $\abs{X_n}$ 的圆盘中均匀随机地选取的点，即 $X_{n+1}/\abs{X_n}$ 在单位圆盘上均匀分布，并且与 $X_1,\dots,X_n$ 独立。证明 $\frac1n\log\abs{X_n}\to c$ a.s.，并求 $c$。
 \begin{solution}
-令 $U_{n+1}=\abs{X_{n+1}}/\abs{X_n}$，它是单位圆盘上均匀分布的点到原点的距离。按假设 $U_1,U_2,\dots$ i.i.d.。对 $0\leqslant r\leqslant1$，$P(U_1\leqslant r)=\frac{\pi r^2}\pi=r^2$，所以 $U_1$ 有密度 $2r\one_{(0,1)}(r)$。
+令 $U_{n+1}=\abs{X_{n+1}}/\abs{X_n}$，它是单位圆盘上均匀分布的点到原点的距离。按假设 $U_1,U_2,\dots$ i.i.d.。对 $0\leqslant r\leqslant1$，$\P(U_1\leqslant r)=\frac{\pi r^2}\pi=r^2$，所以 $U_1$ 有密度 $2r\one_{(0,1)}(r)$。
 
 $\abs{X_n}=U_1U_2\cdots U_n$，$\log\abs{X_n}=\sum_{i=1}^n\log U_i$。
 \[
@@ -267,7 +267,7 @@ $f(U_i)$ i.i.d.，$E\abs{f(U_1)}=\int_0^1\abs f<\infty$，$Ef(U_1)=\int_0^1f$，
 \begin{solution}
 由强大数定律（或定理~\ref{thm:strong-laws:infinite-mean}），$S_n/n\to\mu>0$ a.s.，所以 $n$ 充分大时 $S_n>\frac{\min\{\mu,1\}}2n\to\infty$。
 
-$\mu=0$ 时不能。比如 $P(X_1=\pm1)=\frac12$，强大数定律只给出 $S_n/n\to0$，而 $S_n$ 本身是简单随机游走，它会在 $0$ 附近上下摆动，摆动的幅度越来越大（以后学习常返性时会证明 $\limsup S_n=+\infty$，$\liminf S_n=-\infty$ a.s.）。所以强大数定律只告诉我们 $S_n=o(n)$，关于 $S_n$ 本身的行为还需要更精细的工具。
+$\mu=0$ 时不能。比如 $\P(X_1=\pm1)=\frac12$，强大数定律只给出 $S_n/n\to0$，而 $S_n$ 本身是简单随机游走，它会在 $0$ 附近上下摆动，摆动的幅度越来越大（以后学习常返性时会证明 $\limsup S_n=+\infty$，$\liminf S_n=-\infty$ a.s.）。所以强大数定律只告诉我们 $S_n=o(n)$，关于 $S_n$ 本身的行为还需要更精细的工具。
 \end{solution}
 
 \item\label{ex:strong-laws:A5} 设 $X_1,X_2,\dots$ 两两独立、同分布，$E\abs{X_1}<\infty$。证明 $\frac1n\max_{k\leqslant n}\abs{X_k}\to0$ a.s.，并由此再证明一次引理~\ref{lem:strong-laws:truncation} 中的 $\sum_kP(\abs{X_k}>k)<\infty$ 的必要性：若 $E\abs{X_1}=\infty$，强大数定律的结论必定失败。
@@ -336,7 +336,7 @@ E\frac1V>\frac1a\qquad\text{且}\qquad EV>a .
 \]
 第二个条件说股票的平均收益比债券高（否则全买债券更好）；第一个条件说股票“有足够的风险”，全买股票的长期增长率不是最好的。由 Jensen 不等式 $E\frac1V\geqslant\frac1{EV}$，两个条件可以同时成立。
 \end{solution}
-\item 设 $P(V=1)=P(V=4)=\frac12$。求最优的 $p$（作为 $a$ 的函数）。
+\item 设 $\P(V=1)=\P(V=4)=\frac12$。求最优的 $p$（作为 $a$ 的函数）。
 \begin{solution}
 $c(p)=\frac12\log(ap+1-p)+\frac12\log(ap+4-4p)$。令
 \[
@@ -374,17 +374,17 @@ p^*=\frac{5a-8}{2(a-1)(4-a)} .
 \begin{probleme}{E}{Shannon 定理与数据压缩}
 沿用例题（第~\pageref{we:strong-laws:shannon} 页）的记号。固定 $\varepsilon>0$，称长度为 $n$ 的字母串 $x=(x_1,\dots,x_n)\in\{1,\dots,r\}^n$ 是\term{典型的}，若 $e^{-n(H+\varepsilon)}\leqslant p(x_1)\cdots p(x_n)\leqslant e^{-n(H-\varepsilon)}$。记典型字母串的全体为 $\cT_n$。
 \begin{questions}
-\item 证明 $P\bigl((X_1,\dots,X_n)\in\cT_n\bigr)\to1$。
+\item 证明 $\P\bigl((X_1,\dots,X_n)\in\cT_n\bigr)\to1$。
 \begin{solution}
 这就是例题的第二个结论。
 \end{solution}
 \item 证明 $\abs{\cT_n}\leqslant e^{n(H+\varepsilon)}$。
 \begin{solution}
-每个典型字母串的概率不小于 $e^{-n(H+\varepsilon)}$，而它们的概率之和不超过 $1$：$1\geqslant\sum_{x\in\cT_n}P((X_1,\dots,X_n)=x)\geqslant\abs{\cT_n}e^{-n(H+\varepsilon)}$。
+每个典型字母串的概率不小于 $e^{-n(H+\varepsilon)}$，而它们的概率之和不超过 $1$：$1\geqslant\sum_{x\in\cT_n}\P((X_1,\dots,X_n)=x)\geqslant\abs{\cT_n}e^{-n(H+\varepsilon)}$。
 \end{solution}
 \item 证明 $n$ 充分大时 $\abs{\cT_n}\geqslant(1-\varepsilon)e^{n(H-\varepsilon)}$。
 \begin{solution}
-由 E1)，$n$ 充分大时 $P((X_1,\dots,X_n)\in\cT_n)\geqslant1-\varepsilon$；每个典型字母串的概率不超过 $e^{-n(H-\varepsilon)}$。所以 $1-\varepsilon\leqslant\abs{\cT_n}e^{-n(H-\varepsilon)}$。
+由 E1)，$n$ 充分大时 $\P((X_1,\dots,X_n)\in\cT_n)\geqslant1-\varepsilon$；每个典型字母串的概率不超过 $e^{-n(H-\varepsilon)}$。所以 $1-\varepsilon\leqslant\abs{\cT_n}e^{-n(H-\varepsilon)}$。
 \end{solution}
 \item 解释这个结论与数据压缩的关系。
 \begin{solution}

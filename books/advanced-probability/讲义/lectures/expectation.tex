@@ -8,17 +8,17 @@
 
 掷一颗均匀的骰子，点数的平均值是 $\frac{1+2+\cdots+6}6=3.5$。在初等概率论中，我们把它叫做点数的期望。一般地，离散型随机变量的期望是 $\sum_xxP(X=x)$，有密度 $f$ 的随机变量的期望是 $\int xf(x)\dd x$。这两个公式长得不一样，却应该是同一个概念。而对于第~\ref{lec:distributions} 讲的 Cantor 分布，两个公式都用不上。现在我们有了一般测度空间上的积分，就可以统一地定义：
 \[
-EX=\int_\Omega X\dd P .
+EX=\int_\Omega X\dd \P .
 \]
-直观上，这是把 $X$ 在每个样本点 $\omega$ 处的值 $X(\omega)$，按照 $\omega$ 的“权重” $P(\dd\omega)$ 加权平均。
+直观上，这是把 $X$ 在每个样本点 $\omega$ 处的值 $X(\omega)$，按照 $\omega$ 的“权重” $\P(\dd\omega)$ 加权平均。
 
 这一讲有三个任务。第一，说明这个抽象的定义在具体情形下就是初等概率论中的公式，为此要证明\emph{变量替换公式} $Ef(X)=\int f(x)\,\mu_X(\dd x)$，它把 $\Omega$ 上的积分搬到 $\R$ 上来计算。第二，建立概率论中最常用的几个不等式：Markov、Chebyshev、Jensen、Hölder。第三，把上一讲的极限定理翻译成期望的语言，并用它们回答“尾概率与期望”的一类问题，比如课堂上提到的：$E\abs X<\infty$ 蕴含 $\lim_{t\to\infty}tP(\abs X>t)=0$。
 
 \topic{本讲用到的前文结果}
 
-我们把这一讲要反复用到的结果列在这里，读者忘了可以点回去看。$(\Omega,\cF,P)$ 是概率空间。
+我们把这一讲要反复用到的结果列在这里，读者忘了可以点回去看。$(\Omega,\cF,\P)$ 是概率空间。
 \begin{enumerate}
-\item 分布（定义~\ref{def:distributions:law}）：随机变量 $X$ 的分布是 $\R$ 上的概率测度 $\mu_X(B)=P(X\in B)$，$B\in\cR$。
+\item 分布（定义~\ref{def:distributions:law}）：随机变量 $X$ 的分布是 $\R$ 上的概率测度 $\mu_X(B)=\P(X\in B)$，$B\in\cR$。
 \item 积分的四步定义与可积函数（定义~\ref{def:integration:nonnegative}，定义~\ref{def:integration:integrable}）：$\int f=\int f^+-\int f^-$，$f$ 可积是指 $\int\abs f<\infty$。
 \item 积分的性质（定理~\ref{thm:integration:linear-nonnegative}，定理~\ref{thm:integration:integrable}）：线性，单调，$\abs{\int f}\leqslant\int\abs f$，几乎处处相等的函数积分相等。
 \item 单调收敛定理（定理~\ref{thm:integration:mct}）：$0\leqslant f_n\uparrow f$ 蕴含 $\int f_n\uparrow\int f$。
@@ -33,13 +33,13 @@ EX=\int_\Omega X\dd P .
 \topic{期望的定义}
 
 \begin{definition}[期望]\label{def:expectation:expectation}
-设 $X$ 是概率空间 $(\Omega,\cF,P)$ 上的随机变量（可以取值于 $\overline\R=[-\infty,\infty]$）。
+设 $X$ 是概率空间 $(\Omega,\cF,\P)$ 上的随机变量（可以取值于 $\overline\R=[-\infty,\infty]$）。
 \begin{enumerate}
-\item 若 $X\geqslant0$，定义 $X$ 的\term{期望}（expectation，expected value）为 $EX=\int X\dd P\in[0,\infty]$。它总有意义，但可能是 $\infty$。
+\item 若 $X\geqslant0$，定义 $X$ 的\term{期望}（expectation，expected value）为 $EX=\int X\dd \P\in[0,\infty]$。它总有意义，但可能是 $\infty$。
 \item 一般地，若 $EX^+$ 与 $EX^-$ 中至少有一个有限，称 $X$ 的\term{期望存在}，定义 $EX=EX^+-EX^-\in[-\infty,\infty]$。
 \item 若 $E\abs X<\infty$，称 $X$ \term{可积}（integrable）。这时 $EX^+$ 与 $EX^-$ 都有限，$EX$ 是实数。
 \end{enumerate}
-对 $A\in\cF$，记 $E(X;A)=E(X\one_A)=\int_AX\dd P$。期望也称为\term{均值}（mean）。
+对 $A\in\cF$，记 $E(X;A)=E(X\one_A)=\int_AX\dd \P$。期望也称为\term{均值}（mean）。
 \end{definition}
 
 由于 $\abs X=X^++X^-$，“可积”就是 $EX^+$ 与 $EX^-$ 都有限。期望就是积分，所以上一讲关于积分的一切结论都可以直接翻译过来。另外，概率空间上的常数 $c$ 是简单函数 $c\one_\Omega$，所以 $Ec=cP(\Omega)=c$。我们把最常用的几条列出来。
@@ -51,7 +51,7 @@ EX=\int_\Omega X\dd P .
 \item 若 $X\leqslant Y$ a.s.，则 $EX\leqslant EY$；
 \item $\abs{EX}\leqslant E\abs X$；
 \item 若 $X\geqslant0$ 且 $EX=0$，则 $X=0$ a.s.；
-\item $E\one_A=P(A)$ 对一切 $A\in\cF$ 成立。
+\item $E\one_A=\P(A)$ 对一切 $A\in\cF$ 成立。
 \end{enumerate}
 \end{proposition}
 \begin{proof}
@@ -61,19 +61,19 @@ EX=\int_\Omega X\dd P .
 下面看几个例子。前两个是在具体的概率空间上直接按定义计算，后两个说明期望可以是 $\infty$，也可以不存在。
 
 \begin{example}[有限概率空间]\label{ex:expectation:finite}
-设 $\Omega=\{\omega_1,\dots,\omega_n\}$ 有限，$\cF=2^\Omega$，$P(\{\omega_i\})=p_i$。任何 $X:\Omega\to\R$ 都是简单函数 $X=\sum_iX(\omega_i)\one_{\{\omega_i\}}$，由引理~\ref{lem:integration:representation}，
+设 $\Omega=\{\omega_1,\dots,\omega_n\}$ 有限，$\cF=2^\Omega$，$\P(\{\omega_i\})=p_i$。任何 $X:\Omega\to\R$ 都是简单函数 $X=\sum_iX(\omega_i)\one_{\{\omega_i\}}$，由引理~\ref{lem:integration:representation}，
 \[
 EX=\sum_{i=1}^nX(\omega_i)p_i .
 \]
-这正是“加权平均”。比如掷骰子，$\Omega=\{1,\dots,6\}$，$p_i=1/6$，$X(i)=i$，$EX=3.5$。又如 $X(i)=\one\{i\ \text{是偶数}\}$，$EX=P(\text{偶数})=1/2$。
+这正是“加权平均”。比如掷骰子，$\Omega=\{1,\dots,6\}$，$p_i=1/6$，$X(i)=i$，$EX=3.5$。又如 $X(i)=\one\{i\ \text{是偶数}\}$，$EX=\P(\text{偶数})=1/2$。
 \end{example}
 
 \begin{example}[区间上的均匀随机数]\label{ex:expectation:uniform}
-取 $\Omega=[0,1]$，$\cF=\cR\cap[0,1]$，$P=\lambda$，$X(\omega)=\omega$。由定理~\ref{thm:integration:riemann}，$EX=\int_0^1\omega\dd\omega=\frac12$，$EX^2=\int_0^1\omega^2\dd\omega=\frac13$。又如 $Y(\omega)=\one_{\Q}(\omega)$（$\omega$ 是有理数时取 $1$），$Y$ 是简单函数，$EY=\lambda(\Q\cap[0,1])=0$。随机地取一个数，它是有理数的概率是 $0$。
+取 $\Omega=[0,1]$，$\cF=\cR\cap[0,1]$，$\P=\lambda$，$X(\omega)=\omega$。由定理~\ref{thm:integration:riemann}，$EX=\int_0^1\omega\dd\omega=\frac12$，$EX^2=\int_0^1\omega^2\dd\omega=\frac13$。又如 $Y(\omega)=\one_{\Q}(\omega)$（$\omega$ 是有理数时取 $1$），$Y$ 是简单函数，$EY=\lambda(\Q\cap[0,1])=0$。随机地取一个数，它是有理数的概率是 $0$。
 \end{example}
 
 \begin{example}[St.\ Petersburg 悖论：期望为无穷]\label{ex:expectation:st-petersburg}
-反复抛一枚公平硬币，直到出现正面为止。若第 $k$ 次才出现正面，你得到 $2^k$ 元。设得到的钱数为 $X$，则 $P(X=2^k)=2^{-k}$，$k=1,2,\dots$。$X\geqslant0$，由下面的推论~\ref{cor:expectation:discrete}，
+反复抛一枚公平硬币，直到出现正面为止。若第 $k$ 次才出现正面，你得到 $2^k$ 元。设得到的钱数为 $X$，则 $\P(X=2^k)=2^{-k}$，$k=1,2,\dots$。$X\geqslant0$，由下面的推论~\ref{cor:expectation:discrete}，
 \[
 EX=\sum_{k=1}^\infty2^k\cdot2^{-k}=\sum_{k=1}^\infty1=\infty .
 \]
@@ -81,7 +81,7 @@ EX=\sum_{k=1}^\infty2^k\cdot2^{-k}=\sum_{k=1}^\infty1=\infty .
 \end{example}
 
 \begin{example}[期望不存在]\label{ex:expectation:no-mean}
-设 $P(X=2^k)=P(X=-2^k)=2^{-k-1}$，$k=1,2,\dots$（总概率 $2\sum_k2^{-k-1}=1$）。则
+设 $\P(X=2^k)=\P(X=-2^k)=2^{-k-1}$，$k=1,2,\dots$（总概率 $2\sum_k2^{-k-1}=1$）。则
 \[
 EX^+=\sum_{k\geqslant1}2^k2^{-k-1}=\infty,\qquad EX^-=\sum_{k\geqslant1}2^k2^{-k-1}=\infty,
 \]
@@ -101,7 +101,7 @@ Ef(X)=\int_Sf(x)\,\mu_X(\dd x).
 \end{theorem}
 
 \begin{remark}[证明思路]
-这是“四步法”的第一个完整示范。先对示性函数 $f=\one_B$ 验证，这时两边都是 $P(X\in B)$，等式就是分布的定义；再由线性性推广到简单函数；再用单调收敛定理推广到非负函数；最后拆成正部与负部推广到可积函数。以后凡是要证明“对一切可测函数成立”的等式，都可以照这四步走。
+这是“四步法”的第一个完整示范。先对示性函数 $f=\one_B$ 验证，这时两边都是 $\P(X\in B)$，等式就是分布的定义；再由线性性推广到简单函数；再用单调收敛定理推广到非负函数；最后拆成正部与负部推广到可积函数。以后凡是要证明“对一切可测函数成立”的等式，都可以照这四步走。
 \end{remark}
 
 \begin{proof}
@@ -109,7 +109,7 @@ Ef(X)=\int_Sf(x)\,\mu_X(\dd x).
 
 \emph{第一步：示性函数。}设 $f=\one_B$，$B\in\cS$。则 $f(X(\omega))=1$ 当且仅当 $X(\omega)\in B$，所以 $f(X)=\one_{\{X\in B\}}$。于是
 \[
-Ef(X)=P(X\in B)=\mu_X(B)=\int_S\one_B\dd\mu_X .
+Ef(X)=\P(X\in B)=\mu_X(B)=\int_S\one_B\dd\mu_X .
 \]
 第一个等号是命题~\ref{prop:expectation:basic}(5)，第二个是分布的定义，第三个是推论~\ref{cor:integration:nonnegative-simple}（对测度 $\mu_X$ 用）。
 
@@ -138,14 +138,14 @@ Ef(X)=Ef^+(X)-Ef^-(X)=\int_Sf^+\dd\mu_X-\int_Sf^-\dd\mu_X=\int_Sf\dd\mu_X .
 从变量替换公式出发，我们得到初等概率论中的两个公式。
 
 \begin{corollary}[离散型随机变量]\label{cor:expectation:discrete}
-设 $D\subseteq\R$ 是可数集，$P(X\in D)=1$，记 $p(x)=P(X=x)$。则对 Borel 函数 $f\geqslant0$，
+设 $D\subseteq\R$ 是可数集，$\P(X\in D)=1$，记 $p(x)=\P(X=x)$。则对 Borel 函数 $f\geqslant0$，
 \[
 Ef(X)=\sum_{x\in D}f(x)p(x);
 \]
 对一般的 Borel 函数 $f$，$E\abs{f(X)}<\infty$ 当且仅当 $\sum_{x\in D}\abs{f(x)}p(x)<\infty$，此时上式仍成立（右边绝对收敛）。
 \end{corollary}
 \begin{proof}
-这个推论可以直接证明，不必经过变量替换公式。由于 $P(X\notin D)=0$，在概率为 $1$ 的事件 $\{X\in D\}$ 上，
+这个推论可以直接证明，不必经过变量替换公式。由于 $\P(X\notin D)=0$，在概率为 $1$ 的事件 $\{X\in D\}$ 上，
 \[
 f(X)=\sum_{x\in D}f(x)\one_{\{X=x\}}
 \]
@@ -170,13 +170,13 @@ Ef(X)=\int_\R f(x)p(x)\dd x;
 现在我们可以计算常见分布的期望了。对 $k\geqslant1$，$EX^k$ 称为 $X$ 的 $k$ \term{阶矩}（$k$-th moment），$E\abs X^k$ 称为 $k$ 阶绝对矩。
 
 \begin{example}[Bernoulli 分布与示性函数]\label{ex:expectation:bernoulli}
-若 $P(X=1)=p$，$P(X=0)=1-p$，称 $X$ 服从参数为 $p$ 的 \term{Bernoulli 分布}。$EX=1\cdot p+0\cdot(1-p)=p$。由于 $X^2=X$，$EX^2=p$。任何事件 $A$ 的示性函数 $\one_A$ 都服从参数为 $P(A)$ 的 Bernoulli 分布。
+若 $\P(X=1)=p$，$\P(X=0)=1-p$，称 $X$ 服从参数为 $p$ 的 \term{Bernoulli 分布}。$EX=1\cdot p+0\cdot(1-p)=p$。由于 $X^2=X$，$EX^2=p$。任何事件 $A$ 的示性函数 $\one_A$ 都服从参数为 $\P(A)$ 的 Bernoulli 分布。
 \end{example}
 
 \begin{example}[二项分布：用示性函数之和计算]\label{ex:expectation:binomial}
-设 $X$ 服从二项分布 $B(n,p)$：$P(X=k)=\binom nkp^k(1-p)^{n-k}$，$k=0,\dots,n$。按推论~\ref{cor:expectation:discrete}，$EX=\sum_kk\binom nkp^k(1-p)^{n-k}$，可以用组合恒等式 $k\binom nk=n\binom{n-1}{k-1}$ 算出它等于 $np$。
+设 $X$ 服从二项分布 $B(n,p)$：$\P(X=k)=\binom nkp^k(1-p)^{n-k}$，$k=0,\dots,n$。按推论~\ref{cor:expectation:discrete}，$EX=\sum_kk\binom nkp^k(1-p)^{n-k}$，可以用组合恒等式 $k\binom nk=n\binom{n-1}{k-1}$ 算出它等于 $np$。
 
-但是有一个更好的办法。二项分布描述的是 $n$ 次试验中成功的次数：若 $A_1,\dots,A_n$ 是事件，$P(A_i)=p$，那么 $N=\sum_{i=1}^n\one_{A_i}$ 是成功的次数。由期望的线性性，
+但是有一个更好的办法。二项分布描述的是 $n$ 次试验中成功的次数：若 $A_1,\dots,A_n$ 是事件，$\P(A_i)=p$，那么 $N=\sum_{i=1}^n\one_{A_i}$ 是成功的次数。由期望的线性性，
 \[
 EN=\sum_{i=1}^nP(A_i)=np .
 \]
@@ -184,7 +184,7 @@ EN=\sum_{i=1}^nP(A_i)=np .
 \end{example}
 
 \begin{example}[Poisson 分布]\label{ex:expectation:poisson}
-设 $P(X=k)=e^{-\lambda}\frac{\lambda^k}{k!}$，$k=0,1,2,\dots$，$\lambda>0$。由推论~\ref{cor:expectation:discrete}，
+设 $\P(X=k)=e^{-\lambda}\frac{\lambda^k}{k!}$，$k=0,1,2,\dots$，$\lambda>0$。由推论~\ref{cor:expectation:discrete}，
 \[
 EX=\sum_{k=0}^\infty ke^{-\lambda}\frac{\lambda^k}{k!}=\lambda\sum_{k=1}^\infty e^{-\lambda}\frac{\lambda^{k-1}}{(k-1)!}=\lambda .
 \]
@@ -192,7 +192,7 @@ EX=\sum_{k=0}^\infty ke^{-\lambda}\frac{\lambda^k}{k!}=\lambda\sum_{k=1}^\infty 
 \end{example}
 
 \begin{example}[几何分布]\label{ex:expectation:geometric}
-设 $P(N=k)=p(1-p)^{k-1}$，$k=1,2,\dots$，$0<p<1$，记 $q=1-p$。$N$ 是重复试验中第一次成功所需的次数。由数学分析中幂级数逐项求导的定理，对 $\abs q<1$，$\sum_{k\geqslant1}kq^{k-1}=\frac{\dd}{\dd q}\frac1{1-q}=\frac1{(1-q)^2}$，于是
+设 $\P(N=k)=p(1-p)^{k-1}$，$k=1,2,\dots$，$0<p<1$，记 $q=1-p$。$N$ 是重复试验中第一次成功所需的次数。由数学分析中幂级数逐项求导的定理，对 $\abs q<1$，$\sum_{k\geqslant1}kq^{k-1}=\frac{\dd}{\dd q}\frac1{1-q}=\frac1{(1-q)^2}$，于是
 \[
 EN=p\sum_{k\geqslant1}kq^{k-1}=\frac p{p^2}=\frac1p .
 \]
@@ -218,7 +218,7 @@ EN=p\sum_{k\geqslant1}kq^{k-1}=\frac p{p^2}=\frac1p .
 \end{example}
 
 \begin{example}[Cantor 分布的期望]\label{ex:expectation:cantor}
-设 $\xi_1,\xi_2,\dots$ 是第~\ref{lec:distributions} 讲中的公平硬币（$\xi_n\in\{0,1\}$，满足 \eqref{eq:distributions:fair}），$X=\sum_n\frac{2\xi_n}{3^n}$ 服从 Cantor 分布。这个分布既没有密度也不是离散的，两个初等公式都不能用，可是期望的定义照样适用。$E\xi_n=P(\xi_n=1)=\frac12$。由非负项的逐项积分（推论~\ref{cor:integration:series}），
+设 $\xi_1,\xi_2,\dots$ 是第~\ref{lec:distributions} 讲中的公平硬币（$\xi_n\in\{0,1\}$，满足 \eqref{eq:distributions:fair}），$X=\sum_n\frac{2\xi_n}{3^n}$ 服从 Cantor 分布。这个分布既没有密度也不是离散的，两个初等公式都不能用，可是期望的定义照样适用。$E\xi_n=\P(\xi_n=1)=\frac12$。由非负项的逐项积分（推论~\ref{cor:integration:series}），
 \[
 EX=\sum_{n=1}^\infty\frac{2E\xi_n}{3^n}=\sum_{n=1}^\infty\frac1{3^n}=\frac12 .
 \]
@@ -269,13 +269,13 @@ EX=\sum_{n=1}^\infty\frac{2E\xi_n}{3^n}=\sum_{n=1}^\infty\frac1{3^n}=\frac12 .
 $n$ 个人把帽子放在一起，然后每人随机地拿一顶。拿到自己帽子的人数记为 $N$。求 $EN$ 与 $\Var(N)$。
 \end{workedexample}
 \begin{solution}
-\emph{建立模型。}把“随机地拿”理解为：$\Omega$ 是 $\{1,\dots,n\}$ 的全体置换 $\sigma$（共 $n!$ 个），$\cF=2^\Omega$，$P$ 是均匀分布，$P(\{\sigma\})=1/n!$。第 $i$ 个人拿到第 $\sigma(i)$ 个人的帽子。令 $A_i=\{\sigma:\sigma(i)=i\}$，则 $N=\sum_{i=1}^n\one_{A_i}$。
+\emph{建立模型。}把“随机地拿”理解为：$\Omega$ 是 $\{1,\dots,n\}$ 的全体置换 $\sigma$（共 $n!$ 个），$\cF=2^\Omega$，$\P$ 是均匀分布，$\P(\{\sigma\})=1/n!$。第 $i$ 个人拿到第 $\sigma(i)$ 个人的帽子。令 $A_i=\{\sigma:\sigma(i)=i\}$，则 $N=\sum_{i=1}^n\one_{A_i}$。
 
-\emph{期望。}$A_i$ 中的置换把 $i$ 固定，其余 $n-1$ 个元素任意排列，共 $(n-1)!$ 个，所以 $P(A_i)=\frac{(n-1)!}{n!}=\frac1n$。由线性性，$EN=n\cdot\frac1n=1$。
+\emph{期望。}$A_i$ 中的置换把 $i$ 固定，其余 $n-1$ 个元素任意排列，共 $(n-1)!$ 个，所以 $\P(A_i)=\frac{(n-1)!}{n!}=\frac1n$。由线性性，$EN=n\cdot\frac1n=1$。
 
-\emph{方差。}对 $i\neq j$，$A_i\cap A_j$ 中的置换固定 $i$ 与 $j$，共 $(n-2)!$ 个（$n\geqslant2$），$P(A_i\cap A_j)=\frac1{n(n-1)}$。由于 $\one_{A_i}^2=\one_{A_i}$，$\one_{A_i}\one_{A_j}=\one_{A_i\cap A_j}$，
+\emph{方差。}对 $i\neq j$，$A_i\cap A_j$ 中的置换固定 $i$ 与 $j$，共 $(n-2)!$ 个（$n\geqslant2$），$\P(A_i\cap A_j)=\frac1{n(n-1)}$。由于 $\one_{A_i}^2=\one_{A_i}$，$\one_{A_i}\one_{A_j}=\one_{A_i\cap A_j}$，
 \[
-EN^2=E\Bigl(\sum_i\one_{A_i}\Bigr)^2=\sum_iP(A_i)+\sum_{i\neq j}P(A_i\cap A_j)=1+n(n-1)\cdot\frac1{n(n-1)}=2 .
+EN^2=E\Bigl(\sum_i\one_{A_i}\Bigr)^2=\sum_iP(A_i)+\sum_{i\neq j}\P(A_i\cap A_j)=1+n(n-1)\cdot\frac1{n(n-1)}=2 .
 \]
 所以 $\Var(N)=EN^2-(EN)^2=2-1=1$。
 
@@ -291,14 +291,14 @@ EN^2=E\Bigl(\sum_i\one_{A_i}\Bigr)^2=\sum_iP(A_i)+\sum_{i\neq j}P(A_i\cap A_j)=1
 \[
 i_AP(X\in A)\leqslant E\bigl(\varphi(X);X\in A\bigr)\leqslant E\varphi(X).
 \]
-特别地，对 $X\geqslant0$ 与 $a>0$，$P(X\geqslant a)\leqslant\frac{EX}a$。
+特别地，对 $X\geqslant0$ 与 $a>0$，$\P(X\geqslant a)\leqslant\frac{EX}a$。
 \end{theorem}
 \begin{proof}
 按照 $i_A$ 的定义，当 $X(\omega)\in A$ 时 $\varphi(X(\omega))\geqslant i_A$；又 $\varphi\geqslant0$。所以逐点有
 \[
 i_A\one_{\{X\in A\}}\leqslant\varphi(X)\one_{\{X\in A\}}\leqslant\varphi(X).
 \]
-取期望，由单调性（命题~\ref{prop:expectation:basic}(2)）与 $E\one_{\{X\in A\}}=P(X\in A)$ 即得。（若 $i_A=\infty$，即 $A=\varnothing$，两边都按 $0$ 理解。）特别情形取 $\varphi(x)=\abs x$，$A=[a,\infty)$，$i_A=a$。
+取期望，由单调性（命题~\ref{prop:expectation:basic}(2)）与 $E\one_{\{X\in A\}}=\P(X\in A)$ 即得。（若 $i_A=\infty$，即 $A=\varnothing$，两边都按 $0$ 理解。）特别情形取 $\varphi(x)=\abs x$，$A=[a,\infty)$，$i_A=a$。
 \end{proof}
 
 这个不等式的证明只有一行，但它的用法很灵活：选不同的 $\varphi$，就得到不同的不等式。
@@ -306,12 +306,12 @@ i_A\one_{\{X\in A\}}\leqslant\varphi(X)\one_{\{X\in A\}}\leqslant\varphi(X).
 \begin{corollary}[Chebyshev 不等式]\label{cor:expectation:chebyshev}
 设 $EX^2<\infty$，$a>0$。则
 \[
-P(\abs{X-EX}\geqslant a)\leqslant\frac{\Var(X)}{a^2}.
+\P(\abs{X-EX}\geqslant a)\leqslant\frac{\Var(X)}{a^2}.
 \]
-一般地，对 $p>0$，$P(\abs X\geqslant a)\leqslant\frac{E\abs X^p}{a^p}$。
+一般地，对 $p>0$，$\P(\abs X\geqslant a)\leqslant\frac{E\abs X^p}{a^p}$。
 \end{corollary}
 \begin{proof}
-对随机变量 $Y=X-EX$ 用 Markov 不等式，取 $\varphi(y)=y^2$，$A=\{y:\abs y\geqslant a\}$，$i_A=a^2$：$a^2P(\abs Y\geqslant a)\leqslant EY^2=\Var(X)$。第二个不等式取 $\varphi(x)=\abs x^p$，$A=\{\abs x\geqslant a\}$，$i_A=a^p$。
+对随机变量 $Y=X-EX$ 用 Markov 不等式，取 $\varphi(y)=y^2$，$A=\{y:\abs y\geqslant a\}$，$i_A=a^2$：$a^2\P(\abs Y\geqslant a)\leqslant EY^2=\Var(X)$。第二个不等式取 $\varphi(x)=\abs x^p$，$A=\{\abs x\geqslant a\}$，$i_A=a^p$。
 \end{proof}
 
 Chebyshev 不等式说，随机变量偏离均值超过 $k$ 个标准差的概率不超过 $1/k^2$。它对一切平方可积的随机变量都成立，所以它的界一般很粗糙。比如标准正态分布偏离均值超过 $3$ 的概率约为 $0.0027$，而 Chebyshev 不等式只给出 $1/9\approx0.11$。可是，在“对一切分布都成立”这个意义下，它不能再改进（本讲作业习题~\exref{ex:expectation:A3}）。下一讲的大数定律中，Chebyshev 不等式是第一个基本工具。
@@ -319,9 +319,9 @@ Chebyshev 不等式说，随机变量偏离均值超过 $k$ 个标准差的概�
 \begin{example}[指数形式的 Markov 不等式]
 设 $t>0$，$Ee^{tX}<\infty$。取 $\varphi(x)=e^{tx}$，$A=[a,\infty)$，$i_A=e^{ta}$，得
 \[
-P(X\geqslant a)\leqslant e^{-ta}Ee^{tX}.
+\P(X\geqslant a)\leqslant e^{-ta}Ee^{tX}.
 \]
-对标准正态的 $X$，配方得 $e^{tx}\phi(x)=e^{t^2/2}\phi(x-t)$，所以 $Ee^{tX}=e^{t^2/2}\int\phi(x-t)\dd x=e^{t^2/2}$（最后一步在 $[-N,N]$ 上作平移换元 $y=x-t$，再令 $N\to\infty$）。取 $t=a$ 使右边最小，得 $P(X\geqslant a)\leqslant e^{-a^2/2}$。这与第~\ref{lec:distributions} 讲中正态尾部的估计（定理~\ref{thm:distributions:gaussian-tail}）在指数的阶上一致。以后的大偏差理论就是从这个简单的想法出发的。
+对标准正态的 $X$，配方得 $e^{tx}\phi(x)=e^{t^2/2}\phi(x-t)$，所以 $Ee^{tX}=e^{t^2/2}\int\phi(x-t)\dd x=e^{t^2/2}$（最后一步在 $[-N,N]$ 上作平移换元 $y=x-t$，再令 $N\to\infty$）。取 $t=a$ 使右边最小，得 $\P(X\geqslant a)\leqslant e^{-a^2/2}$。这与第~\ref{lec:distributions} 讲中正态尾部的估计（定理~\ref{thm:distributions:gaussian-tail}）在指数的阶上一致。以后的大偏差理论就是从这个简单的想法出发的。
 \end{example}
 
 \topic{Jensen 不等式}
@@ -374,7 +374,7 @@ k=\sup_{x<c,\,x\in I}\frac{\varphi(c)-\varphi(x)}{c-x}
 \end{proof}
 
 \begin{theorem}[Jensen 不等式]\label{thm:expectation:jensen}
-设 $\varphi$ 是开区间 $I$ 上的凸函数，$X$ 是随机变量，$P(X\in I)=1$，$E\abs X<\infty$。则 $EX\in I$，$E\varphi(X)$ 存在（可以是 $+\infty$），并且
+设 $\varphi$ 是开区间 $I$ 上的凸函数，$X$ 是随机变量，$\P(X\in I)=1$，$E\abs X<\infty$。则 $EX\in I$，$E\varphi(X)$ 存在（可以是 $+\infty$），并且
 \[
 \varphi(EX)\leqslant E\varphi(X).
 \]
@@ -419,7 +419,7 @@ E\varphi(X)\geqslant\varphi(c)+k(EX-c)=\varphi(c)=\varphi(EX).
 若 $E\abs X^q=\infty$，不等式显然。设 $E\abs X^q<\infty$。先说明 $E\abs X^p<\infty$：$\abs X^p\leqslant1+\abs X^q$（$\abs X\leqslant1$ 时左边 $\leqslant1$，$\abs X>1$ 时 $\abs X^p<\abs X^q$）。令 $Y=\abs X^p$，$\varphi(y)=\abs y^{q/p}$，$q/p>1$，$\varphi$ 在 $\R$ 上凸（它是偶函数，在 $[0,\infty)$ 上二阶导数非负，并且在 $0$ 处的单侧导数都是 $0$）。由 Jensen 不等式，$(EY)^{q/p}\leqslant E\abs X^q$，两边开 $q$ 次方即得。
 \end{proof}
 
-请同学们注意，这个推论用到了 $P(\Omega)=1$。在 $(\R,\lambda)$ 上，$\int\abs f^2<\infty$ 并不蕴含 $\int\abs f<\infty$，比如 $f(x)=\frac1{1+\abs x}$。概率空间上，“高阶矩有限蕴含低阶矩有限”；直观上，在总质量为 $1$ 的空间上，可积性只受“大值”影响，而 $\abs X^q$ 比 $\abs X^p$ 更怕大值。
+请同学们注意，这个推论用到了 $\P(\Omega)=1$。在 $(\R,\lambda)$ 上，$\int\abs f^2<\infty$ 并不蕴含 $\int\abs f<\infty$，比如 $f(x)=\frac1{1+\abs x}$。概率空间上，“高阶矩有限蕴含低阶矩有限”；直观上，在总质量为 $1$ 的空间上，可积性只受“大值”影响，而 $\abs X^q$ 比 $\abs X^p$ 更怕大值。
 
 \topic{Hölder 不等式与 Minkowski 不等式}
 
@@ -484,7 +484,7 @@ E\abs{X+Y}^p\leqslant E\bigl(\abs X\abs{X+Y}^{p-1}\bigr)+E\bigl(\abs Y\abs{X+Y}^
 最后一步对两项分别用 Hölder 不等式。右边的最后一个因子是 $(E\abs{X+Y}^p)^{1-1/p}$。两边除以这个正的有限数，得 $(E\abs{X+Y}^p)^{1/p}\leqslant\norm X_p+\norm Y_p$。
 \end{proof}
 
-Minkowski 不等式说 $\norm\cdot_p$ 满足三角不等式。记 $L^p=L^p(\Omega,\cF,P)$ 为满足 $E\abs X^p<\infty$ 的随机变量的全体。由 Minkowski 不等式，$L^p$ 是线性空间，$\norm\cdot_p$ 是它上面的半范数（$\norm X_p=0$ 只能推出 $X=0$ a.s.，而不是 $X=0$）。把几乎必然相等的随机变量看成同一个，$L^p$ 就成为赋范线性空间。以后讨论 $L^p$ 收敛时会用到这个观点。
+Minkowski 不等式说 $\norm\cdot_p$ 满足三角不等式。记 $L^p=L^p(\Omega,\cF,\P)$ 为满足 $E\abs X^p<\infty$ 的随机变量的全体。由 Minkowski 不等式，$L^p$ 是线性空间，$\norm\cdot_p$ 是它上面的半范数（$\norm X_p=0$ 只能推出 $X=0$ a.s.，而不是 $X=0$）。把几乎必然相等的随机变量看成同一个，$L^p$ 就成为赋范线性空间。以后讨论 $L^p$ 收敛时会用到这个观点。
 
 \topic{期望的极限定理}
 
@@ -500,11 +500,11 @@ Minkowski 不等式说 $\norm\cdot_p$ 满足三角不等式。记 $L^p=L^p(\Omeg
 \end{enumerate}
 \end{theorem}
 \begin{proof}
-这分别是定理~\ref{thm:integration:mct}，定理~\ref{thm:integration:fatou}，定理~\ref{thm:integration:dct}，推论~\ref{cor:integration:bct}，取 $\mu=P$。
+这分别是定理~\ref{thm:integration:mct}，定理~\ref{thm:integration:fatou}，定理~\ref{thm:integration:dct}，推论~\ref{cor:integration:bct}，取 $\mu=\P$。
 \end{proof}
 
 \begin{example}[期望的极限不等于极限的期望]\label{ex:expectation:no-interchange}
-在 $((0,1),\cR,\lambda)$ 上，令 $X_n=n\one_{(0,1/n)}$。$X_n\to0$ 处处成立，但 $EX_n=1$。在概率的语言中：$P(X_n\neq0)=\frac1n\to0$，$X_n$ 几乎总是 $0$，但它以很小的概率取一个很大的值，这个“小概率的大值”撑住了期望。这类现象在概率论中非常普遍。比如一个赌徒每次把全部赌本押上，赢了翻倍、输了归零，$n$ 次之后的财富 $X_n$ 以概率 $2^{-n}$ 等于 $2^n$，否则为 $0$；$EX_n=1$ 始终不变，可是 $X_n\to0$ a.s.。
+在 $((0,1),\cR,\lambda)$ 上，令 $X_n=n\one_{(0,1/n)}$。$X_n\to0$ 处处成立，但 $EX_n=1$。在概率的语言中：$\P(X_n\neq0)=\frac1n\to0$，$X_n$ 几乎总是 $0$，但它以很小的概率取一个很大的值，这个“小概率的大值”撑住了期望。这类现象在概率论中非常普遍。比如一个赌徒每次把全部赌本押上，赢了翻倍、输了归零，$n$ 次之后的财富 $X_n$ 以概率 $2^{-n}$ 等于 $2^n$，否则为 $0$；$EX_n=1$ 始终不变，可是 $X_n\to0$ a.s.。
 \end{example}
 
 下面的定理给出了比控制收敛定理更便于验证的一个条件：只要有一个“增长得更快”的函数的期望一致有界，就可以交换极限与期望。它在以后讨论矩的收敛时有用。
@@ -526,7 +526,7 @@ Minkowski 不等式说 $\norm\cdot_p$ 满足三角不等式。记 $L^p=L^p(\Omeg
 \begin{proof}
 把 $h$ 换成 $h-h(0)$，结论不变（两边都减去常数 $h(0)$），所以不妨设 $h(0)=0$。
 
-\emph{第一步：选截断高度。}$X$ 的分布函数至多有可数个间断点（命题~\ref{prop:distributions:jumps}），所以 $P(\abs X=M)=P(X=M)+P(X=-M)>0$ 的 $M$ 至多可数个。给定 $M_0>0$，可以取 $M\geqslant M_0$ 使 $P(\abs X=M)=0$，并且 $\abs x\geqslant M$ 时 $g(x)>0$（由条件 (1)，$M_0$ 取得足够大时这成立）。记
+\emph{第一步：选截断高度。}$X$ 的分布函数至多有可数个间断点（命题~\ref{prop:distributions:jumps}），所以 $\P(\abs X=M)=\P(X=M)+\P(X=-M)>0$ 的 $M$ 至多可数个。给定 $M_0>0$，可以取 $M\geqslant M_0$ 使 $\P(\abs X=M)=0$，并且 $\abs x\geqslant M$ 时 $g(x)>0$（由条件 (1)，$M_0$ 取得足够大时这成立）。记
 \[
 \varepsilon_M=\sup\Bigl\{\frac{\abs{h(x)}}{g(x)}:\abs x\geqslant M\Bigr\}.
 \]
@@ -559,13 +559,13 @@ Minkowski 不等式说 $\norm\cdot_p$ 满足三角不等式。记 $L^p=L^p(\Omeg
 
 \begin{proposition}[期望与尾概率之和]\label{prop:expectation:tail-sum}
 \begin{enumerate}
-\item 设 $N$ 取值于 $\{0,1,2,\dots\}\cup\{\infty\}$。则 $EN=\sum_{n=1}^\infty P(N\geqslant n)$。
+\item 设 $N$ 取值于 $\{0,1,2,\dots\}\cup\{\infty\}$。则 $EN=\sum_{n=1}^\infty \P(N\geqslant n)$。
 \item 设 $X\geqslant0$。则
 \[
-\sum_{n=1}^\infty P(X\geqslant n)\leqslant EX\leqslant1+\sum_{n=1}^\infty P(X\geqslant n).
+\sum_{n=1}^\infty \P(X\geqslant n)\leqslant EX\leqslant1+\sum_{n=1}^\infty \P(X\geqslant n).
 \]
 \end{enumerate}
-特别地，对任意随机变量 $X$，$E\abs X<\infty$ 当且仅当 $\sum_{n\geqslant1}P(\abs X\geqslant n)<\infty$，也当且仅当 $\sum_{n\geqslant1}P(\abs X>n)<\infty$。
+特别地，对任意随机变量 $X$，$E\abs X<\infty$ 当且仅当 $\sum_{n\geqslant1}\P(\abs X\geqslant n)<\infty$，也当且仅当 $\sum_{n\geqslant1}\P(\abs X>n)<\infty$。
 \end{proposition}
 \begin{proof}
 (1) 我们断言逐点有
@@ -576,14 +576,14 @@ N=\sum_{n=1}^\infty\one_{\{N\geqslant n\}}.
 
 (2) 令 $N=\lfloor X\rfloor$ 为 $X$ 的整数部分（$X=\infty$ 时令 $N=\infty$）。$N=\sum_{n\geqslant1}\one_{\{X\geqslant n\}}$ 是随机变量，并且对正整数 $n$，$N\geqslant n$ 当且仅当 $X\geqslant n$。由 (1)，$EN=\sum_nP(X\geqslant n)$。又 $N\leqslant X\leqslant N+1$，取期望得 $EN\leqslant EX\leqslant EN+1$。
 
-最后一句：对 $\abs X$ 用 (2)，得第一个等价。又 $P(\abs X>n)\leqslant P(\abs X\geqslant n)\leqslant P(\abs X>n-1)$，所以 $\sum_{n\geqslant1}P(\abs X>n)$ 与 $\sum_{n\geqslant1}P(\abs X\geqslant n)$ 同时有限或同时无限（后者不超过 $\sum_{n\geqslant0}P(\abs X>n)=P(\abs X>0)+\sum_{n\geqslant1}P(\abs X>n)$）。
+最后一句：对 $\abs X$ 用 (2)，得第一个等价。又 $\P(\abs X>n)\leqslant \P(\abs X\geqslant n)\leqslant \P(\abs X>n-1)$，所以 $\sum_{n\geqslant1}\P(\abs X>n)$ 与 $\sum_{n\geqslant1}\P(\abs X\geqslant n)$ 同时有限或同时无限（后者不超过 $\sum_{n\geqslant0}\P(\abs X>n)=\P(\abs X>0)+\sum_{n\geqslant1}\P(\abs X>n)$）。
 \end{proof}
 
 \begin{example}
-几何分布：$P(N\geqslant n)=(1-p)^{n-1}$（前 $n-1$ 次都失败），所以 $EN=\sum_{n\geqslant1}(1-p)^{n-1}=\frac1p$，与\egref{ex:expectation:geometric} 一致，但这次不需要对级数求导。St.\ Petersburg 悖论：$P(X\geqslant2^k)=\sum_{j\geqslant k}2^{-j}=2^{1-k}$。对 $2^{k-1}<n\leqslant2^k$ 这 $2^{k-1}$ 个 $n$，$P(X\geqslant n)\geqslant P(X\geqslant2^k)=2^{1-k}$，它们对 $\sum_nP(X\geqslant n)$ 的贡献至少是 $2^{k-1}\cdot2^{1-k}=1$。对 $k=1,2,\dots$ 求和，$\sum_nP(X\geqslant n)=\infty$，于是 $EX=\infty$，与\egref{ex:expectation:st-petersburg} 一致。
+几何分布：$\P(N\geqslant n)=(1-p)^{n-1}$（前 $n-1$ 次都失败），所以 $EN=\sum_{n\geqslant1}(1-p)^{n-1}=\frac1p$，与\egref{ex:expectation:geometric} 一致，但这次不需要对级数求导。St.\ Petersburg 悖论：$\P(X\geqslant2^k)=\sum_{j\geqslant k}2^{-j}=2^{1-k}$。对 $2^{k-1}<n\leqslant2^k$ 这 $2^{k-1}$ 个 $n$，$\P(X\geqslant n)\geqslant \P(X\geqslant2^k)=2^{1-k}$，它们对 $\sum_nP(X\geqslant n)$ 的贡献至少是 $2^{k-1}\cdot2^{1-k}=1$。对 $k=1,2,\dots$ 求和，$\sum_nP(X\geqslant n)=\infty$，于是 $EX=\infty$，与\egref{ex:expectation:st-petersburg} 一致。
 \end{example}
 
-对一般的非负随机变量，精确的公式是 $EX=\int_0^\infty P(X>t)\dd t$。它的证明要用到下一讲的 Fubini 定理（也可以参看第~\ref{lec:integration} 讲作业 C），我们留到那里再讲。上面的命题是它的“离散版本”，对判断期望是否有限已经够用了。
+对一般的非负随机变量，精确的公式是 $EX=\int_0^\infty \P(X>t)\dd t$。它的证明要用到下一讲的 Fubini 定理（也可以参看第~\ref{lec:integration} 讲作业 C），我们留到那里再讲。上面的命题是它的“离散版本”，对判断期望是否有限已经够用了。
 
 下面是课堂上提出的问题。
 
@@ -613,7 +613,7 @@ tP(\abs X>t)=E\bigl(t\one_{\{\abs X>t\}}\bigr)\leqslant E\bigl(\abs X\one_{\{\ab
 上题的逆命题是否成立？即 $tP(\abs X>t)\to0$ 能否推出 $E\abs X<\infty$？
 \end{workedexample}
 \begin{solution}
-不能。我们构造一个反例：$tP(X>t)\to0$，但 $EX=\infty$。由命题~\ref{prop:expectation:tail-sum}，$EX<\infty$ 相当于 $\sum_nP(X>n)<\infty$。所以只需让 $P(X>t)$ 比 $\frac1t$ 小一点，又小得不够快，使 $\sum_nP(X>n)$ 发散。$\frac1{t\log t}$ 正好如此：$t\cdot\frac1{t\log t}=\frac1{\log t}\to0$，而 $\sum_n\frac1{n\log n}=\infty$。
+不能。我们构造一个反例：$tP(X>t)\to0$，但 $EX=\infty$。由命题~\ref{prop:expectation:tail-sum}，$EX<\infty$ 相当于 $\sum_nP(X>n)<\infty$。所以只需让 $\P(X>t)$ 比 $\frac1t$ 小一点，又小得不够快，使 $\sum_nP(X>n)$ 发散。$\frac1{t\log t}$ 正好如此：$t\cdot\frac1{t\log t}=\frac1{\log t}\to0$，而 $\sum_n\frac1{n\log n}=\infty$。
 
 \emph{构造。}令
 \[
@@ -621,7 +621,7 @@ F(t)=\begin{cases}0,&t<e,\\ 1-\dfrac e{t\log t},&t\geqslant e.\end{cases}
 \]
 验证 $F$ 是分布函数：$t\log t$ 在 $[e,\infty)$ 上连续、严格递增（导数 $\log t+1>0$），在 $t=e$ 处等于 $e$，所以 $\frac e{t\log t}$ 从 $1$ 单调递减到 $0$。于是 $F$ 单调不减，$F(e)=0$，$F$ 在 $[e,\infty)$ 上连续，在 $(-\infty,e)$ 上为常数 $0$，所以右连续；$F(t)\to1$（$t\to\infty$），$F(t)=0$（$t<e$）。由定理~\ref{thm:distributions:characterization}，存在随机变量 $X$ 以 $F$ 为分布函数。$X\geqslant e>0$ a.s.。
 
-\emph{验证。}对 $t\geqslant e$，$tP(X>t)=t(1-F(t))=\frac e{\log t}\to0$。另一方面，对 $n\geqslant3$，$P(X>n)=\frac e{n\log n}$，而由积分判别法，$\sum_{n\geqslant3}\frac1{n\log n}\geqslant\int_3^\infty\frac{\dd x}{x\log x}=\lim_N(\log\log N-\log\log3)=\infty$（$\frac1{x\log x}$ 在 $[3,\infty)$ 上递减，所以 $\frac1{n\log n}\geqslant\int_n^{n+1}\frac{\dd x}{x\log x}$）。由命题~\ref{prop:expectation:tail-sum}，$EX=\infty$。
+\emph{验证。}对 $t\geqslant e$，$tP(X>t)=t(1-F(t))=\frac e{\log t}\to0$。另一方面，对 $n\geqslant3$，$\P(X>n)=\frac e{n\log n}$，而由积分判别法，$\sum_{n\geqslant3}\frac1{n\log n}\geqslant\int_3^\infty\frac{\dd x}{x\log x}=\lim_N(\log\log N-\log\log3)=\infty$（$\frac1{x\log x}$ 在 $[3,\infty)$ 上递减，所以 $\frac1{n\log n}\geqslant\int_n^{n+1}\frac{\dd x}{x\log x}$）。由命题~\ref{prop:expectation:tail-sum}，$EX=\infty$。
 
 \emph{注。}这个例子以后还会出现。条件 $tP(\abs X>t)\to0$ 正是弱大数定律的一般形式所需要的条件：对以 $F$ 为分布的独立同分布序列，存在数列 $\mu_n$ 使 $S_n/n-\mu_n$ 依概率收敛到 $0$；可是 $EX=\infty$，$S_n/n$ 并不收敛到一个有限的数。
 \end{solution}
@@ -630,7 +630,7 @@ F(t)=\begin{cases}0,&t<e,\\ 1-\dfrac e{t\log t},&t\geqslant e.\end{cases}
 设 $p>0$。
 \begin{enumerate}
 \item 若 $E\abs X^p<\infty$，证明 $t^pP(\abs X>t)\to0$（$t\to\infty$）。
-\item 若存在常数 $C$ 使 $P(\abs X>t)\leqslant Ct^{-p}$ 对一切 $t>0$ 成立，证明 $E\abs X^q<\infty$ 对一切 $0<q<p$ 成立。
+\item 若存在常数 $C$ 使 $\P(\abs X>t)\leqslant Ct^{-p}$ 对一切 $t>0$ 成立，证明 $E\abs X^q<\infty$ 对一切 $0<q<p$ 成立。
 \item 举例说明 (2) 中不能取 $q=p$。
 \end{enumerate}
 \end{workedexample}
@@ -639,13 +639,13 @@ F(t)=\begin{cases}0,&t<e,\\ 1-\dfrac e{t\log t},&t\geqslant e.\end{cases}
 
 (2) 由命题~\ref{prop:expectation:tail-sum}(2)（对 $\abs X^q$ 用），
 \[
-E\abs X^q\leqslant1+\sum_{n=1}^\infty P(\abs X^q\geqslant n)=1+\sum_{n=1}^\infty P(\abs X\geqslant n^{1/q}).
+E\abs X^q\leqslant1+\sum_{n=1}^\infty \P(\abs X^q\geqslant n)=1+\sum_{n=1}^\infty \P(\abs X\geqslant n^{1/q}).
 \]
-而 $P(\abs X\geqslant n^{1/q})\leqslant P(\abs X>\frac12n^{1/q})\leqslant C2^pn^{-p/q}$。由于 $p/q>1$，$\sum_nn^{-p/q}<\infty$，所以 $E\abs X^q<\infty$。
+而 $\P(\abs X\geqslant n^{1/q})\leqslant \P(\abs X>\frac12n^{1/q})\leqslant C2^pn^{-p/q}$。由于 $p/q>1$，$\sum_nn^{-p/q}<\infty$，所以 $E\abs X^q<\infty$。
 
-(3) 取 $X$ 的分布函数为 $F(t)=1-t^{-p}$（$t\geqslant1$），$F(t)=0$（$t<1$），这称为 \term{Pareto 分布}。和\wegref{we:expectation:tP-converse} 一样可以验证 $F$ 是分布函数。$P(X>t)=t^{-p}$（$t\geqslant1$），$P(X>t)\leqslant1\leqslant t^{-p}$（$0<t<1$），所以 (2) 的条件对 $C=1$ 成立。但 $P(X^p\geqslant n)=P(X\geqslant n^{1/p})=\frac1n$，由命题~\ref{prop:expectation:tail-sum}，$EX^p\geqslant\sum_n\frac1n=\infty$。
+(3) 取 $X$ 的分布函数为 $F(t)=1-t^{-p}$（$t\geqslant1$），$F(t)=0$（$t<1$），这称为 \term{Pareto 分布}。和\wegref{we:expectation:tP-converse} 一样可以验证 $F$ 是分布函数。$\P(X>t)=t^{-p}$（$t\geqslant1$），$\P(X>t)\leqslant1\leqslant t^{-p}$（$0<t<1$），所以 (2) 的条件对 $C=1$ 成立。但 $\P(X^p\geqslant n)=\P(X\geqslant n^{1/p})=\frac1n$，由命题~\ref{prop:expectation:tail-sum}，$EX^p\geqslant\sum_n\frac1n=\infty$。
 
-\emph{注。}(1)(2) 合起来说：$p$ 阶矩有限，大致相当于尾概率比 $t^{-p}$ 衰减得快。准确地说，$E\abs X^p<\infty$ 介于“$P(\abs X>t)=o(t^{-p})$”与“$P(\abs X>t)=O(t^{-p-\varepsilon})$”之间。
+\emph{注。}(1)(2) 合起来说：$p$ 阶矩有限，大致相当于尾概率比 $t^{-p}$ 衰减得快。准确地说，$E\abs X^p<\infty$ 介于“$\P(\abs X>t)=o(t^{-p})$”与“$\P(\abs X>t)=O(t^{-p-\varepsilon})$”之间。
 \end{solution}
 
 \begin{workedexample}\label{we:expectation:truncated-second-moment}
@@ -669,7 +669,7 @@ E\abs X^q\leqslant1+\sum_{n=1}^\infty P(\abs X^q\geqslant n)=1+\sum_{n=1}^\infty
 逐项积分还给出概率论中的一个基本结论。回忆 $\limsup_nA_n=\bigcap_n\bigcup_{m\geqslant n}A_m$ 是“无穷多个 $A_n$ 发生”这一事件（定义~\ref{def:set-systems:limsup}），概率论中常记为 $\{A_n\ \text{i.o.}\}$（infinitely often）。
 
 \begin{theorem}[第一 Borel--Cantelli 引理]\label{thm:expectation:borel-cantelli}
-设 $A_1,A_2,\dots\in\cF$，$\sum_nP(A_n)<\infty$。则 $P(\limsup_nA_n)=0$，即几乎必然地只有有限个 $A_n$ 发生。
+设 $A_1,A_2,\dots\in\cF$，$\sum_nP(A_n)<\infty$。则 $\P(\limsup_nA_n)=0$，即几乎必然地只有有限个 $A_n$ 发生。
 \end{theorem}
 \begin{proof}
 令 $N=\sum_{n=1}^\infty\one_{A_n}$，它是发生了的 $A_n$ 的个数（可以是 $\infty$）。由逐项积分，$EN=\sum_nP(A_n)<\infty$，所以 $N<\infty$ a.s.（命题~\ref{prop:integration:markov}(3)）。而 $N(\omega)=\infty$ 当且仅当 $\omega$ 属于无穷多个 $A_n$，即 $\{N=\infty\}=\limsup_nA_n$。
@@ -683,28 +683,28 @@ E\abs X^q\leqslant1+\sum_{n=1}^\infty P(\abs X^q\geqslant n)=1+\sum_{n=1}^\infty
 \begin{solution}
 \emph{思路。}要证明对每个 $\varepsilon>0$，$\abs{X_n}>\varepsilon n$ 只发生有限次。用 Borel--Cantelli 引理，只需 $\sum_nP(\abs{X_n}>\varepsilon n)<\infty$；由于同分布，这个和只与 $X_1$ 有关，而它有限正是 $E\abs{X_1}<\infty$ 的另一种说法。
 
-\emph{第一步。}固定 $\varepsilon>0$。$X_n$ 与 $X_1$ 同分布，所以 $P(\abs{X_n}>\varepsilon n)=P(\abs{X_1}>\varepsilon n)=P(\abs{X_1}/\varepsilon>n)$。$\abs{X_1}/\varepsilon$ 可积，由命题~\ref{prop:expectation:tail-sum}，
+\emph{第一步。}固定 $\varepsilon>0$。$X_n$ 与 $X_1$ 同分布，所以 $\P(\abs{X_n}>\varepsilon n)=\P(\abs{X_1}>\varepsilon n)=\P(\abs{X_1}/\varepsilon>n)$。$\abs{X_1}/\varepsilon$ 可积，由命题~\ref{prop:expectation:tail-sum}，
 \[
-\sum_{n=1}^\infty P(\abs{X_n}>\varepsilon n)=\sum_{n=1}^\infty P(\abs{X_1}/\varepsilon>n)<\infty .
+\sum_{n=1}^\infty \P(\abs{X_n}>\varepsilon n)=\sum_{n=1}^\infty \P(\abs{X_1}/\varepsilon>n)<\infty .
 \]
 由第一 Borel--Cantelli 引理，事件 $B_\varepsilon=\{\abs{X_n}>\varepsilon n\ \text{对无穷多个}\ n\ \text{成立}\}$ 的概率为 $0$。
 
-\emph{第二步。}令 $B=\bigcup_{k\geqslant1}B_{1/k}$，它是可数个零概率事件的并，$P(B)=0$。若 $\omega\notin B$，则对每个 $k$，只有有限个 $n$ 使 $\abs{X_n(\omega)}>n/k$，即 $n$ 充分大时 $\abs{X_n(\omega)}/n\leqslant1/k$。这就是 $X_n(\omega)/n\to0$。
+\emph{第二步。}令 $B=\bigcup_{k\geqslant1}B_{1/k}$，它是可数个零概率事件的并，$\P(B)=0$。若 $\omega\notin B$，则对每个 $k$，只有有限个 $n$ 使 $\abs{X_n(\omega)}>n/k$，即 $n$ 充分大时 $\abs{X_n(\omega)}/n\leqslant1/k$。这就是 $X_n(\omega)/n\to0$。
 
 \emph{注。}第二步把“对每个 $\varepsilon$ 几乎必然”换成“几乎必然对每个 $\varepsilon$”，用的是只取可数个 $\varepsilon=1/k$。这个技巧以后会反复出现：不可数个零概率事件的并未必是零概率事件，可数个才是。
 \end{solution}
 
 \begin{example}[小概率的大值]
-设 $P(X_n=n^2)=\frac1{n^2}$，$P(X_n=0)=1-\frac1{n^2}$（$X_n$ 之间的关系任意）。由 Borel--Cantelli 引理，几乎必然只有有限个 $X_n$ 不为零，所以 $X_n\to0$ a.s.。可是 $EX_n=1$ 对一切 $n$ 成立。这又是一个“期望的极限不等于极限的期望”的例子。
+设 $\P(X_n=n^2)=\frac1{n^2}$，$\P(X_n=0)=1-\frac1{n^2}$（$X_n$ 之间的关系任意）。由 Borel--Cantelli 引理，几乎必然只有有限个 $X_n$ 不为零，所以 $X_n\to0$ a.s.。可是 $EX_n=1$ 对一切 $n$ 成立。这又是一个“期望的极限不等于极限的期望”的例子。
 \end{example}
 
 \topic{本讲小结}
 
 \begin{enumerate}
-\item 期望就是关于概率测度的积分：$EX=\int X\dd P$。上一讲关于积分的一切结论（线性、单调、单调收敛定理、Fatou 引理、控制收敛定理）都直接成为关于期望的结论。
+\item 期望就是关于概率测度的积分：$EX=\int X\dd \P$。上一讲关于积分的一切结论（线性、单调、单调收敛定理、Fatou 引理、控制收敛定理）都直接成为关于期望的结论。
 \item 变量替换公式（定理~\ref{thm:expectation:change-of-variables}）$Ef(X)=\int f\dd\mu_X$ 说明期望只依赖于分布，并把计算化到 $\R$ 上。离散型时它是求和（推论~\ref{cor:expectation:discrete}），有密度时它是 $\int f(x)p(x)\dd x$（推论~\ref{cor:expectation:density}）。
 \item “把计数写成示性函数之和”与期望的线性性结合，可以在不知道分布的情况下算出期望与方差（二项分布、配对问题）。
-\item 不等式：Markov（$P(X\geqslant a)\leqslant EX/a$）与 Chebyshev（偏离均值的概率由方差控制）从期望得到概率的上界；Jensen（$\varphi(EX)\leqslant E\varphi(X)$）来自凸函数的支撑线；Hölder 与 Minkowski 来自 Young 不等式。
+\item 不等式：Markov（$\P(X\geqslant a)\leqslant EX/a$）与 Chebyshev（偏离均值的概率由方差控制）从期望得到概率的上界；Jensen（$\varphi(EX)\leqslant E\varphi(X)$）来自凸函数的支撑线；Hölder 与 Minkowski 来自 Young 不等式。
 \item 尾概率与期望：$E\abs X<\infty$ 当且仅当 $\sum_nP(\abs X>n)<\infty$；可积时 $tP(\abs X>t)\to0$，但反过来不成立。
 \item 第一 Borel--Cantelli 引理：$\sum_nP(A_n)<\infty$ 蕴含几乎必然只有有限个 $A_n$ 发生。证明只用了逐项积分。
 \end{enumerate}
@@ -741,21 +741,21 @@ E\abs X^q\leqslant1+\sum_{n=1}^\infty P(\abs X^q\geqslant n)=1+\sum_{n=1}^\infty
 
 \item\label{ex:expectation:A3} （Chebyshev 不等式在什么意义下是最好的）
 \begin{questions}
-\item 设 $0<b\leqslant a$。构造随机变量 $X$，使 $EX^2=b^2$ 并且 $P(\abs X\geqslant a)=b^2/a^2$，从而 Chebyshev 不等式 $P(\abs X\geqslant a)\leqslant EX^2/a^2$ 中的等号可以成立。
+\item 设 $0<b\leqslant a$。构造随机变量 $X$，使 $EX^2=b^2$ 并且 $\P(\abs X\geqslant a)=b^2/a^2$，从而 Chebyshev 不等式 $\P(\abs X\geqslant a)\leqslant EX^2/a^2$ 中的等号可以成立。
 \begin{solution}
 思路：要使 Markov 不等式的证明中 $a^2\one_{\{\abs X\geqslant a\}}\leqslant X^2$ 处处取等号，$X$ 只能取 $0$ 与 $\pm a$。令
 \[
-P(X=a)=P(X=-a)=\frac{b^2}{2a^2},\qquad P(X=0)=1-\frac{b^2}{a^2}.
+\P(X=a)=\P(X=-a)=\frac{b^2}{2a^2},\qquad \P(X=0)=1-\frac{b^2}{a^2}.
 \]
-由 $b\leqslant a$，这些数非负，和为 $1$，所以这是一个分布。由推论~\ref{cor:expectation:discrete}，$EX^2=a^2\cdot\frac{b^2}{a^2}=b^2$，而 $P(\abs X\geqslant a)=\frac{b^2}{a^2}=\frac{EX^2}{a^2}$。
+由 $b\leqslant a$，这些数非负，和为 $1$，所以这是一个分布。由推论~\ref{cor:expectation:discrete}，$EX^2=a^2\cdot\frac{b^2}{a^2}=b^2$，而 $\P(\abs X\geqslant a)=\frac{b^2}{a^2}=\frac{EX^2}{a^2}$。
 \end{solution}
-\item 另一方面，证明对任意给定的 $X$，若 $0<EX^2<\infty$，则 $\displaystyle\lim_{a\to\infty}\frac{a^2P(\abs X\geqslant a)}{EX^2}=0$。
+\item 另一方面，证明对任意给定的 $X$，若 $0<EX^2<\infty$，则 $\displaystyle\lim_{a\to\infty}\frac{a^2\P(\abs X\geqslant a)}{EX^2}=0$。
 \begin{solution}
 思路：和\wegref{we:expectation:tP} 一样，只在事件 $\{\abs X\geqslant a\}$ 上估计。在这个事件上 $a^2\leqslant X^2$，所以
 \[
-a^2P(\abs X\geqslant a)\leqslant E(X^2;\abs X\geqslant a).
+a^2\P(\abs X\geqslant a)\leqslant E(X^2;\abs X\geqslant a).
 \]
-任取 $a_n\to\infty$，令 $Y_n=X^2\one_{\{\abs X\geqslant a_n\}}$。$0\leqslant Y_n\leqslant X^2$，$X^2$ 可积；$X$ 处处有限，所以 $n$ 充分大时 $a_n>\abs X$，$Y_n\to0$ 处处成立。由控制收敛定理，$EY_n\to0$。所以 $a^2P(\abs X\geqslant a)\to0$，再除以正数 $EX^2$ 即得。
+任取 $a_n\to\infty$，令 $Y_n=X^2\one_{\{\abs X\geqslant a_n\}}$。$0\leqslant Y_n\leqslant X^2$，$X^2$ 可积；$X$ 处处有限，所以 $n$ 充分大时 $a_n>\abs X$，$Y_n\to0$ 处处成立。由控制收敛定理，$EY_n\to0$。所以 $a^2\P(\abs X\geqslant a)\to0$，再除以正数 $EX^2$ 即得。
 
 这说明：Chebyshev 不等式对“所有分布”是最好的，但对“每一个固定的分布”，当 $a$ 很大时它都远不是最好的。A3-1) 中达到等号的分布依赖于 $a$。
 \end{solution}
@@ -763,7 +763,7 @@ a^2P(\abs X\geqslant a)\leqslant E(X^2;\abs X\geqslant a).
 
 \item\label{ex:expectation:A4} （单侧 Chebyshev 不等式）设 $EY=0$，$\Var(Y)=\sigma^2<\infty$，$a>0$。证明
 \[
-P(Y\geqslant a)\leqslant\frac{\sigma^2}{\sigma^2+a^2},
+\P(Y\geqslant a)\leqslant\frac{\sigma^2}{\sigma^2+a^2},
 \]
 并构造使等号成立的 $Y$。
 \begin{solution}
@@ -771,7 +771,7 @@ P(Y\geqslant a)\leqslant\frac{\sigma^2}{\sigma^2+a^2},
 
 \emph{第一步。}设 $c\geqslant0$。若 $Y\geqslant a$，则 $Y+c\geqslant a+c>0$，于是 $(Y+c)^2\geqslant(a+c)^2$。用 Markov 不等式（定理~\ref{thm:expectation:markov}，$\varphi(y)=(y+c)^2$，$A=[a,\infty)$，$i_A=(a+c)^2$），
 \[
-P(Y\geqslant a)\leqslant\frac{E(Y+c)^2}{(a+c)^2}=\frac{EY^2+2cEY+c^2}{(a+c)^2}=\frac{\sigma^2+c^2}{(a+c)^2}.
+\P(Y\geqslant a)\leqslant\frac{E(Y+c)^2}{(a+c)^2}=\frac{EY^2+2cEY+c^2}{(a+c)^2}=\frac{\sigma^2+c^2}{(a+c)^2}.
 \]
 
 \emph{第二步：选 $c$。}令 $g(c)=\frac{\sigma^2+c^2}{(a+c)^2}$。求导，$g'(c)=\frac{2c(a+c)-2(\sigma^2+c^2)}{(a+c)^3}=\frac{2(ac-\sigma^2)}{(a+c)^3}$，所以 $g$ 在 $c=\sigma^2/a$ 处取最小值。代入：
@@ -781,18 +781,18 @@ g\Bigl(\frac{\sigma^2}a\Bigr)=\frac{\sigma^2+\sigma^4/a^2}{(a+\sigma^2/a)^2}=\fr
 
 \emph{第三步：等号。}等号要求第一步中 $(a+c)^2\one_{\{Y\geqslant a\}}=(Y+c)^2$ a.s.，所以 $Y$ 只取 $a$ 与 $-c=-\sigma^2/a$ 两个值。令
 \[
-P(Y=a)=\frac{\sigma^2}{a^2+\sigma^2},\qquad P\Bigl(Y=-\frac{\sigma^2}a\Bigr)=\frac{a^2}{a^2+\sigma^2}.
+\P(Y=a)=\frac{\sigma^2}{a^2+\sigma^2},\qquad \P\Bigl(Y=-\frac{\sigma^2}a\Bigr)=\frac{a^2}{a^2+\sigma^2}.
 \]
-验证：$EY=\frac{a\sigma^2}{a^2+\sigma^2}-\frac{\sigma^2}a\cdot\frac{a^2}{a^2+\sigma^2}=0$，$EY^2=\frac{a^2\sigma^2}{a^2+\sigma^2}+\frac{\sigma^4}{a^2}\cdot\frac{a^2}{a^2+\sigma^2}=\sigma^2$，并且 $P(Y\geqslant a)=\frac{\sigma^2}{a^2+\sigma^2}$。
+验证：$EY=\frac{a\sigma^2}{a^2+\sigma^2}-\frac{\sigma^2}a\cdot\frac{a^2}{a^2+\sigma^2}=0$，$EY^2=\frac{a^2\sigma^2}{a^2+\sigma^2}+\frac{\sigma^4}{a^2}\cdot\frac{a^2}{a^2+\sigma^2}=\sigma^2$，并且 $\P(Y\geqslant a)=\frac{\sigma^2}{a^2+\sigma^2}$。
 \end{solution}
 
-\item\label{ex:expectation:A5} 设 $Y\geqslant0$，$0<EY^2<\infty$。证明 $P(Y>0)\geqslant\frac{(EY)^2}{EY^2}$。
+\item\label{ex:expectation:A5} 设 $Y\geqslant0$，$0<EY^2<\infty$。证明 $\P(Y>0)\geqslant\frac{(EY)^2}{EY^2}$。
 \begin{solution}
-思路：$Y=Y\one_{\{Y>0\}}$，对这个乘积用 Cauchy--Schwarz 不等式，就把 $P(Y>0)=E\one_{\{Y>0\}}^2$ 分离出来。
+思路：$Y=Y\one_{\{Y>0\}}$，对这个乘积用 Cauchy--Schwarz 不等式，就把 $\P(Y>0)=E\one_{\{Y>0\}}^2$ 分离出来。
 
 由于 $Y\geqslant0$，在 $\{Y>0\}^c$ 上 $Y=0$，所以 $Y=Y\one_{\{Y>0\}}$。由 Cauchy--Schwarz 不等式（定理~\ref{thm:expectation:holder}，$p=q=2$），
 \[
-EY=E\bigl(Y\one_{\{Y>0\}}\bigr)\leqslant\bigl(EY^2\bigr)^{1/2}\bigl(E\one_{\{Y>0\}}^2\bigr)^{1/2}=\bigl(EY^2\bigr)^{1/2}P(Y>0)^{1/2}.
+EY=E\bigl(Y\one_{\{Y>0\}}\bigr)\leqslant\bigl(EY^2\bigr)^{1/2}\bigl(E\one_{\{Y>0\}}^2\bigr)^{1/2}=\bigl(EY^2\bigr)^{1/2}\P(Y>0)^{1/2}.
 \]
 两边非负，平方后除以 $EY^2>0$ 即得。
 
@@ -836,7 +836,7 @@ EY=E\bigl(Y\one_{\{Y>0\}}\bigr)\leqslant\bigl(EY^2\bigr)^{1/2}\bigl(E\one_{\{Y>0
 \begin{solution}
 记 $\mu=EX$。$(X-c)^2=(X-\mu)^2+2(\mu-c)(X-\mu)+(\mu-c)^2$，取期望，中间一项为 $2(\mu-c)E(X-\mu)=0$，即得。
 \end{solution}
-\item 设 $m$ 是 $X$ 的\term{中位数}（median），即 $P(X\leqslant m)\geqslant\frac12$，$P(X\geqslant m)\geqslant\frac12$。证明 $E\abs{X-c}\geqslant E\abs{X-m}$ 对一切 $c\in\R$ 成立。
+\item 设 $m$ 是 $X$ 的\term{中位数}（median），即 $\P(X\leqslant m)\geqslant\frac12$，$\P(X\geqslant m)\geqslant\frac12$。证明 $E\abs{X-c}\geqslant E\abs{X-m}$ 对一切 $c\in\R$ 成立。
 \begin{solution}
 思路：比较 $\abs{X-c}$ 与 $\abs{X-m}$，按 $X$ 落在 $m$ 的哪一侧分情况估计差值。
 
@@ -847,15 +847,15 @@ EY=E\bigl(Y\one_{\{Y>0\}}\bigr)\leqslant\bigl(EY^2\bigr)^{1/2}\bigl(E\one_{\{Y>0
 （$E\abs X<\infty$ 由 $EX^2<\infty$ 得到，所以各项可积。）取期望，
 \[
 \begin{aligned}
-E\abs{X-c}-E\abs{X-m}&\geqslant(c-m)\bigl(P(X\leqslant m)-P(X>m)\bigr)\\
-&=(c-m)\bigl(2P(X\leqslant m)-1\bigr)\geqslant0 .
+E\abs{X-c}-E\abs{X-m}&\geqslant(c-m)\bigl(\P(X\leqslant m)-\P(X>m)\bigr)\\
+&=(c-m)\bigl(2\P(X\leqslant m)-1\bigr)\geqslant0 .
 \end{aligned}
 \]
-$c<m$ 的情形对称：若 $x\geqslant m$，$\abs{x-c}-\abs{x-m}=m-c$；若 $x<m$，差值 $\geqslant-(m-c)$；于是差的期望 $\geqslant(m-c)(2P(X\geqslant m)-1)\geqslant0$。
+$c<m$ 的情形对称：若 $x\geqslant m$，$\abs{x-c}-\abs{x-m}=m-c$；若 $x<m$，差值 $\geqslant-(m-c)$；于是差的期望 $\geqslant(m-c)(2\P(X\geqslant m)-1)\geqslant0$。
 \end{solution}
 \item 证明中位数总是存在的。
 \begin{solution}
-设 $F$ 是 $X$ 的分布函数，取 $m=F^{-1}(\frac12)$（定义~\ref{def:distributions:quantile}）。由引理~\ref{lem:distributions:quantile}，$F^{-1}(\frac12)\leqslant m$ 蕴含 $\frac12\leqslant F(m)$，即 $P(X\leqslant m)\geqslant\frac12$。又对 $x<m$，$F^{-1}(\frac12)\leqslant x$ 不成立，所以 $F(x)<\frac12$；令 $x\uparrow m$，$P(X<m)=F(m-)\leqslant\frac12$，即 $P(X\geqslant m)\geqslant\frac12$。
+设 $F$ 是 $X$ 的分布函数，取 $m=F^{-1}(\frac12)$（定义~\ref{def:distributions:quantile}）。由引理~\ref{lem:distributions:quantile}，$F^{-1}(\frac12)\leqslant m$ 蕴含 $\frac12\leqslant F(m)$，即 $\P(X\leqslant m)\geqslant\frac12$。又对 $x<m$，$F^{-1}(\frac12)\leqslant x$ 不成立，所以 $F(x)<\frac12$；令 $x\uparrow m$，$\P(X<m)=F(m-)\leqslant\frac12$，即 $\P(X\geqslant m)\geqslant\frac12$。
 \end{solution}
 \end{questions}
 
@@ -888,17 +888,17 @@ $EX=\frac1{b-a}\int_a^bx\dd x=\frac{b^2-a^2}{2(b-a)}=\frac{a+b}2$；$EX^2=\frac1
 
 \item\label{ex:expectation:A11} （$L^\infty$ 范数）正文中的 Hölder 不等式要求 $1<p,q<\infty$。这道题补上 $p=1$，$q=\infty$ 的情形。令
 \[
-\norm X_\infty=\inf\{M\geqslant0:P(\abs X>M)=0\}\qquad(\inf\varnothing=\infty),
+\norm X_\infty=\inf\{M\geqslant0:\P(\abs X>M)=0\}\qquad(\inf\varnothing=\infty),
 \]
 称为 $X$ 的\term{本质上确界}（essential supremum）。直观上，它是“去掉一个零概率事件之后 $\abs X$ 的上确界”。
 \begin{questions}
 \item 证明 $\abs X\leqslant\norm X_\infty$ a.s.，即定义中的下确界是取得到的。
 \begin{solution}
-若 $\norm X_\infty=\infty$，结论显然。设 $\norm X_\infty=s<\infty$。对每个 $k\geqslant1$，由下确界的定义，存在 $M$ 使 $P(\abs X>M)=0$ 且 $M<s+\frac1k$；于是 $\{\abs X>s+\frac1k\}\subseteq\{\abs X>M\}$，$P(\abs X>s+\frac1k)=0$。而
+若 $\norm X_\infty=\infty$，结论显然。设 $\norm X_\infty=s<\infty$。对每个 $k\geqslant1$，由下确界的定义，存在 $M$ 使 $\P(\abs X>M)=0$ 且 $M<s+\frac1k$；于是 $\{\abs X>s+\frac1k\}\subseteq\{\abs X>M\}$，$\P(\abs X>s+\frac1k)=0$。而
 \[
 \{\abs X>s\}=\bigcup_{k\geqslant1}\Bigl\{\abs X>s+\frac1k\Bigr\}
 \]
-是可数个零概率事件的并，由可数次可加性，$P(\abs X>s)=0$。
+是可数个零概率事件的并，由可数次可加性，$\P(\abs X>s)=0$。
 
 这里用到的是“可数个零测集的并是零测集”。所以 $\norm X_\infty$ 本身属于定义中的集合，下确界是最小值。
 \end{solution}
@@ -912,11 +912,11 @@ $EX=\frac1{b-a}\int_a^bx\dd x=\frac{b^2-a^2}{2(b-a)}=\frac{a+b}2$；$EX^2=\frac1
 \[
 \abs{X+Y}\leqslant\abs X+\abs Y\leqslant\norm X_\infty+\norm Y_\infty .
 \]
-所以 $M=\norm X_\infty+\norm Y_\infty$ 满足 $P(\abs{X+Y}>M)=0$，由下确界的定义，$\norm{X+Y}_\infty\leqslant M$。
+所以 $M=\norm X_\infty+\norm Y_\infty$ 满足 $\P(\abs{X+Y}>M)=0$，由下确界的定义，$\norm{X+Y}_\infty\leqslant M$。
 \end{solution}
 \item 证明对一切 $1\leqslant p<\infty$，$\norm X_p\leqslant\norm X_\infty$。
 \begin{solution}
-不妨设 $\norm X_\infty<\infty$。由 A11-1)，$\abs X^p\leqslant\norm X_\infty^p$ a.s.，取期望，$E\abs X^p\leqslant\norm X_\infty^p\cdot P(\Omega)=\norm X_\infty^p$，开 $p$ 次方即得。这里用到了 $P(\Omega)=1$。
+不妨设 $\norm X_\infty<\infty$。由 A11-1)，$\abs X^p\leqslant\norm X_\infty^p$ a.s.，取期望，$E\abs X^p\leqslant\norm X_\infty^p\cdot \P(\Omega)=\norm X_\infty^p$，开 $p$ 次方即得。这里用到了 $\P(\Omega)=1$。
 \end{solution}
 \end{questions}
 
@@ -926,13 +926,13 @@ $EX=\frac1{b-a}\int_a^bx\dd x=\frac{b^2-a^2}{2(b-a)}=\frac{a+b}2$；$EX^2=\frac1
 
 \emph{第一步：极限存在，并且不超过 $\norm X_\infty$。}由推论~\ref{cor:expectation:lyapunov}，$p\mapsto\norm X_p$ 在 $[1,\infty)$ 上单调不减，所以 $L=\lim_{p\to\infty}\norm X_p\in[0,\infty]$ 存在。由 A11-4)，$L\leqslant\norm X_\infty$。
 
-\emph{第二步：$L\geqslant\norm X_\infty$。}若 $\norm X_\infty=0$，无须证明。任取 $0\leqslant M<\norm X_\infty$。由 $\norm X_\infty$ 的定义，$P(\abs X>M)=:\delta>0$（否则 $\norm X_\infty\leqslant M$）。由于 $\abs X^p\geqslant M^p\one_{\{\abs X>M\}}$，
+\emph{第二步：$L\geqslant\norm X_\infty$。}若 $\norm X_\infty=0$，无须证明。任取 $0\leqslant M<\norm X_\infty$。由 $\norm X_\infty$ 的定义，$\P(\abs X>M)=:\delta>0$（否则 $\norm X_\infty\leqslant M$）。由于 $\abs X^p\geqslant M^p\one_{\{\abs X>M\}}$，
 \[
 E\abs X^p\geqslant M^p\delta,\qquad\norm X_p\geqslant M\delta^{1/p}.
 \]
 令 $p\to\infty$，$\delta^{1/p}\to1$（$\delta>0$），所以 $L\geqslant M$。$M$ 可以任意接近 $\norm X_\infty$（$\norm X_\infty=\infty$ 时 $M$ 可以任意大），所以 $L\geqslant\norm X_\infty$。
 
-注意第一步用到了 $P(\Omega)=1$。在 $(\R,\cR,\lambda)$ 上取 $f\equiv1$，$\norm f_\infty=1$，而 $\norm f_p=\infty$ 对一切 $p<\infty$ 成立。
+注意第一步用到了 $\P(\Omega)=1$。在 $(\R,\cR,\lambda)$ 上取 $f\equiv1$，$\norm f_\infty=1$，而 $\norm f_p=\infty$ 对一切 $p<\infty$ 成立。
 \end{solution}
 
 \item\label{ex:expectation:A13} 设 $1\leqslant p<\infty$，$E\abs X^p<\infty$。证明存在简单随机变量 $\varphi_n$，使 $\norm{\varphi_n-X}_p\to0$。
@@ -1057,7 +1057,7 @@ A14-4)、A14-5) 的论证在泛函分析中称为 Hahn--Banach 定理；在有�
 \]
 $p_m=\frac1n$ 时，这就是算术平均不小于几何平均。
 \begin{solution}
-在有限概率空间 $\Omega=\{1,\dots,n\}$，$P(\{m\})=p_m$ 上令 $X(m)=\log y_m$。$X$ 有界，所以可积。$\varphi(x)=e^x$ 在 $\R$ 上凸（二阶导数为正）。由 Jensen 不等式（定理~\ref{thm:expectation:jensen}），$e^{EX}\leqslant Ee^X$。而由离散型随机变量的期望公式（推论~\ref{cor:expectation:discrete}，这里直接按有限和计算即可），
+在有限概率空间 $\Omega=\{1,\dots,n\}$，$\P(\{m\})=p_m$ 上令 $X(m)=\log y_m$。$X$ 有界，所以可积。$\varphi(x)=e^x$ 在 $\R$ 上凸（二阶导数为正）。由 Jensen 不等式（定理~\ref{thm:expectation:jensen}），$e^{EX}\leqslant Ee^X$。而由离散型随机变量的期望公式（推论~\ref{cor:expectation:discrete}，这里直接按有限和计算即可），
 \[
 EX=\sum_mp_m\log y_m,\qquad e^{EX}=\prod_me^{p_m\log y_m}=\prod_my_m^{p_m},\qquad Ee^X=\sum_mp_my_m .
 \]
@@ -1068,13 +1068,13 @@ EX=\sum_mp_m\log y_m,\qquad e^{EX}=\prod_me^{p_m\log y_m}=\prod_my_m^{p_m},\qqua
 \begin{probleme}{B}{容斥原理与配对问题}
 设 $A_1,\dots,A_n$ 是事件，$A=\bigcup_{i=1}^nA_i$。对非空的 $S\subseteq\{1,\dots,n\}$，记 $A_S=\bigcap_{i\in S}A_i$，并令
 \[
-s_k=\sum_{\abs S=k}P(A_S)\qquad(k=1,\dots,n).
+s_k=\sum_{\abs S=k}\P(A_S)\qquad(k=1,\dots,n).
 \]
 本题用示性函数与期望证明容斥原理与 Bonferroni 不等式，然后算出\wegref{we:expectation:matching} 中配对数 $N$ 的分布。
 \begin{questions}
 \item 证明 $\one_A=1-\prod_{i=1}^n(1-\one_{A_i})$，并由此证明\term{容斥原理}（inclusion-exclusion formula）
 \[
-P(A)=\sum_{k=1}^n(-1)^{k+1}s_k .
+\P(A)=\sum_{k=1}^n(-1)^{k+1}s_k .
 \]
 \begin{solution}
 \emph{示性函数的等式。}$\omega\notin A$ 当且仅当 $\omega$ 不属于任何 $A_i$，当且仅当每个因子 $1-\one_{A_i}(\omega)=1$，当且仅当乘积为 $1$。乘积的每个因子只取 $0,1$，所以乘积只取 $0,1$，并且乘积 $=\one_{A^c}$。于是 $\one_A=1-\one_{A^c}=1-\prod_i(1-\one_{A_i})$。
@@ -1083,7 +1083,7 @@ P(A)=\sum_{k=1}^n(-1)^{k+1}s_k .
 \[
 \one_A=1-\sum_S(-1)^{\abs S}\one_{A_S}=\sum_{S\neq\varnothing}(-1)^{\abs S+1}\one_{A_S}.
 \]
-\emph{取期望。}这是有限个可积函数的和，由线性性与 $E\one_{A_S}=P(A_S)$，按 $\abs S=k$ 分组，即得 $P(A)=\sum_{k=1}^n(-1)^{k+1}s_k$。
+\emph{取期望。}这是有限个可积函数的和，由线性性与 $E\one_{A_S}=\P(A_S)$，按 $\abs S=k$ 分组，即得 $\P(A)=\sum_{k=1}^n(-1)^{k+1}s_k$。
 \end{solution}
 
 \item 设 $m\geqslant1$，$0\leqslant r\leqslant m$。证明组合恒等式
@@ -1102,7 +1102,7 @@ P(A)=\sum_{k=1}^n(-1)^{k+1}s_k .
 最后一步是 Pascal 公式 $\binom mr=\binom{m-1}r+\binom{m-1}{r-1}$。$r=m$ 时右边是 $(-1)^m\binom{m-1}m=0$，这与二项式定理 $\sum_{k=0}^m(-1)^k\binom mk=(1-1)^m=0$ 一致。
 \end{solution}
 
-\item （Bonferroni 不等式）对 $1\leqslant r\leqslant n$，令 $T_r=\sum_{k=1}^r(-1)^{k+1}s_k$。证明：$r$ 为奇数时 $P(A)\leqslant T_r$，$r$ 为偶数时 $P(A)\geqslant T_r$。特别地，$P(A)\leqslant s_1$，$P(A)\geqslant s_1-s_2$。
+\item （Bonferroni 不等式）对 $1\leqslant r\leqslant n$，令 $T_r=\sum_{k=1}^r(-1)^{k+1}s_k$。证明：$r$ 为奇数时 $\P(A)\leqslant T_r$，$r$ 为偶数时 $\P(A)\geqslant T_r$。特别地，$\P(A)\leqslant s_1$，$\P(A)\geqslant s_1-s_2$。
 \begin{solution}
 思路：和 B1 一样，先对示性函数逐点证明不等式，再取期望。逐点计算的方法是：固定 $\omega$，数一数它属于多少个 $A_i$。
 
@@ -1115,28 +1115,28 @@ P(A)=\sum_{k=1}^n(-1)^{k+1}s_k .
 若 $r\geqslant m$，右边为 $(-1)^m\binom{m-1}m=0$；若 $r<m$，右边为 $(-1)^r\binom{m-1}r$，$r$ 为奇数时 $\leqslant0$，偶数时 $\geqslant0$。所以 $r$ 为奇数时 $\one_A\leqslant t_r$ 处处成立，$r$ 为偶数时 $\one_A\geqslant t_r$ 处处成立。取期望即得。
 \end{solution}
 
-\item 回到配对问题：$\Omega$ 是 $\{1,\dots,n\}$ 的全体置换，均匀分布，$A_i=\{\sigma(i)=i\}$。证明 $P(A_S)=\frac{(n-\abs S)!}{n!}$，并由容斥原理证明没有人拿对帽子的概率为
+\item 回到配对问题：$\Omega$ 是 $\{1,\dots,n\}$ 的全体置换，均匀分布，$A_i=\{\sigma(i)=i\}$。证明 $\P(A_S)=\frac{(n-\abs S)!}{n!}$，并由容斥原理证明没有人拿对帽子的概率为
 \[
-P(N=0)=\sum_{k=0}^n\frac{(-1)^k}{k!}\ \longrightarrow\ e^{-1}\qquad(n\to\infty).
+\P(N=0)=\sum_{k=0}^n\frac{(-1)^k}{k!}\ \longrightarrow\ e^{-1}\qquad(n\to\infty).
 \]
 \begin{solution}
-$A_S$ 由固定 $S$ 中每个元素的置换组成，其余 $n-\abs S$ 个元素任意排列，共 $(n-\abs S)!$ 个，所以 $P(A_S)=\frac{(n-\abs S)!}{n!}$。大小为 $k$ 的 $S$ 有 $\binom nk$ 个，于是 $s_k=\binom nk\frac{(n-k)!}{n!}=\frac1{k!}$。由容斥原理，
+$A_S$ 由固定 $S$ 中每个元素的置换组成，其余 $n-\abs S$ 个元素任意排列，共 $(n-\abs S)!$ 个，所以 $\P(A_S)=\frac{(n-\abs S)!}{n!}$。大小为 $k$ 的 $S$ 有 $\binom nk$ 个，于是 $s_k=\binom nk\frac{(n-k)!}{n!}=\frac1{k!}$。由容斥原理，
 \[
-P(N=0)=1-P\Bigl(\bigcup_iA_i\Bigr)=1-\sum_{k=1}^n\frac{(-1)^{k+1}}{k!}=\sum_{k=0}^n\frac{(-1)^k}{k!}.
+\P(N=0)=1-\P\Bigl(\bigcup_iA_i\Bigr)=1-\sum_{k=1}^n\frac{(-1)^{k+1}}{k!}=\sum_{k=0}^n\frac{(-1)^k}{k!}.
 \]
 由 $e^x$ 的幂级数，$n\to\infty$ 时它趋于 $e^{-1}\approx0.368$。所以人数很多时，大约有 $37\%$ 的可能没有一个人拿对。
 \end{solution}
 
 \item 记 $D_m$ 为 $\{1,\dots,m\}$ 上没有不动点的置换（\term{错排}，derangement）的个数，$D_0=1$。由 B4，$D_m=m!\sum_{j=0}^m\frac{(-1)^j}{j!}$。证明对 $0\leqslant k\leqslant n$，
 \[
-P(N=k)=\frac1{k!}\sum_{j=0}^{n-k}\frac{(-1)^j}{j!}\ \longrightarrow\ \frac{e^{-1}}{k!}\qquad(n\to\infty).
+\P(N=k)=\frac1{k!}\sum_{j=0}^{n-k}\frac{(-1)^j}{j!}\ \longrightarrow\ \frac{e^{-1}}{k!}\qquad(n\to\infty).
 \]
 所以配对数的分布收敛到参数为 $1$ 的 Poisson 分布。这与 $EN=\Var(N)=1$ 是一致的。
 \begin{solution}
 $N(\sigma)=k$ 当且仅当 $\sigma$ 恰好有 $k$ 个不动点。先选不动点的集合 $T$（$\abs T=k$），有 $\binom nk$ 种；$\sigma$ 在 $T$ 上是恒等，在其余 $n-k$ 个元素上是一个没有不动点的置换，有 $D_{n-k}$ 种。不同的 $T$ 给出不同的置换，所以
 \[
 \begin{aligned}
-P(N=k)&=\frac{\binom nkD_{n-k}}{n!}=\frac{n!}{k!(n-k)!}\cdot\frac{(n-k)!\sum_{j=0}^{n-k}(-1)^j/j!}{n!}\\
+\P(N=k)&=\frac{\binom nkD_{n-k}}{n!}=\frac{n!}{k!(n-k)!}\cdot\frac{(n-k)!\sum_{j=0}^{n-k}(-1)^j/j!}{n!}\\
 &=\frac1{k!}\sum_{j=0}^{n-k}\frac{(-1)^j}{j!}.
 \end{aligned}
 \]
@@ -1193,21 +1193,21 @@ $\varphi(x)=\frac1x$ 在 $(0,\infty)$ 上凸（$\varphi''(x)=2/x^3>0$），由 J
 \begin{probleme}[问题]{D}{Chebyshev 不等式给不出下界}
 Chebyshev 不等式说：均值与方差控制了“偏离均值的概率”的上界。本题说明，均值与方差控制不了这个概率的下界；但如果再知道随机变量有界，就有下界了。
 \begin{questions}
-\item 设 $\varepsilon>0$。证明 $\inf\{P(\abs X>\varepsilon):EX=0,\ \Var(X)=1\}=0$。
+\item 设 $\varepsilon>0$。证明 $\inf\{\P(\abs X>\varepsilon):EX=0,\ \Var(X)=1\}=0$。
 \begin{solution}
-对 $n>\varepsilon$，令 $P(X=n)=P(X=-n)=\frac1{2n^2}$，$P(X=0)=1-\frac1{n^2}$。则 $EX=0$，$EX^2=n^2\cdot\frac1{n^2}=1$，$\Var(X)=1$，而 $P(\abs X>\varepsilon)=P(X\neq0)=\frac1{n^2}$。令 $n\to\infty$，下确界为 $0$。直观上，方差可以全部由一个概率很小的大值贡献出来。
+对 $n>\varepsilon$，令 $\P(X=n)=\P(X=-n)=\frac1{2n^2}$，$\P(X=0)=1-\frac1{n^2}$。则 $EX=0$，$EX^2=n^2\cdot\frac1{n^2}=1$，$\Var(X)=1$，而 $\P(\abs X>\varepsilon)=\P(X\neq0)=\frac1{n^2}$。令 $n\to\infty$，下确界为 $0$。直观上，方差可以全部由一个概率很小的大值贡献出来。
 \end{solution}
 
-\item 设 $y\geqslant1$，$\sigma^2\in(0,\infty)$。证明 $\inf\{P(\abs X>y):EX=1,\ \Var(X)=\sigma^2\}=0$。
+\item 设 $y\geqslant1$，$\sigma^2\in(0,\infty)$。证明 $\inf\{\P(\abs X>y):EX=1,\ \Var(X)=\sigma^2\}=0$。
 \begin{solution}
-令 $X=1+W$，其中 $P(W=n\sigma)=P(W=-n\sigma)=\frac1{2n^2}$，$P(W=0)=1-\frac1{n^2}$。则 $EX=1$，$\Var(X)=\Var(W)=\sigma^2$。当 $W=0$ 时 $\abs X=1\leqslant y$，所以 $P(\abs X>y)\leqslant P(W\neq0)=\frac1{n^2}\to0$。
+令 $X=1+W$，其中 $\P(W=n\sigma)=\P(W=-n\sigma)=\frac1{2n^2}$，$\P(W=0)=1-\frac1{n^2}$。则 $EX=1$，$\Var(X)=\Var(W)=\sigma^2$。当 $W=0$ 时 $\abs X=1\leqslant y$，所以 $\P(\abs X>y)\leqslant \P(W\neq0)=\frac1{n^2}\to0$。
 \end{solution}
 
-\item 设 $\abs X\leqslant M$，$EX=0$，$\Var(X)=1$，$0<\varepsilon<1$。证明 $P(\abs X>\varepsilon)\geqslant\frac{1-\varepsilon^2}{M^2}$。
+\item 设 $\abs X\leqslant M$，$EX=0$，$\Var(X)=1$，$0<\varepsilon<1$。证明 $\P(\abs X>\varepsilon)\geqslant\frac{1-\varepsilon^2}{M^2}$。
 \begin{solution}
 把 $EX^2$ 按 $\abs X$ 的大小拆开：
 \[
-1=EX^2=E(X^2;\abs X\leqslant\varepsilon)+E(X^2;\abs X>\varepsilon)\leqslant\varepsilon^2+M^2P(\abs X>\varepsilon).
+1=EX^2=E(X^2;\abs X\leqslant\varepsilon)+E(X^2;\abs X>\varepsilon)\leqslant\varepsilon^2+M^2\P(\abs X>\varepsilon).
 \]
 移项即得。这说明 D1 中的反例必须用到很大的值；有界性排除了这种可能。
 \end{solution}
@@ -1222,7 +1222,7 @@ Weierstrass 逼近定理说：$[0,1]$ 上的连续函数可以用多项式一致
 B_nf(x)=\sum_{k=0}^nf\Bigl(\frac kn\Bigr)\binom nkx^k(1-x)^{n-k}.
 \]
 \begin{questions}
-\item 设 $x\in[0,1]$，$S$ 服从二项分布 $B(n,x)$：$P(S=k)=\binom nkx^k(1-x)^{n-k}$。（这样的 $S$ 存在：在 $\{0,\dots,n\}$ 上取这个概率，令 $S(k)=k$。）证明 $ES=nx$，$\Var(S)=nx(1-x)$。
+\item 设 $x\in[0,1]$，$S$ 服从二项分布 $B(n,x)$：$\P(S=k)=\binom nkx^k(1-x)^{n-k}$。（这样的 $S$ 存在：在 $\{0,\dots,n\}$ 上取这个概率，令 $S(k)=k$。）证明 $ES=nx$，$\Var(S)=nx(1-x)$。
 \begin{solution}
 用组合恒等式 $k\binom nk=n\binom{n-1}{k-1}$（$k\geqslant1$）与 $k(k-1)\binom nk=n(n-1)\binom{n-2}{k-2}$（$k\geqslant2$）。由推论~\ref{cor:expectation:discrete} 与二项式定理，
 \[
@@ -1239,12 +1239,12 @@ E[S(S-1)]=\sum_{k=2}^nn(n-1)\binom{n-2}{k-2}x^k(1-x)^{n-k}=n(n-1)x^2 .
 
 \item 证明 $B_nf(x)=Ef(S/n)$。
 \begin{solution}
-$S/n$ 以概率 $\binom nkx^k(1-x)^{n-k}$ 取值 $k/n$，由推论~\ref{cor:expectation:discrete}，$Ef(S/n)=\sum_kf(k/n)P(S=k)=B_nf(x)$。$f$ 有界，所以期望有限。
+$S/n$ 以概率 $\binom nkx^k(1-x)^{n-k}$ 取值 $k/n$，由推论~\ref{cor:expectation:discrete}，$Ef(S/n)=\sum_kf(k/n)\P(S=k)=B_nf(x)$。$f$ 有界，所以期望有限。
 \end{solution}
 
 \item 设 $\norm f=\max_{[0,1]}\abs f$。给定 $\varepsilon>0$，由 $f$ 在 $[0,1]$ 上一致连续，取 $\delta>0$ 使 $\abs{s-t}<\delta$ 时 $\abs{f(s)-f(t)}<\varepsilon$。证明
 \[
-\abs{B_nf(x)-f(x)}\leqslant\varepsilon+2\norm f\,P\Bigl(\Bigl\lvert\frac Sn-x\Bigr\rvert\geqslant\delta\Bigr).
+\abs{B_nf(x)-f(x)}\leqslant\varepsilon+2\norm f\,\P\Bigl(\Bigl\lvert\frac Sn-x\Bigr\rvert\geqslant\delta\Bigr).
 \]
 \begin{solution}
 由 B2 与 $Ef(x)=f(x)$（常数的期望），$B_nf(x)-f(x)=E[f(S/n)-f(x)]$。所以
@@ -1257,13 +1257,13 @@ $S/n$ 以概率 $\binom nkx^k(1-x)^{n-k}$ 取值 $k/n$，由推论~\ref{cor:expe
 第一项中被积函数 $<\varepsilon$，所以第一项 $\leqslant\varepsilon$；第二项中被积函数 $\leqslant2\norm f$，所以第二项 $\leqslant2\norm fP(\abs{S/n-x}\geqslant\delta)$。
 \end{solution}
 
-\item 用 Chebyshev 不等式证明 $P(\abs{S/n-x}\geqslant\delta)\leqslant\frac1{4n\delta^2}$，从而
+\item 用 Chebyshev 不等式证明 $\P(\abs{S/n-x}\geqslant\delta)\leqslant\frac1{4n\delta^2}$，从而
 \[
 \sup_{x\in[0,1]}\abs{B_nf(x)-f(x)}\leqslant\varepsilon+\frac{\norm f}{2n\delta^2}.
 \]
 由此证明 Weierstrass 逼近定理：$B_nf$ 在 $[0,1]$ 上一致收敛到 $f$。
 \begin{solution}
-由 E1，$E(S/n)=x$，$\Var(S/n)=\frac{x(1-x)}n\leqslant\frac1{4n}$（$x(1-x)\leqslant\frac14$）。由 Chebyshev 不等式，$P(\abs{S/n-x}\geqslant\delta)\leqslant\frac{\Var(S/n)}{\delta^2}\leqslant\frac1{4n\delta^2}$。代入 E3，右边与 $x$ 无关，所以对 $\sup_x$ 也成立。
+由 E1，$E(S/n)=x$，$\Var(S/n)=\frac{x(1-x)}n\leqslant\frac1{4n}$（$x(1-x)\leqslant\frac14$）。由 Chebyshev 不等式，$\P(\abs{S/n-x}\geqslant\delta)\leqslant\frac{\Var(S/n)}{\delta^2}\leqslant\frac1{4n\delta^2}$。代入 E3，右边与 $x$ 无关，所以对 $\sup_x$ 也成立。
 
 给定 $\varepsilon>0$，取 E3 中的 $\delta$，再取 $n_0$ 使 $n\geqslant n_0$ 时 $\frac{\norm f}{2n\delta^2}<\varepsilon$。则 $n\geqslant n_0$ 时 $\sup_x\abs{B_nf(x)-f(x)}<2\varepsilon$。这就是一致收敛。$B_nf$ 是 $x$ 的 $n$ 次多项式，所以连续函数可以被多项式一致逼近。
 \end{solution}

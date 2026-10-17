@@ -39,10 +39,6 @@ THEOREM_ENVS = [
 NUMBERED_ENVS = ["definition", "proposition", "lemma", "theorem", "corollary",
                  "claim", "conjecture", "observation"]
 
-HW_RULES_ZH = ("作业供课后自学使用，不提交。每道题与每个小问后面紧跟解答，"
-               "建议先自己想几分钟再读。法式大题请按顺序完成：后一问可以直接使用前面各问的结论。")
-
-
 def log(msg):
     print(f"[build] {msg}", file=sys.stderr)
 
@@ -298,7 +294,7 @@ def brace_macros(s, macros):
     \\overline{\\mathbb{R}}, not \\overline\\mathbb{R}, after pandoc expands it."""
     # only letter-like macros (\\mathbb{R}, \\mathcal{F}); bracing a relation
     # such as \\given or \\toP would change its spacing
-    names = re.findall(r"\\newcommand\{\\([A-Za-z]+)\}\{\\math(?:bb|cal|bf|frak|scr)\{\w\}\}", macros)
+    names = re.findall(r"\\(?:re)?newcommand\{\\([A-Za-z]+)\}\{\\math(?:bb|cal|bf|frak|scr)\{\w\}\}", macros)
     if not names:
         return s
     pat = re.compile(r"(?<!\{)\\(" + "|".join(sorted(names, key=len, reverse=True)) + r")(?![A-Za-z])")
@@ -366,7 +362,7 @@ def run_pandoc(tex, meta):
     return r.stdout
 
 
-def build_book(book, site_cfg, no_latex):
+def build_book(book, no_latex):
     slug, lang = book["slug"], book.get("lang", "en")
     src = ROOT / book["source"]
     main = book["main"]
@@ -414,13 +410,10 @@ def build_book(book, site_cfg, no_latex):
                       "tex": lecture, "unit": uname})
         if hw is not None:
             hw_no += 1
+            # the PDF's homework box (title bar and rules) is left out on the web
             word = "作业" if lang == "zh" else "Exercises"
             sep = "：" if lang == "zh" else ": "
-            header = site_cfg.get("hwheader", {}).get(slug, "")
-            box_title = header.replace("#1", str(hw_no)) if header else f"{word} {hw_no}"
-            hw_tex = (r"\section{" + word + (sep + hw_title if hw_title.strip() else "") + "}\n"
-                      + r"\begin{yphwbox}" + href("hwtitle", box_title)
-                      + (HW_RULES_ZH if lang == "zh" else "") + r"\end{yphwbox}" + "\n" + hw)
+            hw_tex = r"\section{" + word + (sep + hw_title if hw_title.strip() else "") + "}\n" + hw
             pages.append({"file": uname + "-hw", "kind": "homework", "tex": hw_tex, "unit": uname})
 
     # label -> page file
@@ -445,8 +438,6 @@ def build_book(book, site_cfg, no_latex):
             p["no"] = lecture_no
             if lang == "zh":
                 meta["yp-kicker"] = f"第 {lecture_no} 讲"
-            if row.get("正文"):
-                meta["yp-status"] = row["正文"]
             lec = labels.get(f"lec:{p['unit']}")
             if lec:
                 meta["yp-pdf-page"] = lec["pdfpage"]
@@ -454,14 +445,10 @@ def build_book(book, site_cfg, no_latex):
             p["no"] = lecture_no
             if lang == "zh":
                 meta["yp-kicker"] = f"第 {lecture_no} 讲 · 作业"
-            status = row.get("作业", "")
-            if status:
-                meta["yp-status"] = re.sub(r"[（(].*", "", status)
             hw = labels.get(f"hw:{p['unit']}")
             if hw:
                 meta["yp-pdf-page"] = hw["pdfpage"]
         p["topic"] = row.get("主题", "")
-        p["status"] = meta.get("yp-status", "")
         md = run_pandoc(macros + brace_macros(preprocess(p["tex"], lang), macros), meta)
         (out / f"{p['file']}.qmd").write_text(md, encoding="utf-8")
         p["title"] = page_title(md)
@@ -528,30 +515,22 @@ def write_book_index(book, pages, out, pdf_name, progress):
 
     lectures = [p for p in pages if p["kind"] == "lecture"]
     rows_md = []
-    head = ("| 讲 | 内容 | 状态 | 作业 |" if zh else "| § | Contents | Status | Exercises |")
-    rows_md += [head, "|---|---|---|---|"]
+    head = ("| 讲 | 内容 | 作业 |" if zh else "| § | Contents | Exercises |")
+    rows_md += [head, "|---|---|---|"]
     for p in lectures:
         hw = next((q for q in pages if q["kind"] == "homework" and q["unit"] == p["unit"]), None)
         name = p["topic"] or plain_title(p["title"])
         hw_cell = f"[{'作业' if zh else 'Exercises'}]({hw['file']}.qmd)" if hw else ""
-        rows_md.append(f"| {p['no']} | [{name}]({p['file']}.qmd) | {status_badge(p['status'])} | {hw_cell} |")
+        rows_md.append(f"| {p['no']} | [{name}]({p['file']}.qmd) | {hw_cell} |")
     # planned lectures from the progress table
     done = {p["unit"] for p in lectures}
     n = len(lectures)
     for f, row in progress.items():
         if f not in done and row.get("正文") == "未开始":
             n += 1
-            rows_md.append(f"| {row.get('讲', n)} | {row.get('主题', f)} | "
-                           f"<span class=\"yp-status yp-status-todo\">未开始</span> | |")
+            rows_md.append(f"| {row.get('讲', n)} | <span class=\"yp-todo\">{row.get('主题', f)}</span> | |")
     lines += ["## " + ("目录" if zh else "Contents"), "", "::: {.yp-book-index}"] + rows_md + [":::", ""]
     (out / "index.qmd").write_text("\n".join(lines), encoding="utf-8")
-
-
-def status_badge(s):
-    if not s:
-        return ""
-    cls = "yp-status-done" if s in ("完成", "reviewed") else "yp-status-draft"
-    return f'<span class="yp-status {cls}">{s}</span>'
 
 
 def last_updated(book):
@@ -610,8 +589,7 @@ def write_quarto_yml(lib, sidebars):
             "sidebar": sidebars,
         },
         "format": {"html": {
-            "theme": {"light": ["cosmo", "assets/library.scss"],
-                      "dark": ["cosmo", "assets/library.scss", "assets/dark.scss"]},
+            "theme": ["cosmo", "assets/library.scss"],
             "html-math-method": "mathjax",
             "include-in-header": "assets/head.html",
             "toc": True, "toc-depth": 2,
@@ -678,11 +656,7 @@ def progress_summary(book):
     if not rows:
         return ""
     written = sum(1 for r in rows.values() if r.get("正文") not in ("未开始", ""))
-    done = sum(1 for r in rows.values() if r.get("正文") == "完成")
-    s = f"{written}/{len(rows)} lectures written"
-    if done:
-        s += f", {done} reviewed"
-    return s
+    return f"{written}/{len(rows)} lectures"
 
 
 def main():
@@ -692,18 +666,12 @@ def main():
     a = ap.parse_args()
 
     lib = yaml.safe_load((ROOT / "library.yml").read_text(encoding="utf-8"))
-    site_cfg = {"hwheader": {}}
     sidebars, built = [], set()
     for b in lib["books"]:
         if not b.get("source") or b.get("status") == "planned":
             continue
         log(f"book {b['slug']}")
-        hdr = ROOT / b["source"] / "课程设置.tex"
-        if hdr.exists():
-            m = re.search(r"\\homeworkheader\{(.*)\}", hdr.read_text(encoding="utf-8"))
-            if m:
-                site_cfg["hwheader"][b["slug"]] = m.group(1)
-        pages = build_book(b, site_cfg, a.no_latex)
+        pages = build_book(b, a.no_latex)
         sidebars.append(sidebar_for(b, pages))
         built.add(b["slug"])
     write_quarto_yml(lib, sidebars)

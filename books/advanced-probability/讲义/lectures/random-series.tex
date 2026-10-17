@@ -16,7 +16,7 @@
 \topic{本讲用到的前文结果}
 
 \begin{enumerate}
-\item 独立性的 $\pi$-类判别（定理~\ref{thm:independence:pi-systems}）与分组定理（定理~\ref{thm:independence:grouping}）；若事件 $A$ 与自己独立，则 $P(A)\in\{0,1\}$（\egref{ex:independence:constant}）。
+\item 独立性的 $\pi$-类判别（定理~\ref{thm:independence:pi-systems}）与分组定理（定理~\ref{thm:independence:grouping}）；若事件 $A$ 与自己独立，则 $\P(A)\in\{0,1\}$（\egref{ex:independence:constant}）。
 \item 独立随机变量乘积的期望等于期望的乘积（定理~\ref{thm:independence:expectation}）；独立随机变量和的方差等于方差的和。
 \item 两个 Borel--Cantelli 引理（第~\ref{lec:borel-cantelli} 讲）；强大数定律需要有限的期望（定理~\ref{thm:borel-cantelli:necessity}）。
 \item 上一讲的截断引理~\ref{lem:strong-laws:truncation} 与方差估计（引理~\ref{lem:strong-laws:variance}）：对 i.i.d.\ 且 $E\abs{X_1}<\infty$，$Y_k=X_k\one_{\{\abs{X_k}\leqslant k\}}$ 满足 $\sum_k\Var(Y_k)/k^2\leqslant4E\abs{X_1}$。
@@ -48,29 +48,29 @@ $\cF_n'$ 是“第 $n$ 时刻以后的未来”，$\cT$ 称为\term{尾 $\sigma$
 下面的定理说，对独立的随机变量，尾 $\sigma$-代数中的事件都是平凡的。
 
 \begin{theorem}[Kolmogorov $0$-$1$ 律]\label{thm:random-series:kolmogorov}
-设 $X_1,X_2,\dots$ 独立，$A\in\cT$。则 $P(A)=0$ 或 $1$。
+设 $X_1,X_2,\dots$ 独立，$A\in\cT$。则 $\P(A)=0$ 或 $1$。
 \end{theorem}
 
 \begin{remark}[证明思路]
-我们证明 $A$ 与自己独立：$P(A)=P(A\cap A)=P(A)^2$，从而 $P(A)\in\{0,1\}$。分两步“包抄”：(a) 过去 $\sigma(X_1,\dots,X_k)$ 与未来 $\sigma(X_{k+1},\dots)$ 独立；(b) 于是 $\cT$（它包含于每个未来之中）与每个过去独立，从而与一切过去的并独立，再由 $\pi$-$\lambda$ 定理，与 $\sigma(X_1,X_2,\dots)$ 独立。而 $\cT$ 本身包含于 $\sigma(X_1,X_2,\dots)$。
+我们证明 $A$ 与自己独立：$\P(A)=\P(A\cap A)=\P(A)^2$，从而 $\P(A)\in\{0,1\}$。分两步“包抄”：(a) 过去 $\sigma(X_1,\dots,X_k)$ 与未来 $\sigma(X_{k+1},\dots)$ 独立；(b) 于是 $\cT$（它包含于每个未来之中）与每个过去独立，从而与一切过去的并独立，再由 $\pi$-$\lambda$ 定理，与 $\sigma(X_1,X_2,\dots)$ 独立。而 $\cT$ 本身包含于 $\sigma(X_1,X_2,\dots)$。
 \end{remark}
 
 \begin{proof}
 \emph{(a) $\sigma(X_1,\dots,X_k)$ 与 $\sigma(X_{k+1},X_{k+2},\dots)$ 独立。}由分组定理（定理~\ref{thm:independence:grouping}），把 $\{\sigma(X_i)\}_{i\geqslant1}$ 分成 $\{1,\dots,k\}$ 与 $\{k+1,k+2,\dots\}$ 两组即得。（分组定理允许无穷多个指标。）
 
-\emph{(b) $\sigma(X_1,X_2,\dots)$ 与 $\cT$ 独立。}令 $\cA=\bigcup_k\sigma(X_1,\dots,X_k)$。它是 $\pi$-类：$\sigma(X_1,\dots,X_k)$ 随 $k$ 递增，两个元素总属于同一个 $\sigma(X_1,\dots,X_k)$，交仍在其中。$\cT$ 是 $\sigma$-代数，当然是 $\pi$-类。若 $B\in\sigma(X_1,\dots,X_k)$，$C\in\cT\subseteq\sigma(X_{k+1},\dots)$，由 (a)，$P(B\cap C)=P(B)P(C)$。所以 $\cA$ 与 $\cT$ 独立。由定理~\ref{thm:independence:pi-systems}，$\sigma(\cA)$ 与 $\sigma(\cT)=\cT$ 独立。而 $\sigma(\cA)=\sigma(X_1,X_2,\dots)$：每个 $X_i$ 关于 $\sigma(\cA)$ 可测，并且 $\cA\subseteq\sigma(X_1,X_2,\dots)$。
+\emph{(b) $\sigma(X_1,X_2,\dots)$ 与 $\cT$ 独立。}令 $\cA=\bigcup_k\sigma(X_1,\dots,X_k)$。它是 $\pi$-类：$\sigma(X_1,\dots,X_k)$ 随 $k$ 递增，两个元素总属于同一个 $\sigma(X_1,\dots,X_k)$，交仍在其中。$\cT$ 是 $\sigma$-代数，当然是 $\pi$-类。若 $B\in\sigma(X_1,\dots,X_k)$，$C\in\cT\subseteq\sigma(X_{k+1},\dots)$，由 (a)，$\P(B\cap C)=\P(B)\P(C)$。所以 $\cA$ 与 $\cT$ 独立。由定理~\ref{thm:independence:pi-systems}，$\sigma(\cA)$ 与 $\sigma(\cT)=\cT$ 独立。而 $\sigma(\cA)=\sigma(X_1,X_2,\dots)$：每个 $X_i$ 关于 $\sigma(\cA)$ 可测，并且 $\cA\subseteq\sigma(X_1,X_2,\dots)$。
 
-\emph{(c)}$\cT\subseteq\cF_1'=\sigma(X_1,X_2,\dots)$，所以 $A\in\cT$ 也属于 $\sigma(X_1,X_2,\dots)$，由 (b)，$A$ 与 $A$ 独立，$P(A)=P(A)^2$。
+\emph{(c)}$\cT\subseteq\cF_1'=\sigma(X_1,X_2,\dots)$，所以 $A\in\cT$ 也属于 $\sigma(X_1,X_2,\dots)$，由 (b)，$A$ 与 $A$ 独立，$\P(A)=\P(A)^2$。
 \end{proof}
 
 \begin{corollary}\label{cor:random-series:tail-constant}
-设 $X_1,X_2,\dots$ 独立，$Y$ 是 $\cT$-可测的广义实值随机变量。则存在常数 $c\in[-\infty,\infty]$ 使 $Y=c$ a.s.。特别地，若 $c_n\to\infty$，则 $\limsup_nS_n/c_n$ 几乎必然等于一个常数；$P(\sum_nX_n\ \text{收敛})$ 只能是 $0$ 或 $1$。
+设 $X_1,X_2,\dots$ 独立，$Y$ 是 $\cT$-可测的广义实值随机变量。则存在常数 $c\in[-\infty,\infty]$ 使 $Y=c$ a.s.。特别地，若 $c_n\to\infty$，则 $\limsup_nS_n/c_n$ 几乎必然等于一个常数；$\P(\sum_nX_n\ \text{收敛})$ 只能是 $0$ 或 $1$。
 \end{corollary}
 \begin{proof}
-对每个 $x$，$\{Y\leqslant x\}\in\cT$，概率是 $0$ 或 $1$。$F(x)=P(Y\leqslant x)$ 单调不减，只取 $0,1$ 两个值。令 $c=\sup\{x:F(x)=0\}$（若集合为空，$c=-\infty$；若为全体实数，$c=+\infty$）。$x<c$ 时 $P(Y\leqslant x)=0$，$x>c$ 时 $P(Y\leqslant x)=1$；取 $x=c\pm\frac1k$ 并令 $k\to\infty$，得 $P(Y<c)=0$，$P(Y\leqslant c)=1$（$c$ 有限时），即 $Y=c$ a.s.；$c=\pm\infty$ 的情形同理。其余两句由\egref{ex:random-series:tail-sums} 得到。
+对每个 $x$，$\{Y\leqslant x\}\in\cT$，概率是 $0$ 或 $1$。$F(x)=\P(Y\leqslant x)$ 单调不减，只取 $0,1$ 两个值。令 $c=\sup\{x:F(x)=0\}$（若集合为空，$c=-\infty$；若为全体实数，$c=+\infty$）。$x<c$ 时 $\P(Y\leqslant x)=0$，$x>c$ 时 $\P(Y\leqslant x)=1$；取 $x=c\pm\frac1k$ 并令 $k\to\infty$，得 $\P(Y<c)=0$，$\P(Y\leqslant c)=1$（$c$ 有限时），即 $Y=c$ a.s.；$c=\pm\infty$ 的情形同理。其余两句由\egref{ex:random-series:tail-sums} 得到。
 \end{proof}
 
-例如，对独立的事件，$P(A_n\ \text{i.o.})\in\{0,1\}$，这与两个 Borel--Cantelli 引理一致；$0$-$1$ 律告诉我们答案只能是 $0$ 或 $1$，Borel--Cantelli 引理告诉我们是哪一个。
+例如，对独立的事件，$\P(A_n\ \text{i.o.})\in\{0,1\}$，这与两个 Borel--Cantelli 引理一致；$0$-$1$ 律告诉我们答案只能是 $0$ 或 $1$，Borel--Cantelli 引理告诉我们是哪一个。
 
 \topic{Hewitt--Savage \texorpdfstring{$0$-$1$}{0-1} 律★}
 
@@ -79,38 +79,38 @@ $\cF_n'$ 是“第 $n$ 时刻以后的未来”，$\cT$ 称为\term{尾 $\sigma$
 为了说清楚“重排”，我们在序列空间上讨论。令 $\R^\N$ 为一切实数列 $x=(x_1,x_2,\dots)$ 的集合，$\cR^\N$ 为由坐标映射 $x\mapsto x_i$ 生成的 $\sigma$-代数（与第~\ref{lec:set-systems} 讲作业 D 中的 $\sigma(\cC)$ 相同）。$\N$ 的一个\term{有限置换}是一个双射 $\pi:\N\to\N$，只有有限个 $i$ 使 $\pi(i)\neq i$。对 $x\in\R^\N$，令 $(\pi x)_i=x_{\pi(i)}$。若 $B\in\cR^\N$ 对一切有限置换 $\pi$ 满足 $\{x:\pi x\in B\}=B$，称 $B$ 是\term{可交换的}（exchangeable）。
 
 \begin{theorem}[Hewitt--Savage $0$-$1$ 律]\label{thm:random-series:hewitt-savage}
-设 $X_1,X_2,\dots$ 是 i.i.d.，$\mathbf X=(X_1,X_2,\dots)$，$B\in\cR^\N$ 是可交换的。则 $P(\mathbf X\in B)\in\{0,1\}$。
+设 $X_1,X_2,\dots$ 是 i.i.d.，$\mathbf X=(X_1,X_2,\dots)$，$B\in\cR^\N$ 是可交换的。则 $\P(\mathbf X\in B)\in\{0,1\}$。
 \end{theorem}
 \begin{proof}[证明★]
-记 $A=\{\mathbf X\in B\}$，$\mu=P\circ\mathbf X^{-1}$ 为 $\mathbf X$ 在 $(\R^\N,\cR^\N)$ 上的分布（$\mathbf X$ 可测，因为每个坐标 $X_i$ 可测，第~\ref{lec:random-variables} 讲定理~\ref{thm:random-variables:generators}）。
+记 $A=\{\mathbf X\in B\}$，$\mu=\P\circ\mathbf X^{-1}$ 为 $\mathbf X$ 在 $(\R^\N,\cR^\N)$ 上的分布（$\mathbf X$ 可测，因为每个坐标 $X_i$ 可测，第~\ref{lec:random-variables} 讲定理~\ref{thm:random-variables:generators}）。
 
-\emph{第一步：用有限维事件逼近。}令 $\cC=\bigcup_n\{\{x:(x_1,\dots,x_n)\in D\}:D\in\cR^n\}$ 为柱集的全体，它是代数，生成 $\cR^\N$。令 $\cG$ 为这样的 $E\in\cR^\N$ 的全体：对任意 $\varepsilon>0$ 存在 $C\in\cC$ 使 $\mu(E\triangle C)<\varepsilon$。$\cC\subseteq\cG$。$\cG$ 对补集封闭（$E^c\triangle C^c=E\triangle C$）。对可数并：设 $E=\bigcup_iE_i$，$E_i\in\cG$。取 $N$ 使 $\mu(E\setminus\bigcup_{i\leqslant N}E_i)<\frac\varepsilon2$（从下连续），再取 $C_i\in\cC$ 使 $\mu(E_i\triangle C_i)<\frac\varepsilon{2N}$；$C=\bigcup_{i\leqslant N}C_i\in\cC$，并且 $E\triangle C\subseteq(E\setminus\bigcup_{i\leqslant N}E_i)\cup\bigcup_{i\leqslant N}(E_i\triangle C_i)$，$\mu(E\triangle C)<\varepsilon$。所以 $\cG$ 是包含 $\cC$ 的 $\sigma$-代数，$\cG=\cR^\N$。于是存在 $B_n\in\cR^n$，使 $A_n=\{(X_1,\dots,X_n)\in B_n\}$ 满足 $P(A_n\triangle A)\to0$。
+\emph{第一步：用有限维事件逼近。}令 $\cC=\bigcup_n\{\{x:(x_1,\dots,x_n)\in D\}:D\in\cR^n\}$ 为柱集的全体，它是代数，生成 $\cR^\N$。令 $\cG$ 为这样的 $E\in\cR^\N$ 的全体：对任意 $\varepsilon>0$ 存在 $C\in\cC$ 使 $\mu(E\triangle C)<\varepsilon$。$\cC\subseteq\cG$。$\cG$ 对补集封闭（$E^c\triangle C^c=E\triangle C$）。对可数并：设 $E=\bigcup_iE_i$，$E_i\in\cG$。取 $N$ 使 $\mu(E\setminus\bigcup_{i\leqslant N}E_i)<\frac\varepsilon2$（从下连续），再取 $C_i\in\cC$ 使 $\mu(E_i\triangle C_i)<\frac\varepsilon{2N}$；$C=\bigcup_{i\leqslant N}C_i\in\cC$，并且 $E\triangle C\subseteq(E\setminus\bigcup_{i\leqslant N}E_i)\cup\bigcup_{i\leqslant N}(E_i\triangle C_i)$，$\mu(E\triangle C)<\varepsilon$。所以 $\cG$ 是包含 $\cC$ 的 $\sigma$-代数，$\cG=\cR^\N$。于是存在 $B_n\in\cR^n$，使 $A_n=\{(X_1,\dots,X_n)\in B_n\}$ 满足 $\P(A_n\triangle A)\to0$。
 
-\emph{第二步：重排后的分布不变。}固定 $n$，令 $\pi$ 交换 $j$ 与 $j+n$（$1\leqslant j\leqslant n$），其余不动，$\pi$ 是有限置换，$\pi\circ\pi$ 是恒等映射。随机序列 $\pi\mathbf X=(X_{\pi(1)},X_{\pi(2)},\dots)$ 的分量仍然 i.i.d.，所以对任意 $k$ 与 Borel 集 $D_1,\dots,D_k$，$P(X_{\pi(1)}\in D_1,\dots,X_{\pi(k)}\in D_k)=\prod_iP(X_1\in D_i)=P(X_1\in D_1,\dots,X_k\in D_k)$。形如 $\{x:x_1\in D_1,\dots,x_k\in D_k\}$ 的集合组成生成 $\cR^\N$ 的 $\pi$-类，由唯一性定理，$\pi\mathbf X$ 与 $\mathbf X$ 有相同的分布 $\mu$。
+\emph{第二步：重排后的分布不变。}固定 $n$，令 $\pi$ 交换 $j$ 与 $j+n$（$1\leqslant j\leqslant n$），其余不动，$\pi$ 是有限置换，$\pi\circ\pi$ 是恒等映射。随机序列 $\pi\mathbf X=(X_{\pi(1)},X_{\pi(2)},\dots)$ 的分量仍然 i.i.d.，所以对任意 $k$ 与 Borel 集 $D_1,\dots,D_k$，$\P(X_{\pi(1)}\in D_1,\dots,X_{\pi(k)}\in D_k)=\prod_iP(X_1\in D_i)=\P(X_1\in D_1,\dots,X_k\in D_k)$。形如 $\{x:x_1\in D_1,\dots,x_k\in D_k\}$ 的集合组成生成 $\cR^\N$ 的 $\pi$-类，由唯一性定理，$\pi\mathbf X$ 与 $\mathbf X$ 有相同的分布 $\mu$。
 
-\emph{第三步：交换前后两段。}令 $E_n=\{x:(x_1,\dots,x_n)\in B_n\}\triangle B$。由第二步，$P(\pi\mathbf X\in E_n)=P(\mathbf X\in E_n)=P(A_n\triangle A)$。另一方面，$\{\pi\mathbf X\in B\}=\{\mathbf X\in B\}=A$（$B$ 可交换），而 $\{((\pi\mathbf X)_1,\dots,(\pi\mathbf X)_n)\in B_n\}=\{(X_{n+1},\dots,X_{2n})\in B_n\}=:A_n'$。所以 $\{\pi\mathbf X\in E_n\}=A_n'\triangle A$，于是 $P(A_n'\triangle A)=P(A_n\triangle A)\to0$。
+\emph{第三步：交换前后两段。}令 $E_n=\{x:(x_1,\dots,x_n)\in B_n\}\triangle B$。由第二步，$\P(\pi\mathbf X\in E_n)=\P(\mathbf X\in E_n)=\P(A_n\triangle A)$。另一方面，$\{\pi\mathbf X\in B\}=\{\mathbf X\in B\}=A$（$B$ 可交换），而 $\{((\pi\mathbf X)_1,\dots,(\pi\mathbf X)_n)\in B_n\}=\{(X_{n+1},\dots,X_{2n})\in B_n\}=:A_n'$。所以 $\{\pi\mathbf X\in E_n\}=A_n'\triangle A$，于是 $\P(A_n'\triangle A)=\P(A_n\triangle A)\to0$。
 
-\emph{第四步。}由 $\abs{P(E)-P(F)}\leqslant P(E\triangle F)$，$P(A_n)\to P(A)$，$P(A_n')\to P(A)$。由 $A_n\triangle A_n'\subseteq(A_n\triangle A)\cup(A\triangle A_n')$，$P(A_n\triangle A_n')\to0$，于是
+\emph{第四步。}由 $\abs{\P(E)-\P(F)}\leqslant \P(E\triangle F)$，$\P(A_n)\to \P(A)$，$\P(A_n')\to \P(A)$。由 $A_n\triangle A_n'\subseteq(A_n\triangle A)\cup(A\triangle A_n')$，$\P(A_n\triangle A_n')\to0$，于是
 \[
-0\leqslant P(A_n)-P(A_n\cap A_n')\leqslant P(A_n\cup A_n')-P(A_n\cap A_n')=P(A_n\triangle A_n')\to0,
+0\leqslant \P(A_n)-\P(A_n\cap A_n')\leqslant \P(A_n\cup A_n')-\P(A_n\cap A_n')=\P(A_n\triangle A_n')\to0,
 \]
-$P(A_n\cap A_n')\to P(A)$。但 $A_n\in\sigma(X_1,\dots,X_n)$ 与 $A_n'\in\sigma(X_{n+1},\dots,X_{2n})$ 独立，$P(A_n\cap A_n')=P(A_n)P(A_n')\to P(A)^2$。所以 $P(A)=P(A)^2$。
+$\P(A_n\cap A_n')\to \P(A)$。但 $A_n\in\sigma(X_1,\dots,X_n)$ 与 $A_n'\in\sigma(X_{n+1},\dots,X_{2n})$ 独立，$\P(A_n\cap A_n')=\P(A_n)\P(A_n')\to \P(A)^2$。所以 $\P(A)=\P(A)^2$。
 \end{proof}
 
-尾事件都是可交换的（重排有限个坐标，只影响有限个 $X_i$），所以对 i.i.d.\ 序列，Hewitt--Savage $0$-$1$ 律比 Kolmogorov $0$-$1$ 律强。比如对 i.i.d.\ 序列，$P(S_n\in B\ \text{i.o.})\in\{0,1\}$；以后讨论随机游走的常返性时要用到这一点。
+尾事件都是可交换的（重排有限个坐标，只影响有限个 $X_i$），所以对 i.i.d.\ 序列，Hewitt--Savage $0$-$1$ 律比 Kolmogorov $0$-$1$ 律强。比如对 i.i.d.\ 序列，$\P(S_n\in B\ \text{i.o.})\in\{0,1\}$；以后讨论随机游走的常返性时要用到这一点。
 
 \topic{Kolmogorov 极大不等式}
 
-由 $0$-$1$ 律，$P(\sum_nX_n\ \text{收敛})$ 是 $0$ 或 $1$。下面的工具帮助我们证明它是 $1$。
+由 $0$-$1$ 律，$\P(\sum_nX_n\ \text{收敛})$ 是 $0$ 或 $1$。下面的工具帮助我们证明它是 $1$。
 
 \begin{theorem}[Kolmogorov 极大不等式]\label{thm:random-series:maximal}
 设 $X_1,\dots,X_n$ 独立，$EX_i=0$，$\Var(X_i)<\infty$，$S_k=X_1+\cdots+X_k$。则对 $x>0$，
 \[
-P\Bigl(\max_{1\leqslant k\leqslant n}\abs{S_k}\geqslant x\Bigr)\leqslant\frac{\Var(S_n)}{x^2}.
+\P\Bigl(\max_{1\leqslant k\leqslant n}\abs{S_k}\geqslant x\Bigr)\leqslant\frac{\Var(S_n)}{x^2}.
 \]
 \end{theorem}
 
-Chebyshev 不等式只给出 $P(\abs{S_n}\geqslant x)\leqslant\Var(S_n)/x^2$。极大不等式说，同样的界对整条路径的最大值也成立：路径中途“冲高”的概率，并不比终点“冲高”的概率大多少。
+Chebyshev 不等式只给出 $\P(\abs{S_n}\geqslant x)\leqslant\Var(S_n)/x^2$。极大不等式说，同样的界对整条路径的最大值也成立：路径中途“冲高”的概率，并不比终点“冲高”的概率大多少。
 
 \begin{proof}
 \emph{按第一次越过 $x$ 的时刻分解。}令 $A_k=\{\abs{S_k}\geqslant x,\ \abs{S_j}<x\ \text{对一切}\ j<k\}$，$k=1,\dots,n$。它们两两不交，并为 $\{\max_k\abs{S_k}\geqslant x\}$。
@@ -126,7 +126,7 @@ ES_n^2&\geqslant\sum_{k=1}^nE(S_n^2;A_k)=\sum_{k=1}^nE\bigl(S_k^2+2S_k(S_n-S_k)+
 
 \emph{结论。}在 $A_k$ 上 $\abs{S_k}\geqslant x$，所以
 \[
-\Var(S_n)=ES_n^2\geqslant\sum_{k=1}^nE(S_k^2;A_k)\geqslant x^2\sum_{k=1}^nP(A_k)=x^2P\Bigl(\max_{k\leqslant n}\abs{S_k}\geqslant x\Bigr).\qedhere
+\Var(S_n)=ES_n^2\geqslant\sum_{k=1}^nE(S_k^2;A_k)\geqslant x^2\sum_{k=1}^nP(A_k)=x^2\P\Bigl(\max_{k\leqslant n}\abs{S_k}\geqslant x\Bigr).\qedhere
 \]
 \end{proof}
 
@@ -139,19 +139,19 @@ ES_n^2&\geqslant\sum_{k=1}^nE(S_n^2;A_k)=\sum_{k=1}^nE\bigl(S_k^2+2S_k(S_n-S_k)+
 \end{theorem}
 
 \begin{remark}[证明思路]
-级数收敛等价于部分和是 Cauchy 列，即“$M$ 以后的部分和的最大摆动”$w_M=\sup_{m,n\geqslant M}\abs{S_m-S_n}$ 趋于零。极大不等式正好控制最大摆动：$P(\sup_{m\geqslant M}\abs{S_m-S_M}>\varepsilon)\leqslant\varepsilon^{-2}\sum_{n>M}\Var(X_n)$，右边是收敛级数的余项。
+级数收敛等价于部分和是 Cauchy 列，即“$M$ 以后的部分和的最大摆动”$w_M=\sup_{m,n\geqslant M}\abs{S_m-S_n}$ 趋于零。极大不等式正好控制最大摆动：$\P(\sup_{m\geqslant M}\abs{S_m-S_M}>\varepsilon)\leqslant\varepsilon^{-2}\sum_{n>M}\Var(X_n)$，右边是收敛级数的余项。
 \end{remark}
 
 \begin{proof}
 令 $S_N=\sum_{n\leqslant N}X_n$。对 $M<N$，把极大不等式用于 $X_{M+1},\dots,X_N$：
 \[
-P\Bigl(\max_{M\leqslant m\leqslant N}\abs{S_m-S_M}>\varepsilon\Bigr)\leqslant\frac{\Var(S_N-S_M)}{\varepsilon^2}=\frac1{\varepsilon^2}\sum_{n=M+1}^N\Var(X_n).
+\P\Bigl(\max_{M\leqslant m\leqslant N}\abs{S_m-S_M}>\varepsilon\Bigr)\leqslant\frac{\Var(S_N-S_M)}{\varepsilon^2}=\frac1{\varepsilon^2}\sum_{n=M+1}^N\Var(X_n).
 \]
 令 $N\to\infty$，左边的事件递增趋于 $\{\sup_{m\geqslant M}\abs{S_m-S_M}>\varepsilon\}$，由从下连续，
 \[
-P\Bigl(\sup_{m\geqslant M}\abs{S_m-S_M}>\varepsilon\Bigr)\leqslant\frac1{\varepsilon^2}\sum_{n>M}\Var(X_n)\to0\quad(M\to\infty).
+\P\Bigl(\sup_{m\geqslant M}\abs{S_m-S_M}>\varepsilon\Bigr)\leqslant\frac1{\varepsilon^2}\sum_{n>M}\Var(X_n)\to0\quad(M\to\infty).
 \]
-令 $w_M=\sup_{m,n\geqslant M}\abs{S_m-S_n}$。由三角不等式 $w_M\leqslant2\sup_{m\geqslant M}\abs{S_m-S_M}$，所以 $P(w_M>2\varepsilon)\to0$。$w_M$ 随 $M$ 单调不增，极限 $w=\lim_Mw_M$ 存在，并且 $P(w>2\varepsilon)\leqslant P(w_M>2\varepsilon)\to0$，于是 $P(w>2\varepsilon)=0$。$\varepsilon$ 取遍 $\frac1j$，$w=0$ a.s.。而 $w(\omega)=0$ 说明 $S_n(\omega)$ 是 Cauchy 列，从而收敛。
+令 $w_M=\sup_{m,n\geqslant M}\abs{S_m-S_n}$。由三角不等式 $w_M\leqslant2\sup_{m\geqslant M}\abs{S_m-S_M}$，所以 $\P(w_M>2\varepsilon)\to0$。$w_M$ 随 $M$ 单调不增，极限 $w=\lim_Mw_M$ 存在，并且 $\P(w>2\varepsilon)\leqslant \P(w_M>2\varepsilon)\to0$，于是 $\P(w>2\varepsilon)=0$。$\varepsilon$ 取遍 $\frac1j$，$w=0$ a.s.。而 $w(\omega)=0$ 说明 $S_n(\omega)$ 是 Cauchy 列，从而收敛。
 \end{proof}
 
 \begin{example}[随机符号的级数]\label{ex:random-series:random-signs}
@@ -159,7 +159,7 @@ P\Bigl(\sup_{m\geqslant M}\abs{S_m-S_M}>\varepsilon\Bigr)\leqslant\frac1{\vareps
 \end{example}
 
 \begin{workedexample}\label{we:random-series:sparse-signs}
-设 $X_n$ 独立，$P(X_n=1)=P(X_n=-1)=\frac{p_n}2$，$P(X_n=0)=1-p_n$。证明 $\sum_nX_n$ 几乎必然收敛当且仅当 $\sum_np_n<\infty$，并且 $\sum_np_n=\infty$ 时它几乎必然发散。
+设 $X_n$ 独立，$\P(X_n=1)=\P(X_n=-1)=\frac{p_n}2$，$\P(X_n=0)=1-p_n$。证明 $\sum_nX_n$ 几乎必然收敛当且仅当 $\sum_np_n<\infty$，并且 $\sum_np_n=\infty$ 时它几乎必然发散。
 \end{workedexample}
 \begin{solution}
 若 $\sum_np_n<\infty$，则 $\sum_nP(X_n\neq0)<\infty$，由第一 Borel--Cantelli 引理只有有限个 $X_n\neq0$，级数几乎必然收敛（甚至只有有限个非零项）。也可以用定理~\ref{thm:random-series:convergence}：$EX_n=0$，$\Var(X_n)=p_n$。
@@ -178,7 +178,7 @@ P\Bigl(\sup_{m\geqslant M}\abs{S_m-S_M}>\varepsilon\Bigr)\leqslant\frac1{\vareps
 \]
 \end{theorem}
 \begin{proof}
-我们只证充分性；必要性要用中心极限定理，留到那里再证。令 $\mu_n=EY_n$。$Y_n-\mu_n$ 独立，期望为零，由 (iii) 与定理~\ref{thm:random-series:convergence}，$\sum_n(Y_n-\mu_n)$ 几乎必然收敛；再由 (ii)，$\sum_nY_n$ 几乎必然收敛。由 (i) 与第一 Borel--Cantelli 引理，$P(X_n\neq Y_n\ \text{i.o.})=0$，几乎必然地两个级数只有有限项不同，所以 $\sum_nX_n$ 几乎必然收敛。
+我们只证充分性；必要性要用中心极限定理，留到那里再证。令 $\mu_n=EY_n$。$Y_n-\mu_n$ 独立，期望为零，由 (iii) 与定理~\ref{thm:random-series:convergence}，$\sum_n(Y_n-\mu_n)$ 几乎必然收敛；再由 (ii)，$\sum_nY_n$ 几乎必然收敛。由 (i) 与第一 Borel--Cantelli 引理，$\P(X_n\neq Y_n\ \text{i.o.})=0$，几乎必然地两个级数只有有限项不同，所以 $\sum_nX_n$ 几乎必然收敛。
 \end{proof}
 
 三个条件的含义：(i) 大的项只有有限个；(ii) 截断后的项“平均”起来收敛；(iii) 截断后的项的随机波动可以求和。
@@ -253,7 +253,7 @@ P\Bigl(\sup_{m\geqslant M}\abs{S_m-S_M}>\varepsilon\Bigr)\leqslant\frac1{\vareps
 \]
 这里把 $[0,m^{1/p}]$ 分成 $[(n-1)^{1/p},n^{1/p}]$（$n\leqslant m$），再交换求和次序。因为 $\frac2p>1$，$\sum_{m\geqslant n}m^{-2/p}\leqslant n^{-2/p}+\int_n^\infty x^{-2/p}\dd x\leqslant Cn^{(p-2)/p}$；对 $y\in[(n-1)^{1/p},n^{1/p}]$，$n\geqslant y^p$，而 $(p-2)/p<0$，所以 $n^{(p-2)/p}\leqslant y^{p-2}$。于是上式不超过
 \[
-C\int_0^\infty2y\cdot y^{p-2}P(\abs{X_1}>y)\dd y=\frac{2C}p\int_0^\infty py^{p-1}P(\abs{X_1}>y)\dd y=\frac{2C}pE\abs{X_1}^p<\infty .
+C\int_0^\infty2y\cdot y^{p-2}\P(\abs{X_1}>y)\dd y=\frac{2C}p\int_0^\infty py^{p-1}\P(\abs{X_1}>y)\dd y=\frac{2C}pE\abs{X_1}^p<\infty .
 \]
 由定理~\ref{thm:random-series:convergence} 与 Kronecker 引理（$a_m=m^{1/p}$），$n^{-1/p}\sum_{m\leqslant n}(Y_m-\mu_m)\to0$ a.s.，$\mu_m=EY_m$。
 
@@ -278,15 +278,15 @@ $a_n/n$ 单调不减蕴含 $a_n$ 单调不减（$a_{n+1}\geqslant\frac{n+1}na_n$
 
 \emph{发散的情形。}对正整数 $k$，由 $a_{kn}\geqslant ka_n$ 与 $a$ 单调，
 \[
-\sum_nP(\abs{X_1}\geqslant ka_n)\geqslant\sum_nP(\abs{X_1}\geqslant a_{kn})\geqslant\frac1k\sum_{m\geqslant k}P(\abs{X_1}\geqslant a_m)=\infty,
+\sum_nP(\abs{X_1}\geqslant ka_n)\geqslant\sum_nP(\abs{X_1}\geqslant a_{kn})\geqslant\frac1k\sum_{m\geqslant k}\P(\abs{X_1}\geqslant a_m)=\infty,
 \]
-（把 $m\in[kn,kn+k)$ 这 $k$ 项归到 $n$，每项 $\leqslant P(\abs{X_1}\geqslant a_{kn})$）。由第二 Borel--Cantelli 引理，$\abs{X_n}\geqslant ka_n$ 无穷多次，所以 $\limsup\abs{X_n}/a_n\geqslant k$，对一切 $k$ 成立。又 $\abs{X_n}\leqslant\abs{S_n}+\abs{S_{n-1}}\leqslant2\max\{\abs{S_n},\abs{S_{n-1}}\}$，$a_{n-1}\leqslant a_n$，所以 $\limsup\abs{S_n}/a_n=\infty$。
+（把 $m\in[kn,kn+k)$ 这 $k$ 项归到 $n$，每项 $\leqslant \P(\abs{X_1}\geqslant a_{kn})$）。由第二 Borel--Cantelli 引理，$\abs{X_n}\geqslant ka_n$ 无穷多次，所以 $\limsup\abs{X_n}/a_n\geqslant k$，对一切 $k$ 成立。又 $\abs{X_n}\leqslant\abs{S_n}+\abs{S_{n-1}}\leqslant2\max\{\abs{S_n},\abs{S_{n-1}}\}$，$a_{n-1}\leqslant a_n$，所以 $\limsup\abs{S_n}/a_n=\infty$。
 
 \emph{收敛的情形。}令 $a_0=0$。
 
 (1) \emph{一个恒等式。}$a_n\geqslant na_1\to\infty$。把 $m=\sum_{n=1}^m1$ 代入并交换求和次序，
 \begin{equation}\label{eq:random-series:feller-identity}
-\sum_{m\geqslant1}mP(a_{m-1}\leqslant\abs{X_1}<a_m)=\sum_{n\geqslant1}P(\abs{X_1}\geqslant a_{n-1})<\infty,
+\sum_{m\geqslant1}mP(a_{m-1}\leqslant\abs{X_1}<a_m)=\sum_{n\geqslant1}\P(\abs{X_1}\geqslant a_{n-1})<\infty,
 \end{equation}
 因为对固定的 $n$，区间 $[a_{m-1},a_m)$（$m\geqslant n$）不交，并为 $[a_{n-1},\infty)$；右边有限是假设。
 
@@ -313,7 +313,7 @@ $a_n/n$ 单调不减蕴含 $a_n$ 单调不减（$a_{n+1}\geqslant\frac{n+1}na_n$
 
 \begin{enumerate}
 \item 尾 $\sigma$-代数 $\cT=\bigcap_n\sigma(X_n,X_{n+1},\dots)$ 中的事件不依赖于有限个变量。Kolmogorov $0$-$1$ 律：独立时尾事件的概率是 $0$ 或 $1$；尾可测的随机变量几乎必然是常数。对 i.i.d.\ 序列，可交换的事件也是如此（Hewitt--Savage）。
-\item Kolmogorov 极大不等式：$P(\max_{k\leqslant n}\abs{S_k}\geqslant x)\leqslant\Var(S_n)/x^2$。证明的方法是按第一次越过 $x$ 的时刻分解。
+\item Kolmogorov 极大不等式：$\P(\max_{k\leqslant n}\abs{S_k}\geqslant x)\leqslant\Var(S_n)/x^2$。证明的方法是按第一次越过 $x$ 的时刻分解。
 \item 独立、期望为零、方差可求和，则 $\sum X_n$ 几乎必然收敛；三级数定理给出充要条件。随机调和级数 $\sum\pm\frac1n$ 几乎必然收敛。
 \item Kronecker 引理把级数的收敛转化为平均的收敛：$\sum x_n/a_n$ 收敛蕴含 $\frac1{a_n}\sum_{m\leqslant n}x_m\to0$。由此得到强大数定律的第二个证明，以及收敛速度：方差有限时 $S_n=o(\sqrt n(\log n)^{1/2+\varepsilon})$，$E\abs X^p<\infty$ 时 $S_n=o(n^{1/p})$。
 \item 期望为无穷时，$S_n/a_n$ 的上极限只能是 $0$ 或 $\infty$（Feller）。
@@ -332,14 +332,14 @@ $a_n/n$ 单调不减蕴含 $a_n$ 单调不减（$a_{n+1}\geqslant\frac{n+1}na_n$
 
 令 $n_m=\lceil m^\alpha\rceil$。由极大不等式，
 \[
-P\Bigl(\max_{k\leqslant n_{m+1}}\abs{S_k}\geqslant\varepsilon n_m^p\Bigr)\leqslant\frac{Cn_{m+1}}{\varepsilon^2n_m^{2p}}\leqslant\frac{C'}{\varepsilon^2}m^{\alpha(1-2p)}
+\P\Bigl(\max_{k\leqslant n_{m+1}}\abs{S_k}\geqslant\varepsilon n_m^p\Bigr)\leqslant\frac{Cn_{m+1}}{\varepsilon^2n_m^{2p}}\leqslant\frac{C'}{\varepsilon^2}m^{\alpha(1-2p)}
 \]
 （$n_{m+1}\leqslant2(m+1)^\alpha\leqslant2^{1+\alpha}m^\alpha$，$n_m\geqslant m^\alpha$）。$\alpha(2p-1)>1$，可求和。由第一 Borel--Cantelli 引理，几乎必然地 $m$ 充分大时 $\max_{k\leqslant n_{m+1}}\abs{S_k}<\varepsilon n_m^p$。对 $n_m\leqslant n<n_{m+1}$，$\abs{S_n}/n^p\leqslant\max_{k\leqslant n_{m+1}}\abs{S_k}/n_m^p<\varepsilon$。$\varepsilon$ 取遍 $\frac1j$。
 \end{solution}
 
 \item\label{ex:random-series:A2} 设 $X_1,X_2,\dots$ 是 i.i.d.，$p>0$。证明：若 $S_n/n^{1/p}\to0$ a.s.，则 $E\abs{X_1}^p<\infty$。（这是定理~\ref{thm:random-series:mz} 的逆，容易得多。）
 \begin{solution}
-$\frac{X_n}{n^{1/p}}=\frac{S_n}{n^{1/p}}-\Bigl(\frac{n-1}n\Bigr)^{1/p}\frac{S_{n-1}}{(n-1)^{1/p}}\to0$ a.s.，所以 $P(\abs{X_n}>n^{1/p}\ \text{i.o.})=0$。事件 $\{\abs{X_n}^p>n\}$ 独立，由第二 Borel--Cantelli 引理，$\sum_nP(\abs{X_1}^p>n)<\infty$，由命题~\ref{prop:expectation:tail-sum}，$E\abs{X_1}^p<\infty$。
+$\frac{X_n}{n^{1/p}}=\frac{S_n}{n^{1/p}}-\Bigl(\frac{n-1}n\Bigr)^{1/p}\frac{S_{n-1}}{(n-1)^{1/p}}\to0$ a.s.，所以 $\P(\abs{X_n}>n^{1/p}\ \text{i.o.})=0$。事件 $\{\abs{X_n}^p>n\}$ 独立，由第二 Borel--Cantelli 引理，$\sum_nP(\abs{X_1}^p>n)<\infty$，由命题~\ref{prop:expectation:tail-sum}，$E\abs{X_1}^p<\infty$。
 \end{solution}
 
 \item\label{ex:random-series:A3} 设 $X_1,X_2,\dots$ 是 i.i.d.\ 的标准正态随机变量。证明对任意 $t\in\R$，$\sum_{n\geqslant1}X_n\frac{\sin(n\pi t)}n$ 几乎必然收敛。
@@ -363,7 +363,7 @@ $X_n/n$ 独立，期望为零，方差 $\sigma_n^2/n^2$ 可求和，由定理~\r
 \begin{solution}
 用三级数定理（充分性），$A=1$，$Y_n=X_n\one_{\{\abs{X_n}\leqslant1\}}$。
 \begin{itemize}
-\item (i) $\abs x>1$ 时 $\psi(x)\geqslant1$，所以 $P(\abs{X_n}>1)\leqslant E\psi(X_n)$，可求和。
+\item (i) $\abs x>1$ 时 $\psi(x)\geqslant1$，所以 $\P(\abs{X_n}>1)\leqslant E\psi(X_n)$，可求和。
 \item (iii) $\Var(Y_n)\leqslant EY_n^2=E(X_n^2;\abs{X_n}\leqslant1)\leqslant E\psi(X_n)$，可求和。
 \item (ii) 由 $EX_n=0$，$EY_n=-E(X_n;\abs{X_n}>1)$，$\abs{EY_n}\leqslant E(\abs{X_n};\abs{X_n}>1)\leqslant E\psi(X_n)$，所以 $\sum_nEY_n$ 绝对收敛。
 \end{itemize}
@@ -372,7 +372,7 @@ $\psi$ 在 $0$ 附近像 $x^2$（控制方差），在远处像 $\abs x$（控�
 
 \item\label{ex:random-series:A6} 设 $X_n$ 独立，$0<p(n)\leqslant2$，$p(n)>1$ 时 $EX_n=0$，并且 $\sum_nE\abs{X_n}^{p(n)}<\infty$。证明 $\sum_nX_n$ 几乎必然收敛。
 \begin{solution}
-三级数定理，$A=1$。(i) $P(\abs{X_n}>1)\leqslant E\abs{X_n}^{p(n)}$（Markov 不等式）。(iii) $\abs x\leqslant1$、$p\leqslant2$ 时 $x^2\leqslant\abs x^p$，所以 $\Var(Y_n)\leqslant EY_n^2\leqslant E\abs{X_n}^{p(n)}$。(ii) 若 $p(n)\leqslant1$：$\abs x\leqslant1$ 时 $\abs x\leqslant\abs x^{p(n)}$，$\abs{EY_n}\leqslant E\abs{X_n}^{p(n)}$。若 $p(n)>1$：$EY_n=-E(X_n;\abs{X_n}>1)$，而 $\abs x\geqslant1$ 时 $\abs x\leqslant\abs x^{p(n)}$，$\abs{EY_n}\leqslant E\abs{X_n}^{p(n)}$。所以三个级数都收敛。
+三级数定理，$A=1$。(i) $\P(\abs{X_n}>1)\leqslant E\abs{X_n}^{p(n)}$（Markov 不等式）。(iii) $\abs x\leqslant1$、$p\leqslant2$ 时 $x^2\leqslant\abs x^p$，所以 $\Var(Y_n)\leqslant EY_n^2\leqslant E\abs{X_n}^{p(n)}$。(ii) 若 $p(n)\leqslant1$：$\abs x\leqslant1$ 时 $\abs x\leqslant\abs x^{p(n)}$，$\abs{EY_n}\leqslant E\abs{X_n}^{p(n)}$。若 $p(n)>1$：$EY_n=-E(X_n;\abs{X_n}>1)$，而 $\abs x\geqslant1$ 时 $\abs x\leqslant\abs x^{p(n)}$，$\abs{EY_n}\leqslant E\abs{X_n}^{p(n)}$。所以三个级数都收敛。
 \end{solution}
 
 \item\label{ex:random-series:A7} （加权强大数定律）设 $X_1,X_2,\dots$ 是 i.i.d.，$E\abs{X_1}<\infty$，$\mu=EX_1$，$\{c_k\}$ 是有界的实数列，$\abs{c_k}\leqslant C$。证明 $\frac1n\sum_{k\leqslant n}c_k(X_k-\mu)\to0$ a.s.
@@ -392,7 +392,7 @@ $\psi$ 在 $0$ 附近像 $x^2$（控制方差），在远处像 $\abs x$（控�
 \begin{probleme}{B}{非负独立随机变量之和}
 设 $X_n\geqslant0$ 独立。本题证明下列三条等价：
 \[
-\text{(i)}\ \sum_nX_n<\infty\ \text{a.s.};\quad\text{(ii)}\ \sum_n\bigl[P(X_n>1)+E(X_n\one_{\{X_n\leqslant1\}})\bigr]<\infty;\quad\text{(iii)}\ \sum_nE\frac{X_n}{1+X_n}<\infty .
+\text{(i)}\ \sum_nX_n<\infty\ \text{a.s.};\quad\text{(ii)}\ \sum_n\bigl[\P(X_n>1)+E(X_n\one_{\{X_n\leqslant1\}})\bigr]<\infty;\quad\text{(iii)}\ \sum_nE\frac{X_n}{1+X_n}<\infty .
 \]
 令 $Y_n=X_n\one_{\{X_n\leqslant1\}}$。
 \begin{questions}
@@ -400,7 +400,7 @@ $\psi$ 在 $0$ 附近像 $x^2$（控制方差），在远处像 $\abs x$（控�
 \begin{solution}
 对 $x\in[0,1]$，$\frac x2\leqslant\frac x{1+x}\leqslant x$；对 $x>1$，$\frac12<\frac x{1+x}<1$。所以
 \[
-\frac12\bigl[P(X_n>1)+EY_n\bigr]\leqslant E\frac{X_n}{1+X_n}\leqslant P(X_n>1)+EY_n,
+\frac12\bigl[\P(X_n>1)+EY_n\bigr]\leqslant E\frac{X_n}{1+X_n}\leqslant \P(X_n>1)+EY_n,
 \]
 两个级数同时收敛或同时发散。
 \end{solution}
@@ -410,7 +410,7 @@ $\psi$ 在 $0$ 附近像 $x^2$（控制方差），在远处像 $\abs x$（控�
 \end{solution}
 \item 设 (i) 成立。证明 $\sum_nP(X_n>1)<\infty$。
 \begin{solution}
-由 (i)，$X_n\to0$ a.s.，所以 $P(X_n>1\ \text{i.o.})=0$。事件 $\{X_n>1\}$ 独立，由第二 Borel--Cantelli 引理，$\sum_nP(X_n>1)<\infty$。
+由 (i)，$X_n\to0$ a.s.，所以 $\P(X_n>1\ \text{i.o.})=0$。事件 $\{X_n>1\}$ 独立，由第二 Borel--Cantelli 引理，$\sum_nP(X_n>1)<\infty$。
 \end{solution}
 \item 设 (i) 成立。证明 $\sum_nEY_n<\infty$。（提示：考虑 $E\exp(-\sum_nY_n)$。）
 \begin{solution}

@@ -139,7 +139,7 @@
 \newcommand{\Q}{\mathbb{Q}}
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\E}{\mathbb{E}}
-\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\mathbb{P}}   % probability, written \P throughout the site
 \newcommand{\cA}{\mathcal{A}}
 \newcommand{\cB}{\mathcal{B}}
 \newcommand{\cC}{\mathcal{C}}
