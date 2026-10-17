@@ -1,0 +1,5 @@
+\begin{tikzpicture}[every node/.style={font=\small}]
+    \foreach \row [count=\i] in {{0,3,1,2},{1,0,2,3},{3,2,0,1},{2,1,3,0}}
+      \foreach \c [count=\j] in \row
+        \node[lscell, minimum size=6.5mm] at (0.65*\j, -0.65*\i) {$\c$};
+  \end{tikzpicture}

@@ -1,0 +1,31 @@
+% Helper macros for this survey's figures (from the talk's preamble).
+\providecommand{\Red}[1]{\textcolor{red}{#1}}
+\newcommand{\hamPanel}[6]{% shift, colour, v1, v2, v3, v4
+  \begin{scope}[shift={(#1,0)}]
+    \coordinate (q0) at (0,1.2); \coordinate (q1) at (1.2,1.2);
+    \coordinate (q2) at (1.2,0); \coordinate (q3) at (0,0);
+    \draw[->, #2, line width=1.1pt, shorten <=3pt, shorten >=3pt] (q#3) -- (q#4);
+    \draw[->, #2, line width=1.1pt, shorten <=3pt, shorten >=3pt] (q#4) -- (q#5);
+    \draw[->, #2, line width=1.1pt, shorten <=3pt, shorten >=3pt] (q#5) -- (q#6);
+    \foreach \v in {0,1,2,3} \node[overtex] at (q\v) {};
+    \node[above left=0pt] at (q0) {$0$}; \node[above right=0pt] at (q1) {$1$};
+    \node[below right=0pt] at (q2) {$2$}; \node[below left=0pt] at (q3) {$3$};
+    \node at (0.6,-0.6) {$#3\to#4\to#5\to#6$};
+  \end{scope}}
+\newcommand{\walkPanel}[2]{% #1 = x shift, #2 = number of points
+  \foreach \k in {0,...,\numexpr#2-1\relax} {
+    \coordinate (t\k) at ($({90-360*\k/#2}:1.05)+(#1,0)$);}}
+\newcommand{\waleckiPanel}[3]{% shift x, rotation, colour
+  \begin{scope}[shift={(#1,0)}]
+    \foreach \k in {0,...,9} \coordinate (w\k) at ({90-36*\k}:1.35);
+    \coordinate (winf) at (0,0);
+    \foreach \u/\v in {0/1,1/9,9/2,2/8,8/3,3/7,7/4,4/6,6/5} {
+      \pgfmathtruncatemacro{\x}{mod(\u+#2,10)}
+      \pgfmathtruncatemacro{\y}{mod(\v+#2,10)}
+      \draw[#3, line width=1pt] (w\x) -- (w\y);}
+    \pgfmathtruncatemacro{\s}{mod(#2,10)}
+    \pgfmathtruncatemacro{\t}{mod(5+#2,10)}
+    \draw[#3, line width=1pt, dashed] (w\s) -- (winf) -- (w\t);
+    \foreach \k in {0,...,9} {\node[overtex] at (w\k) {}; \node at ({90-36*\k}:1.65) {$\k$};}
+    \node[bvertex] at (winf) {}; \node[right=1pt] at (winf) {$\infty$};
+  \end{scope}}

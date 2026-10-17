@@ -1,0 +1,21 @@
+\begin{tikzpicture}[every node/.style={font=\footnotesize}]
+    \foreach \i in {0,...,6} {
+      \coordinate (p\i) at ({90-360*\i/7}:1.2);
+      \coordinate (q\i) at ($({90-360*\i/7}:1.2)+(5,0)$);}
+    \draw[col1, line width=1.2pt] (p0)--(p1);
+    \draw[col2, line width=1.2pt] (p1)--(p3);
+    \draw[col3, line width=1.2pt] (p3)--(p6);
+    \foreach \g in {1,...,6} {
+      \pgfmathtruncatemacro{\a}{mod(\g,7)}
+      \pgfmathtruncatemacro{\b}{mod(1+\g,7)}
+      \pgfmathtruncatemacro{\c}{mod(3+\g,7)}
+      \draw[gray!45] (q\a)--(q\b)--(q\c)--cycle;}
+    \draw[col1, line width=1.2pt] (q0)--(q1);
+    \draw[col2, line width=1.2pt] (q1)--(q3);
+    \draw[col3, line width=1.2pt] (q3)--(q0);
+    \foreach \i in {0,...,6} {
+      \node[overtex] at (p\i) {}; \node at ({90-360*\i/7}:1.5) {$\i$};
+      \node[overtex] at (q\i) {}; \node at ($({90-360*\i/7}:1.5)+(5,0)$) {$\i$};}
+    \node[align=center] at (0,-2.0) {$A=\{1,2,3\}$: path $0,1,3,6$\\ $7$ translates $=K_7$};
+    \node[align=center] at (5,-2.0) {$A=\{1,2,4\}$: triangle $0,1,3$\\ $7$ translates $=$ Fano plane};
+  \end{tikzpicture}

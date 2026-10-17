@@ -1,0 +1,65 @@
+\section{Progress on Graham's conjecture}\label{sec:progress}
+
+\topic{Small sets}
+
+Hicks, Ollis and Schmitt~\cite{hos19} proved Graham's conjecture for $|S|\leq10$ and for $|S|\geq p-3$, and Costa, Della Fiore, Ollis and Rovner-Frydman~\cite{cdor22} extended this to $|S|\leq12$. Sawin (2015) and Kravitz~\cite{kra24} handled $|S|\leq\log p/\log\log p$, and Bedert and Kravitz~\cite{bk24} reached $|S|\leq e^{c(\log p)^{1/4}}$, beyond the ``rectification barrier''. The methods are the polynomial method, rectification, and dissociated sets.
+
+\topic{Large sets}
+
+M\"uyesser and Pokrovskiy~\cite{mp22} proved the conjecture for $|S|\geq(1-o(1))p$. Buci\'c, Frederickson, M\"uyesser, Pokrovskiy and Yepremyan~\cite{bfmpy25} showed that in any group every $S$ has an ordering in which all but $o(|S|)$ partial products are distinct. Bedert, Buci\'c, Kravitz, Montgomery and M\"uyesser~\cite{bbkmm25} proved that in any group every $S$ with $|S|\geq|G|^{1-c}$ has a valid ordering. The methods here are rainbow paths in properly coloured digraphs, absorption, and Freiman--Ruzsa theory.
+
+\topic{Large primes}
+
+The remaining middle range was closed by Pham and Sauermann.
+
+\begin{theorem}[Pham--Sauermann~\cite{ps26}, Theorem~1.2]\label{thm:ps}
+For every $0<\alpha<1$ there is $C_\alpha$ such that every $S\subseteq\Z_p\setminus\{0\}$ with $C_\alpha\leq|S|\leq p^{1-\alpha}$ has a valid ordering.
+\end{theorem}
+
+Their proof uses anticoncentration of sums of random subsets. To see that the three ranges cover every subset, choose $0<\alpha<c$, where $c>0$ is the constant of the large-set theorem~\cite{bbkmm25}. Subsets with $|S|<C_\alpha$ are handled by the small-set bound of Bedert and Kravitz~\cite{bk24} once $p$ is large; subsets with $C_\alpha\leq|S|\leq p^{1-\alpha}$ by Theorem~\ref{thm:ps}; and subsets with $|S|\geq p^{1-c}$ by Bedert et al.~\cite{bbkmm25}. Since $p^{1-c}<p^{1-\alpha}$, there is no gap (Figure~\ref{fig:graham-ranges}).
+
+\begin{figure}[ht]
+\centering
+\input{figures/graham-ranges}
+\caption{The three ranges of $|S|$ that together settle Graham's conjecture for large $p$ (not to scale).}
+\label{fig:graham-ranges}
+\end{figure}
+
+\begin{theorem}[Pham--Sauermann~\cite{ps26}, with the earlier results]\label{thm:graham-large}
+Graham's rearrangement conjecture holds for all sufficiently large primes $p$.
+\end{theorem}
+
+In graph language, every $\operatorname{Cay}(\Z_p,S)$ has a rainbow directed path with $|S|-1$ arcs. The conclusion is for all sufficiently large primes; no explicit cutoff for small primes is asserted.
+
+\topic{Small subsets of general cyclic groups}
+
+\begin{theorem}[Costa--Della Fiore~\cite{cdf26}, Theorem~1.3]\label{thm:cdf}
+There is an absolute constant $c>0$ such that, if $p$ is the least prime divisor of $k$, every non-empty $A\subseteq\Z_k\setminus\{0\}$ with
+\[
+|A|\leq\exp\bigl(c(\log p)^{1/3}\bigr)
+\]
+is sequenceable: it has an ordering with distinct partial sums and no zero proper partial sum.
+\end{theorem}
+
+This improves the earlier exponent $1/4$ to $1/3$ for general cyclic groups, with the subset size controlled through the least prime divisor. The conclusion is stronger than a valid ordering. Order $A=\{a_1,\dots,a_r\}$ and put $p_0=0$ and $p_i=a_1+\dots+a_i$ in $\Z_k$; then $p_0,\dots,p_{r-1}$ are distinct, and the only allowed return is $p_r=p_0$. If $\sum A\neq0$, the $r$ steps give a rainbow directed path; if $\sum A=0$, they give a rainbow directed cycle. Both use every colour in $A$, whereas a valid ordering only asks for a path with $r-1$ arcs. Directed $2$-cycles are allowed. The local $t$-weak variant (Theorem~1.4 of~\cite{cdf26}) is a separate conclusion, not a global ordering theorem for arbitrary $|A|$.
+
+\topic{Composite moduli}
+
+\begin{theorem}[Costa--Della Fiore--Feng--Liu~\cite{cdfl26}, Theorem~1.3]\label{thm:cdfl}
+Fix $L\geq2$ and $\gamma\geq1$. For a sufficiently large $p_0=p_0(L,\gamma)$, every subset of $\Z_k\setminus\{0\}$ has a valid ordering if, for distinct primes $p_i$ and positive integers $e_i$,
+\[
+k=\prod_{i=1}^{s}p_i^{e_i},\qquad\sum_{i=1}^{s}e_i\leq L,\qquad p_0\leq p_1<\dots<p_s\leq\gamma p_1 .
+\]
+\end{theorem}
+
+This covers prime powers of bounded exponent and bounded products of comparable large primes; the bound is on the sum of the exponents. In graph language, every subset gives a rainbow path with one fewer arc than colours. Theorem~\ref{thm:cdfl} requires every prime factor to be large; a separate corollary allows a fixed small factor.
+
+\begin{theorem}[Costa--Della Fiore--Feng--Liu~\cite{cdfl26}, Corollary~1.6]\label{thm:cdfl-tp}
+Fix $t\geq2$ such that $\Z_t$ is strongly sequenceable. For all sufficiently large primes $p\nmid t$, every subset of $\Z_{tp}\setminus\{0\}$ has a valid ordering. In particular, every fixed $2\leq t\leq21$ is allowed.
+\end{theorem}
+
+Here \term{strongly sequenceable} means that every subset of non-zero elements admits an ordering with all partial sums, including the initial $0$, distinct, except that the final sum may return to $0$. Strong sequenceability thus asks for paths or cycles using every colour, while the conclusion on $\Z_{tp}$ guarantees paths with $|A|-1$ arcs.
+
+\topic{Beyond cyclic groups}
+
+Bedert, Buci\'c, Kravitz, Montgomery and M\"uyesser~\cite{bbkmm25} proved that in $\mathbb F_2^n$ every non-zero subset $S$ with $|S|\geq C$ has a valid ordering. Costa, Della Fiore and Engel~\cite{cdfe25} proved small-set results for $\Z_p\rtimes_\varphi H$, where $H$ is finite, abelian and strongly sequenceable and each $\varphi(h)$ acts as $+1$ or $-1$: every non-identity subset with $|S|\leq\exp(c(\log p)^{1/4})$ has a sequencing. Finally, the weak arithmetic regularity lemma developed in the Graham programme is also used in the 2026 theorem on Hamilton cycles in moderately dense Cayley graphs~\cite[\S1]{bdmp26}: the same group structure helps to organise rainbow paths and Hamilton cycles.

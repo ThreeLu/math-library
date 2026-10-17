@@ -1,0 +1,91 @@
+\section{Sequenceable groups}\label{sec:sequenceable}
+
+\topic{Gordon's question}
+
+In 1961 Gordon~\cite{gor61} wrote: ``In an investigation concerning a certain type of Latin square, the following problem arose: Can the elements of a finite group $G$ be arranged in a sequence $a_1,a_2,\dots,a_n$ so that the partial products $a_1,\ a_1a_2,\ \dots,\ a_1a_2\cdots a_n$ are all distinct?''
+
+\begin{definition}[Gordon~\cite{gor61}]\label{def:sequencing}
+An ordering $b_1,\dots,b_n$ of the elements of $G$ whose partial products are all distinct is a \term{sequencing}, and $G$ is \term{sequenceable} if it has one.
+\end{definition}
+
+Necessarily $b_1=e$: if $b_i=e$ for some $i>1$, then $b_1\cdots b_{i-1}=b_1\cdots b_i$. Walecki's differences $(0,1,2n-2,3,\dots)$ from Section~\ref{sec:round-dances} are a sequencing of $\Z_{2n}$, and their partial sums are the zigzag.
+
+\begin{theorem}[Gordon~\cite{gor61}]\label{thm:gordon-square}
+If $b_1,\dots,b_n$ is a sequencing of $G$ with partial products $a_i=b_1\cdots b_i$, then $L_{ij}=a_i^{-1}a_j$ is a complete Latin square.
+\end{theorem}
+
+To see that $L$ is row-complete, suppose the ordered pair $(x,y)$ sits in row $i$ and columns $j,j+1$. Then $x^{-1}y=a_j^{-1}a_{j+1}=b_{j+1}$. As the $b$'s are distinct this determines $j$, and then $a_i=a_jx^{-1}$ determines $i$.
+
+\begin{example}\label{ex:gordon-z4}
+For $\Z_4$ take $b=(0,3,2,1)$, so that $a=(0,3,1,2)$. The square $L_{ij}=a_j-a_i$ (Figure~\ref{fig:gordon-square}) is the square of the cows in Figure~\ref{fig:cows}.
+\end{example}
+
+\begin{figure}[ht]
+\centering
+\input{figures/gordon-square}
+\caption{Gordon's complete Latin square from the sequencing $(0,3,2,1)$ of $\Z_4$, bordered by the partial sums $a=(0,3,1,2)$.}
+\label{fig:gordon-square}
+\end{figure}
+
+Theorem~\ref{thm:gordon-square} tells the experimenter that a sequenceable group of order $n$ gives a one-square Williams design for $n$ treatments. For $n$ even, $\Z_n$ is sequenceable by the Lucas--Walecki sequencing, which recovers Williams's even case. For $n$ odd no abelian group is sequenceable, as we shall see, so one needs a non-abelian group of odd order. The non-abelian group of order $21$ is sequenceable (D\'enes and T\H{o}r\H{o}k; Mendelsohn, 1968; see~\cite{oll25}), so a single $21\times21$ square balances $21$ treatments. The experimental question had become a question about groups.
+
+\topic{Small cases}
+
+The groups $\Z_4$, with the sequencing $(0,3,2,1)$, and more generally $\Z_{2n}$, with $(0,1,2n-2,3,2n-4,5,\dots,2,2n-1)$, are sequenceable, and so is the dihedral group $D_{10}$~\cite{gor61}. The groups $\Z_3$, $\Z_5$ and $\Z_2^2$ are not, and neither are $D_6$, $D_8$ and $Q_8$~\cite{gor61}.
+
+It helps to try small cases by hand. Put the elements of the group on a circle. A sequencing $0,b_2,\dots,b_n$ of an abelian group is a walk from $0$ that takes each non-zero element once as a step and never revisits a point. In $\Z_3$ both walks return to $0$, since the steps $1+2=3\equiv0$ always bring us back; in $\Z_4$ the steps $3,2,1$ visit every point once (Figure~\ref{fig:try-z3}).
+
+\begin{figure}[ht]
+\centering
+\input{figures/try-z3}
+\caption{Partial sums as walks. In $\Z_3$ every attempt returns to $0$ (circled); in $\Z_4$ the steps $3,2,1$ give a sequencing.}
+\label{fig:try-z3}
+\end{figure}
+
+\topic{Abelian groups}
+
+\begin{theorem}[Gordon~\cite{gor61}]\label{thm:gordon-abelian}
+A finite abelian group is sequenceable if and only if it has exactly one involution.
+\end{theorem}
+
+The obstruction is easy to see. In an abelian group the last partial sum is $\sum_{g\in G}g$, whatever the order. Pairing each $g$ with $-g$, this is the sum of the involutions, which is $0$ unless there is exactly one involution~\cite[Theorem~3]{oll25}. But $a_n=a_1=0$ is forbidden. The answer is read off the structure of the group.
+
+\topic{Non-abelian groups}
+
+Gordon~\cite{gor61} showed that $D_6$, $D_8$ and $Q_8$ are not sequenceable and that $D_{10}$ is. Between 1968 and 1973 the groups $D_{12}$, $D_{14}$, $D_{16}$ and the non-abelian groups of orders $21$, $27$, $39$, $55$ and $57$ were shown to be sequenceable~\cite[\S2]{oll25}. Anderson and Ollis showed by computer that every non-abelian group of order $10\leq n\leq255$ is sequenceable, and the dihedral groups of order at least $10$ and the soluble groups with exactly one involution, except $Q_8$, are known to be sequenceable~\cite[\S2.6]{oll25}.
+
+\begin{theorem}[M\"uyesser--Pokrovskiy~\cite{mp22}]\label{thm:mp-sequenceable}
+Every sufficiently large non-abelian group is sequenceable.
+\end{theorem}
+
+The only non-sequenceable groups known are the abelian groups without a unique involution, together with $D_6$, $D_8$ and $Q_8$~\cite[\S2.6]{oll25}.
+
+\topic{Ringel's R-sequencings}
+
+\begin{definition}[Ringel~\cite{rin74}]\label{def:r-sequencing}
+An \term{R-sequencing} of $G$ is an ordering $e=b_1,\dots,b_n$ of its elements with $b_1\cdots b_n=e$ and with $b_1,\ b_1b_2,\ \dots,\ b_1\cdots b_{n-1}$ distinct.
+\end{definition}
+
+Ringel was led to this notion by constructions in his proof of the Heawood map-colour theorem~\cite[\S1]{bfmpy25}. For example, $(0,1,2)$ is an R-sequencing of $\Z_3$, and $(0,1,2,4,3)$ is one of $\Z_5$, with partial sums $0,1,3,2,0$.
+
+\begin{fact}[Paige~\cite{pai51}; Ollis~\cite{oll25}, \S3.1]\label{fact:r-complete-mapping}
+An R-sequencing gives a complete mapping, and hence a pair of orthogonal Latin squares.
+\end{fact}
+
+For abelian groups the two notions exclude each other, since the last partial sum is fixed~\cite[\S3.1]{oll25}. The condition for R-sequencings is the Hall--Paige condition.
+
+\begin{theorem}[Friedlander--Gordon--Miller~\cite{fgm78}, conjectured; Alspach--Kreher--Pastine~\cite{akp17}, proved]\label{thm:fgm}
+An abelian group is R-sequenceable if and only if its Sylow $2$-subgroup is trivial or non-cyclic.
+\end{theorem}
+
+M\"uyesser and Pokrovskiy~\cite{mp22} showed that a large group is R-sequenceable if and only if it satisfies the Hall--Paige condition. More families were added in 2026.
+
+\begin{theorem}[Pastine--Soldera Ruiz~\cite{psr26}, Corollaries~2.7--2.8]\label{thm:psr}
+Each of the following groups is R-sequenceable:
+\begin{enumerate}
+\item groups whose order is coprime to $30$;
+\item nilpotent groups whose order is coprime to $6$, except possibly groups of order $5^k$.
+\end{enumerate}
+\end{theorem}
+
+Here a finite nilpotent group is a direct product of its Sylow subgroups. The paper proves the stronger property of R**-sequenceability. These are results about whole groups; they do not assert that every subset has a valid ordering, and the possible exception of $5$-groups remains.

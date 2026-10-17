@@ -1,0 +1,12 @@
+\begin{tikzpicture}[every node/.style={font=\footnotesize}]
+    \draw[->, thick] (0,0) -- (11,0) node[right] {$|S|$};
+    \foreach \x/\l in {0.2/$1$, 2.2/$C_\alpha$, 3.6/$e^{c(\log p)^{1/4}}$,
+                       7.2/$p^{1-c}$, 8.4/$p^{1-\alpha}$, 10.5/$p$}
+      {\draw (\x,0.08) -- (\x,-0.08); \node[below=3pt] at (\x,0) {\l};}
+    \draw[col2, line width=4pt] (0.2,0.55) -- (3.6,0.55);
+    \node[above] at (1.9,0.65) {Bedert--Kravitz, 2024};
+    \draw[col1, line width=4pt] (2.2,1.25) -- (8.4,1.25);
+    \node[above] at (5.3,1.35) {Pham--Sauermann, 2026};
+    \draw[col3, line width=4pt] (7.2,0.55) -- (10.5,0.55);
+    \node[above] at (8.85,0.65) {Bedert et al., 2025};
+  \end{tikzpicture}

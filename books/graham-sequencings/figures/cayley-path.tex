@@ -1,0 +1,13 @@
+\begin{tikzpicture}[>=Latex, every node/.style={font=\footnotesize}]
+    \foreach \i/\x in {0/0,1/2.2,2/4.4,3/6.6,4/8.8}
+      \node[overtex] (p\i) at (\x,0) {};
+    \draw[->,col1] (p0)--(p1) node[midway,above] {$s_1$};
+    \draw[->,col2] (p1)--(p2) node[midway,above] {$s_2$};
+    \draw[->,col3] (p2)--(p3) node[midway,above] {$s_3$};
+    \draw[->,col4] (p3)--(p4) node[midway,above] {$s_4$};
+    \node[below=3pt of p0] {$e$};
+    \node[below=3pt of p1] {$s_1$};
+    \node[below=3pt of p2] {$s_1s_2$};
+    \node[below=3pt of p3] {$s_1s_2s_3$};
+    \node[below=3pt of p4] {$s_1s_2s_3s_4$};
+  \end{tikzpicture}

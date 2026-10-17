@@ -92,3 +92,13 @@ books:
     source: books/hall-paige
     main: main.tex
     slides: books/hall-paige/slides/The-Hall-Paige-Conjecture-slides.pdf
+
+  - slug: graham-sequencings
+    title: Graham's Rearrangement Conjecture
+    subtitle: Sequenceable groups and rainbow paths in Cayley digraphs
+    category: surveys
+    lang: en
+    status: active
+    source: books/graham-sequencings
+    main: main.tex
+    slides: books/graham-sequencings/slides/Graham-Rearrangement-Conjecture-slides.pdf

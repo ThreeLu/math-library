@@ -1,0 +1,99 @@
+\section{Graham's conjecture and its rediscoveries}\label{sec:graham}
+
+\begin{conjecture}[Graham~\cite{gra71}; repeated by Erd\H{o}s--Graham~\cite{eg80}]\label{conj:graham}
+For every prime $p$, every $S\subseteq\Z_p\setminus\{0\}$ has a valid ordering: an ordering $s_1,\dots,s_k$ whose partial sums $s_1,\ s_1+s_2,\ \dots,\ s_1+\dots+s_k$ are distinct.
+\end{conjecture}
+
+Graham posed this in a paper on sums of integers taken from a fixed sequence, among problems on sumsets; according to later papers of Graham, it was partly motivated by juggling~\cite[\S1]{bfmpy25}, \cite{begw94}. In the dictionary of Section~\ref{sec:rainbow-paths}, it says that every $\operatorname{Cay}(\Z_p,S)$ has a rainbow path with $|S|-1$ arcs. The same question appeared independently twice more: from Heffter arrays and from cycle decompositions.
+
+\topic{Heffter arrays}
+
+\begin{definition}[Archdeacon~\cite{arc15}; Pasotti--Dinitz~\cite{pd22}, Definition~1.4]\label{def:heffter}
+A \term{Heffter array} $H(m,n;h,k)$ is an $m\times n$ partially filled array with entries in $\Z_v$, where $v=2nk+1$, such that
+\begin{enumerate}
+\item each row has $h$ filled cells and each column has $k$;
+\item for every $x\in\Z_v\setminus\{0\}$, exactly one of $x$ and $-x$ appears;
+\item every row and every column sums to $0$ in $\Z_v$.
+\end{enumerate}
+\end{definition}
+
+\begin{figure}[ht]
+\centering
+\input{figures/heffter}
+\caption{A Heffter array $H(3,5)$ over $\Z_{31}$~\cite[Example~1.3]{pd22}.}
+\label{fig:heffter}
+\end{figure}
+
+In the array of Figure~\ref{fig:heffter} the entries are $\pm1,\dots,\pm15$, each up to sign once. The row sums are $6+7-10-4+1=0$ and so on, and the column sums are $6-9+3=0$ and so on.
+
+An ordering $t_1,\dots,t_h$ of a row is \term{simple} if its partial sums are distinct~\cite[\S2]{pd22}; since the row sums to $0$, the last partial sum is $0$. The partial sums $0,t_1,t_1+t_2,\dots$ then form an $h$-cycle in $K_v$ whose edges have ``lengths'' $\pm t_1,\dots,\pm t_h$. The rows use every length $\pm x$ exactly once, so the cycles of all rows and all their translates $+g$, $g\in\Z_v$, use every edge of $K_v$ exactly once.
+
+\begin{fact}[Archdeacon~\cite{arc15}; Pasotti--Dinitz~\cite{pd22}, \S5]\label{fact:heffter}
+If every row and every column of $H(m,n;h,k)$ has a simple ordering, then $K_v$ has a cyclic decomposition into $h$-cycles, from the rows, and one into $k$-cycles, from the columns, and the two decompositions are orthogonal.
+\end{fact}
+
+\begin{example}\label{ex:heffter}
+In the $H(3,5)$ of Figure~\ref{fig:heffter}, the row $6,7,-10,-4,1$ has partial sums $6,13,3,30,0$, so this ordering is simple. The rows give $93$ five-cycles decomposing $K_{31}$, and the columns give $155$ triangles, which form a Steiner triple system of order $31$.
+\end{example}
+
+To use \emph{any} Heffter array one needs a simple ordering of \emph{every} row. Archdeacon, Dinitz, Mattern and Stinson asked for this in general.
+
+\begin{conjecture}[Archdeacon--Dinitz--Mattern--Stinson~\cite{admc16}]\label{conj:adms}
+For every $n$, every $A\subseteq\Z_n\setminus\{0\}$ has a valid ordering.
+\end{conjecture}
+
+For example~\cite[Example~1.1]{admc16}, $A=\{1,\dots,6\}\subseteq\Z_8$ in the order $1,6,3,4,5,2$ has partial sums $1,7,2,6,3,5$. Conjecture~\ref{conj:adms} is Graham's conjecture with $\Z_p$ replaced by $\Z_n$, ``although their work was independent of Graham''~\cite[\S3.7]{oll25}.
+
+\topic{Cycle decompositions}
+
+\begin{problem}[Alspach~\cite{als81}]\label{prob:alspach-cycles}
+For odd $n$, can $K_n$ be decomposed into cycles of any prescribed lengths $m_1,\dots,m_t$ with $3\leq m_i\leq n$ and $\sum m_i=\binom n2$? For even $n$, the same question for $K_n$ minus a perfect matching.
+\end{problem}
+
+\begin{theorem}[Bryant--Horsley--Pettersson~\cite{bhp14}]\label{thm:bhp}
+Yes: the obvious necessary conditions are sufficient.
+\end{theorem}
+
+Cycle decompositions of $K_n$ and $K_n\pm I$, and directed cycle decompositions of complete digraphs, were Alspach's motivation for a partial-sums question~\cite[\S1]{hos19}, citing Bode and Harborth. The bridge is the classical difference method. Write $C_n(A)$ for the circulant graph $\operatorname{Cay}(\Z_n,A\cup-A)$.
+
+\begin{proposition}[the difference method; cf.~\cite{pd22}, Proposition~5.5]\label{prop:difference}
+Let $A\subseteq\Z_n\setminus\{0\}$ with $|A|=k$ and $A\cap(-A)=\emptyset$, and let $s_0=0,s_1,\dots,s_k$ be the partial sums of an ordering $a_1,\dots,a_k$ of $A$.
+\begin{enumerate}
+\item If $s_0,\dots,s_k$ are distinct, the $n$ translates of the path $s_0s_1\cdots s_k$ decompose $C_n(A)$ into paths with $k$ edges.
+\item If $s_k=0$ and $s_0,\dots,s_{k-1}$ are distinct, the $n$ translates of the cycle $s_0s_1\cdots s_{k-1}$ decompose $C_n(A)$ into $k$-cycles.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+The edge $\{x,x+a\}$ with $a=a_t$ lies in exactly one translate, namely the translate by $g=x-s_{t-1}$; the condition $A\cap(-A)=\emptyset$ makes $a$, and hence $t$, unique. Counting confirms this: $C_n(A)$ has $nk$ edges, and there are $n$ blocks of $k$ edges each.
+\end{proof}
+
+\begin{example}\label{ex:z7-blocks}
+In $\Z_7$ (Figure~\ref{fig:z7-blocks}), the ordering $1,2,3$ has partial sums $0,1,3,6$. Since $\pm\{1,2,3\}$ is all of $\Z_7\setminus\{0\}$, the $7$ translates of the path decompose $K_7$. The ordering $1,2,4$ has partial sums $0,1,3,0$, and the $7$ translates of the triangle $\{0,1,3\}$ are the lines of the Fano plane, a Steiner triple system of order $7$.
+\end{example}
+
+\begin{figure}[ht]
+\centering
+\input{figures/z7-blocks}
+\caption{Left: the path $0,1,3,6$, whose $7$ translates decompose $K_7$. Right: the triangle $0,1,3$, whose $7$ translates form the Fano plane.}
+\label{fig:z7-blocks}
+\end{figure}
+
+\begin{conjecture}[Alspach; see Bode--Harborth~\cite{bh05}]\label{conj:alspach}
+Every $A\subseteq\Z_n\setminus\{0\}$ with $\sum_{a\in A}a\neq0$ has a strongly valid ordering, that is, one with $0,s_1,\dots,s_k$ distinct.
+\end{conjecture}
+
+Alspach's conjecture implies Conjecture~\ref{conj:adms}~\cite[Proposition~1.1]{admc16}. The whole family of conjectures is summarised below.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\small
+\begin{tabular}{p{0.34\textwidth}p{0.2\textwidth}p{0.36\textwidth}}
+\textbf{conjecture} & \textbf{group} & \textbf{in the dictionary}\\\hline
+Graham, 1971 & $\Z_p$ & rainbow path, $|S|-1$ arcs\\
+Archdeacon et al., 2015 & $\Z_n$ & rainbow path, $|S|-1$ arcs\\
+Alspach & $\Z_n$, $\sum A\neq0$ & rainbow path, $|S|$ arcs\\
+Ollis, Conjecture~38 & abelian & path with $|S|$ arcs, or cycle\\
+Bedert et al., Question~1.1 & any group & rainbow path, $|S|-1$ arcs
+\end{tabular}
+\end{center}

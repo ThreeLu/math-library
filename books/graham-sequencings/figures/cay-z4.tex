@@ -1,0 +1,12 @@
+\begin{tikzpicture}[>=Latex, scale=0.9, every node/.style={font=\footnotesize}]
+    \foreach \v/\a in {0/90,1/0,2/270,3/180} \coordinate (z\v) at (\a:1.5);
+    \foreach \v in {0,1,2,3} {
+      \pgfmathtruncatemacro{\w}{mod(\v+1,4)}
+      \draw[->, col1, shorten <=4pt, shorten >=4pt] (z\v) to[bend left=12] (z\w);
+      \pgfmathtruncatemacro{\u}{mod(\v+3,4)}
+      \draw[->, col3, shorten <=4pt, shorten >=4pt] (z\v) to[bend left=12] (z\u);
+      \pgfmathtruncatemacro{\x}{mod(\v+2,4)}
+      \draw[->, col2, shorten <=4pt, shorten >=4pt] (z\v) to[bend left=8] (z\x);}
+    \foreach \v/\a in {0/90,1/0,2/270,3/180} {
+      \node[overtex] at (z\v) {}; \node at (\a:1.85) {$\v$};}
+  \end{tikzpicture}

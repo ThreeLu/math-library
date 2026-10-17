@@ -1,0 +1,35 @@
+\section{Introduction}\label{sec:intro}
+
+This survey is about one question asked in several languages: given some elements of a group, can they be listed so that the partial products are all distinct? It arose from round dances and from agricultural experiments, was posed for whole groups by Gordon in 1961 and for subsets of $\Z_p$ by Graham in 1971, and was rediscovered twice more, from Heffter arrays and from cycle decompositions. Graham's version was settled for all sufficiently large primes in 2026.
+
+The common thread is a translation into graph theory. An ordering $s_1,\dots,s_k$ of elements of a group $G$ gives partial products
+\[
+p_0=e,\qquad p_i=s_1\cdots s_i ,
+\]
+and we may think of the step from $p_{i-1}$ to $p_i=p_{i-1}s_i$ as an arc of colour $s_i$:
+\[
+p_{i-1}\ \xrightarrow{\ \text{colour }s_i\ }\ p_i=p_{i-1}s_i.
+\]
+The terms are distinct exactly when the arcs have distinct colours, and the partial products are distinct exactly when the walk visits no vertex twice.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{ll}
+\textbf{group language} & \textbf{graph language}\\\hline
+the element $s_i$ & the colour of step $i$\\
+the partial product $p_i$ & the vertex reached at step $i$\\
+distinct terms $s_i$ & distinct arc colours (rainbow)\\
+distinct partial products & no repeated vertex
+\end{tabular}
+\end{center}
+
+Whether the initial vertex $p_0$ must also be distinct from the others matters: that choice changes the required path length by one~\cite[\S1]{bfmpy25}. Section~\ref{sec:rainbow-paths} makes the translation precise.
+
+We first recall two facts about groups. In the Cayley table of a finite group every row and every column contains each element once, since $xy=xy'$ implies $y=y'$, so the table is a Latin square. An \term{involution} is an element $g\neq e$ with $g^2=e$. For example, $\Z_4$ has one involution, namely $2$; $\Z_2^2$ has three; and $\Z_n$ with $n$ odd has none. Every finite abelian group is a product $\Z_{n_1}\times\dots\times\Z_{n_k}$, and it has \emph{exactly one} involution if and only if its Sylow $2$-subgroup is cyclic and non-trivial.
+
+\begin{figure}[ht]
+\centering
+\input{figures/z4-table}
+\caption{The Cayley table of $\Z_4$.}
+\label{fig:z4-table}
+\end{figure}

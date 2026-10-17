@@ -1,0 +1,119 @@
+\section{The translation: rainbow paths in Cayley digraphs}\label{sec:rainbow-paths}
+
+\begin{definition}\label{def:cayley-digraph}
+For $S\subseteq G\setminus\{e\}$, the \term{Cayley digraph} $\operatorname{Cay}(G,S)$ has vertex set $G$ and, for each $g\in G$ and $s\in S$, an arc $g\to gs$ of colour $s$. A directed path or cycle is \term{rainbow} if its arcs have distinct colours.
+\end{definition}
+
+\begin{lemma}\label{lem:cayley}
+\leavevmode
+\begin{enumerate}
+\item The colouring is proper: at every vertex there is exactly one out-arc and one in-arc of each colour.
+\item For $h\in G$, the map $x\mapsto hx$ sends the arc $g\to gs$ to the arc $hg\to hgs$ of the same colour.
+\end{enumerate}
+\end{lemma}
+
+\begin{figure}[ht]
+\centering
+\input{figures/cay-z4}
+\caption{$\operatorname{Cay}(\Z_4,\{1,2,3\})$, with colours $1$ (red), $2$ (blue) and $3$ (green).}
+\label{fig:cay-z4}
+\end{figure}
+
+In this language the three questions of the previous sections read as follows. Gordon asks for which finite groups $G$ the digraph $\operatorname{Cay}(G,G\setminus\{e\})$ contains a rainbow directed Hamilton path; Ringel asks for which $G$ it contains a rainbow directed cycle with $|G|-1$ arcs; and Graham asks whether, for a prime $p$ and $S\subseteq\Z_p\setminus\{0\}$, the digraph $\operatorname{Cay}(\Z_p,S)$ contains a rainbow directed path with $|S|-1$ arcs. Each reformulation is equivalent to the original question, as we now show.
+
+\begin{figure}[ht]
+\centering
+\input{figures/cayley-path}
+\caption{A directed rainbow path in a Cayley digraph records distinct partial products.}
+\label{fig:cayley-path}
+\end{figure}
+
+\begin{proposition}\label{prop:whole}
+Let $|G|=n$.
+\begin{enumerate}
+\item $G$ is sequenceable if and only if $\operatorname{Cay}(G,G\setminus\{e\})$ has a rainbow directed Hamilton path.
+\item $G$ is R-sequenceable if and only if $\operatorname{Cay}(G,G\setminus\{e\})$ has a rainbow directed cycle with $n-1$ arcs.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+For (i), let $e=b_1,b_2,\dots,b_n$ be a sequencing. The partial products $a_1=e,a_2,\dots,a_n$ are the $n$ vertices, and the arc $a_t\to a_{t+1}=a_tb_{t+1}$ has colour $b_{t+1}$; the colours $b_2,\dots,b_n$ are distinct. Conversely, let $v_1\to\dots\to v_n$ be a rainbow Hamilton path, with $v_{t+1}=v_tc_{t+1}$. By Lemma~\ref{lem:cayley}, $u_t=v_1^{-1}v_t$ is again a rainbow Hamilton path, now starting at $u_1=e$, and $(e,c_2,\dots,c_n)$ is a sequencing whose partial products are $u_1,\dots,u_n$. The proof of (ii) is the same: the cycle $e\to b_2\to b_2b_3\to\dots\to e$ uses every non-identity colour once.
+\end{proof}
+
+For subsets we need to distinguish two notions. Let $S\subseteq G\setminus\{e\}$, and for an ordering $s_1,\dots,s_k$ of $S$ let $p_0=e$ and $p_t=s_1\cdots s_t$. The ordering is \term{valid} if $p_1,\dots,p_k$ are distinct, and \term{strongly valid} if $p_0,p_1,\dots,p_k$ are distinct.
+
+\begin{proposition}\label{prop:subsets}
+Let $|S|=k$. In $\operatorname{Cay}(G,S)$:
+\begin{enumerate}
+\item $S$ has a valid ordering if and only if there is a rainbow directed path with $k-1$ arcs;
+\item $S$ has a strongly valid ordering if and only if there is a rainbow directed path with $k$ arcs;
+\item $S$ has an ordering with $p_0,\dots,p_{k-1}$ distinct and $p_k=e$ if and only if there is a rainbow directed cycle with $k$ arcs.
+\end{enumerate}
+\end{proposition}
+
+In (i) the path uses all but one colour; in (ii) and (iii) it uses every colour. The case (i) is the reason why one missing colour is enough.
+
+\begin{proof}
+Suppose a rainbow path $v_1\to\dots\to v_k$ uses the colours $c_2,\dots,c_k$, and let $c\in S$ be the unused colour. Translate every vertex by left multiplication with $h=cv_1^{-1}$; by Lemma~\ref{lem:cayley} all arc colours stay the same, and the first vertex becomes $hv_1=c$. The translated vertices are then the partial products of $(c,c_2,\dots,c_k)$, and they are distinct because the path is simple. Conversely, distinct partial products $p_1,\dots,p_k$ give the rainbow path $p_1\to\dots\to p_k$. For a strongly valid ordering, include $p_0=e$ to obtain $k$ arcs; if only $p_k=p_0$ repeats, the walk is a cycle.
+\end{proof}
+
+This is the equivalence behind the rainbow-path formulation of Graham's conjecture~\cite[\S1]{bfmpy25}.
+
+\begin{example}\label{ex:z7}
+Take $S=\{1,3,4\}\subseteq\Z_7$ (Figure~\ref{fig:z7-walks}). In the order $1,3,4$ the partial sums are $1,4,1$, so the walk from $0$ revisits $1$. In the order $3,4,1$ the partial sums are $3,0,1$, which form a rainbow path $3\to0\to1$; the arc $0\to3$ is the first step $s_1=3$. Four of the six orders of $S$ work.
+\end{example}
+
+\begin{figure}[ht]
+\centering
+\input{figures/z7-walks}
+\caption{$S=\{1,3,4\}$ in $\Z_7$: the order $1,3,4$ revisits $1$; the order $3,4,1$ gives the rainbow path $3\to0\to1$.}
+\label{fig:z7-walks}
+\end{figure}
+
+\topic{The dictionary}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\small
+\begin{tabular}{p{0.42\textwidth}p{0.5\textwidth}}
+\textbf{algebra} & \textbf{combinatorics}\\\hline
+group $G$, subset $S$ & $\operatorname{Cay}(G,S)$, arc $g\to gs$ coloured $s$\\
+left multiplication & colour-preserving automorphism\\
+valid ordering of $S$ & rainbow path with $|S|-1$ arcs\\
+strongly valid ordering of $S$ & rainbow path with $|S|$ arcs\\
+sequencing of $G$ & rainbow Hamilton path in $\operatorname{Cay}(G,G\setminus\{e\})$\\
+R-sequencing of $G$ & rainbow cycle with $|G|-1$ arcs\\
+sequencing $\Rightarrow$ complete Latin square & Hamilton path decomposition of the complete digraph\\
+complete mapping & rainbow perfect matching in $K_{n,n}$
+\end{tabular}
+\end{center}
+
+\topic{R-sequencings as cyclic vertex orders}
+
+Javaheri uses an equivalent convention for R-sequencings in which the group elements are vertices and the quotients are colours.
+
+\begin{definition}[Javaheri~\cite{jav26}, Definition~1.1]\label{def:r-star}
+List the non-identity elements of $G$ as $g_1,\dots,g_{\ell-1}$ so that the consecutive quotients
+\[
+g_1^{-1}g_2,\ \dots,\ g_{\ell-2}^{-1}g_{\ell-1},\ g_{\ell-1}^{-1}g_1
+\]
+also list $G\setminus\{e\}$. Such a list is an \term{R*-sequencing} if, for some cyclic index $i$, $g_{i-1}g_{i+1}=g_{i+1}g_{i-1}=g_i$.
+\end{definition}
+
+Here the $g_i$ are vertices and the quotients are arc colours, so the cycle uses every non-identity vertex and every non-identity colour. To compare with Definition~\ref{def:r-sequencing}, translate an R-cycle so that its missing vertex is $e$; translation preserves the quotient colours. The extra condition in the definition of R*-sequencings allows a construction on direct products.
+
+\begin{theorem}[Javaheri~\cite{jav26}, Theorem~1.3]\label{thm:javaheri}
+If $G$ has even order and is R*-sequenceable, and $H$ has odd order, then $G\times H$ is R*-sequenceable.
+\end{theorem}
+
+In the product group this gives a rainbow cycle of length $|G||H|-1$ using all non-identity quotient colours. The input about $H$ is a cyclic ordering whose adjacent products enumerate $H$ and whose positions respect inversion, a \term{symmetric harmonious ordering}. (The preprint appeared in November 2025, the journal version in 2026.)
+
+\topic{Why the graph language helps}
+
+The digraph $\operatorname{Cay}(G,S)$ is $|S|$-regular, with a proper $|S|$-colouring of its arcs. So any theorem about all such digraphs applies to every group and every $S$ at once.
+
+\begin{problem}[Schrijver's question; directed version by Buci\'c et al.~\cite{bfmpy25}]\label{prob:schrijver}
+Does every $d$-regular graph (digraph) whose edges (arcs) are properly coloured with $d$ colours contain a rainbow (directed) path with $d-1$ edges?
+\end{problem}
+
+By Proposition~\ref{prop:subsets}(i), a positive answer to the directed version would give a valid ordering of every $S\subseteq G\setminus\{e\}$ in every group. The recent progress on Graham's conjecture runs through such rainbow-path theorems~\cite{bfmpy25}.
