@@ -341,7 +341,11 @@ def render_tikz(s, src, out, lang, macros):
             for ext in (".aux", ".log", ".pdf", ".tex"):
                 (cache / (h + ext)).unlink(missing_ok=True)
         shutil.copy(svg, out / "figs" / svg.name)
-        return r"\includegraphics{figs/" + svg.name + "}"
+        # TikZ sizes suit a printed page; on screen show them 1.5 times larger
+        # (the stylesheet caps the width at the text column)
+        m = re.search(r'width="([\d.]+)(pt)?"', svg.read_text(encoding="utf-8")[:500])
+        size = f"[width={float(m.group(1)) * 1.5:.0f}pt]" if m else ""
+        return r"\includegraphics" + size + "{figs/" + svg.name + "}"
 
     return TIKZ.sub(one, s)
 
