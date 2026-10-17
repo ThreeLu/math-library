@@ -37,6 +37,7 @@ local NAMES = {
     question = '问题', thinking = '思考题', historynote = '历史注记',
     workedexample = '例题', proof = '证明', solution = '解答',
     claim = '断言', conjecture = '猜想', observation = '观察',
+    fact = '事实', problem = '问题',
   },
   en = {
     definition = 'Definition', proposition = 'Proposition', lemma = 'Lemma',
@@ -45,6 +46,7 @@ local NAMES = {
     thinking = 'Problem', historynote = 'Historical note',
     workedexample = 'Worked example', proof = 'Proof', solution = 'Solution',
     claim = 'Claim', conjecture = 'Conjecture', observation = 'Observation',
+    fact = 'Fact', problem = 'Problem',
   },
 }
 
@@ -54,11 +56,12 @@ local NUMBERED = {
   corollary = true, claim = true, conjecture = true, observation = true,
 }
 -- en books follow Montgomery: remarks and examples are numbered too.
-local NUMBERED_EN = {remark = true, example = true, question = true}
+local NUMBERED_EN = {remark = true, example = true, question = true, fact = true, problem = true}
 -- amsthm "definition" style (upright body) in en books.
 local UPRIGHT = {
   definition = true, remark = true, example = true, practice = true,
   question = true, thinking = true, historynote = true, workedexample = true,
+  problem = true,
 }
 
 local function warn(msg)
@@ -174,7 +177,25 @@ local function fix_link(el)
   return nil
 end
 
-local inline_filter = {Math = fix_math, Link = fix_link}
+-- \cite{a,b}[note] -> [1, 4, note], each number linking to the reference list
+local function fix_cite(c)
+  local out = pandoc.Inlines({pandoc.Str('[')})
+  for i, cit in ipairs(c.citations) do
+    if i > 1 then out:insert(pandoc.Str(', ')) end
+    local key = 'bib:' .. cit.id
+    out:insert(pandoc.Link({pandoc.Str(num(key))}, target(key), '', {class = 'yp-cite'}))
+    if #cit.suffix > 0 then
+      out:insert(pandoc.Str(', '))
+      local suf = pandoc.Inlines(cit.suffix)
+      if suf[1] and suf[1].t == 'Str' then suf[1].text = suf[1].text:gsub('^,%s*', '') end
+      out:extend(suf)
+    end
+  end
+  out:insert(pandoc.Str(']'))
+  return out
+end
+
+local inline_filter = {Math = fix_math, Link = fix_link, Cite = fix_cite}
 
 -- ---------------------------------------------------------------------
 --  Block helpers
@@ -189,7 +210,7 @@ local function take_head(blocks)
   for _, el in ipairs(first.content) do
     local m = marker(el)
     if m and info[m] == nil and (m == 'note' or m == 'group' or m == 'title'
-        or m == 'resume') then
+        or m == 'resume' or m == 'bibkey') then
       info[m] = el.content
     elseif el.t == 'Span' and el.attributes['label'] and not info.label then
       info.label = el.attributes['label']
@@ -289,7 +310,7 @@ end
 -- ---------------------------------------------------------------------
 local INDEXED = {
   definition = true, proposition = true, lemma = true, theorem = true,
-  corollary = true, conjecture = true,
+  corollary = true, conjecture = true, problem = true,
 }
 
 -- Plain inlines for the index: links become text, nothing page-relative.
@@ -536,6 +557,13 @@ local function handle_div(div, ctx)
   if cls == 'ypexercises' then return exercises_div(div, ctx) end
   if cls == 'ypprobleme' then return probleme_div(div, ctx) end
   if cls == 'ypquestions' then return questions_div(div, ctx) end
+  if cls == 'ypbibentry' then
+    local blocks = pandoc.List(div.content)
+    local info = take_head(blocks)
+    local key = 'bib:' .. stringify(info.bibkey or '')
+    prepend_inlines(blocks, {pandoc.Span({pandoc.Str('[' .. num(key) .. ']')}, {class = 'yp-biblabel'})})
+    return pandoc.Div(blocks, {id = key, class = 'yp-bibentry'})
+  end
   if cls == 'summary' then
     return pandoc.Div(walk_blocks(pandoc.List(div.content), ctx), {class = 'yp-summary'})
   end
@@ -574,6 +602,17 @@ walk_blocks = function(blocks, ctx)
       r = b
     elseif b.t == 'BulletList' then
       for k, item in ipairs(b.content) do b.content[k] = walk_blocks(pandoc.List(item), ctx) end
+      r = b
+    elseif b.t == 'Figure' then
+      -- "Figure 5." in front of the caption, numbered as in the PDF
+      local id = b.identifier
+      if id ~= '' and labels[id] and b.caption.long[1] then
+        local word = lang == 'zh' and '图 ' or 'Figure '
+        local cap = b.caption.long[1]
+        local c = pandoc.Inlines({pandoc.Span({pandoc.Str(word .. labels[id].num .. '.')}, {class = 'yp-fignum'}), pandoc.Space()})
+        c:extend(cap.content)
+        cap.content = c
+      end
       r = b
     elseif b.t == 'BlockQuote' then
       b.content = walk_blocks(pandoc.List(b.content), ctx)

@@ -17,6 +17,7 @@
 #    source     directory holding the LaTeX sources (main file inside)
 #    main       main .tex file, relative to `source`
 #    progress   optional progress table (进度.md format)
+#    slides     optional slides PDF, offered next to the book's own PDF
 # =====================================================================
 
 site:
@@ -81,3 +82,13 @@ books:
     category: research
     lang: en
     status: planned
+
+  - slug: hall-paige
+    title: The Hall–Paige Conjecture
+    subtitle: Rainbow perfect matchings in Cayley tables
+    category: surveys
+    lang: en
+    status: active
+    source: books/hall-paige
+    main: main.tex
+    slides: books/hall-paige/slides/The-Hall-Paige-Conjecture-slides.pdf

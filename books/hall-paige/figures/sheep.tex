@@ -1,0 +1,12 @@
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+    \foreach \b [count=\j] in {Ile de France,Beauce,Champagne,Picardy}
+      \node[align=center, text width=1.45cm] at (1.55*\j,0.05) {\b};
+    \foreach \d [count=\i] in {20 Feb,20 Mar,20 Apr,20 May}
+      \node at (0,-0.55*\i) {\d};
+    \foreach \row [count=\i] in {{potatoes,turnips,beets,oats \& peas},
+                                 {turnips,beets,oats \& peas,potatoes},
+                                 {beets,oats \& peas,potatoes,turnips},
+                                 {oats \& peas,potatoes,turnips,beets}}
+      \foreach \c [count=\j] in \row
+        \node[draw, minimum width=1.5cm, minimum height=0.55cm] at (1.55*\j,-0.55*\i) {\c};
+  \end{tikzpicture}

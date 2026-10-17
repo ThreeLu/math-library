@@ -1,0 +1,8 @@
+\begin{tikzpicture}[scale=0.42]
+    \foreach \i in {0,...,7}{\foreach \j in {0,...,7}{%
+      \pgfmathtruncatemacro{\pty}{mod(\i+\j,2)}%
+      \ifnum\pty=1 \fill[black!12] (\j,-\i) rectangle ++(1,-1);\fi}}
+    \draw (0,0) rectangle (8,-8);
+    \foreach \c [count=\r from 0] in {1,5,8,6,3,7,2,4}
+      \fill[BlkConjecture] (\c-0.5,-\r-0.5) circle (0.3);
+  \end{tikzpicture}

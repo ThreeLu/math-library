@@ -1,0 +1,12 @@
+\begin{tikzpicture}[every node/.style={font=\normalsize},
+      cell/.style={draw, minimum size=8mm, inner sep=0pt, outer sep=0pt}]
+    \foreach \i/\j in {0/0, 0/2, 2/0, 2/2}
+    \fill[RainbowAmber!40] (0.8*\j+0.4, -0.8*\i-0.4) rectangle ++(0.8,-0.8);
+    \foreach \i in {0,...,3}{%
+      \node[font=\footnotesize, text=CiteColor] at (0.0, -0.8*\i-0.8) {$\i$};
+      \node[font=\footnotesize, text=CiteColor] at (0.8*\i+0.8, -0.2) {$\i$};
+      \foreach \j in {0,...,3}{%
+        \pgfmathtruncatemacro{\v}{mod(\i+\j,4)}%
+        \node[cell] at (0.8*\j+0.8, -0.8*\i-0.8) {$\v$};}}
+    \node[font=\footnotesize] at (0.0,-0.2) {$+$};
+  \end{tikzpicture}

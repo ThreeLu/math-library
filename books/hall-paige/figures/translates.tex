@@ -1,0 +1,19 @@
+\begin{tikzpicture}[every node/.style={font=\normalsize},
+      cell/.style={draw, minimum size=8mm, inner sep=0pt, outer sep=0pt}]
+    \colorlet{suitS}{RainbowBlue!35}\colorlet{suitH}{RainbowRed!35}%
+    \colorlet{suitD}{RainbowAmber!45}\colorlet{suitC}{RainbowGreen!40}%
+    \foreach \i/\x/\row in {1/00/{00/S,01/C,10/H,11/D}, 2/11/{11/H,10/D,01/S,00/C},
+                            3/01/{01/D,00/H,11/C,10/S}, 4/10/{10/C,11/S,00/D,01/H}}{%
+      \node[font=\footnotesize, text=CiteColor] at (0.0, -0.8*\i) {$\x$};
+      \foreach \v/\u [count=\j] in \row
+        \node[cell, fill=suit\u] at (0.8*\j, -0.8*\i) {$\v$};}
+    \foreach \y [count=\j] in {00,01,10,11}
+      \node[font=\footnotesize, text=CiteColor] at (0.8*\j, -0.2) {$\y$};
+    \node[font=\footnotesize] at (0.0,-0.2) {$+$};
+    \foreach \u/\sym/\g/\y in {S/{$\spadesuit$}/{$T$}/-0.8,
+        H/{\textcolor{RainbowRed}{$\heartsuit$}}/{$T+10$}/-1.6,
+        D/{\textcolor{RainbowRed}{$\diamondsuit$}}/{$T+11$}/-2.4,
+        C/{$\clubsuit$}/{$T+01$}/-3.2}{%
+      \node[cell, fill=suit\u, minimum size=5.5mm] at (4.3,\y) {};
+      \node[anchor=west] at (4.65,\y) {\sym\ \ \g};}
+  \end{tikzpicture}

@@ -1,0 +1,27 @@
+\begin{tikzpicture}[every node/.style={font=\normalsize},
+      cell/.style={draw, minimum size=7.5mm, inner sep=0pt, outer sep=0pt}]
+    \def\cA{RainbowRed}\def\cK{RainbowBlue}\def\cQ{RainbowGreen}\def\cJ{black}%
+    \def\gA{00}\def\gQ{01}\def\gJ{10}\def\gK{11}%
+    \foreach \i/\x/\row in {1/00/{A,Q,J,K}, 2/11/{K,J,Q,A},
+                            3/01/{Q,A,K,J}, 4/10/{J,K,A,Q}}{%
+      \node[font=\footnotesize, text=CiteColor] at (0.0, -0.75*\i) {$\x$};
+      \foreach \r [count=\j] in \row
+        \node[cell] at (0.75*\j, -0.75*\i)
+          {\textcolor{\csname c\r\endcsname}{$\csname g\r\endcsname$}};}
+    \foreach \y [count=\j] in {00,01,10,11}
+      \node[font=\footnotesize, text=CiteColor] at (0.75*\j, -0.2) {$\y$};
+    \node[font=\footnotesize] at (0.0,-0.2) {$+$};
+    \foreach \i/\j in {1/1, 2/3, 3/4, 4/2}
+      \node[circled, minimum size=6.6mm] at (0.75*\j, -0.75*\i) {};
+    \node at (1.875,-3.85) {$\mathbb Z_2\times\mathbb Z_2$};
+    \begin{scope}[shift={(5.2,0)}]
+      \foreach \i in {0,...,3}{%
+        \node[font=\footnotesize, text=CiteColor] at (0.0, -0.75*\i-0.75) {$\i$};
+        \node[font=\footnotesize, text=CiteColor] at (0.75*\i+0.75, -0.2) {$\i$};
+        \foreach \j in {0,...,3}{%
+          \pgfmathtruncatemacro{\v}{mod(\i+\j,4)}%
+          \node[cell] at (0.75*\j+0.75, -0.75*\i-0.75) {$\v$};}}
+      \node[font=\footnotesize] at (0.0,-0.2) {$+$};
+      \node at (1.875,-3.85) {$\mathbb Z_4$};
+    \end{scope}
+  \end{tikzpicture}

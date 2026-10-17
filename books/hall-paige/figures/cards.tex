@@ -1,0 +1,10 @@
+\begin{tikzpicture}[every node/.style={font=\large},
+      card/.style={draw, minimum size=9mm, inner sep=0pt, outer sep=0pt}]
+    \def\S{$\spadesuit$}\def\C{$\clubsuit$}%
+    \def\H{\textcolor{RainbowRed}{$\heartsuit$}}%
+    \def\D{\textcolor{RainbowRed}{$\diamondsuit$}}%
+    \foreach \i/\row in {0/{A\S,Q\C,J\H,K\D}, 1/{K\H,J\D,Q\S,A\C},
+                         2/{Q\D,A\H,K\C,J\S}, 3/{J\C,K\S,A\D,Q\H}}{%
+      \foreach \c [count=\j] in \row
+        \node[card] at (0.9*\j, -0.9*\i) {\c};}
+  \end{tikzpicture}

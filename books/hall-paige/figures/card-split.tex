@@ -1,0 +1,29 @@
+\begin{tikzpicture}[every node/.style={font=\normalsize},
+      cell/.style={draw, minimum size=7mm, inner sep=0pt, outer sep=0pt}]
+    \def\S{$\spadesuit$}\def\C{$\clubsuit$}%
+    \def\H{\textcolor{RainbowRed}{$\heartsuit$}}%
+    \def\D{\textcolor{RainbowRed}{$\diamondsuit$}}%
+    % the cards
+    \foreach \i/\row in {0/{A\S,Q\C,J\H,K\D}, 1/{K\H,J\D,Q\S,A\C},
+                         2/{Q\D,A\H,K\C,J\S}, 3/{J\C,K\S,A\D,Q\H}}{%
+      \foreach \c [count=\j] in \row
+        \node[cell] at (0.7*\j, -0.7*\i) {\c};}
+    \node[font=\footnotesize] at (1.75,-3.0) {the cards};
+    \node at (3.75,-1.05) {$=$};
+    % the ranks
+    \begin{scope}[shift={(4.2,0)}]
+      \foreach \i/\row in {0/{A,Q,J,K}, 1/{K,J,Q,A}, 2/{Q,A,K,J}, 3/{J,K,A,Q}}{%
+        \foreach \c [count=\j] in \row
+          \node[cell] at (0.7*\j, -0.7*\i) {\c};}
+      \node[font=\footnotesize] at (1.75,-3.0) {the ranks};
+    \end{scope}
+    \node at (7.95,-1.05) {$+$};
+    % the suits
+    \begin{scope}[shift={(8.4,0)}]
+      \foreach \i/\row in {0/{\S,\C,\H,\D}, 1/{\H,\D,\S,\C},
+                           2/{\D,\H,\C,\S}, 3/{\C,\S,\D,\H}}{%
+        \foreach \c [count=\j] in \row
+          \node[cell] at (0.7*\j, -0.7*\i) {\c};}
+      \node[font=\footnotesize] at (1.75,-3.0) {the suits};
+    \end{scope}
+  \end{tikzpicture}

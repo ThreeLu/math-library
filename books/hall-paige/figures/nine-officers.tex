@@ -1,0 +1,5 @@
+\begin{tikzpicture}[every node/.style={font=\small}]
+    \foreach \row [count=\i] in {{A\alpha,B\beta,C\gamma},{C\beta,A\gamma,B\alpha},{B\gamma,C\alpha,A\beta}}
+      \foreach \c [count=\j] in \row
+        \node[lscell, minimum size=7.5mm] at (0.75*\j,-0.75*\i) {$\c$};
+  \end{tikzpicture}

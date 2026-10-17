@@ -1,0 +1,61 @@
+\section{From Latin squares to rainbow matchings}\label{sec:rainbow}
+
+Euler's question is about a pair of Latin squares, but it can be rephrased as a question about one. The key notion is that of a transversal.
+
+\begin{definition}\label{def:transversal}
+A \term{transversal} of a Latin square of order $n$ is a set of $n$ cells, one in each row and one in each column, containing $n$ distinct symbols.
+\end{definition}
+
+In Ozanam's puzzle the four cells holding the spades form a transversal of the square of ranks, and so do the cells of each of the other suits. The four suits therefore split the square of ranks into four disjoint transversals (Figure~\ref{fig:suit-transversals}). This is a general fact; see Wanless's survey~\cite{wan07}.
+
+\begin{figure}[ht]
+\centering
+\input{figures/suit-transversals}
+\caption{The ranks, shaded by suit. Each suit picks one cell in every row, every column and every rank.}
+\label{fig:suit-transversals}
+\end{figure}
+
+\topic{The dictionary}
+
+A Latin square $L$ of order $n$ can be read as an edge colouring of the complete bipartite graph $K_{n,n}$: the vertices on one side are the rows, the vertices on the other side are the columns, and the edge joining row $i$ to column $j$ receives the colour $L(i,j)$. The colouring is \term{proper}, meaning that edges sharing a vertex have different colours, precisely because each symbol occurs once in each row and once in each column. Conversely every proper $n$-edge-colouring of $K_{n,n}$ arises from a Latin square in this way. A transversal is then a perfect matching whose edges have distinct colours, that is, a \term{rainbow perfect matching} (Figure~\ref{fig:ranks-knn}).
+
+\begin{figure}[ht]
+\centering
+\input{figures/ranks-knn}
+\caption{The ranks as a proper colouring of $K_{4,4}$; the circled transversal is the bold rainbow perfect matching.}
+\label{fig:ranks-knn}
+\end{figure}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{rcl}
+Latin square of order $n$ & $\longleftrightarrow$ & proper $n$-edge-colouring of $K_{n,n}$\\
+transversal & $\longleftrightarrow$ & rainbow perfect matching\\
+orthogonal mate & $\longleftrightarrow$ & decomposition into $n$ rainbow perfect matchings
+\end{tabular}
+\end{center}
+
+The last line of this dictionary is the content of the following proposition.
+
+\begin{proposition}[cf.~\cite{wan07}]\label{prop:mate}
+For a Latin square $L$ of order $n$ the following are equivalent:
+\begin{enumerate}
+\item $L$ has an orthogonal mate;
+\item the cells of $L$ split into $n$ disjoint transversals;
+\item the edges of $K_{n,n}$, coloured by $L$, split into $n$ rainbow perfect matchings.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Suppose $M$ is an orthogonal mate of $L$ and fix a symbol $s$. The $n$ cells with $M=s$ lie in distinct rows and distinct columns, as $M$ is Latin, and they carry distinct $L$-symbols, as the pairs $(L,M)$ are distinct. So they form a transversal of $L$, and different symbols $s$ give disjoint transversals. Conversely, given $n$ disjoint transversals, number them $1,\dots,n$ and let $M(i,j)$ be the number of the transversal containing $(i,j)$. Each row and each column meets each transversal once, so $M$ is Latin, and transversal $s$ contains each symbol $a$ of $L$ exactly once, so the pair $(a,s)$ occurs exactly once. The equivalence of the last two statements is the dictionary: a transversal is a rainbow perfect matching.
+\end{proof}
+
+\topic{Does one rainbow perfect matching exist?}
+
+Euler asked for a decomposition into rainbow perfect matchings, but even one need not exist; we will see in Section~\ref{sec:complete-mappings} that the addition table of $\Z_4$ has none. The natural conjecture is that one can always come within one cell.
+
+\begin{conjecture}[Ryser--Brualdi--Stein; Ryser~\cite{rys67}, Stein~\cite{ste75}]\label{conj:rbs}
+Every Latin square of order $n$ has a partial transversal with $n-1$ cells, and a transversal if $n$ is odd.
+\end{conjecture}
+
+Montgomery~\cite{mon23} proved that for all large $n$ every Latin square of order $n$ has a partial transversal with $n-1$ cells, so the conjecture holds for large even $n$. The odd case, which asks for a full transversal, is open.

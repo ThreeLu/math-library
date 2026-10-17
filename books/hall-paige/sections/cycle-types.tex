@@ -1,0 +1,42 @@
+\section{Of which shape? Orthomorphisms and cycle types}\label{sec:cycle-types}
+
+A complete mapping is a permutation of $G$, so it has a cycle type. It is more convenient to work with a closely related notion.
+
+\begin{definition}\label{def:orthomorphism}
+A bijection $\psi\colon G\to G$ is an \term{orthomorphism} if $x\mapsto x^{-1}\psi(x)$ is also a bijection. Equivalently, choosing in row $x$ of the Cayley table the cell with symbol $\psi(x)$ gives a transversal~\cite{wan07}.
+\end{definition}
+
+For example, the spade transversal of Ozanam's square, read as a permutation of $\Z_2\times\Z_2$, fixes $00$ and cycles $01\to10\to11\to01$ (Figure~\ref{fig:ortho-cycle}).
+
+\begin{figure}[ht]
+\centering
+\input{figures/ortho-cycle}
+\caption{The spade transversal as a permutation of $\Z_2\times\Z_2$.}
+\label{fig:ortho-cycle}
+\end{figure}
+
+Prescribed cycle types have long-standing applications, as recorded by M\"uyesser~\cite{muy23}. A single cycle through all non-identity elements appears in Ringel's solution of the Heawood map-colouring problem, and orthomorphisms whose non-identity elements fall into disjoint $6$-cycles give cyclic Steiner triple systems.
+
+\begin{conjecture}[Friedlander--Gordon--Tannenbaum~\cite{fgt81}]\label{conj:fgt}
+Let $G$ be an abelian group of order $n$ satisfying the Hall--Paige condition, and let $k\geq2$ with $k\mid n-1$. Then some orthomorphism of $G$ fixes $0$ and permutes the other elements in disjoint $k$-cycles.
+\end{conjecture}
+
+Figure~\ref{fig:ortho-cycle} is the case $G=\Z_2\times\Z_2$, $k=3$. Friedlander, Gordon and Tannenbaum~\cite{fgt81} proved the conjecture for $|G|\leq15$ and for abelian $p$-groups with $p\geq3$. Even the case $k=3$ with $G$ cyclic remained open for forty years.
+
+\begin{theorem}[M\"uyesser~\cite{muy23}]\label{thm:fgt}
+The Friedlander--Gordon--Tannenbaum conjecture holds for all sufficiently large abelian groups.
+\end{theorem}
+
+\topic{Cycle types as rainbow cycle factors}
+
+Let $\operatorname{Cay}(G,G\setminus\{e\})$ denote the complete directed Cayley graph in which the arc $x\to xs$ has colour $s$; equivalently, the arc $x\to y$ has colour $x^{-1}y$.
+
+\begin{proposition}\label{prop:cyc}
+Orthomorphisms $\psi$ of $G$ with $\psi(e)=e$ that permute $G\setminus\{e\}$ in cycles of lengths $k_1,k_2,\dots$ correspond exactly to rainbow spanning families of vertex-disjoint directed cycles of lengths $k_1,k_2,\dots$ on $G\setminus\{e\}$ in $\operatorname{Cay}(G,G\setminus\{e\})$.
+\end{proposition}
+
+\begin{proof}
+Given $\psi$, use the arcs $x\to\psi(x)$ for $x\neq e$. Their colours $x^{-1}\psi(x)$ are distinct because $\psi$ is an orthomorphism, and none of them is $e$, because $e^{-1}\psi(e)=e$ is already taken. Conversely, a rainbow cycle factor on $G\setminus\{e\}$ uses $|G|-1$ distinct non-identity colours, that is, each non-identity colour exactly once. Setting $\psi(x)$ to be the successor of $x$ on its cycle and $\psi(e)=e$, the map $x\mapsto x^{-1}\psi(x)$ takes every value exactly once.
+\end{proof}
+
+A single cycle of length $|G|-1$ is one of Ringel's R-sequencings, and a factor of triangles is the case $k=3$ of the Friedlander--Gordon--Tannenbaum conjecture.

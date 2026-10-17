@@ -1,0 +1,55 @@
+% =====================================================================
+%  yp-figures.sty — colours and TikZ styles shared by the figures.
+%
+%  Loaded by books that draw TikZ figures, and by tools/build.py when it
+%  compiles each tikzpicture on its own into an SVG for the web page.
+%  The colours and styles are those of the talk series' rainbowtalk.sty,
+%  so figures can move between slides and notes unchanged.
+% =====================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{yp-figures}[2026/10/17 v1.0 shared figure styles]
+
+\RequirePackage{xcolor}
+\RequirePackage{tikz}
+\usetikzlibrary{calc,positioning,matrix,arrows.meta,decorations.pathreplacing}
+
+% Highlight colours
+\definecolor{RainbowRed}{HTML}{D0021B}
+\definecolor{RainbowBlue}{HTML}{4A90E2}
+\definecolor{RainbowGreen}{HTML}{7ED321}
+\definecolor{RainbowAmber}{HTML}{F5A623}
+\definecolor{RainbowViolet}{HTML}{9013FE}
+\definecolor{CiteColor}{HTML}{5B6B8C}
+
+% One colour per kind of statement (used for marks inside figures)
+\definecolor{BlkDefinition}{HTML}{6E7C9E}
+\definecolor{BlkTheorem}{HTML}{1F4E79}
+\definecolor{BlkConjecture}{HTML}{51247A}
+\definecolor{BlkProblem}{HTML}{0F6E7D}
+\definecolor{BlkExample}{HTML}{4E8F5B}
+\definecolor{BlkOpen}{HTML}{C0651A}
+
+\tikzset{
+  % Latin-square grid
+  lscell/.style   = {draw, minimum size=5.2mm, inner sep=0pt, anchor=center},
+  lslabel/.style  = {inner sep=1pt},
+  circled/.style  = {draw, circle, inner sep=0.6pt, minimum size=4.6mm},
+  dcircled/.style = {draw, dashed, circle, inner sep=0.6pt, minimum size=4.6mm},
+  % graph drawings
+  bvertex/.style  = {circle, fill, inner sep=1.1pt},
+  overtex/.style  = {circle, draw, fill=white, inner sep=1.3pt},
+  % line styles standing for colours (monochrome figures)
+  sym1/.style     = {dotted, thick},
+  sym2/.style     = {gray, thick},
+  sym3/.style     = {dashed, thick},
+  sym4/.style     = {solid, thick},
+  % real colours
+  col1/.style     = {RainbowRed, thick},
+  col2/.style     = {RainbowBlue, thick},
+  col3/.style     = {RainbowGreen, thick},
+  col4/.style     = {black, thick},
+  col5/.style     = {RainbowAmber, thick},
+  col6/.style     = {RainbowViolet, thick},
+}
+
+\endinput

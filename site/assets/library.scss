@@ -347,3 +347,14 @@ html[lang|="zh"] .yp-toc-title { font-family: var(--yp-song); }
   .yp-idx-item { padding-left: 0; .yp-idx-label { position: static; display: block; width: auto; } }
   .yp-hero-title { font-size: 2.1rem; }
 }
+
+// Reference list: [n] hanging in the margin
+.yp-bibentry { position: relative; padding-left: 2.6rem; margin: 0.5em 0; font-size: 0.95em; line-height: 1.6;
+  p { margin: 0; text-align: left !important; } }
+.yp-biblabel { position: absolute; left: 0; width: 2.2rem; color: var(--yp-muted); font-variant-numeric: tabular-nums; }
+.yp-bibentry:target { background: rgba(155, 44, 44, 0.05); }
+a.yp-cite { color: var(--yp-accent); }
+.yp-book-files { display: flex; gap: 0.4rem; }
+.yp-body figure img, .yp-body .quarto-figure img { max-width: 100%; height: auto; }
+.yp-body figcaption, .yp-body .figure-caption { font-family: var(--yp-sans); font-size: 0.82rem; color: var(--yp-muted); text-align: center; margin-top: 0.5rem; }
+.yp-fignum { color: var(--yp-ink); font-weight: 600; }

@@ -1,0 +1,31 @@
+\begin{tikzpicture}[every node/.style={font=\normalsize},
+      cell/.style={draw, minimum size=7.6mm, inner sep=0pt, outer sep=0pt}]
+    \def\cA{RainbowRed}\def\cK{RainbowBlue}\def\cQ{RainbowGreen}\def\cJ{black}%
+    \foreach \i/\row in {1/{A,Q,J,K}, 2/{K,J,Q,A}, 3/{Q,A,K,J}, 4/{J,K,A,Q}}{%
+      \node[font=\footnotesize] at (0.2, -0.76*\i) {$\i$};
+      \foreach \r [count=\j] in \row
+        \node[cell] at (0.76*\j, -0.76*\i) {\textcolor{\csname c\r\endcsname}{\r}};}
+    \foreach \j in {1,...,4} \node[font=\footnotesize] at (0.76*\j, -0.2) {$\j$};
+    \node[font=\footnotesize, anchor=east] at (0.05, -0.2) {row\,\textbackslash\,col};
+    \foreach \i/\j in {1/1, 2/3, 3/4, 4/2}
+      \node[circled, minimum size=6.4mm] at (0.76*\j, -0.76*\i) {};
+    \node at (4.45,-1.9) {$\Longleftrightarrow$};
+    \begin{scope}[shift={(5.6,0)}]
+      \node[font=\footnotesize] at (0,-0.2) {rows};
+      \node[font=\footnotesize] at (2.6,-0.2) {columns};
+      \foreach \i in {1,...,4}{%
+        \node[bvertex] (L\i) at (0,-0.76*\i) {};
+        \node[bvertex] (R\i) at (2.6,-0.76*\i) {};
+        \node[left=3pt of L\i, font=\footnotesize] {$\i$};
+        \node[right=3pt of R\i, font=\footnotesize] {$\i$};}
+      \foreach \i/\row in {1/{A,Q,J,K}, 2/{K,J,Q,A}, 3/{Q,A,K,J}, 4/{J,K,A,Q}}{%
+        \foreach \r [count=\j] in \row
+          \draw[\csname c\r\endcsname, opacity=.35] (L\i) -- (R\j);}
+      \foreach \i/\j/\r in {1/1/A, 2/3/Q, 3/4/J, 4/2/K}
+        \draw[\csname c\r\endcsname, line width=2.2pt] (L\i) -- (R\j);
+      \node[align=left, font=\footnotesize, anchor=west] at (3.3,-1.9)
+        {edge $ij$ gets the\\ colour of cell $(i,j)$:\\[2pt]
+         \textcolor{RainbowRed}{A}, \textcolor{RainbowBlue}{K},
+         \textcolor{RainbowGreen}{Q}, J};
+    \end{scope}
+  \end{tikzpicture}

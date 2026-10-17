@@ -1,0 +1,104 @@
+\section{How many transversals? Semiqueens and queens}\label{sec:counting}
+
+\topic{Counting complete mappings}
+
+The first result on the number of transversals concerned cyclic groups and was conjectured by Vardi.
+
+\begin{theorem}[Eberhard--Manners--Mrazovi\'c~\cite{emm19}; Vardi's conjecture]\label{thm:emm19}
+For odd $n$, the Cayley table of $\Z_n$ has
+\[
+\bigl(e^{-1/2}+o(1)\bigr)\,n\,\frac{n!^2}{n^n}
+\]
+transversals.
+\end{theorem}
+
+Equivalently, this counts the ways to place $n$ non-attacking \term{semiqueens} on an $n\times n$ board wrapped into a torus; a semiqueen moves along rows, columns and one family of diagonals. Vardi~\cite{var91} conjectured in 1991 that the count lies between $c_1^n\,n!$ and $c_2^n\,n!$ for constants $0<c_1\leq c_2<1$, the lower bound being the hard part. Theorem~\ref{thm:emm} extends Theorem~\ref{thm:emm19} to every group, with the same constant $e^{-1/2}$ and an extra factor $|G^{ab}|$, and has the following consequence.
+
+\begin{corollary}[Eberhard--Manners--Mrazovi\'c~\cite{emm22}]\label{cor:most}
+For large $k$, among all groups of order $2^k$, the elementary abelian group $\Z_2^k$ has the most complete mappings.
+\end{corollary}
+
+\topic{The $n$-queens problem}
+
+The semiqueens are a relative of a much older puzzle.
+
+\begin{problem}[Bezzel~\cite{bez1848}, 1848]\label{prob:queens}
+Place eight queens on a chessboard so that no two attack each other, that is, no two share a row, a column or a diagonal.
+\end{problem}
+
+Nauck~\cite{nau1850} found all $92$ solutions in 1850; Gauss also worked on the puzzle. Pauls~\cite{pau1874} showed in 1874 that on an $n\times n$ board $n$ non-attacking queens fit for every $n\notin\{2,3\}$. Let $Q(n)$ denote the number of solutions, so that $Q(8)=92$; the question is how $Q(n)$ grows.
+
+\begin{figure}[ht]
+\centering
+\input{figures/eight-queens}
+\caption{A solution of the eight-queens puzzle.}
+\label{fig:eight-queens}
+\end{figure}
+
+Number the rows and the columns $1,\dots,n$. With one queen in each row and each column, the queen of row $j$ stands in column $\sigma(j)$ for a permutation $\sigma$, and the square $(j,c)$ lies on the diagonals $c+j=\text{const}$ and $c-j=\text{const}$.
+
+\begin{fact}\label{fact:queens}
+A permutation $\sigma$ is a solution if and only if the $n$ numbers $\sigma(j)+j$ are distinct and the $n$ numbers $\sigma(j)-j$ are distinct.
+\end{fact}
+
+For the solution in Figure~\ref{fig:eight-queens}:
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{r|cccccccc}
+$j$ & 1&2&3&4&5&6&7&8\\\hline
+$\sigma(j)$ & 1&5&8&6&3&7&2&4\\
+$\sigma(j)+j$ & 2&7&11&10&8&13&9&12\\
+$\sigma(j)-j$ & 0&3&5&2&$-2$&1&$-5$&$-4$
+\end{tabular}
+\end{center}
+
+\topic{P\'olya's toroidal board}
+
+P\'olya~\cite{pol1918} studied in 1918 the \emph{doubly periodic} solutions: those that remain non-attacking when the board is repeated to fill the whole plane (Figure~\ref{fig:queens-tiled}). Equivalently the diagonals wrap around, the board is a torus, and the numbers $\sigma(j)+j$ and $\sigma(j)-j$ must be distinct modulo $n$. The torus is the more regular problem, with $n$ rows, $n$ columns and $n$ diagonals in each direction. A toroidal solution is also an ordinary one, so the number $T(n)$ of toroidal solutions satisfies $T(n)\leq Q(n)$, and P\'olya showed that $T(n)>0$ if and only if $n\equiv1,5\pmod6$.
+
+\begin{figure}[ht]
+\centering
+\input{figures/queens-tiled}
+\caption{Five queens on the $5\times5$ torus, repeated periodically: still no attacks.}
+\label{fig:queens-tiled}
+\end{figure}
+
+On the torus, both puzzles are statements about the group $\Z_n$:
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{lll}
+\textbf{on the $n\times n$ torus} & \textbf{condition on $\sigma$ (mod $n$)} & \textbf{in the group $\Z_n$}\\\hline
+$n$ semiqueens & $\sigma(j)+j$ distinct & a complete mapping\\
+$n$ queens & $\sigma(j)+j$ and $\sigma(j)-j$ distinct & a strong complete mapping
+\end{tabular}
+\end{center}
+Semiqueens exist if and only if $n$ is odd, which is the Hall--Paige conjecture for $\Z_n$; queens exist if and only if $n\equiv1,5\pmod6$, by P\'olya's theorem. In Figure~\ref{fig:toroidal-queens}, where $\sigma(j)=2j$ on $\Z_5$, both $\sigma(j)+j=3j$ and $\sigma(j)-j=j$ are bijections of $\Z_5$.
+
+\begin{figure}[ht]
+\centering
+\input{figures/toroidal-queens}
+\caption{Five non-attacking queens on the $5\times5$ torus: $\sigma(j)=2j$ on $\Z_5$.}
+\label{fig:toroidal-queens}
+\end{figure}
+
+\topic{Counting queens}
+
+Rivin, Vardi and Zimmermann~\cite{rvz94} conjectured in 1994 that $\log Q(n)$ and $\log T(n)$ are both $\Theta(n\log n)$. Luria~\cite{lur17} showed that $T(n)\leq\bigl((1+o(1))\,ne^{-3}\bigr)^n$ and conjectured that this is tight. Bowtell and Keevash~\cite{bk21} proved that $T(n)=\bigl((1+o(1))\,ne^{-3}\bigr)^n$ for $n\equiv1,5\pmod6$, and Luria and Simkin~\cite{ls21} and Bowtell and Keevash~\cite{bk21} showed that $Q(n)\geq\bigl((1-o(1))\,ne^{-3}\bigr)^n$. Finally Simkin~\cite{sim21} determined the ordinary count:
+\[
+Q(n)=\bigl((1\pm o(1))\,ne^{-\alpha}\bigr)^n,\qquad \alpha=1.942\pm0.003,
+\]
+which is about $(0.143\,n)^n$. The tools are those of the Hall--Paige problem: a random greedy process, followed by absorption.
+
+Two further results concern completion and symmetry.
+
+\begin{theorem}[Glock--Munh\'a Correia--Sudakov~\cite{gms22}]\label{thm:completion}
+For large $n$, any $n/60$ non-attacking queens on the $n\times n$ board can be completed to a solution, while some $\approx n/4$ non-attacking queens cannot.
+\end{theorem}
+
+The completion question goes back to Nauck~\cite{nau1850}, and the proof goes through rainbow matchings in bipartite graphs.
+
+\begin{theorem}[Dai--Kelly~\cite{dk24}]\label{thm:reflecting}
+For all large $n$ there is a reflecting $n$-queens configuration, answering questions of Klarner (1967) and Slater.
+\end{theorem}
+
+The group-theoretic generalisation of toroidal queens, strong complete mappings, is the subject of Problem~\ref{prob:strong}.

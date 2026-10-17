@@ -67,6 +67,7 @@
 \newtheorem{claim}[theorem]{Claim}
 \newtheorem{conjecture}[theorem]{Conjecture}
 \newtheorem{observation}[theorem]{Observation}
+\newtheorem{fact}[theorem]{Fact}
 \newtheorem*{theorem*}{Theorem}
 \newtheorem*{lemma*}{Lemma}
 \newtheorem*{proposition*}{Proposition}
@@ -78,6 +79,8 @@
 \newtheorem{remark}[theorem]{Remark}
 \newtheorem{example}[theorem]{Example}
 \newtheorem{question}[theorem]{Question}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem*{problem*}{Problem}
 \newtheorem*{definition*}{Definition}
 \newtheorem*{remark*}{Remark}
 \newtheorem*{example*}{Example}

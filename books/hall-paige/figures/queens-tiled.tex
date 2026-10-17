@@ -1,0 +1,12 @@
+\begin{tikzpicture}[scale=0.3]
+    \foreach \bx in {0,1}{\foreach \by in {0,1}{%
+      \foreach \i in {0,...,4}{\foreach \j in {0,...,4}{%
+        \pgfmathtruncatemacro{\pty}{mod(\i+\j,2)}%
+        \ifnum\pty=0 \fill[black!8] (5*\bx+\j,-5*\by-\i) rectangle ++(1,-1);\fi}}
+      \foreach \j in {0,...,4}{%
+        \pgfmathtruncatemacro{\c}{mod(2*\j,5)}%
+        \fill[BlkConjecture] (5*\bx+\c+0.5,-5*\by-\j-0.5) circle (0.32);}}}
+    \draw[step=1, black!30] (0,0) grid (10,-10);
+    \draw[very thick] (0,0) rectangle (10,-10);
+    \draw[very thick] (5,0) -- (5,-10) (0,-5) -- (10,-5);
+  \end{tikzpicture}

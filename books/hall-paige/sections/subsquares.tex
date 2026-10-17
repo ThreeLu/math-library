@@ -1,0 +1,70 @@
+\section{In which subsets? Near transversals and subsquares}\label{sec:subsquares}
+
+\topic{Deleting one row and one column}
+
+A \term{near transversal} of a Latin square of order $n$ is a set of $n-1$ cells in distinct rows and distinct columns with distinct symbols. Since $\Z_{2m}$ has no transversal, $n-1$ is the best one can ask for in general.
+
+\begin{theorem}[Goddyn--Halasz~\cite{gh20}]\label{thm:near}
+Every Cayley table, and indeed every Latin square main-class equivalent to one, has a near transversal.
+\end{theorem}
+
+This is the Ryser--Brualdi--Stein conjecture for Cayley tables. In the language of Theorem~\ref{thm:random-hp}, the near transversal of $\Z_4$ in Figure~\ref{fig:z4-near} is a transversal for $X=G\setminus\{3\}$, $Y=G\setminus\{1\}$ and $Z=G\setminus\{2\}$, and indeed $\sum X+\sum Y=3+1=0=\sum Z$ in $\Z_4$. M\"uyesser and Pokrovskiy~\cite{mp25a} gave a second proof of Theorem~\ref{thm:near} for large groups in this way.
+
+\begin{figure}[ht]
+\centering
+\input{figures/z4-near}
+\caption{The Cayley table of $\Z_4$ with row $3$, column $1$ and symbol $2$ deleted. The circled cells are a transversal of what is left.}
+\label{fig:z4-near}
+\end{figure}
+
+\topic{Subsquares and Snevily's conjecture}
+
+Keeping the rows in a set $A$ and the columns in a set $B$ with $|A|=|B|=k$ gives a $k\times k$ \term{subsquare} $A\times B$. In an abelian group, a transversal of it is a bijection $\pi\colon A\to B$ for which the $k$ sums $a+\pi(a)$ are distinct. Deleting rows and columns should only make a transversal easier to find, \emph{unless} what is left is itself the table of a group with no transversal (Figures~\ref{fig:z5-subsquare} and~\ref{fig:z4-subsquare}).
+
+\begin{figure}[ht]
+\centering
+\input{figures/z5-subsquare}
+\caption{The subsquare $\{0,1,3\}\times\{0,2,4\}$ of the Cayley table of $\Z_5$ has a transversal.}
+\label{fig:z5-subsquare}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\input{figures/z4-subsquare}
+\caption{The subsquare $\{0,2\}\times\{0,2\}$ of the Cayley table of $\Z_4$ is the table of $\Z_2$, and has no transversal.}
+\label{fig:z4-subsquare}
+\end{figure}
+
+Snevily's note~\cite{sne99} contains four conjectures; the two below are his third and second, as combined by M\"uyesser and Pokrovskiy~\cite{mp25a}.
+
+\begin{conjecture}[Snevily~\cite{sne99}]\label{conj:snevily}
+Let $G$ be abelian and $A,B\subseteq G$ with $|A|=|B|$.
+\begin{enumerate}
+\item If $|G|$ is odd, then $A\times B$ has a transversal.
+\item If $G\cong\Z_{2k}$, then $A\times B$ has a transversal unless $g_1+A=g_2+B=H$ for some cyclic subgroup $H$ of even order.
+\end{enumerate}
+\end{conjecture}
+
+The first part says that in an abelian group of odd order \emph{every} subsquare has a transversal; for $k=|G|$ it is the odd case of the Hall--Paige conjecture, and Snevily notes that this case follows from a theorem of Hall~\cite{hall52}. The second part says that in $\Z_{2k}$ the only subsquares without a transversal are translates of the table of a cyclic subgroup of even order.
+
+Progress on the first part was algebraic. Alon~\cite{alon00} proved it for $\Z_p$ by the Combinatorial Nullstellensatz, even when $A$ is a \emph{sequence} of $k<p$ elements with repetitions allowed. Dasgupta, K\'arolyi, Serra and Szegedy~\cite{dkss01} proved it for every cyclic group of odd order, and Arsovski~\cite{ars11} for every abelian group of odd order, by linear algebra over characters. There was no partial progress on the second part before 2025.
+
+The second part cannot be stated for all abelian groups of even order, as the following example shows.
+
+\begin{example}[Akbari--Alipour~\cite{aa04}]\label{ex:akbari-alipour}
+In $G=\Z_2^k$ take $a_1\neq a_2$ and $b_1\neq b_2$ with $a_1+a_2+b_1+b_2=0$, and let $A=G\setminus\{a_1,a_2\}$ and $B=G\setminus\{b_1,b_2\}$. Then $A\times B$ has no transversal, although it is not the table of a subgroup.
+\end{example}
+
+\topic{All groups, large subsquares}
+
+M\"uyesser and Pokrovskiy showed that for large subsquares these are the only obstructions, in every group.
+
+\begin{theorem}[M\"uyesser--Pokrovskiy~\cite{mp25a}]\label{thm:subsquares}
+Let $n$ be large, let $G$ be a group and let $A,B\subseteq G$ with $|A|=|B|=n$. Then $A\times B$ has a transversal unless, for some $g_1,g_2\in G$ and some subgroup $H\leq G$, one of the following holds:
+\begin{enumerate}
+\item $H$ fails the Hall--Paige condition, $A=g_1H$ and $B=Hg_2$;
+\item $H\cong\Z_2^k$, $g_1A=H\setminus\{a_1,a_2\}$ and $g_2B=H\setminus\{b_1,b_2\}$ with $a_1+a_2+b_1+b_2=0$.
+\end{enumerate}
+\end{theorem}
+
+In the first case $A\times B$ is a copy of the table of $H$, which has no transversal by the Hall--Paige theorem; the second case is the example of Akbari and Alipour. Nothing else goes wrong, and in particular both parts of Snevily's conjecture hold for large subsquares. Whether the same is true for every $n$ is Conjecture~\ref{conj:mp-every-n} below.

@@ -1,0 +1,13 @@
+\begin{tikzpicture}[every node/.style={font=\large},
+      cell/.style={draw, minimum size=10mm, inner sep=0pt, outer sep=0pt}]
+    \colorlet{suitS}{RainbowBlue!35}\colorlet{suitH}{RainbowRed!35}%
+    \colorlet{suitD}{RainbowAmber!45}\colorlet{suitC}{RainbowGreen!40}%
+    \foreach \i/\row in {0/{A/S,Q/C,J/H,K/D}, 1/{K/H,J/D,Q/S,A/C},
+                         2/{Q/D,A/H,K/C,J/S}, 3/{J/C,K/S,A/D,Q/H}}{%
+      \foreach \r/\u [count=\j] in \row
+        \node[cell, fill=suit\u] at (1.0*\j, -1.0*\i) {\r};}
+    \foreach \u/\sym/\y in {S/{$\spadesuit$}/0, H/{\textcolor{RainbowRed}{$\heartsuit$}}/-1,
+                            D/{\textcolor{RainbowRed}{$\diamondsuit$}}/-2, C/{$\clubsuit$}/-3}{%
+      \node[cell, fill=suit\u, minimum size=6mm] at (5.4,\y) {};
+      \node[anchor=west, font=\normalsize] at (5.8,\y) {\sym};}
+  \end{tikzpicture}

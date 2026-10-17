@@ -1,0 +1,73 @@
+\section{Open problems}\label{sec:open}
+
+Each problem below is stated first in its algebraic form and then, through the dictionary of Section~\ref{sec:proof}, as a problem about rainbow subgraphs. For large groups the algebraic obstruction is usually the only one; for small groups, and beyond groups, much less is known.
+
+\topic{How many?}
+
+A bijection $\phi\colon G\to G$ is a \term{strong complete mapping} if both $x\mapsto x\,\phi(x)$ and $x\mapsto x^{-1}\phi(x)$ are bijections. For $\Z_n$ these are exactly the toroidal $n$-queens solutions of Section~\ref{sec:counting}.
+
+\begin{problem}[Evans~\cite{eva13}]\label{prob:strong}
+Which finite groups $G$ have a bijection $\phi$ such that $x\phi(x)$ and $x^{-1}\phi(x)$ both run through all of $G$? Equivalently, by Proposition~\ref{prop:cm} applied to two colourings: colour each edge $(x,y)$ of $K_{G,G}$ twice, by $xy$ and by $x^{-1}y$; for which $G$ is there a perfect matching that is rainbow in both colourings?
+\end{problem}
+
+For $\Z_n$ the answer is: exactly when $n\equiv1,5\pmod6$, by P\'olya's theorem on toroidal queens~\cite{pol1918}.
+
+\topic{In which subsets?}
+
+\begin{conjecture}[M\"uyesser--Pokrovskiy~\cite{mp25a}, Conjecture~7.1]\label{conj:mp-every-n}
+For every $n$ the following holds. If $A,B\subseteq G$ with $|A|=|B|=n$, then there is a bijection $\pi\colon A\to B$ with all products $a\pi(a)$ distinct, unless for some $g_1,g_2\in G$ and some subgroup $H$ either (1) $H$ fails the Hall--Paige condition, $A=g_1H$ and $B=Hg_2$, or (2) $H\cong\Z_2^k$, $g_1A=H\setminus\{a_1,a_2\}$ and $g_2B=H\setminus\{b_1,b_2\}$ with $a_1+a_2+b_1+b_2=0$.
+\end{conjecture}
+
+By Proposition~\ref{prop:cm} restricted to $A\times B$, this says that in $K_{G,G}$, with $(x,y)$ coloured $xy$, the induced subgraph $K_{A,B}$ has a rainbow perfect matching unless (1) or (2) holds. It is known for all large $n$ (Theorem~\ref{thm:subsquares}), and both parts of Snevily's conjecture are special cases.
+
+\begin{conjecture}[M\"uyesser--Pokrovskiy~\cite{mp25a}, Conjecture~7.2]\label{conj:mp-hp}
+Let $|G|=n$ and let $X,Y,Z\subseteq G$ with $|X|=|Y|=|Z|=n-1$ and $\sum X+\sum Y=\sum Z$ in $G^{ab}$. Then there is a bijection $\phi\colon X\to Y$ with $\{x\phi(x):x\in X\}=Z$.
+\end{conjecture}
+
+In graph form: in $K_{X,Y}\subseteq K_{G,G}$, with $(x,y)$ coloured $xy$, there is a perfect matching using each colour of $Z$ exactly once; equivalently, a perfect matching of the multiplication hypergraph. It is true for large $n$ when $X,Y,Z$ are close to random sets, and for sets of size $n-O(n^{1-\varepsilon})$ in $\Z_n$~\cite{mp25a}. With $X=Y=Z=G\setminus\{e\}$ it would give the Hall--Paige conjecture for every $n$ without the classification.
+
+\begin{problem}[M\"uyesser--Pokrovskiy~\cite{mp25a}, Problem~7.4]\label{prob:g}
+Find the largest $g(n)$ such that, whenever $X,Y,Z\subseteq\Z_n$ have size $n-g(n)$ and $\sum X+\sum Y=\sum Z$, some bijection $\phi\colon X\to Y$ has $\{x+\phi(x)\}=Z$. Equivalently, find the largest $g(n)$ such that, for all such $X,Y,Z$, the graph $K_{X,Y}$ with $(x,y)$ coloured $x+y$ has a perfect matching using each colour of $Z$ once.
+\end{problem}
+
+M\"uyesser and Pokrovskiy~\cite[\S7]{mp25a} show that $g(n)=\Omega(n)$ and $g(n)\leq n/2$, and write that ``it would already be interesting to determine $g(n)$ asymptotically''.
+
+\begin{problem}[Snevily~\cite{sne99}; K\'ezdy--Snevily~\cite{ks02}; M\"uyesser--Pokrovskiy~\cite{mp25a}, Problem~7.5]\label{prob:ks}
+Let $k<n$. Do any $a_1,\dots,a_k\in\Z_n$, not necessarily distinct, admit a permutation $\pi$ such that $a_{\pi(1)}+1,\ a_{\pi(2)}+2,\ \dots,\ a_{\pi(k)}+k$ are distinct? Equivalently, colour the edge $(i,j)$ of $K_{k,k}$, both of whose sides are $\{1,\dots,k\}$, by $a_i+j\in\Z_n$; is there always a rainbow perfect matching?
+\end{problem}
+
+The colouring is proper in $j$ but not in $i$ when the $a_i$ repeat, which is the new difficulty compared with Snevily's conjecture. The answer is yes when $n$ is prime~\cite{alon00}, when $k=n-1$~\cite{hall52}, when $2k\leq n+1$~\cite{ks02}, and for large $k$ without repetitions~\cite{mp25a}; otherwise the problem is wide open.
+
+\topic{Of which shape?}
+
+\begin{conjecture}[M\"uyesser~\cite{muy23}, Conjecture~7.1]\label{conj:fgt-all}
+Let $G$ be a sufficiently large group satisfying the Hall--Paige condition, and let $k\geq3$ with $k\mid n-1$. Then some orthomorphism of $G$ fixes $e$ and permutes the other elements in disjoint $k$-cycles.
+\end{conjecture}
+
+By Proposition~\ref{prop:cyc}, this says that under the same hypotheses $\operatorname{Cay}(G,G\setminus\{e\})$ contains a rainbow directed $C_k$-factor on the vertex set $G\setminus\{e\}$. It is known for all large abelian groups~\cite{muy23}, and the high-girth part of the proof does not use commutativity~\cite[\S7.1]{muy23}.
+
+\begin{conjecture}[M\"uyesser~\cite{muy23}, Conjecture~7.3]\label{conj:triangles}
+Every complete graph $K_n$, properly coloured with $n$ colours, contains a rainbow family of vertex-disjoint triangles covering all but at most $C$ vertices, for an absolute constant $C$.
+\end{conjecture}
+
+This is the case $k=3$ of the Friedlander--Gordon--Tannenbaum conjecture with Cayley tables replaced by arbitrary proper colourings. With $C$ replaced by $n^{1-\varepsilon}$ it follows from the R\"odl nibble, and no example rules out $C=2$~\cite[\S7.1]{muy23}.
+
+\begin{problem}[M\"uyesser~\cite{muy23}, \S7.2]\label{prob:cycle-types}
+Which cycle types can an orthomorphism of an abelian group have? Equivalently, by Proposition~\ref{prop:cyc}, which families of directed cycle lengths occur in rainbow cycle factors of $\operatorname{Cay}(G,G\setminus\{e\})$ on $G\setminus\{e\}$?
+\end{problem}
+
+Many mixed types, with each cycle length used linearly often, are known to occur~\cite[\S7.2]{muy23}.
+
+\topic{One equation, many problems}
+
+Fix an integer matrix $M$ of size $r\times m$ and an abelian group $G$ of order $n$.
+
+\begin{problem}[M\"uyesser~\cite{muy23}, \S7.3]\label{prob:equation}
+For which $M$ and $G$ are there $n$ solutions $v\in G^m$ of $Mv=0$ such that in every coordinate each element of $G$ appears exactly once? This is open already for matrices with entries in $\{-1,0,1\}$.
+\end{problem}
+
+Reading solutions as hyperedges, let $\mathcal H_M$ be the $m$-partite $m$-uniform hypergraph with parts $G\times\{1\},\dots,G\times\{m\}$ and an edge $\{(v_1,1),\dots,(v_m,m)\}$ for each solution $v$; the question is when $\mathcal H_M$ has a perfect matching. This hypergraph form is M\"uyesser's own (``we can equivalently phrase this as a hypergraph matching problem''~\cite[\S7.3]{muy23}). The Hall--Paige conjecture is the case $M=\begin{pmatrix}1&-1&-1\end{pmatrix}$, toroidal queens are the case
+\[
+M=\begin{pmatrix}1&1&-1&0\\1&-1&0&-1\end{pmatrix},
+\]
+and the case $k=3$ of the Friedlander--Gordon--Tannenbaum conjecture corresponds to a $3\times6$ matrix.

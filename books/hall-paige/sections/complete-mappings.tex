@@ -1,0 +1,111 @@
+\section{Cayley tables and complete mappings}\label{sec:complete-mappings}
+
+The most natural Latin squares come from groups.
+
+\begin{definition}\label{def:cayley-table}
+The \term{Cayley table} of a finite group $G$ has its rows and columns indexed by $G$ and the entry $ab$ in cell $(a,b)$. It is a Latin square. As a colouring of a complete bipartite graph, it is the graph $K_{G,G}$ whose two sides are copies of $G$, with the edge $(x,y)$ coloured $xy$.
+\end{definition}
+
+The square of ranks in Ozanam's puzzle is a Cayley table. Renaming the ranks A, Q, J, K as $00,01,10,11$ and labelling the rows $00,11,01,10$ and the columns $00,01,10,11$, every cell becomes the sum of its row label and its column label in $\Z_2\times\Z_2$, and no cell moves (Figure~\ref{fig:ranks-cayley}).
+
+\begin{figure}[ht]
+\centering
+\input{figures/ranks-cayley}
+\caption{Renaming the ranks and labelling the rows and columns by elements of $\Z_2\times\Z_2$, every cell becomes row $+$ column.}
+\label{fig:ranks-cayley}
+\end{figure}
+
+So we may ask which groups $G$ have a Cayley table that decomposes into transversals. For a group, one transversal is enough.
+
+\begin{fact}\label{fact:translates}
+Let $T=\{(x,\phi(x)):x\in G\}$ be a transversal of the Cayley table of $G$. For each $g\in G$ the set
+\[
+T_g=\{(x,\phi(x)g):x\in G\}
+\]
+is again a transversal, and the $|G|$ sets $T_g$ partition the table.
+\end{fact}
+
+The entries of $T_g$ are those of $T$ multiplied on the right by $g$; in Ozanam's puzzle the four suits are exactly the four translates of the spade transversal (Figure~\ref{fig:translates}). For a group, therefore, Euler's question asks for a single rainbow perfect matching.
+
+\begin{figure}[ht]
+\centering
+\input{figures/translates}
+\caption{The four suits are the translates of one transversal $T$, obtained by shifting every column label by the same element.}
+\label{fig:translates}
+\end{figure}
+
+\topic{Mann's complete mappings}
+
+By 1942 every known pair of orthogonal Latin squares, whether in the statistical tables of Fisher and Yates~\cite{fy} or constructed from Galois fields by Bose~\cite{bose38} and Stevens~\cite{ste39}, was based on a group. Mann~\cite{man42} asked which groups can be used, and introduced the following notion.
+
+\begin{definition}[Mann~\cite{man42}]\label{def:complete-mapping}
+A bijection $\theta\colon G\to G$ is a \term{complete mapping} if $x\mapsto x\,\theta(x)$ is also a bijection.
+\end{definition}
+
+In the Cayley table, a complete mapping chooses in row $x$ the cell in column $\theta(x)$; these $n$ cells form a transversal, and every transversal arises in this way.
+
+\begin{theorem}[Mann~\cite{man42}; Paige~\cite{pai51}]\label{thm:mann}
+The Cayley table of $G$ has an orthogonal mate if and only if $G$ has a complete mapping $\theta$. One mate is the Latin square $S(i,k)=i\,k\,\theta(k)$.
+\end{theorem}
+
+The translation to rainbow matchings is immediate.
+
+\begin{proposition}\label{prop:cm}
+A bijection $\theta\colon G\to G$ is a complete mapping if and only if the perfect matching $\{(x,\theta(x)):x\in G\}$ of $K_{G,G}$ is rainbow. Every rainbow perfect matching of $K_{G,G}$ arises in this way from exactly one $\theta$.
+\end{proposition}
+
+\begin{proof}
+A perfect matching of $K_{G,G}$ is the graph of a bijection $\theta$. Its colours are the elements $x\theta(x)$, and these are distinct exactly when $x\mapsto x\theta(x)$ is injective, that is, a bijection.
+\end{proof}
+
+\begin{corollary}\label{cor:cm}
+The following are equivalent: $G$ has a complete mapping; $K_{G,G}$ has a rainbow perfect matching; the edges of $K_{G,G}$ split into $|G|$ rainbow perfect matchings.
+\end{corollary}
+
+\begin{proof}
+Combine Proposition~\ref{prop:cm} with Fact~\ref{fact:translates} and Proposition~\ref{prop:mate}.
+\end{proof}
+
+\topic{The first results}
+
+The first results on complete mappings appeared between 1942 and 1951.
+\begin{itemize}
+\item Mann~\cite{man42} showed in 1942 that \emph{no group of order $4n+2$ has a complete mapping}, so groups can never refute Euler's conjecture. In the same paper he obtained new orthogonal pairs of order $12$, from $\Z_2\times\Z_2\times\Z_3$ and from $A_4$, beyond the reach of the Galois-field method.
+\item Paige~\cite{pai47} showed in 1947 that an abelian group has a complete mapping if and only if $\sum_{x\in G}x=0$.
+\item Bateman~\cite{bat50} showed in 1950 that every infinite group has a complete mapping.
+\item Paige~\cite{pai51} showed in 1951 that every group of odd order has one, namely $\theta(x)=x$.
+\end{itemize}
+Paige also found a necessary condition for general groups.
+
+\begin{theorem}[Paige~\cite{pai51}]\label{thm:paige}
+If $G$ has a complete mapping, then the product of all elements of $G$, taken in any order, lies in the commutator subgroup $G'$.
+\end{theorem}
+
+Paige conjectured the converse. He also conjectured that no symmetric group $S_n$ has a complete mapping.
+
+\begin{example}\label{ex:order-four}
+The two groups of order $4$ already behave differently (Figure~\ref{fig:z2z2-z4}). In $\Z_2\times\Z_2$ we have $00+01+10+11=00$, so Paige's condition holds, and the Cayley table has a transversal. In $\Z_4$ we have $0+1+2+3=2\neq0$, so Paige's condition fails and the Cayley table has no transversal. The two tables are Latin squares of the same order; what separates them is the structure of the group.
+\end{example}
+
+\begin{figure}[ht]
+\centering
+\input{figures/z2z2-z4}
+\caption{The Cayley tables of $\Z_2\times\Z_2$ and $\Z_4$. The first has a transversal (circled); the second has none.}
+\label{fig:z2z2-z4}
+\end{figure}
+
+\topic{Hall and Paige, 1955}
+
+Hall and Paige~\cite{hp55} translated Paige's condition into a statement about Sylow subgroups.
+
+\begin{fact}[Hall--Paige~\cite{hp55}]\label{fact:sylow}
+The product of all elements of $G$ lies in $G'$ if and only if the Sylow $2$-subgroups of $G$ are trivial or non-cyclic.
+\end{fact}
+
+For $\Z_4$ the Sylow $2$-subgroup is $\Z_4$ itself, which is cyclic; for $\Z_2\times\Z_2$ it is not. In the same paper Hall and Paige proved that every \emph{solvable} group with this property has a complete mapping, and that $S_n$ for $n>3$ and $A_n$ have complete mappings, so Paige's conjecture on symmetric groups was false. They conjectured the converse of Theorem~\ref{thm:paige} in the following form.
+
+\begin{conjecture}[Hall--Paige~\cite{hp55}]\label{conj:hp}
+A finite group $G$ has a complete mapping if and only if its Sylow $2$-subgroups are trivial or non-cyclic.
+\end{conjecture}
+
+We say that $G$ satisfies the \term{Hall--Paige condition} if its Sylow $2$-subgroups are trivial or non-cyclic.

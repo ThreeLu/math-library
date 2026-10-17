@@ -1,0 +1,69 @@
+\section{Three proofs of the Hall--Paige conjecture}\label{sec:proof}
+
+\topic{The proof via the classification}
+
+The first proof was completed in 2009 and runs through the classification of finite simple groups.
+\begin{itemize}
+\item Hall and Paige~\cite{hp55} showed that if a normal subgroup $N$ of $G$ and the quotient $G/N$ both have complete mappings, then so does $G$. This settles the solvable case.
+\item Wilcox~\cite{wil09} showed that a minimal counterexample is simple, and handled the groups of Lie type uniformly. This left the Tits group and the $26$ sporadic groups.
+\item Evans~\cite{eva09} treated all of these except the fourth Janko group $J_4$, with computer algebra.
+\item Bray treated $J_4$ in 2009; the proof was published in 2020 in~\cite{bccsz20}.
+\end{itemize}
+
+\begin{theorem}[Wilcox~\cite{wil09}, Evans~\cite{eva09}, Bray~\cite{bccsz20}, 2009]\label{thm:hp}
+The Hall--Paige conjecture is true.
+\end{theorem}
+
+A question about Latin squares was thus settled by the classification of finite simple groups.
+
+\topic{A proof by counting}
+
+Eberhard, Manners and Mrazovi\'c~\cite{emm22} gave a second proof, for large groups, by counting complete mappings. We write $G^{ab}$ for the abelianisation $G/G'$.
+
+\begin{theorem}[Eberhard--Manners--Mrazovi\'c~\cite{emm22}]\label{thm:emm}
+If $G$ has order $n$ and satisfies the Hall--Paige condition, then the number of complete mappings of $G$ is
+\[
+\bigl(e^{-1/2}+o(1)\bigr)\,|G^{ab}|\,\frac{n!^2}{n^n}.
+\]
+\end{theorem}
+
+The factor $n!\cdot n!/n^n$ is the naive guess: there are $n!$ bijections $\phi$, and $x\mapsto x\phi(x)$ is a bijection with ``probability'' $n!/n^n$. Since the count is positive for every large $G$, Theorem~\ref{thm:emm} proves the Hall--Paige conjecture for large groups without the classification, though not by a construction. Combined with Wilcox's reduction, only the Mathieu groups $M_{11}$ and $M_{12}$ need to be treated separately.
+
+\topic{A proof by random subsets}
+
+The third approach keeps only part of the Cayley table. Take sets $X$ of rows, $Y$ of columns and $Z$ of symbols with $|X|=|Y|=|Z|$; a transversal of what is left uses every symbol of $Z$ exactly once.
+
+\begin{fact}\label{fact:sum}
+If such a transversal exists, then $\sum X+\sum Y=\sum Z$ in $G^{ab}$.
+\end{fact}
+
+This is the same sum argument as for the Hall--Paige condition. M\"uyesser and Pokrovskiy showed that, for sets that look random, nothing else is needed.
+
+\begin{theorem}[M\"uyesser--Pokrovskiy~\cite{mp25a}]\label{thm:random-hp}
+Let $G$ be large. If $X,Y,Z$ are each close to a random subset of $G$, in which every element is kept independently with probability $p$, then $\sum X+\sum Y=\sum Z$ in $G^{ab}$ is also sufficient for the existence of a transversal.
+\end{theorem}
+
+Taking $X=Y=Z=G$, that is $p=1$, gives the Hall--Paige conjecture for large $G$, again with no use of the classification.
+
+\topic{The dictionary}
+
+We collect the translations used so far, together with those of the later sections.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\small
+\begin{tabular}{p{0.42\textwidth}p{0.5\textwidth}}
+\textbf{algebra / Latin squares} & \textbf{graphs}\\\hline
+Latin square of order $n$ & proper $n$-edge-colouring of $K_{n,n}$\\
+transversal & rainbow perfect matching\\
+orthogonal mate & decomposition into $n$ rainbow perfect matchings\\
+Cayley table of $G$ & $K_{G,G}$, edge $(x,y)$ coloured $xy$\\
+complete mapping of $G$ & rainbow perfect matching of $K_{G,G}$\\
+number of complete mappings & number of rainbow perfect matchings\\
+strong complete mapping & perfect matching rainbow in two colourings\\
+transversal of a subsquare $A\times B$ & rainbow perfect matching of $K_{A,B}$\\
+orthomorphism with a given cycle type & rainbow cycle factor in $\operatorname{Cay}(G,G\setminus\{e\})$
+\end{tabular}
+\end{center}
+
+Beyond the Hall--Paige conjecture three questions suggest themselves, and the rest of this survey is organised around them. \emph{How many} transversals does a Cayley table have, and which groups have the most (Section~\ref{sec:counting})? \emph{In which subsets}: if we delete some rows, columns and symbols, when does what is left still have a transversal (Section~\ref{sec:subsquares})? \emph{Of which shape}: a complete mapping is a permutation of $G$, so which cycle types can it have (Section~\ref{sec:cycle-types})?

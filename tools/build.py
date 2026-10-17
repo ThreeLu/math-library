@@ -13,6 +13,7 @@ a lecture's \\homework part becomes a separate page.
 
 import argparse
 import datetime
+import hashlib
 import html
 import json
 import os
@@ -35,7 +36,7 @@ QUARTO = shutil.which("quarto") or str(Path.home() / ".local/quarto/bin/quarto")
 THEOREM_ENVS = [
     "definition", "proposition", "lemma", "theorem", "corollary", "claim",
     "conjecture", "observation", "remark", "example", "practice", "question",
-    "thinking", "historynote", "workedexample",
+    "thinking", "historynote", "workedexample", "fact", "problem",
 ]
 NUMBERED_ENVS = ["definition", "proposition", "lemma", "theorem", "corollary",
                  "claim", "conjecture", "observation"]
@@ -147,6 +148,9 @@ def parse_aux(path):
         num = fields[0].strip("{}").strip()
         labels[name] = {"num": num, "page": fields[1],
                         "title": fields[2] if len(fields) > 2 else ""}
+    # citations: \bibcite{key}{n}, numbered as in the PDF's bibliography
+    for m in re.finditer(r"\\bibcite\{([^}]*)\}\{([^}]*)\}", s):
+        labels["bib:" + m.group(1)] = {"num": m.group(2), "page": "", "title": ""}
     return labels
 
 
@@ -255,11 +259,91 @@ def preprocess(s, lang):
     s = replace_command(s, "begin{probleme}", "somm", probleme)
     s = s.replace(r"\end{probleme}", r"\end{ypprobleme}")
 
+    s = bibliography_entries(s)
+
     s = replace_command(s, "begin{questions}", "o", lambda o: r"\begin{ypquestions}"
                         + (href("resume", "x") if o and "resume" in o else "")
                         + r"\begin{enumerate}")
     s = s.replace(r"\end{questions}", r"\end{enumerate}\end{ypquestions}")
     return s
+
+
+def bibliography_entries(s):
+    """thebibliography -> one ypbibentry block per \\bibitem (numbers come from the aux)."""
+    m = re.search(r"\\begin\{thebibliography\}(\{[^}]*\})?", s)
+    if not m:
+        return s
+    end = s.find(r"\end{thebibliography}", m.end())
+    body = s[m.end():end if end >= 0 else len(s)]
+    body = body.replace(r"\newblock", " ")
+    parts = re.split(r"\\bibitem(?:\[[^\]]*\])?\{([^}]*)\}", body)
+    out = []
+    for key, text in zip(parts[1::2], parts[2::2]):
+        out.append(r"\begin{ypbibentry}" + href("bibkey", key) + text.strip() + r"\end{ypbibentry}")
+    tail = s[end + len(r"\end{thebibliography}"):] if end >= 0 else ""
+    head = s[:m.start()]
+    if not re.search(r"\\section\*?\{", head):
+        head += r"\section*{References}" + "\n"
+    return head + "\n\n".join(out) + tail
+
+
+# ---------------------------------------------------------------------
+#  TikZ figures -> SVG
+# ---------------------------------------------------------------------
+TIKZ = re.compile(r"\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}", re.S)
+
+
+def expand_inputs(s, base):
+    """Inline \\input{...} of files next to the book (figures, snippets)."""
+    def sub(m):
+        name = m.group(1)
+        f = base / (name if name.endswith(".tex") else name + ".tex")
+        return expand_inputs(f.read_text(encoding="utf-8"), base) if f.exists() else m.group(0)
+    return re.sub(r"\\input\{([^}]+)\}", sub, strip_comments(s))
+
+
+def figure_preamble(src, lang, macros):
+    pre = [r"\documentclass[border=2pt]{standalone}",
+           r"\usepackage{amsmath,amssymb,mathtools}",
+           r"\usepackage{yp-figures}"]
+    if lang == "zh":
+        pre.insert(1, r"\usepackage[UTF8,fontset=none]{ctex}\setCJKmainfont{Songti SC}")
+    extra = src / "figures" / "preamble.tex"
+    body = macros + (extra.read_text(encoding="utf-8") if extra.exists() else "")
+    return "\n".join(pre) + "\n" + body + "\n"
+
+
+def render_tikz(s, src, out, lang, macros):
+    """Replace every tikzpicture by an SVG made from it; cached by content hash."""
+    pics = TIKZ.findall(s)
+    if not pics:
+        return s
+    preamble = figure_preamble(src, lang, macros)
+    cache = src / "build" / "figs"
+    cache.mkdir(parents=True, exist_ok=True)
+    (out / "figs").mkdir(exist_ok=True)
+    env = dict(os.environ)
+    env["TEXINPUTS"] = f".:{SHARED_TEX}//:" + env.get("TEXINPUTS", "")
+
+    def one(m):
+        code = m.group(0)
+        h = hashlib.sha1((preamble + code).encode()).hexdigest()[:12]
+        svg = cache / f"{h}.svg"
+        if not svg.exists():
+            tex = cache / f"{h}.tex"
+            tex.write_text(preamble + r"\begin{document}" + code + r"\end{document}", encoding="utf-8")
+            r = subprocess.run(["xelatex", "-interaction=nonstopmode", "-halt-on-error", tex.name],
+                               cwd=cache, env=env, capture_output=True, text=True)
+            if r.returncode != 0:
+                log(f"figure {h} failed to compile; see {cache / (h + '.log')}")
+                return r"\textbf{[figure failed to compile]}"
+            subprocess.run(["pdftocairo", "-svg", f"{h}.pdf", f"{h}.svg"], cwd=cache, check=True)
+            for ext in (".aux", ".log", ".pdf", ".tex"):
+                (cache / (h + ext)).unlink(missing_ok=True)
+        shutil.copy(svg, out / "figs" / svg.name)
+        return r"\includegraphics{figs/" + svg.name + "}"
+
+    return TIKZ.sub(one, s)
 
 
 def split_homework(s):
@@ -385,6 +469,8 @@ def build_book(book, no_latex):
     pdf_name = f"{slug}.pdf"
     if pdf.exists():
         shutil.copy(pdf, out / pdf_name)
+    if book.get("slides"):
+        shutil.copy(ROOT / book["slides"], out / Path(book["slides"]).name)
 
     cls = src / "yupin-notes.cls"
     if not cls.exists():
@@ -399,8 +485,11 @@ def build_book(book, no_latex):
         path = src / (unit if unit.endswith(".tex") else unit + ".tex")
         if not path.exists():
             continue
-        raw = path.read_text(encoding="utf-8")
+        raw = expand_inputs(path.read_text(encoding="utf-8"), src)
         if raw.lstrip().startswith(r"\documentclass") or "makecoursetitle" in raw:
+            continue
+        if "thebibliography" in raw:
+            pages.append({"file": "references", "kind": "back", "tex": raw, "unit": uname})
             continue
         uname = Path(unit).stem
         front = unit.startswith("front/")
@@ -417,8 +506,16 @@ def build_book(book, no_latex):
             hw_tex = r"\section{" + word + (sep + hw_title if hw_title.strip() else "") + "}\n" + hw
             pages.append({"file": uname + "-hw", "kind": "homework", "tex": hw_tex, "unit": uname})
 
+    # BibTeX books: the .bbl is the reference list
+    bbl = src / "build" / f"{stem}.bbl"
+    if bbl.exists() and not any(p["kind"] == "back" for p in pages):
+        pages.append({"file": "references", "kind": "back", "unit": "references",
+                      "tex": bbl.read_text(encoding="utf-8")})
+
     # label -> page file
     for p in pages:
+        for m in re.finditer(r"\\bibitem(?:\[[^\]]*\])?\{([^}]+)\}", p["tex"]):
+            labels.setdefault("bib:" + m.group(1), {"num": "??", "page": "", "title": ""})["file"] = p["file"]
         for m in re.finditer(r"\\label\{([^}]+)\}", strip_comments(p["tex"])):
             labels.setdefault(m.group(1), {"num": "??", "page": "", "title": ""})["file"] = p["file"]
 
@@ -455,7 +552,8 @@ def build_book(book, no_latex):
                 meta["yp-pdf-page"] = hw["pdfpage"]
         if p["topic"]:
             meta["yp-crumb"] = short_label(p, lang == "zh") + ("（作业）" if p["kind"] == "homework" else "")
-        md = run_pandoc(macros + brace_macros(preprocess(p["tex"], lang), macros), meta)
+        tex = render_tikz(p["tex"], src, out, lang, macros)
+        md = run_pandoc(macros + brace_macros(preprocess(tex, lang), macros), meta)
         (out / f"{p['file']}.qmd").write_text(md, encoding="utf-8")
         p["title"] = page_title(md)
         thm_offset += len(re.findall(r"\\begin\{(" + "|".join(NUMBERED_ENVS) + r")\}", clean))
@@ -512,13 +610,8 @@ def tex_to_unicode_text(s):
 
 
 def write_dir_metadata(book, out):
+    # citations are resolved by the filter from the aux, so no citeproc here
     meta = {"lang": "zh" if book.get("lang") == "zh" else "en"}
-    bib = ROOT / book["source"] / "refs.bib"
-    if bib.exists():
-        shutil.copy(bib, out / "refs.bib")
-        meta["bibliography"] = "refs.bib"
-        # numeric [1] citations, as in math papers
-        meta["csl"] = "../../assets/csl/american-mathematical-society-numeric.csl"
     (out / "_metadata.yml").write_text(yaml.safe_dump(meta, allow_unicode=True), encoding="utf-8")
 
 
@@ -541,6 +634,8 @@ def write_book_index(book, pages, out, pdf_name, progress):
         actions.append(f'<a class="yp-btn" href="{first}">{"从第 1 讲开始" if zh else "Start reading"}</a>')
     if pdf_name:
         actions.append(f'<a class="yp-btn yp-btn-ghost" href="{pdf_name}">PDF</a>')
+    if book.get("slides"):
+        actions.append(f'<a class="yp-btn yp-btn-ghost" href="{Path(book["slides"]).name}">Slides</a>')
     updated = last_updated(book)
     if updated:
         actions.append(f'<span class="yp-quiet">{"更新于" if zh else "Updated"} {updated}</span>')
@@ -553,8 +648,9 @@ def write_book_index(book, pages, out, pdf_name, progress):
     h.append(f'<a class="yp-continue" id="yp-continue-book" data-book="{book["slug"]}" '
              f'data-word="{"继续阅读" if zh else "Continue reading"}" hidden></a>')
     h.append("</header>")
-    if front:
-        links = " ".join(f'<a href="{p["file"]}.html">{esc(plain_title(p["title"]))}</a>' for p in front)
+    extra = front + [p for p in pages if p["kind"] == "back"]
+    if extra:
+        links = " ".join(f'<a href="{p["file"]}.html">{esc(plain_title(p["title"]))}</a>' for p in extra)
         h.append(f'<nav class="yp-front">{links}</nav>')
     h.append('<ol class="yp-toc">')
     for p in lectures:
@@ -610,6 +706,9 @@ def sidebar_for(book, pages):
                                            "text": "作业与解答" if zh else "Exercises"}]})
         else:
             contents.append({"href": f"{base}/{p['file']}.qmd", "text": text})
+    for p in pages:
+        if p["kind"] == "back":
+            contents.append({"href": f"{base}/{p['file']}.qmd", "text": plain_title(p["title"])})
     return {"id": book["slug"], "title": book["title"], "style": "floating",
             "collapse-level": 1, "contents": contents}
 
@@ -662,12 +761,15 @@ def write_home(lib, built):
         if upd:
             meta.append(upd)
         pdf = (GENERATED / slug / f"{slug}.pdf").exists()
+        slides = Path(b["slides"]).name if b.get("slides") else ""
         sub = f'<span class="yp-book-sub">{esc(b["subtitle"])}</span>' if b.get("subtitle") else ""
         return (f'<li class="yp-book"><a class="yp-book-main" href="books/{slug}/index.html">'
                 f'<span class="yp-book-title">{esc(b["title"])}</span>{sub}</a>'
                 f'<span class="yp-book-meta">{" · ".join(esc(m) for m in meta if m)}</span>'
-                + (f'<a class="yp-book-pdf" href="books/{slug}/{slug}.pdf">PDF</a>' if pdf else '<span></span>')
-                + '</li>')
+                + '<span class="yp-book-files">'
+                + (f'<a class="yp-book-pdf" href="books/{slug}/{slug}.pdf">PDF</a>' if pdf else '')
+                + (f'<a class="yp-book-pdf" href="books/{slug}/{slides}">Slides</a>' if slides else '')
+                + '</span></li>')
 
     h = ['<header class="yp-hero yp-hero-home">',
          f'<h1 class="yp-hero-title">{esc(cfg["title"])}</h1>',
@@ -699,7 +801,8 @@ def write_home(lib, built):
 
 
 KIND_WORD = {"theorem": "Theorems", "proposition": "Propositions", "lemma": "Lemmas",
-             "corollary": "Corollaries", "definition": "Definitions", "conjecture": "Conjectures"}
+             "corollary": "Corollaries", "definition": "Definitions", "conjecture": "Conjectures",
+             "problem": "Problems"}
 
 
 def write_results(lib, results):
