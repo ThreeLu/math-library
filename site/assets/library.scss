@@ -358,3 +358,17 @@ a.yp-cite { color: var(--yp-accent); }
 .yp-body figure img, .yp-body .quarto-figure img { max-width: 100%; height: auto; }
 .yp-body figcaption, .yp-body .figure-caption { font-family: var(--yp-sans); font-size: 0.82rem; color: var(--yp-muted); text-align: center; margin-top: 0.5rem; }
 .yp-fignum { color: var(--yp-ink); font-weight: 600; }
+
+// Jump back after following a cross-reference
+.yp-back {
+  position: fixed; right: 1.4rem; bottom: 1.4rem; z-index: 1050;
+  font-family: var(--yp-sans); font-size: 0.82rem; max-width: min(22rem, calc(100vw - 2.8rem));
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  padding: 0.5rem 1rem; border-radius: 999px; border: 1px solid var(--yp-ink);
+  background: var(--yp-ink); color: #fff; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  transition: background 0.15s, transform 0.15s;
+  &:hover { background: var(--yp-accent); border-color: var(--yp-accent); transform: translateY(-1px); }
+  @media (max-width: 760px) { right: 1rem; bottom: 1rem; }
+}
+.yp-back[hidden] { display: none; }
+.yp-back-flash { background: rgba(155, 44, 44, 0.16); border-radius: 3px; transition: background 0.4s; }

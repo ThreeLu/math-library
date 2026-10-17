@@ -72,6 +72,88 @@ document.addEventListener("DOMContentLoaded", () => {
   const cb = document.getElementById("yp-continue-book");
   if (cb) fill(cb, store.get("yp:last:" + cb.dataset.book), false);
 
+  // ---- Jump back: following a cross-reference remembers where it was clicked;
+  // a "Back" button then returns there (one level per click, across pages).
+  const BACK = "yp:back";
+  const ss = {
+    get() { try { return JSON.parse(sessionStorage.getItem(BACK)) || []; } catch (e) { return []; } },
+    set(v) { try { sessionStorage.setItem(BACK, JSON.stringify(v.slice(-30))); } catch (e) {} },
+  };
+  const refSelector = "a.yp-ref, a.yp-cite, .yp-idx-item a, .yp-body a[href*='#']";
+  const refLinks = () => [...document.querySelectorAll(refSelector)];
+  document.addEventListener("click", ev => {
+    const a = ev.target.closest(refSelector);
+    if (!a || ev.metaKey || ev.ctrlKey || ev.shiftKey || a.target === "_blank") return;
+    // a short name for the page: the sidebar label, else the page title
+    const crumb = document.querySelector(".yp-body[data-crumb]");
+    const active = document.querySelector("#quarto-sidebar a.sidebar-link.active");
+    const h1 = document.querySelector("h1.title, .yp-hero-title");
+    const label = crumb ? crumb.dataset.crumb
+      : active ? active.textContent.trim()
+      : (h1 ? h1.textContent.trim() : document.title);
+    const stack = ss.get();
+    stack.push({ path: location.pathname, index: refLinks().indexOf(a), y: window.scrollY,
+                 label: label.slice(0, 40) });
+    ss.set(stack);
+    showBack();
+  }, true);
+
+  const backBtn = document.createElement("button");
+  backBtn.type = "button";
+  backBtn.className = "yp-back";
+  backBtn.hidden = true;
+  document.body.append(backBtn);
+  function showBack() {
+    const stack = ss.get();
+    if (!stack.length) { backBtn.hidden = true; return; }
+    const top = stack[stack.length - 1];
+    const here = top.path === location.pathname;
+    backBtn.textContent = (zh ? "↩ 返回" : "↩ Back") + (here ? "" : " · " + top.label);
+    backBtn.title = zh ? "回到跳转前的位置（键盘：b）" : "Return to where you were (key: b)";
+    backBtn.hidden = false;
+  }
+  // put the reader back at the link they followed, after the math has been typeset
+  function restore(entry) {
+    const go = () => {
+      const link = refLinks()[entry.index];
+      if (link) {
+        link.scrollIntoView({ block: "center" });
+        link.classList.add("yp-back-flash");
+        setTimeout(() => link.classList.remove("yp-back-flash"), 1600);
+      } else {
+        window.scrollTo(0, entry.y);
+      }
+    };
+    // jump at once, then re-align once MathJax has finished changing the layout
+    go();
+    const mj = window.MathJax && MathJax.startup && MathJax.startup.promise;
+    if (mj) mj.then(() => requestAnimationFrame(go));
+  }
+  backBtn.addEventListener("click", () => {
+    const stack = ss.get();
+    const entry = stack.pop();
+    ss.set(stack);
+    if (!entry) return;
+    if (entry.path === location.pathname) {
+      history.replaceState(null, "", location.pathname);
+      restore(entry);
+      showBack();
+    } else {
+      try { sessionStorage.setItem("yp:restore", JSON.stringify(entry)); } catch (e) {}
+      location.href = entry.path;
+    }
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "b" && !e.metaKey && !e.ctrlKey && !e.altKey && !backBtn.hidden &&
+        !/input|textarea/i.test(document.activeElement.tagName)) backBtn.click();
+  });
+  try {
+    const pending = JSON.parse(sessionStorage.getItem("yp:restore"));
+    sessionStorage.removeItem("yp:restore");
+    if (pending && pending.path === location.pathname) restore(pending);
+  } catch (e) {}
+  showBack();
+
   // ---- Index of results: search box and kind filter ("/" focuses the box)
   const q = document.getElementById("yp-idx-q");
   if (q) {
