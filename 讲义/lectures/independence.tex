@@ -1,9 +1,9 @@
 % !TEX root = ../高等概率论.tex
 % =====================================================================
 %  独立性：事件、σ-代数、随机变量的独立性，π-类判别法，分组定理，联合分布与乘积测度，
-%  乘积的期望，卷积，独立序列的构造，Rényi 记录定理，Borel 正规数定理
+%  乘积的期望，卷积，独立序列的构造，Kolmogorov 扩张定理，Rényi 记录定理，Borel 正规数定理
 % =====================================================================
-\lecture{事件的独立性，两两独立与相互独立，$\sigma$-代数与随机变量的独立性，用 $\pi$-类判别独立性，分组定理，联合分布是乘积测度，乘积的期望与和的方差，独立和的分布与卷积，独立随机变量序列的构造，Rényi 记录定理，Borel 正规数定理}
+\lecture{事件的独立性，两两独立与相互独立，$\sigma$-代数与随机变量的独立性，用 $\pi$-类判别独立性，分组定理，联合分布是乘积测度，乘积的期望与和的方差，独立和的分布与卷积，独立随机变量序列的构造，Kolmogorov 扩张定理，Rényi 记录定理，Borel 正规数定理}
 \label{lec:independence}
 
 测度论到这里告一段落，概率论从独立性开始。前面九讲中的几乎每一个概念，测度、可测函数、积分、乘积测度，在分析中都有，概率论只是给它们换了名字。独立性却是概率论自己的概念，它没有分析中的对应物；概率论之所以成为一门独立的学科，主要就是因为这个概念。
@@ -21,6 +21,7 @@
 \item 方差的计算（命题~\ref{prop:expectation:variance}）：$\Var(\sum X_i)=\sum\Var(X_i)+2\sum_{i<j}\Cov(X_i,X_j)$；Chebyshev 不等式（推论~\ref{cor:expectation:chebyshev}），Markov 不等式（定理~\ref{thm:expectation:markov}）。
 \item 第一 Borel--Cantelli 引理（定理~\ref{thm:expectation:borel-cantelli}）：$\sum P(A_n)<\infty$ 蕴含几乎必然只有有限个 $A_n$ 发生。
 \item 二进制展开（命题~\ref{prop:distributions:binary-digits}）：在 $([0,1),\lambda)$ 上，$\xi_n(\omega)$ 为 $\omega$ 的第 $n$ 位二进制数字，则 $P(\xi_1=a_1,\dots,\xi_n=a_n)=2^{-n}$。公平硬币给出均匀分布（定理~\ref{thm:distributions:coins-to-uniform}）。分位数变换（定义~\ref{def:distributions:quantile}，引理~\ref{lem:distributions:quantile}）：$F^{-1}(u)\leqslant x\iff u\leqslant F(x)$。
+\item ★节用到：半代数 $\cS_n$ 与它生成的代数 $\overline{\cS_n}$（\egref{ex:extension:Sd}，引理~\ref{lem:extension:algebra-from-semialgebra}）；Carathéodory 延拓定理（定理~\ref{thm:extension:main}）：代数上的测度可以延拓到它生成的 $\sigma$-代数上。
 \end{enumerate}
 
 \emph{本讲约定：}$(\Omega,\cF,P)$ 是概率空间，所说的 $\sigma$-代数都是 $\cF$ 的子 $\sigma$-代数。
@@ -372,7 +373,118 @@ P(X_k\leqslant x)=P(U_k\leqslant G_k(x))=G_k(x),
 \end{proof}
 
 \begin{remark}
-特别地，对任意分布 $\mu$，存在独立同分布（i.i.d.）的随机变量序列 $X_1,X_2,\dots$，分布都是 $\mu$。以后讨论大数定律、中心极限定理时，我们总是默认这样的序列存在。另一种构造是 Kolmogorov 扩张定理：在 $\R^\N$ 上直接构造“无穷乘积测度”。那个构造更一般（不要求独立），但证明更长，我们以后需要时再讲。
+特别地，对任意分布 $\mu$，存在独立同分布（i.i.d.）的随机变量序列 $X_1,X_2,\dots$，分布都是 $\mu$。以后讨论大数定律、中心极限定理时，我们总是默认这样的序列存在。另一种构造是下一节的 Kolmogorov 扩张定理：在 $\R^\N$ 上直接构造“无穷乘积测度”。那个构造更一般（不要求独立），但证明更长。
+\end{remark}
+
+\topic{Kolmogorov 扩张定理★}
+
+上一个定理只能构造\emph{独立}的随机变量序列。以后我们还要构造很多不独立的序列，比如 Markov 链。在那里，我们事先知道的是每个 $(X_1,\dots,X_n)$ 的联合分布，要找一个概率空间，使其上的 $X_1,X_2,\dots$ 恰好有这些有限维分布。这一节在实数列的空间上直接构造这样的概率测度。第一遍阅读可以跳过这一节，只需要承认定理~\ref{thm:independence:kolmogorov} 的结论。
+
+令 $\R^\N=\{\omega=(\omega_1,\omega_2,\dots):\omega_i\in\R\}$ 为一切实数列组成的集合，$X_i(\omega)=\omega_i$ 为第 $i$ 个坐标。形如
+\[
+\{\omega:\omega_i\in(a_i,b_i],\ 1\leqslant i\leqslant n\}\qquad(n\geqslant1,\ -\infty\leqslant a_i<b_i\leqslant\infty)
+\]
+的集合称为\term{有限维矩形}（finite-dimensional rectangle），它们生成的 $\sigma$-代数记作 $\cR^\N$，称为\term{乘积 $\sigma$-代数}（product $\sigma$-field）。（与前面一样，$(a,\infty]$ 表示 $(a,\infty)$。）
+
+对 $n\geqslant1$ 与 $A\subseteq\R^n$，记
+\[
+[A]_n=\{\omega\in\R^\N:(\omega_1,\dots,\omega_n)\in A\}=A\times\R\times\R\times\cdots,
+\]
+称为以 $A$ 为底的\term{柱集}（cylinder set）。有限维矩形就是以 $\R^n$ 中矩形为底的柱集。一个柱集只限制前 $n$ 个坐标，其余坐标随意。注意 $[A]_n=[A\times\R]_{n+1}$：同一个柱集可以把底写在不同的维数中。
+
+\begin{example}[$\cR^\N$ 中的集合]\label{ex:independence:RN-sets}
+$\cR^\N=\sigma(X_1,X_2,\dots)$：一方面每个 $X_i$ 是 $\cR^\N$-可测的，因为 $\{X_i\leqslant x\}=[\R^{i-1}\times(-\infty,x]]_i$ 是有限维矩形；另一方面有限维矩形 $\bigcap_{i\leqslant n}\{X_i\in(a_i,b_i]\}$ 属于 $\sigma(X_1,X_2,\dots)$。所以下面这些我们关心的集合都属于 $\cR^\N$：
+\[
+\{\omega:\omega_n\to0\},\qquad\Bigl\{\omega:\sup_n\omega_n\leqslant1\Bigr\},\qquad\Bigl\{\omega:\frac{\omega_1+\cdots+\omega_n}n\to\frac12\Bigr\}.
+\]
+它们分别是 $\bigcap_k\bigcup_N\bigcap_{n\geqslant N}\{\abs{X_n}\leqslant\frac1k\}$，$\bigcap_n\{X_n\leqslant1\}$，以及第~\ref{lec:set-systems} 讲中处理过的那类集合（\wegref{we:set-systems:slln-event}）。这与抛硬币的例子完全一样：$\R^\N$ 上的一个概率测度，就是“一个无穷随机序列”的完整描述。
+\end{example}
+
+设 $X_1,X_2,\dots$ 是任意一个概率空间上的随机变量，$\mu_n$ 是随机向量 $(X_1,\dots,X_n)$ 的分布。由于 $\{(X_1,\dots,X_n,X_{n+1})\in A\times\R\}=\{(X_1,\dots,X_n)\in A\}$，必须有
+\begin{equation}\label{eq:independence:consistent}
+\mu_{n+1}\bigl((a_1,b_1]\times\cdots\times(a_n,b_n]\times\R\bigr)=\mu_n\bigl((a_1,b_1]\times\cdots\times(a_n,b_n]\bigr).
+\end{equation}
+满足 \eqref{eq:independence:consistent} 的一列概率测度 $\mu_n$（$\mu_n$ 定义在 $(\R^n,\cR^n)$ 上）称为\term{相容的}（consistent）。Kolmogorov 扩张定理说，这个显然必要的条件也是充分的。
+
+\begin{theorem}[Kolmogorov 扩张定理]\label{thm:independence:kolmogorov}
+设 $\mu_n$ 是 $(\R^n,\cR^n)$ 上的概率测度，$n=1,2,\dots$，并且相容。则 $(\R^\N,\cR^\N)$ 上存在唯一的概率测度 $P$，使
+\[
+P\bigl(\omega:\omega_i\in(a_i,b_i],\ 1\leqslant i\leqslant n\bigr)=\mu_n\bigl((a_1,b_1]\times\cdots\times(a_n,b_n]\bigr)
+\]
+对一切 $n$ 与一切矩形成立。于是在概率空间 $(\R^\N,\cR^\N,P)$ 上，坐标 $X_1,X_2,\dots$ 的有限维分布恰好是 $\mu_n$。
+\end{theorem}
+
+\begin{example}[独立序列]\label{ex:independence:kolmogorov-product}
+设 $\nu_1,\nu_2,\dots$ 是 $\R$ 上的概率测度，$\mu_n=\nu_1\otimes\cdots\otimes\nu_n$（定理~\ref{thm:product:finite-product}）。则
+\[
+\mu_{n+1}\Bigl(\prod_{i\leqslant n}(a_i,b_i]\times\R\Bigr)=\prod_{i\leqslant n}\nu_i((a_i,b_i])\cdot\nu_{n+1}(\R)=\mu_n\Bigl(\prod_{i\leqslant n}(a_i,b_i]\Bigr),
+\]
+相容性成立。由定理~\ref{thm:independence:kolmogorov}，得到 $\R^\N$ 上的概率测度 $P$，在它下面 $(X_1,\dots,X_n)$ 的分布是 $\nu_1\otimes\cdots\otimes\nu_n$，由定理~\ref{thm:independence:product-measure}，$X_1,\dots,X_n$ 独立，$X_i$ 的分布是 $\nu_i$。这就重新证明了定理~\ref{thm:independence:existence}。$P$ 称为无穷乘积测度，记作 $\bigotimes_i\nu_i$。
+\end{example}
+
+\begin{example}[一个不独立的序列]\label{ex:independence:kolmogorov-polya}
+对 $x=(x_1,\dots,x_n)\in\{0,1\}^n$，记 $k=x_1+\cdots+x_n$，令
+\[
+\mu_n(\{x\})=\int_0^1p^k(1-p)^{n-k}\dd p=\frac{k!\,(n-k)!}{(n+1)!},
+\]
+$\mu_n$ 是集中在 $\{0,1\}^n$ 上的离散测度。（积分是 Beta 函数 $B(k+1,n-k+1)$，由第~\ref{lec:product-measures} 讲问题 D 得到右边的值。）直观上，这是先随机选一枚硬币，它出现正面的概率 $p$ 在 $[0,1]$ 上均匀分布，再用这枚硬币抛 $n$ 次。
+
+\emph{$\mu_n$ 是概率测度，并且相容。}对 $x\in\{0,1\}^n$，$\mu_{n+1}(\{(x,0)\})+\mu_{n+1}(\{(x,1)\})=\int_0^1p^k(1-p)^{n-k}\bigl((1-p)+p\bigr)\dd p=\mu_n(\{x\})$。对矩形 $R\subseteq\R^n$，$R\times\R$ 中 $\{0,1\}^{n+1}$ 的点恰好是 $(x,0),(x,1)$，$x\in R\cap\{0,1\}^n$，所以 $\mu_{n+1}(R\times\R)=\mu_n(R)$。取 $R=\R^n$ 并归纳，$\mu_n(\R^n)=\mu_1(\R)=\int_0^1(1-p)\dd p+\int_0^1p\dd p=1$。
+
+于是由定理~\ref{thm:independence:kolmogorov}，存在取值于 $\{0,1\}$ 的随机变量序列 $X_1,X_2,\dots$，以 $\mu_n$ 为有限维分布。$P(X_1=1)=\frac12$，而 $P(X_1=X_2=1)=\int_0^1p^2\dd p=\frac13\neq\frac14$，所以 $X_1,X_2$ 不独立：第一次出现正面，说明选到的硬币偏向正面，第二次也更可能是正面。这个序列也可以由 Pólya 坛子得到：坛中开始有一红一白两个球，每次随机摸一个，记下颜色，放回并再放入一个同色的球，$X_n=1$ 表示第 $n$ 次摸到红球。
+\end{example}
+
+\begin{remark}[证明思路]
+按照第~\ref{lec:extension-of-measures} 讲的路线，先在“底为有限个矩形之并”的柱集组成的代数上定义 $P$，它显然是有限可加的；全部困难在于可数可加性，而可数可加性等价于：若这样的柱集 $B_n\downarrow\varnothing$，则 $P(B_n)\to0$。我们用反证法。若 $P(B_n)\geqslant\delta>0$，就在每个 $B_n$ 的底中取一个紧集，使 $P$ 只损失一点点；由紧性与对角线方法，在一切 $B_n$ 中找到同一个点 $\theta$，与 $\bigcap_nB_n=\varnothing$ 矛盾。这和 Lebesgue--Stieltjes 测度的构造（定理~\ref{thm:extension:lebesgue-stieltjes}）一样，可数可加性来自紧性；不同的是这里的空间是无穷维的，所以要用对角线方法逐个坐标地取收敛子列。
+\end{remark}
+
+\begin{proof}
+记 $\cS_n$ 为 $\R^n$ 中左开右闭矩形（连同空集）组成的半代数（\egref{ex:extension:Sd}），$\overline{\cS_n}$ 为 $\cS_n$ 中有限个两两不交集合之并的全体，它是代数（引理~\ref{lem:extension:algebra-from-semialgebra}）。
+
+\emph{第一步：柱集的代数与有限可加性。}令
+\[
+\cA=\bigl\{[A]_n:\ n\geqslant1,\ A\in\overline{\cS_n}\bigr\}.
+\]
+\begin{itemize}
+\item \emph{换维数。}若 $A\in\overline{\cS_n}$，$m>n$，则 $A\times\R^{m-n}\in\overline{\cS_m}$（每个矩形乘以 $(-\infty,\infty]^{m-n}$ 仍是矩形），并且 $[A]_n=[A\times\R^{m-n}]_m$。所以 $\cA$ 中有限个集合总可以写成同一个维数 $m$ 的柱集。
+\item \emph{底由柱集决定。}若 $[A]_m=[B]_m$，$A,B\subseteq\R^m$，则 $A=B$：对 $x\in\R^m$，令 $\omega=(x,0,0,\dots)$，则 $x\in A\iff\omega\in[A]_m\iff\omega\in[B]_m\iff x\in B$。
+\item \emph{$\cA$ 是代数。}$\R^\N=[\R]_1\in\cA$。写成同一维数后，$[A]_m^c=[A^c]_m$，$[A]_m\cap[B]_m=[A\cap B]_m$，而 $\overline{\cS_m}$ 是代数。
+\item \emph{相容性对 $\overline{\cS_n}$ 成立。}$A\in\overline{\cS_n}$ 是有限个不交矩形之并，对每个矩形用 \eqref{eq:independence:consistent}，再用 $\mu_n$，$\mu_{n+1}$ 的有限可加性，得 $\mu_{n+1}(A\times\R)=\mu_n(A)$。归纳得 $\mu_m(A\times\R^{m-n})=\mu_n(A)$（$m>n$）。
+\item \emph{定义 $P$。}对 $[A]_n\in\cA$ 令 $P([A]_n)=\mu_n(A)$。定义合理：若 $[A]_n=[B]_m$，$n\leqslant m$，则 $[A\times\R^{m-n}]_m=[B]_m$，由底的唯一性 $B=A\times\R^{m-n}$，于是 $\mu_m(B)=\mu_n(A)$。
+\item \emph{有限可加。}设 $C_1,C_2\in\cA$ 不交，写成 $C_j=[A_j]_m$，则 $[A_1\cap A_2]_m=C_1\cap C_2=\varnothing$，由底的唯一性 $A_1\cap A_2=\varnothing$，所以 $P(C_1\cup C_2)=\mu_m(A_1\cup A_2)=\mu_m(A_1)+\mu_m(A_2)=P(C_1)+P(C_2)$。
+\end{itemize}
+于是 $P$ 在代数 $\cA$ 上有限可加，从而单调、有限次可加，$P(\R^\N)=1$，$P(\varnothing)=0$。
+
+\emph{第二步：化为“在空集处连续”。}我们断言：若 $B_n\in\cA$，$B_n\downarrow\varnothing$，则 $P(B_n)\to0$。先承认这个断言，说明定理成立。设 $C\in\cA$ 是可数个两两不交的 $C_i\in\cA$ 的并。令 $B_n=C\setminus\bigcup_{i\leqslant n}C_i\in\cA$，则 $B_n\downarrow\varnothing$，由有限可加性
+\[
+P(C)=\sum_{i=1}^nP(C_i)+P(B_n)\to\sum_{i=1}^\infty P(C_i).
+\]
+所以 $P$ 是代数 $\cA$ 上的测度。由 Carathéodory 延拓定理（定理~\ref{thm:extension:main}），$P$ 延拓为 $\sigma(\cA)$ 上的概率测度。$\cA$ 中的集合是有限维矩形的有限并，而 $\cA$ 包含一切有限维矩形，所以 $\sigma(\cA)=\cR^\N$。唯一性：有限维矩形连同空集组成 $\pi$-类（两个有限维矩形写成同一维数后，交集还是有限维矩形或空集），它生成 $\cR^\N$，由唯一性定理（定理~\ref{thm:measures:uniqueness-finite}），满足要求的概率测度至多一个。
+
+\emph{第三步：准备工作。}下面证明断言。设 $B_n\in\cA$，$B_n\downarrow\varnothing$。$P(B_n)$ 单调不增，设它的极限为 $\delta$，用反证法，假设 $\delta>0$，于是 $P(B_n)\geqslant\delta$ 对一切 $n$ 成立。写 $B_n=[B_n^*]_{k_n}$，$B_n^*\in\overline{\cS_{k_n}}$。由换维数，可以把 $k_n$ 换成更大的数，所以不妨设 $k_1<k_2<\cdots$，从而 $k_n\geqslant n$。对 $\omega\in\R^\N$，记 $\pi_n(\omega)=(\omega_1,\dots,\omega_{k_n})$。
+
+\emph{第四步：用紧集从内部逼近。}我们说明：对每个 $n$，存在 $C_n=[C_n^*]_{k_n}\in\cA$，使 $C_n^*$ 的闭包 $K_n$ 是紧集，$K_n\subseteq B_n^*$，并且 $P(B_n\setminus C_n)\leqslant\delta/2^{n+1}$。
+
+先看一个矩形 $R=\prod_{i\leqslant k}(a_i,b_i]\subseteq\R^k$。对 $j\geqslant1$，令 $a_i^{(j)}=a_i+\frac1j$（$a_i$ 有限时）或 $-j$（$a_i=-\infty$ 时），$b_i^{(j)}=b_i$（$b_i$ 有限时）或 $j$（$b_i=\infty$ 时），$R_j=\prod_i(a_i^{(j)},b_i^{(j)}]$（$a_i^{(j)}\geqslant b_i^{(j)}$ 时理解为空集）。$j$ 增大时每个坐标区间 $(a_i^{(j)},b_i^{(j)}]$ 单调增大到 $(a_i,b_i]$，所以 $R_j\uparrow R$（若 $x\in R$，每个坐标 $x_i$ 在 $j\geqslant j_i$ 时属于第 $i$ 个区间，取 $j\geqslant\max_ij_i$ 即可）。由测度的连续性，$\mu_k(R\setminus R_j)\to0$。而 $R_j$ 的闭包 $\prod_i[a_i^{(j)},b_i^{(j)}]$ 是有界闭集，即紧集（Heine--Borel 定理），并且包含于 $R$（因为 $a_i^{(j)}>a_i$，$b_i^{(j)}\leqslant b_i$，$b_i^{(j)}<\infty$）。
+
+$B_n^*=R^1+\cdots+R^L$ 是有限个不交矩形的并。取 $j$ 充分大，使 $\mu_{k_n}(R^l\setminus R^l_j)\leqslant\delta/(L2^{n+1})$ 对 $l=1,\dots,L$ 都成立，令 $C_n^*=\bigcup_lR^l_j$。它属于 $\overline{\cS_{k_n}}$（不交矩形之并），闭包 $K_n=\bigcup_l\overline{R^l_j}$ 是有限个紧集之并，是紧集，并且 $K_n\subseteq B_n^*$。最后 $P(B_n\setminus C_n)=\mu_{k_n}(B_n^*\setminus C_n^*)\leqslant\sum_l\mu_{k_n}(R^l\setminus R^l_j)\leqslant\delta/2^{n+1}$。
+
+\emph{第五步：$D_n=C_1\cap\cdots\cap C_n$ 非空。}$D_n\in\cA$。若 $\omega\in B_n\setminus D_n$，则存在 $j\leqslant n$ 使 $\omega\notin C_j$，而 $\omega\in B_n\subseteq B_j$，所以 $B_n\setminus D_n\subseteq\bigcup_{j\leqslant n}(B_j\setminus C_j)$。由有限次可加性，
+\[
+P(B_n\setminus D_n)\leqslant\sum_{j\leqslant n}\frac\delta{2^{j+1}}<\frac\delta2,\qquad P(D_n)=P(B_n)-P(B_n\setminus D_n)>\frac\delta2>0
+\]
+（$D_n\subseteq B_n$）。所以 $D_n\neq\varnothing$，取 $\omega^{(n)}\in D_n$。由于 $D_m\subseteq D_n\subseteq C_n$（$m\geqslant n$），
+\begin{equation}\label{eq:independence:kolmogorov-compact}
+\pi_n(\omega^{(m)})\in C_n^*\subseteq K_n\qquad\text{对一切}\ m\geqslant n .
+\end{equation}
+
+\emph{第六步：对角线方法。}由 \eqref{eq:independence:kolmogorov-compact} 与 $k_i\geqslant i$，对每个坐标 $i$，当 $m\geqslant i$ 时 $\omega^{(m)}_i$ 是 $\pi_i(\omega^{(m)})\in K_i$ 的第 $i$ 个坐标，而 $K_i$ 有界，所以实数列 $(\omega^{(m)}_i)_{m\geqslant i}$ 有界。令 $N_0=\N$。若无穷集 $N_{i-1}\subseteq\N$ 已经取定，由 Bolzano--Weierstrass 定理，有界数列 $(\omega^{(m)}_i)_{m\in N_{i-1},m\geqslant i}$ 有收敛子列，即存在无穷集 $N_i\subseteq N_{i-1}$ 与实数 $\theta_i$，使 $m\in N_i$，$m\to\infty$ 时 $\omega^{(m)}_i\to\theta_i$。这样得到 $N_0\supseteq N_1\supseteq N_2\supseteq\cdots$ 与 $\theta=(\theta_1,\theta_2,\dots)\in\R^\N$。再取 $m_1<m_2<\cdots$，$m_j\in N_j$（$N_j$ 是无穷集，总可以取到比 $m_{j-1}$ 大的元素）。对每个 $i$，$j\geqslant i$ 时 $m_j\in N_j\subseteq N_i$，所以 $j\to\infty$ 时 $\omega^{(m_j)}_i\to\theta_i$。
+
+\emph{第七步：得出矛盾。}固定 $n$。由第六步，$j\to\infty$ 时 $\pi_n(\omega^{(m_j)})\to\pi_n(\theta)$（$\R^{k_n}$ 中按坐标收敛）。当 $j\geqslant n$ 时 $m_j\geqslant j\geqslant n$，由 \eqref{eq:independence:kolmogorov-compact}，$\pi_n(\omega^{(m_j)})\in K_n$。$K_n$ 是闭集，所以 $\pi_n(\theta)\in K_n\subseteq B_n^*$，即 $\theta\in B_n$。这对一切 $n$ 成立，于是 $\theta\in\bigcap_nB_n=\varnothing$，矛盾。所以 $\delta=0$，断言成立。
+\end{proof}
+
+\begin{remark}[取值于其他空间的序列]
+以后有时需要取值于其他可测空间 $(S,\cS)$ 的随机变量序列，比如取值于可数集的 Markov 链。Kolmogorov 扩张定理对任意的可测空间并不成立，有反例。不过对于下面这类空间，它可以直接由实数情形得到。若存在单射 $\varphi:S\to\R$，使 $\varphi$ 是 $\cS/\cR$-可测的，并且 $\varphi(S)\in\cR$，$\varphi^{-1}:\varphi(S)\to S$ 也是可测的，就称 $(S,\cS)$ 是\term{好的}（nice，也称标准 Borel 空间）：这时用 $\varphi$ 把 $S$ 上的测度搬到 $\R$ 上，在 $\R^\N$ 上构造，再用 $\varphi^{-1}$ 搬回来。可数集（带全部子集的 $\sigma$-代数）显然是好的。可以证明 $\R^d$，以及更一般的完备可分度量空间的 Borel 子集，都是好的，证明的第一步是把度量 $\rho$ 换成有界的度量 $\rho/(1+\rho)$（本讲习题 A13），我们不再细说。
 \end{remark}
 
 \topic{Rényi 记录定理}
@@ -529,11 +641,11 @@ P\Bigl(\Bigl\lvert\frac{S_n}n-\frac12\Bigr\rvert\geqslant\varepsilon\Bigr)=P(\ab
 \item 独立性的定义按“事件、$\sigma$-代数、随机变量”逐步推广；多个事件的独立性要求一切子族的乘积公式，两两独立不够（\egref{ex:independence:pairwise}）。$\sigma$-代数是信息，独立的随机变量的函数仍然独立。
 \item 判别独立性只需在生成的 $\pi$-类上验证（定理~\ref{thm:independence:pi-systems}），证明用 $\pi$-$\lambda$ 定理。由此得到分布函数判别法、离散型判别法，以及分组定理：独立的 $\sigma$-代数分成不交的组，各组仍然独立。
 \item 独立就是联合分布等于乘积测度（定理~\ref{thm:independence:product-measure}）。于是 Fubini 定理给出 $E(XY)=EX\cdot EY$、独立和的方差等于方差之和、卷积公式。
-\item 用二进制数字可以在 $[0,1)$ 上构造任意给定分布的独立随机变量序列（定理~\ref{thm:independence:existence}）。
+\item 用二进制数字可以在 $[0,1)$ 上构造任意给定分布的独立随机变量序列（定理~\ref{thm:independence:existence}）。更一般地，任意一列相容的有限维分布都是 $\R^\N$ 上某个概率测度的有限维分布（Kolmogorov 扩张定理，定理~\ref{thm:independence:kolmogorov}★），它以后用来构造 Markov 链。
 \item Rényi 记录定理：i.i.d. 连续分布序列中“第 $k$ 个是记录”这些事件独立，概率为 $\frac1k$。前 $n$ 个中约有 $\log n$ 个记录，并且几乎必然有无穷多个。
 \item Borel 正规数定理：几乎每个数的二进制数字中 $0$ 与 $1$ 各占一半。证明的模式是“四阶矩估计 + Markov 不等式 + Borel--Cantelli 引理”，这是证明强大数定律的第一个方法。
 \end{enumerate}
-下一讲讨论一般的大数定律：弱大数定律（依概率收敛）与强大数定律（几乎必然收敛），以及它们需要的矩条件。
+下一讲先把随机变量列的几种收敛方式整理清楚，此后讨论一般的大数定律：弱大数定律（依概率收敛）与强大数定律（几乎必然收敛），以及它们需要的矩条件。
 
 % =====================================================================
 \homework{Euler 函数与独立性，一切进制下的正规数，两两独立的构造，秘书问题}[Euler 函数，正规数，两两独立，秘书问题]
@@ -686,6 +798,67 @@ Em&=\int_0^1P(m>t)\dd t=\int_0^1(1-t)^n\dd t=\frac1{n+1}.
 \]
 直观上，$n$ 个随机点把 $[0,1]$ 分成 $n+1$ 段，平均每段长 $\frac1{n+1}$。
 \end{solution}
+
+\item\label{ex:independence:A11} 设 $X_1,\dots,X_n$ 独立，都服从参数为 $p$ 的 Bernoulli 分布：$P(X_i=1)=p$，$P(X_i=0)=1-p$。用习题 A4 与归纳法证明 $S_n=X_1+\cdots+X_n$ 服从二项分布 $B(n,p)$。
+\begin{solution}
+Bernoulli 分布就是 $B(1,p)$。$n=1$ 时结论成立。设 $S_{n-1}$ 服从 $B(n-1,p)$。由不交分组上的函数仍然独立（推论~\ref{cor:independence:functions}），$S_{n-1}=X_1+\cdots+X_{n-1}$ 与 $X_n$ 独立。由习题 A4（取 $B(n-1,p)$ 与 $B(1,p)$），$S_n=S_{n-1}+X_n$ 服从 $B(n,p)$。
+
+注意归纳的每一步都要用到“$S_{n-1}$ 与 $X_n$ 独立”，这正是分组定理提供的。只假设 $X_i$ 两两独立是不够的。
+\end{solution}
+
+\item\label{ex:independence:A12} 和的分布是卷积，并不需要独立。设 $X,Y$ 都取值于 $\{0,1,2\}$，并且各以概率 $\frac13$ 取每个值。
+\begin{questions}
+\item 设 $X,Y$ 独立，求 $X+Y$ 的分布。
+\begin{solution}
+由卷积公式（定理~\ref{thm:independence:convolution}(3)），$P(X+Y=k)=\sum_jP(X=j)P(Y=k-j)=\frac19\cdot\#\{(j,k-j):0\leqslant j,k-j\leqslant2\}$。数一数：
+\[
+P(X+Y=k)=\frac19,\ \frac29,\ \frac39,\ \frac29,\ \frac19\qquad(k=0,1,2,3,4).
+\]
+\end{solution}
+\item 求出一切这样的联合分布 $p_{ij}=P(X=i,Y=j)$（$X,Y$ 各自仍在 $\{0,1,2\}$ 上均匀分布），使 $X+Y$ 的分布与 A12-1) 相同。
+\begin{solution}
+思路：未知数是 $9$ 个 $p_{ij}\geqslant0$，条件是三个行和、三个列和都等于 $\frac13$，以及 $X+Y$ 取每个值的概率。逐个解出来。
+
+$X+Y$ 的条件是
+\[
+p_{00}=\tfrac19,\quad p_{01}+p_{10}=\tfrac29,\quad p_{02}+p_{11}+p_{20}=\tfrac39,\quad p_{12}+p_{21}=\tfrac29,\quad p_{22}=\tfrac19 .
+\]
+令 $a=p_{01}$。由 $p_{01}+p_{10}=\frac29$，$p_{10}=\frac29-a$。由第 $0$ 行的和 $p_{00}+p_{01}+p_{02}=\frac13$，$p_{02}=\frac29-a$。由第 $0$ 列的和 $p_{00}+p_{10}+p_{20}=\frac13$，$p_{20}=\frac29-p_{10}=a$。由第 $2$ 列的和 $p_{02}+p_{12}+p_{22}=\frac13$，$p_{12}=\frac29-p_{02}=a$。再由 $p_{12}+p_{21}=\frac29$，$p_{21}=\frac29-a$。最后 $p_{11}=\frac39-p_{02}-p_{20}=\frac13-(\frac29-a)-a=\frac19$。
+
+验证剩下的条件：第 $1$ 行和 $p_{10}+p_{11}+p_{12}=(\frac29-a)+\frac19+a=\frac13$；第 $2$ 行和 $p_{20}+p_{21}+p_{22}=a+(\frac29-a)+\frac19=\frac13$；第 $1$ 列和 $p_{01}+p_{11}+p_{21}=a+\frac19+(\frac29-a)=\frac13$。都成立。非负性要求 $0\leqslant a\leqslant\frac29$。所以全部解是
+\[
+(p_{ij})=\begin{pmatrix}\frac19&a&\frac29-a\\[2pt]\frac29-a&\frac19&a\\[2pt]a&\frac29-a&\frac19\end{pmatrix},\qquad0\leqslant a\leqslant\frac29 .
+\]
+$a=\frac19$ 时每个 $p_{ij}=\frac19$，这就是独立的情形；其余的 $a$ 给出不独立的 $X,Y$，而 $X+Y$ 的分布相同。比如 $a=0$ 时 $P(X=0,Y=1)=0\neq\frac19=P(X=0)P(Y=1)$。
+\end{solution}
+\end{questions}
+
+\item\label{ex:independence:A13} 设 $\rho$ 是集合 $M$ 上的度量。
+\begin{questions}
+\item 设 $h:[0,\infty)\to[0,\infty)$ 可导，$h(0)=0$，$h'(x)>0$（$x>0$），并且 $h'$ 在 $[0,\infty)$ 上单调不增。证明 $h(\rho(x,y))$ 也是 $M$ 上的度量。
+\begin{solution}
+思路：要验证的只有三角不等式，它来自两点：$h$ 单调递增，$h$ 是次可加的，即 $h(s+t)\leqslant h(s)+h(t)$。后者来自凹性。
+
+\emph{单调。}由 $h'>0$（$x>0$）与微分中值定理，$h$ 在 $[0,\infty)$ 上严格递增。于是 $h(u)=0$ 当且仅当 $u=0$，从而 $h(\rho(x,y))=0$ 当且仅当 $x=y$。对称性显然。
+
+\emph{次可加。}导数单调不增的可导函数是凹函数（数学分析中的结论）。设 $s,t\geqslant0$，$s+t>0$。由凹性，
+\[
+h(s)=h\Bigl(\frac s{s+t}(s+t)+\frac t{s+t}\cdot0\Bigr)\geqslant\frac s{s+t}h(s+t)+\frac t{s+t}h(0)=\frac s{s+t}h(s+t),
+\]
+同样 $h(t)\geqslant\frac t{s+t}h(s+t)$。相加得 $h(s)+h(t)\geqslant h(s+t)$。$s=t=0$ 时显然。
+
+\emph{三角不等式。}由 $\rho$ 的三角不等式与 $h$ 的单调性、次可加性，
+\[
+h(\rho(x,z))\leqslant h\bigl(\rho(x,y)+\rho(y,z)\bigr)\leqslant h(\rho(x,y))+h(\rho(y,z)).
+\]
+\end{solution}
+\item 证明 $h(x)=\frac x{1+x}$ 满足 A13-1) 的条件。由此 $\frac{\rho}{1+\rho}$ 是一个取值于 $[0,1)$ 的度量。
+\begin{solution}
+$h(0)=0$；$h'(x)=\frac{(1+x)-x}{(1+x)^2}=\frac1{(1+x)^2}>0$，并且在 $[0,\infty)$ 上单调递减。由 A13-1)，$\frac\rho{1+\rho}$ 是度量。它小于 $1$。
+
+以后讨论依概率收敛时会看到，$E\frac{\abs{X-Y}}{1+\abs{X-Y}}$ 刻画了依概率收敛。
+\end{solution}
+\end{questions}
 \end{exercises}
 
 \begin{probleme}{B}{Euler 函数与独立性}

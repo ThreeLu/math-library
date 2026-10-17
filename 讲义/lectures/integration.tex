@@ -1005,6 +1005,19 @@ $g_n-f_n\geqslant0$，$g_n-f_n\to g-f$。同样得到 $\int g-\int f\leqslant\in
 
 下一讲讨论测度的绝对连续性时，我们会从另一个角度再看到这个结论：$\nu(A)=\int_A\abs g\dd\mu$ 是有限测度，而上面的结论说 $\mu(A)$ 小时 $\nu(A)$ 也小。
 \end{solution}
+
+\item\label{ex:integration:A16} 设 $f$ 在 $[a,b]$ 上关于 Lebesgue 测度可积，$g(x)=\int_{[a,x]}f\dd\lambda$（$a\leqslant x\leqslant b$）。证明 $g$ 在 $[a,b]$ 上连续。
+\begin{solution}
+思路：$g(y)-g(x)$ 是 $f$ 在一个短区间上的积分，区间的长度趋于零时，由习题 A15，积分趋于零。
+
+设 $a\leqslant x<y\leqslant b$。由于 $[a,y]=[a,x]+(x,y]$，由积分对积分区域的可加性（$\int_{A+B}f=\int_Af+\int_Bf$：对 $f^+$ 与 $f^-$ 分别用推论~\ref{cor:integration:indefinite}，再相减），
+\[
+\abs{g(y)-g(x)}=\Bigl\lvert\int_{(x,y]}f\dd\lambda\Bigr\rvert\leqslant\int_{(x,y]}\abs f\dd\lambda .
+\]
+给定 $\varepsilon>0$，对可积函数 $\abs f\one_{[a,b]}$ 用习题 A15，取 $\delta>0$，使 $\lambda(A)<\delta$ 时 $\int_A\abs f\one_{[a,b]}\dd\lambda<\varepsilon$。那么只要 $\abs{y-x}<\delta$，$\lambda((x,y])=y-x<\delta$，就有 $\abs{g(y)-g(x)}<\varepsilon$。所以 $g$ 在 $[a,b]$ 上一致连续，当然连续。
+
+也可以用控制收敛定理证明：设 $x_n\to x$，则对 $t\neq x$，$\one_{[a,x_n]}(t)\to\one_{[a,x]}(t)$，即 $f\one_{[a,x_n]}\to f\one_{[a,x]}$ 几乎处处成立（例外的点只有 $t=x$，它是零测集），并且 $\abs{f\one_{[a,x_n]}}\leqslant\abs f\one_{[a,b]}$，由控制收敛定理（定理~\ref{thm:integration:dct}），$g(x_n)\to g(x)$。注意在 $t=x$ 处收敛可能不成立（$x_n\uparrow x$，$x_n<x$ 时 $\one_{[a,x_n]}(x)=0$），所以这里“几乎处处”是必要的。
+\end{solution}
 \end{exercises}
 
 

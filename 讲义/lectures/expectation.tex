@@ -885,6 +885,184 @@ $EX=\frac1{b-a}\int_a^bx\dd x=\frac{b^2-a^2}{2(b-a)}=\frac{a+b}2$；$EX^2=\frac1
 对 $k\geqslant0$，由单调收敛定理，$EX^k=\lim_N\int_0^Nx^k\lambda e^{-\lambda x}\dd x$。作换元 $u=\lambda x$，$\int_0^Nx^k\lambda e^{-\lambda x}\dd x=\lambda^{-k}\int_0^{\lambda N}u^ke^{-u}\dd u$，令 $N\to\infty$，由\wegref{we:integration:factorial}，$EX^k=\frac{k!}{\lambda^k}$。所以 $EX=\frac1\lambda$，$EX^2=\frac2{\lambda^2}$，$\Var(X)=\frac1{\lambda^2}$。
 \end{solution}
 \end{questions}
+
+\item\label{ex:expectation:A11} （$L^\infty$ 范数）正文中的 Hölder 不等式要求 $1<p,q<\infty$。这道题补上 $p=1$，$q=\infty$ 的情形。令
+\[
+\norm X_\infty=\inf\{M\geqslant0:P(\abs X>M)=0\}\qquad(\inf\varnothing=\infty),
+\]
+称为 $X$ 的\term{本质上确界}（essential supremum）。直观上，它是“去掉一个零概率事件之后 $\abs X$ 的上确界”。
+\begin{questions}
+\item 证明 $\abs X\leqslant\norm X_\infty$ a.s.，即定义中的下确界是取得到的。
+\begin{solution}
+若 $\norm X_\infty=\infty$，结论显然。设 $\norm X_\infty=s<\infty$。对每个 $k\geqslant1$，由下确界的定义，存在 $M$ 使 $P(\abs X>M)=0$ 且 $M<s+\frac1k$；于是 $\{\abs X>s+\frac1k\}\subseteq\{\abs X>M\}$，$P(\abs X>s+\frac1k)=0$。而
+\[
+\{\abs X>s\}=\bigcup_{k\geqslant1}\Bigl\{\abs X>s+\frac1k\Bigr\}
+\]
+是可数个零概率事件的并，由可数次可加性，$P(\abs X>s)=0$。
+
+这里用到的是“可数个零测集的并是零测集”。所以 $\norm X_\infty$ 本身属于定义中的集合，下确界是最小值。
+\end{solution}
+\item 证明 $E\abs{XY}\leqslant\norm X_1\norm Y_\infty$，其中 $\norm X_1=E\abs X$。（约定 $0\cdot\infty=0$。）
+\begin{solution}
+若 $\norm Y_\infty=\infty$ 且 $E\abs X>0$，右边为 $\infty$，不等式成立。若 $E\abs X=0$，则 $X=0$ a.s.（命题~\ref{prop:expectation:basic}(4)），$XY=0$ a.s.，左边为 $0$。剩下 $\norm Y_\infty<\infty$ 的情形：由 A11-1)，$\abs Y\leqslant\norm Y_\infty$ a.s.，所以 $\abs{XY}\leqslant\norm Y_\infty\abs X$ a.s.，取期望（单调性与线性性）即得。
+\end{solution}
+\item 证明 $\norm{X+Y}_\infty\leqslant\norm X_\infty+\norm Y_\infty$，即 Minkowski 不等式在 $p=\infty$ 时也成立。
+\begin{solution}
+不妨设右边有限。由 A11-1)，在一个概率为 $1$ 的事件上同时有 $\abs X\leqslant\norm X_\infty$ 与 $\abs Y\leqslant\norm Y_\infty$（两个零概率事件的并仍是零概率事件），在那里
+\[
+\abs{X+Y}\leqslant\abs X+\abs Y\leqslant\norm X_\infty+\norm Y_\infty .
+\]
+所以 $M=\norm X_\infty+\norm Y_\infty$ 满足 $P(\abs{X+Y}>M)=0$，由下确界的定义，$\norm{X+Y}_\infty\leqslant M$。
+\end{solution}
+\item 证明对一切 $1\leqslant p<\infty$，$\norm X_p\leqslant\norm X_\infty$。
+\begin{solution}
+不妨设 $\norm X_\infty<\infty$。由 A11-1)，$\abs X^p\leqslant\norm X_\infty^p$ a.s.，取期望，$E\abs X^p\leqslant\norm X_\infty^p\cdot P(\Omega)=\norm X_\infty^p$，开 $p$ 次方即得。这里用到了 $P(\Omega)=1$。
+\end{solution}
+\end{questions}
+
+\item\label{ex:expectation:A12} 证明 $\lim_{p\to\infty}\norm X_p=\norm X_\infty$。
+\begin{solution}
+思路：上界由 A11-4) 给出；下界的想法是，$\abs X$ 以正概率超过任何比 $\norm X_\infty$ 小的数 $M$，这一部分就让 $\norm X_p$ 至少接近 $M$。
+
+\emph{第一步：极限存在，并且不超过 $\norm X_\infty$。}由推论~\ref{cor:expectation:lyapunov}，$p\mapsto\norm X_p$ 在 $[1,\infty)$ 上单调不减，所以 $L=\lim_{p\to\infty}\norm X_p\in[0,\infty]$ 存在。由 A11-4)，$L\leqslant\norm X_\infty$。
+
+\emph{第二步：$L\geqslant\norm X_\infty$。}若 $\norm X_\infty=0$，无须证明。任取 $0\leqslant M<\norm X_\infty$。由 $\norm X_\infty$ 的定义，$P(\abs X>M)=:\delta>0$（否则 $\norm X_\infty\leqslant M$）。由于 $\abs X^p\geqslant M^p\one_{\{\abs X>M\}}$，
+\[
+E\abs X^p\geqslant M^p\delta,\qquad\norm X_p\geqslant M\delta^{1/p}.
+\]
+令 $p\to\infty$，$\delta^{1/p}\to1$（$\delta>0$），所以 $L\geqslant M$。$M$ 可以任意接近 $\norm X_\infty$（$\norm X_\infty=\infty$ 时 $M$ 可以任意大），所以 $L\geqslant\norm X_\infty$。
+
+注意第一步用到了 $P(\Omega)=1$。在 $(\R,\cR,\lambda)$ 上取 $f\equiv1$，$\norm f_\infty=1$，而 $\norm f_p=\infty$ 对一切 $p<\infty$ 成立。
+\end{solution}
+
+\item\label{ex:expectation:A13} 设 $1\leqslant p<\infty$，$E\abs X^p<\infty$。证明存在简单随机变量 $\varphi_n$，使 $\norm{\varphi_n-X}_p\to0$。
+\begin{solution}
+思路：用正部、负部的简单函数逼近（定理~\ref{thm:random-variables:simple-approx}），误差被 $\abs X^p$ 控制，再用控制收敛定理。
+
+由定理~\ref{thm:random-variables:simple-approx}，取非负简单随机变量 $\alpha_n\uparrow X^+$，$\beta_n\uparrow X^-$，令 $\varphi_n=\alpha_n-\beta_n$，它是简单随机变量。
+
+\emph{逐点收敛。}$X$ 取实数值，$X^+,X^-$ 都有限，所以 $\alpha_n\to X^+$，$\beta_n\to X^-$，$\varphi_n\to X^+-X^-=X$ 处处成立，从而 $\abs{\varphi_n-X}^p\to0$ 处处成立。
+
+\emph{控制。}$0\leqslant\alpha_n\leqslant X^+$ 蕴含 $\abs{\alpha_n-X^+}\leqslant X^+$；同样 $\abs{\beta_n-X^-}\leqslant X^-$。所以
+\[
+\abs{\varphi_n-X}\leqslant\abs{\alpha_n-X^+}+\abs{\beta_n-X^-}\leqslant X^++X^-=\abs X,\qquad\abs{\varphi_n-X}^p\leqslant\abs X^p,
+\]
+而 $\abs X^p$ 可积。
+
+由控制收敛定理（定理~\ref{thm:expectation:limits}(3)），$E\abs{\varphi_n-X}^p\to0$，即 $\norm{\varphi_n-X}_p\to0$。
+
+这个结论说简单随机变量在 $L^p$ 中稠密。以后证明关于 $L^p$ 中随机变量的命题时，常常先对简单随机变量验证，再用它逼近。
+\end{solution}
+
+\item\label{ex:expectation:A14} （多元 Jensen 不等式）设 $\varphi:\R^n\to\R$ 是凸函数，即对一切 $x,y\in\R^n$ 与 $\lambda\in(0,1)$，$\varphi(\lambda x+(1-\lambda)y)\leqslant\lambda\varphi(x)+(1-\lambda)\varphi(y)$。我们要证明：若 $E\abs{X_i}<\infty$（$i=1,\dots,n$），$E\abs{\varphi(X_1,\dots,X_n)}<\infty$，则
+\[
+E\varphi(X_1,\dots,X_n)\geqslant\varphi(EX_1,\dots,EX_n).
+\]
+一维的证明（定理~\ref{thm:expectation:jensen}）只用了支撑线，所以这里的全部工作是在 $\R^n$ 中找到“支撑超平面”。记 $\abs x_\infty=\max_i\abs{x_i}$，$a\cdot x=\sum_ia_ix_i$。
+\begin{questions}
+\item 证明 $\varphi$ 连续，从而 $\varphi(X_1,\dots,X_n)$ 是随机变量。（提示：先证明 $\varphi$ 在立方体 $\{x:\abs{x-x_0}_\infty\leqslant1\}$ 上有上界。）
+\begin{solution}
+不妨设 $x_0=0$（否则考虑 $x\mapsto\varphi(x_0+x)$，它仍是凸函数）。
+
+\emph{第一步：有限个点的凸组合。}由归纳法，若 $\lambda_1,\dots,\lambda_m\geqslant0$，$\sum_j\lambda_j=1$，则 $\varphi(\sum_j\lambda_jy_j)\leqslant\sum_j\lambda_j\varphi(y_j)$。（$m=2$ 是定义；若 $\lambda_m<1$，写 $\sum_j\lambda_jy_j=(1-\lambda_m)\sum_{j<m}\frac{\lambda_j}{1-\lambda_m}y_j+\lambda_my_m$，先用定义，再对前 $m-1$ 项用归纳假设。）
+
+\emph{第二步：立方体上有上界。}设 $\abs x_\infty\leqslant1$。对 $\varepsilon\in\{-1,1\}^n$，令 $w_\varepsilon=\prod_{i=1}^n\frac{1+\varepsilon_ix_i}2\geqslant0$。展开乘积 $\prod_i\bigl(\frac{1+x_i}2+\frac{1-x_i}2\bigr)=1$ 可知 $\sum_\varepsilon w_\varepsilon=1$；同样，$\sum_\varepsilon w_\varepsilon\varepsilon_j=\bigl(\frac{1+x_j}2-\frac{1-x_j}2\bigr)\prod_{i\neq j}1=x_j$。所以 $x=\sum_\varepsilon w_\varepsilon\varepsilon$ 是立方体的 $2^n$ 个顶点的凸组合。由第一步，$\varphi(x)\leqslant M:=\max_\varepsilon\varphi(\varepsilon)$。
+
+\emph{第三步：连续性。}设 $0<r=\abs x_\infty\leqslant1$。一方面 $x=r\cdot\frac xr+(1-r)\cdot0$，$\abs{x/r}_\infty=1$，由凸性与第二步，$\varphi(x)\leqslant r M+(1-r)\varphi(0)$，即 $\varphi(x)-\varphi(0)\leqslant r(M-\varphi(0))$。另一方面 $0=\frac1{1+r}x+\frac r{1+r}\bigl(-\frac xr\bigr)$，所以 $\varphi(0)\leqslant\frac1{1+r}\varphi(x)+\frac r{1+r}M$，整理得 $\varphi(x)-\varphi(0)\geqslant-r(M-\varphi(0))$。于是
+\[
+\abs{\varphi(x)-\varphi(0)}\leqslant(M-\varphi(0))\abs x_\infty\qquad(\abs x_\infty\leqslant1),
+\]
+$\varphi$ 在 $0$ 处连续。（由第二步，$M\geqslant\varphi(0)$。）
+
+连续函数是 Borel 函数，$(X_1,\dots,X_n)$ 是随机向量，所以 $\varphi(X_1,\dots,X_n)$ 是随机变量（定理~\ref{thm:random-variables:vector}）。
+\end{solution}
+\item 固定 $x_0\in\R^n$。对 $v\in\R^n$，证明极限
+\[
+p(v)=\lim_{t\downarrow0}\frac{\varphi(x_0+tv)-\varphi(x_0)}t
+\]
+存在且有限，并且 $p(v)\leqslant\varphi(x_0+v)-\varphi(x_0)$。$p(v)$ 称为 $\varphi$ 在 $x_0$ 处沿方向 $v$ 的\term{方向导数}。
+\begin{solution}
+令 $g(t)=\varphi(x_0+tv)$，$t\in\R$。$g$ 是 $\R$ 上的凸函数：$g(\lambda s+(1-\lambda)t)=\varphi(\lambda(x_0+sv)+(1-\lambda)(x_0+tv))\leqslant\lambda g(s)+(1-\lambda)g(t)$。由引理~\ref{lem:expectation:supporting-line}(1)：
+\begin{itemize}
+\item 对 $0<s<t$，取三点 $0<s<t$，比较前两个斜率，$\frac{g(s)-g(0)}s\leqslant\frac{g(t)-g(0)}t$，所以差商 $D(t)=\frac{g(t)-g(0)}t$ 在 $t>0$ 上单调不减；
+\item 对 $t>0$，取三点 $-1<0<t$，比较第一个与第三个斜率，$g(0)-g(-1)\leqslant D(t)$，所以 $D$ 有下界。
+\end{itemize}
+单调不减且有下界的函数在 $t\downarrow0$ 时有有限的极限，即 $p(v)=\lim_{t\downarrow0}D(t)=\inf_{t>0}D(t)$。特别地 $p(v)\leqslant D(1)=\varphi(x_0+v)-\varphi(x_0)$。
+\end{solution}
+\item 证明 $p$ 是\term{次线性}的：$p(0)=0$；对 $s>0$，$p(sv)=sp(v)$；$p(v+w)\leqslant p(v)+p(w)$。
+\begin{solution}
+$p(0)=0$：差商恒为零。
+
+\emph{正齐次。}对 $s>0$，
+\[
+\frac{\varphi(x_0+t\,sv)-\varphi(x_0)}t=s\cdot\frac{\varphi(x_0+(st)v)-\varphi(x_0)}{st},
+\]
+令 $t\downarrow0$，则 $st\downarrow0$，右边趋于 $sp(v)$。
+
+\emph{次可加。}$x_0+t(v+w)=\frac12(x_0+2tv)+\frac12(x_0+2tw)$，由凸性，
+\[
+\varphi(x_0+t(v+w))-\varphi(x_0)\leqslant\frac12\bigl(\varphi(x_0+2tv)-\varphi(x_0)\bigr)+\frac12\bigl(\varphi(x_0+2tw)-\varphi(x_0)\bigr).
+\]
+两边除以 $t$，右边是 $\frac{\varphi(x_0+2tv)-\varphi(x_0)}{2t}+\frac{\varphi(x_0+2tw)-\varphi(x_0)}{2t}$。令 $t\downarrow0$ 即得 $p(v+w)\leqslant p(v)+p(w)$。
+\end{solution}
+\item （一步延拓）设 $V$ 是 $\R^n$ 的线性子空间，$\ell:V\to\R$ 线性，$\ell(v)\leqslant p(v)$ 对一切 $v\in V$ 成立；又设 $e\notin V$。证明存在实数 $c$，使 $V+\R e$ 上的线性函数 $\tilde\ell(v+te)=\ell(v)+tc$ 满足 $\tilde\ell\leqslant p$。
+\begin{solution}
+思路：$\tilde\ell\leqslant p$ 对 $t>0$ 与 $t<0$ 分别给出 $c$ 的上界与下界，要说明下界不超过上界。
+
+\emph{第一步：$c$ 的可选范围非空。}对 $v,w\in V$，由 $\ell$ 线性、$\ell\leqslant p$ 与 $p$ 的次可加性，
+\[
+\ell(v)+\ell(w)=\ell(v+w)\leqslant p(v+w)=p\bigl((v-e)+(w+e)\bigr)\leqslant p(v-e)+p(w+e),
+\]
+即 $\ell(v)-p(v-e)\leqslant p(w+e)-\ell(w)$。左边只依赖 $v$，右边只依赖 $w$，所以
+\[
+\alpha=\sup_{v\in V}\bigl(\ell(v)-p(v-e)\bigr)\leqslant\beta=\inf_{w\in V}\bigl(p(w+e)-\ell(w)\bigr),
+\]
+并且二者都有限（$\alpha$ 不超过右边集合中的任何一个实数，$\beta$ 不小于左边集合中的任何一个实数）。取 $c\in[\alpha,\beta]$。
+
+\emph{第二步：验证。}$t=0$ 时就是假设。$t>0$ 时，由 $c\leqslant\beta$ 与正齐次性，
+\[
+\ell(v)+tc=t\Bigl(\ell\bigl(\tfrac vt\bigr)+c\Bigr)\leqslant t\,p\bigl(\tfrac vt+e\bigr)=p(v+te).
+\]
+$t=-s<0$ 时，由 $c\geqslant\alpha$，$\ell(\frac vs)-c\leqslant p(\frac vs-e)$，所以
+\[
+\ell(v)+tc=s\Bigl(\ell\bigl(\tfrac vs\bigr)-c\Bigr)\leqslant s\,p\bigl(\tfrac vs-e\bigr)=p(v-se)=p(v+te).
+\]
+另外，$e\notin V$ 保证了 $V+\R e$ 中每个元素唯一地写成 $v+te$，所以 $\tilde\ell$ 的定义合理，并且是线性的。
+\end{solution}
+\item （支撑超平面）证明存在 $a\in\R^n$，使 $\varphi(x)\geqslant\varphi(x_0)+a\cdot(x-x_0)$ 对一切 $x\in\R^n$ 成立。
+\begin{solution}
+令 $e_1,\dots,e_n$ 是标准基，$V_k$ 是 $e_1,\dots,e_k$ 张成的子空间，$V_0=\{0\}$。在 $V_0$ 上令 $\ell_0=0$，由 A14-3)，$\ell_0(0)=0=p(0)$。$e_{k+1}\notin V_k$，由 A14-4)，可以把 $\ell_k$ 延拓成 $V_{k+1}$ 上的线性函数 $\ell_{k+1}\leqslant p$。做 $n$ 步，得到 $\R^n$ 上的线性函数 $\ell=\ell_n\leqslant p$。令 $a_i=\ell(e_i)$，则 $\ell(v)=a\cdot v$。由 A14-2)，对一切 $v$，
+\[
+a\cdot v\leqslant p(v)\leqslant\varphi(x_0+v)-\varphi(x_0).
+\]
+取 $v=x-x_0$ 即得。
+
+A14-4)、A14-5) 的论证在泛函分析中称为 Hahn--Banach 定理；在有限维空间中只需要延拓有限步。$n=1$ 时，$a$ 就是引理~\ref{lem:expectation:supporting-line}(2) 中的 $k$。
+\end{solution}
+\item 证明多元 Jensen 不等式。
+\begin{solution}
+令 $c=(EX_1,\dots,EX_n)$，由 A14-5)，取 $a$ 使 $\varphi(x)\geqslant\varphi(c)+a\cdot(x-c)$ 对一切 $x$ 成立。代入 $x=(X_1,\dots,X_n)$，
+\[
+\varphi(X_1,\dots,X_n)\geqslant\varphi(c)+\sum_{i=1}^na_i(X_i-EX_i).
+\]
+两边可积（左边由假设，右边因为每个 $X_i$ 可积），取期望，右边的和的期望为 $\sum_ia_i(EX_i-EX_i)=0$，即得 $E\varphi(X_1,\dots,X_n)\geqslant\varphi(c)$。
+
+例如 $\varphi(x,y)=\sqrt{x^2+y^2}$（欧氏范数，由三角不等式它是凸的）给出 $E\sqrt{X^2+Y^2}\geqslant\sqrt{(EX)^2+(EY)^2}$；$\varphi(x,y)=\max\{x,y\}$ 给出 $E\max\{X,Y\}\geqslant\max\{EX,EY\}$。
+\end{solution}
+\end{questions}
+
+\item\label{ex:expectation:A15} （加权的算术--几何平均不等式）设 $p_1,\dots,p_n>0$，$\sum_mp_m=1$，$y_1,\dots,y_n>0$。用 Jensen 不等式（$\varphi(x)=e^x$）证明
+\[
+\sum_{m=1}^np_my_m\geqslant\prod_{m=1}^ny_m^{p_m}.
+\]
+$p_m=\frac1n$ 时，这就是算术平均不小于几何平均。
+\begin{solution}
+在有限概率空间 $\Omega=\{1,\dots,n\}$，$P(\{m\})=p_m$ 上令 $X(m)=\log y_m$。$X$ 有界，所以可积。$\varphi(x)=e^x$ 在 $\R$ 上凸（二阶导数为正）。由 Jensen 不等式（定理~\ref{thm:expectation:jensen}），$e^{EX}\leqslant Ee^X$。而由离散型随机变量的期望公式（推论~\ref{cor:expectation:discrete}，这里直接按有限和计算即可），
+\[
+EX=\sum_mp_m\log y_m,\qquad e^{EX}=\prod_me^{p_m\log y_m}=\prod_my_m^{p_m},\qquad Ee^X=\sum_mp_my_m .
+\]
+即得。取 $n=2$，$p_1=\frac1p$，$p_2=\frac1q$，$y_1=a^p$，$y_2=b^q$，就得到 Young 不等式（引理~\ref{lem:expectation:young}）。
+\end{solution}
 \end{exercises}
 
 \begin{probleme}{B}{容斥原理与配对问题}
