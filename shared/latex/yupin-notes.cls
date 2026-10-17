@@ -60,9 +60,11 @@
   \setCJKmainfont{SimSun}[BoldFont=SimHei,ItalicFont=KaiTi,BoldItalicFont=SimHei]%
   \setCJKsansfont{SimHei}\setCJKmonofont{FangSong}%
 }{\IfFontExistsTF{Noto Serif CJK SC}{%
-  % Linux（网站的 GitHub Actions 编译环境）：Noto 宋体/黑体，楷体用 Fandol
-  \setCJKmainfont{Noto Serif CJK SC}[BoldFont={Noto Sans CJK SC Bold},ItalicFont=FandolKai-Regular.otf,BoldItalicFont={Noto Sans CJK SC Bold}]%
-  \setCJKsansfont{Noto Sans CJK SC}\setCJKmonofont{FandolFang-Regular.otf}%
+  % Linux（网站的 GitHub Actions 编译环境）：Noto 宋体/黑体；楷体依次找 Fandol、文鼎楷体
+  \IfFontExistsTF{FandolKai-Regular.otf}{\def\yp@kai{FandolKai-Regular.otf}}{%
+    \IfFontExistsTF{AR PL UKai CN}{\def\yp@kai{AR PL UKai CN}}{\def\yp@kai{Noto Serif CJK SC}}}%
+  \setCJKmainfont{Noto Serif CJK SC}[BoldFont={Noto Sans CJK SC Bold},ItalicFont=\yp@kai,BoldItalicFont={Noto Sans CJK SC Bold}]%
+  \setCJKsansfont{Noto Sans CJK SC}\setCJKmonofont{Noto Sans Mono CJK SC}%
 }{%
   \setCJKmainfont{FandolSong-Regular.otf}[BoldFont=FandolHei-Regular.otf,ItalicFont=FandolKai-Regular.otf,BoldItalicFont=FandolHei-Regular.otf]%
   \setCJKsansfont{FandolHei-Regular.otf}\setCJKmonofont{FandolFang-Regular.otf}%
