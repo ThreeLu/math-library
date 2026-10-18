@@ -105,6 +105,35 @@ nav[role="doc-toc"] {
   li a.active { color: var(--yp-accent); border-left-color: var(--yp-accent); }
   .yp-secnum { color: inherit; }
 }
+// Hiding the contents on either side: the text takes the freed columns
+@media (min-width: 992px) {
+  html.yp-hide-left #quarto-sidebar { display: none !important; }
+  html.yp-hide-left #quarto-content.page-columns main.content { grid-column-start: page-start !important; }
+}
+@media (min-width: 1200px) {
+  html.yp-hide-right #quarto-margin-sidebar { display: none !important; }
+  html.yp-hide-right #quarto-content.page-columns main.content { grid-column-end: page-end !important; }
+  html.yp-hide-right .yp-thm-pdf { display: none; }
+}
+// The tabs on the screen edges that do it
+.yp-edge {
+  position: fixed; top: 50%; z-index: 1040; width: 18px; height: 46px; margin-top: -23px; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--yp-line); background: var(--yp-paper); color: var(--yp-faint);
+  transition: color 0.15s, background 0.15s, width 0.15s;
+  &:hover { color: var(--yp-accent); background: var(--yp-card); width: 22px; }
+  &:focus { outline: none; }
+  &:focus-visible { outline: 2px solid var(--yp-accent-soft); outline-offset: -2px; }
+  svg { transition: transform 0.15s; }
+}
+.yp-edge-left { left: 0; border-left: none; border-radius: 0 6px 6px 0; }
+.yp-edge-right { right: 0; border-right: none; border-radius: 6px 0 0 6px; svg { transform: scaleX(-1); } }
+// the chevron points the way the column will move
+html.yp-hide-left .yp-edge-left svg { transform: scaleX(-1); }
+html.yp-hide-right .yp-edge-right svg { transform: none; }
+@media (max-width: 991.98px) { .yp-edge-left { display: none; } }
+@media (max-width: 1199.98px) { .yp-edge-right { display: none; } }
+@media print { .yp-edge { display: none; } }
 .yp-onpage-title {
   font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--yp-muted);
   margin: 0 0 0.6rem;

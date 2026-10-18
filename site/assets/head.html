@@ -3,6 +3,14 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.7.0/style.css">
 <script>
+// Hidden contents columns (left: the book, right: this page), set before the
+// first paint so the page does not jump.
+try {
+  const l = JSON.parse(localStorage.getItem("yp:layout")) || {};
+  if (l.left) document.documentElement.classList.add("yp-hide-left");
+  if (l.right) document.documentElement.classList.add("yp-hide-right");
+} catch (e) {}
+
 document.addEventListener("DOMContentLoaded", () => {
   const zh = (document.documentElement.lang || "").startsWith("zh");
   const store = {
@@ -133,6 +141,48 @@ document.addEventListener("DOMContentLoaded", () => {
     spy();
   }
 
+  // ---- Hide or show the contents on either side; the text widens into the
+  // space. Tabs on the screen edges, keys [ and ], remembered across pages.
+  const root = document.documentElement;
+  const toggles = [];
+  const sides = [["left", "quarto-sidebar", "[", zh ? "目录" : "contents"],
+                 ["right", "quarto-margin-sidebar", "]", zh ? "本页目录" : "page contents"]];
+  sides.forEach(([side, id, key, what]) => {
+    if (!document.getElementById(id)) return;
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "yp-edge yp-edge-" + side;
+    const label = () => {
+      const hidden = root.classList.contains("yp-hide-" + side);
+      b.title = (hidden ? (zh ? "显示" : "Show ") : (zh ? "隐藏" : "Hide ")) + what +
+                (zh ? `（${key}）` : ` (${key})`);
+      b.setAttribute("aria-label", b.title);
+      b.setAttribute("aria-pressed", String(hidden));
+    };
+    b.innerHTML = '<svg viewBox="0 0 10 16" width="8" height="13" aria-hidden="true">' +
+                  '<path d="M7 2 L2 8 L7 14" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';
+    b.onclick = () => {
+      // keep the line being read in place while the column reflows
+      const main = document.querySelector("main.content");
+      const r = main && main.getBoundingClientRect();
+      const at = r && document.elementFromPoint(r.left + r.width / 2, Math.max(r.top, 90));
+      const anchor = at && main.contains(at) ? at : null;
+      const before = anchor && anchor.getBoundingClientRect().top;
+      root.classList.toggle("yp-hide-" + side);
+      if (anchor) scrollBy(0, anchor.getBoundingClientRect().top - before);
+      store.set("yp:layout", { left: root.classList.contains("yp-hide-left"),
+                               right: root.classList.contains("yp-hide-right") });
+      toggles.forEach(f => f());
+    };
+    label();
+    toggles.push(label);
+    document.body.append(b);
+    document.addEventListener("keydown", e => {
+      if (e.key === key && !e.metaKey && !e.ctrlKey && !e.altKey &&
+          !/input|textarea/i.test(document.activeElement.tagName)) b.click();
+    });
+  });
+
   // ---- Jump back: following a cross-reference remembers where it was clicked;
   // a "Back" button then returns there (one level per click, across pages).
   const BACK = "yp:back";
@@ -219,10 +269,16 @@ document.addEventListener("DOMContentLoaded", () => {
   showBack();
 
   // ---- Previews: hovering a cross-reference shows the statement, formula,
-  // exercise, figure or reference it points to. On touch screens the first
-  // tap shows the preview and a second tap (or "Go to") follows the link.
+  // exercise, figure or reference it points to. A tap with a finger or pen
+  // shows the preview and a second tap (or "Go to") follows the link.
   const PREVIEW = "a.yp-ref, a.yp-cite, .yp-idx-item a";
-  const touch = matchMedia("(hover: none)").matches;
+  // Decided per event, not per device: a tablet with a trackpad or pencil
+  // reports that it can hover, and a laptop may have a touch screen.
+  let finger = false;
+  const notePointer = e => { finger = e.pointerType === "touch" || e.pointerType === "pen"; };
+  addEventListener("pointerover", notePointer, true);
+  addEventListener("pointerdown", notePointer, true);
+  addEventListener("keydown", () => { finger = false; }, true);
   const pages = new Map();
   const fetchPage = url => {
     if (!pages.has(url)) {
@@ -295,7 +351,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const body = doc.querySelector(".yp-body");
     box.className = "yp-body yp-pop-body" + (body ? [...body.classList]
       .filter(c => /^yp-(zh|en)$/.test(c)).map(c => " " + c).join("") : "");
-    if (touch) {
+    if (finger) {
       const go = document.createElement("button");
       go.type = "button";
       go.className = "yp-pop-go";
@@ -316,39 +372,41 @@ document.addEventListener("DOMContentLoaded", () => {
     pop.style.visibility = "";
   }
 
-  if (!touch) {
-    document.addEventListener("mouseover", e => {
-      const a = e.target.closest(PREVIEW);
-      if (pop.contains(e.target)) { clearTimeout(hideTimer); return; }
-      if (!a) return;
-      clearTimeout(hideTimer);
-      if (a === popOwner && !pop.hidden) return;
-      // start loading the target page now, while the hover delay runs
-      fetchPage(new URL(a.href.split("#")[0], location.href).href).catch(() => {});
-      clearTimeout(showTimer);
-      showTimer = setTimeout(() => showPop(a), 250);
-    });
-    document.addEventListener("mouseout", e => {
-      const from = e.target.closest(PREVIEW) || (pop.contains(e.target) ? pop : null);
-      if (!from) return;
-      const to = e.relatedTarget;
-      if (to && (pop.contains(to) || (popOwner && popOwner.contains(to)))) return;
-      clearTimeout(showTimer);
-      clearTimeout(hideTimer);
-      hideTimer = setTimeout(hidePop, 200);
-    });
-  } else {
-    // capture on window, before the "Back" bookkeeping on document sees the click
-    window.addEventListener("click", e => {
-      const a = e.target.closest(PREVIEW);
-      if (pop.contains(e.target)) return;
-      if (!a) { if (!pop.hidden) hidePop(); return; }
-      if (a === popOwner && !pop.hidden) { hidePop(); return; }   // second tap: follow
-      e.preventDefault();
-      e.stopPropagation();
-      showPop(a);
-    }, true);
-  }
+  // mouse: hover to preview, click to follow
+  document.addEventListener("mouseover", e => {
+    if (finger) return;            // the mouse events a tap also fires
+    const a = e.target.closest(PREVIEW);
+    if (pop.contains(e.target)) { clearTimeout(hideTimer); return; }
+    if (!a) return;
+    clearTimeout(hideTimer);
+    if (a === popOwner && !pop.hidden) return;
+    // start loading the target page now, while the hover delay runs
+    fetchPage(new URL(a.href.split("#")[0], location.href).href).catch(() => {});
+    clearTimeout(showTimer);
+    showTimer = setTimeout(() => showPop(a), 250);
+  });
+  document.addEventListener("mouseout", e => {
+    if (finger) return;
+    const from = e.target.closest(PREVIEW) || (pop.contains(e.target) ? pop : null);
+    if (!from) return;
+    const to = e.relatedTarget;
+    if (to && (pop.contains(to) || (popOwner && popOwner.contains(to)))) return;
+    clearTimeout(showTimer);
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(hidePop, 200);
+  });
+  // finger or pen: first tap previews, second tap follows. Captured on window,
+  // before the "Back" bookkeeping on document sees the click.
+  window.addEventListener("click", e => {
+    if (!finger) return;
+    const a = e.target.closest(PREVIEW);
+    if (pop.contains(e.target)) return;
+    if (!a) { if (!pop.hidden) hidePop(); return; }
+    if (a === popOwner && !pop.hidden) { hidePop(); return; }   // second tap: follow
+    e.preventDefault();
+    e.stopPropagation();
+    showPop(a);
+  }, true);
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !pop.hidden) hidePop(); });
   addEventListener("resize", () => { if (!pop.hidden) hidePop(); });
 
