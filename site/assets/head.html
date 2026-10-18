@@ -18,6 +18,20 @@ document.addEventListener("DOMContentLoaded", () => {
     set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
   };
 
+  // ---- Book contents: a lecture's exercises as a small link on its own line,
+  // in place of a section that folds out to one item (the CSS hides those).
+  document.querySelectorAll("#quarto-sidebar .sidebar-item-section").forEach(sec => {
+    const items = sec.querySelectorAll(":scope > ul > li");
+    const hw = items.length === 1 && items[0].querySelector('a[href$="-hw.html"]');
+    const row = sec.querySelector(":scope > .sidebar-item-container");
+    if (!hw || !row) return;
+    const a = document.createElement("a");
+    a.href = hw.getAttribute("href");
+    a.className = "yp-side-hw" + (hw.classList.contains("active") ? " active" : "");
+    a.textContent = zh ? "作业" : "Exercises";
+    row.append(a);
+  });
+
   // ---- Solutions: show all / hide all, and open the one a link points into
   const sols = document.querySelectorAll("details.yp-solution");
   if (sols.length > 1) {

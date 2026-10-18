@@ -78,11 +78,25 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 #quarto-sidebar, .sidebar {
   font-family: var(--yp-sans);
   .sidebar-title { font-family: var(--yp-serif); font-size: 1rem; font-weight: 700; color: var(--yp-ink); }
-  .sidebar-item { font-size: 0.84rem; line-height: 1.45; }
+  .sidebar-item { font-size: 0.8rem; line-height: 1.45; }
   .sidebar-link { color: var(--yp-muted); }
   .sidebar-link:hover { color: var(--yp-ink); }
-  .sidebar-link.active, .sidebar-link.active .menu-text { color: var(--yp-ink) !important; font-weight: 600; }
+  .sidebar-link.active, .sidebar-link.active .menu-text { color: var(--yp-accent) !important; font-weight: 400; }
   .sidebar-item-section .sidebar-item-text { color: var(--yp-muted); }
+  .sidebar-item-section .sidebar-item-text.active { color: var(--yp-accent); }
+  // A lecture and its exercises on one line (head.html moves the link up);
+  // the chevron and the one-item list underneath are not needed.
+  .sidebar-item-section:has(> ul > li:only-child a[href$="-hw.html"]) {
+    > ul, .sidebar-item-toggle { display: none !important; }
+  }
+  .sidebar-item-container { gap: 0.6rem; }
+  .sidebar-item-container:has(> a.yp-side-hw) { align-items: baseline; }
+  a.yp-side-hw {
+    flex: none; align-self: baseline; font-size: 0.72rem; color: var(--yp-faint); opacity: 0.75;
+    &:hover { color: var(--yp-accent); opacity: 1; text-decoration: none; }
+    &.active { color: var(--yp-accent); opacity: 1; }
+  }
+  .sidebar-item-container:has(a.yp-side-hw.active) > a.sidebar-link .menu-text { color: var(--yp-ink); }
 }
 nav[role="doc-toc"] {
   font-family: var(--yp-sans);
@@ -94,13 +108,13 @@ nav[role="doc-toc"] {
 // On this page (built by head.html in the right margin)
 .yp-onpage {
   position: sticky; top: 5.5rem; max-height: calc(100vh - 7rem); overflow-y: auto;
-  font-family: var(--yp-sans); font-size: 0.78rem; line-height: 1.45; padding-top: 0.4rem;
+  font-family: var(--yp-sans); font-size: 0.8rem; line-height: 1.45; padding-top: 0.4rem;
   ul { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--yp-line); }
   li a {
     display: block; padding: 0.28rem 0 0.28rem 0.85rem; margin-left: -1px;
-    border-left: 1px solid transparent; color: var(--yp-faint);
+    border-left: 1px solid transparent; color: var(--yp-muted);
   }
-  li.yp-onpage-sub a { padding-left: 1.6rem; font-size: 0.74rem; }
+  li.yp-onpage-sub a { padding-left: 1.6rem; font-size: 0.76rem; }
   li a:hover { color: var(--yp-ink); text-decoration: none; }
   li a.active { color: var(--yp-accent); border-left-color: var(--yp-accent); }
   .yp-secnum { color: inherit; }
@@ -211,7 +225,7 @@ html[lang|="en"] #refs, html[lang|="en"] #quarto-bibliography { font-family: "LM
 
 // Page banner: 第 N 讲 · open in PDF
 .yp-banner {
-  font-family: var(--yp-sans); font-size: 0.76rem; margin: -0.2em 0 2em;
+  font-family: var(--yp-sans); font-size: 0.76rem; margin: 0.7rem 0 2em;
   p { margin: 0; display: flex; gap: 0.9em; align-items: baseline; flex-wrap: wrap; text-align: left !important; }
 }
 .yp-kicker { color: var(--yp-accent); letter-spacing: 0.12em; }
@@ -378,6 +392,7 @@ a.yp-toc-main:hover { text-decoration: none; .yp-toc-title { color: var(--yp-acc
 }
 .yp-toc-title { font-size: 1rem; line-height: 1.5; transition: color 0.15s; }
 html[lang|="zh"] .yp-toc-title { font-family: var(--yp-song); }
+html[lang|="en"] .yp-toc-title { font-family: "LM Roman", Georgia, serif; font-size: 1.08rem; }
 .yp-toc-aux { font-family: var(--yp-sans); font-size: 0.76rem; color: var(--yp-faint) !important; white-space: nowrap; }
 .yp-toc-aux:hover { color: var(--yp-accent) !important; text-decoration: none; }
 .yp-toc-todo { .yp-toc-title, .yp-toc-num { color: #cbc4b9; } }
@@ -412,7 +427,7 @@ html[lang|="zh"] .yp-toc-title { font-family: var(--yp-song); }
   border-top: 1px solid #ece7df;
   p { margin: 0; }
   .yp-idx-label {
-    position: absolute; left: 0; top: 0.5rem; width: 5.6rem;
+    display: inline-block; width: 6.2rem; margin-left: -6.2rem;
     font-family: var(--yp-sans); font-size: 0.78rem; color: var(--yp-accent); font-variant-numeric: tabular-nums;
   }
   .yp-idx-name { font-weight: 700; margin-right: 0.5em; font-family: var(--yp-hei); }
@@ -420,7 +435,7 @@ html[lang|="zh"] .yp-toc-title { font-family: var(--yp-song); }
 }
 .yp-idx-item[hidden], .yp-idx-group[hidden], .yp-idx-book[hidden] { display: none; }
 @media (max-width: 760px) {
-  .yp-idx-item { padding-left: 0; .yp-idx-label { position: static; display: block; width: auto; } }
+  .yp-idx-item { padding-left: 0; .yp-idx-label { display: block; width: auto; margin-left: 0; } }
   .yp-hero-title { font-size: 2.1rem; }
 }
 
@@ -504,6 +519,7 @@ a.yp-cite { color: var(--yp-accent); }
 @media (hover: none) {
   .yp-solution summary { padding: 0.35em 0; }
   .yp-toc-aux, .yp-book-pdf { padding: 0.25rem 0.7rem; }
+  #quarto-sidebar a.yp-side-hw { padding: 0.2rem 0 0.2rem 0.6rem; }
   .yp-solution-toggle { gap: 1.6em; button { padding: 0.3em 0; } }
 }
 // Wide display formulas (e.g. numbered ones, which MathJax gives a min-width)
@@ -511,6 +527,15 @@ a.yp-cite { color: var(--yp-accent); }
 .yp-eq { display: block; max-width: 100%; overflow-x: auto; overflow-y: hidden; }
 .yp-body mjx-container[display="true"] { max-width: 100%; }
 @media (max-width: 599.98px) {
-  html[lang|="zh"] .quarto-title h1.title { font-size: 1.25rem; }
-  .quarto-title h1.title { font-size: 1.35rem; }
+  html[lang|="zh"] .quarto-title h1.title { font-size: 1.15rem; line-height: 1.5; }
+  .quarto-title h1.title { font-size: 1.3rem; }
+}
+
+// ---------------------------------------------------------------------
+//  Dark mode: the whole page inverted (hue kept), figures included
+// ---------------------------------------------------------------------
+@media screen and (prefers-color-scheme: dark) {
+  html { filter: invert(0.92) hue-rotate(180deg); }
+  // shadows would turn into glows
+  .yp-pop, .yp-back { box-shadow: none; }
 }

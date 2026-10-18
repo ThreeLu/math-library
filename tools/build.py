@@ -681,7 +681,9 @@ def write_book_index(book, pages, out, pdf_name, progress):
                      f'{esc(row.get("讲", ""))}</span><span class="yp-toc-title">{topic_html(row.get("主题", f))}'
                      f'</span></span></li>')
     h.append("</ol>")
-    lines = ["---", f"pagetitle: {json.dumps(book['title'], ensure_ascii=False)}", "toc: false", "---", "",
+    # the page is the book's contents, so the contents column would only repeat it
+    lines = ["---", f"pagetitle: {json.dumps(book['title'], ensure_ascii=False)}", "toc: false",
+             "sidebar: false", "---", "",
              "```{=html}", "\n".join(h), "```", ""]
     (out / "index.qmd").write_text("\n".join(lines), encoding="utf-8")
 
