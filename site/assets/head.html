@@ -236,8 +236,26 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!stack.length) { backBtn.hidden = true; return; }
     const top = stack[stack.length - 1];
     const here = top.path === location.pathname;
-    backBtn.textContent = (zh ? "↩ 返回" : "↩ Back") + (here ? "" : " · " + top.label);
+    // arrow · "Back" over where it leads · key hint
+    const word = document.createElement("span");
+    word.className = "yp-back-word";
+    word.textContent = (zh ? "返回" : "Back") + (stack.length > 1 ? ` · ${stack.length}` : "");
+    const where = document.createElement("span");
+    where.className = "yp-back-where";
+    where.textContent = here ? (zh ? "跳转前的位置" : "where you were") : top.label;
+    const text = document.createElement("span");
+    text.className = "yp-back-text";
+    text.append(word, where);
+    const key = document.createElement("kbd");
+    key.textContent = "B";
+    backBtn.replaceChildren();
+    backBtn.insertAdjacentHTML("afterbegin",
+      '<svg class="yp-back-arrow" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">' +
+      '<path d="M6.5 3.5 2.5 7.5l4 4M3 7.5h6.5a4 4 0 0 1 0 8H8" fill="none" stroke="currentColor" ' +
+      'stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+    backBtn.append(text, key);
     backBtn.title = zh ? "回到跳转前的位置（键盘：b）" : "Return to where you were (key: b)";
+    backBtn.setAttribute("aria-label", backBtn.title);
     backBtn.hidden = false;
   }
   // put the reader back at the link they followed, after the math has been typeset

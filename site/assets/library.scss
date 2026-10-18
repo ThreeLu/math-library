@@ -450,18 +450,35 @@ a.yp-cite { color: var(--yp-accent); }
 .yp-body figcaption, .yp-body .figure-caption { font-family: var(--yp-sans); font-size: 0.82rem; color: var(--yp-muted); text-align: center; margin-top: 0.5rem; }
 .yp-fignum { color: var(--yp-ink); font-weight: 600; }
 
-// Jump back after following a cross-reference
+// Jump back after following a cross-reference: a small paper card, like the previews
 .yp-back {
   position: fixed; right: 1.4rem; bottom: 1.4rem; z-index: 1050;
-  font-family: var(--yp-sans); font-size: 0.82rem; max-width: min(22rem, calc(100vw - 2.8rem));
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  padding: 0.5rem 1rem; border-radius: 999px; border: 1px solid var(--yp-ink);
-  background: var(--yp-ink); color: #fff; box-shadow: 0 6px 20px rgba(53, 49, 46, 0.12);
-  transition: background 0.15s, transform 0.15s;
-  &:hover { background: var(--yp-accent); border-color: var(--yp-accent); transform: translateY(-1px); }
+  display: flex; align-items: center; gap: 0.7rem; max-width: min(20rem, calc(100vw - 2.8rem));
+  padding: 0.5rem 0.75rem 0.5rem 0.8rem; text-align: left;
+  font-family: var(--yp-sans); color: var(--yp-ink);
+  background: var(--yp-card); border: 1px solid var(--yp-line); border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(53, 49, 46, 0.08), 0 1px 2px rgba(53, 49, 46, 0.05);
+  animation: yp-back-in 0.2s ease-out;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  &:hover { border-color: var(--yp-accent-soft); box-shadow: 0 8px 22px rgba(53, 49, 46, 0.11), 0 1px 2px rgba(53, 49, 46, 0.05); }
+  &:hover .yp-back-arrow { transform: translateX(-2px); }
+  &:focus { outline: none; }
+  &:focus-visible { outline: 2px solid var(--yp-accent-soft); outline-offset: 2px; }
+  kbd {
+    flex: none; padding: 0.05rem 0.38rem; font-family: var(--yp-sans); font-size: 0.66rem;
+    color: var(--yp-faint); background: transparent; border: 1px solid var(--yp-line); border-radius: 4px;
+    box-shadow: none;
+  }
+  @media (hover: none) { kbd { display: none; } }
   @media (max-width: 760px) { right: 1rem; bottom: 1rem; }
 }
+.yp-back-arrow { flex: none; color: var(--yp-accent); transition: transform 0.15s; }
+.yp-back-text { display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
+.yp-back-word { font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--yp-accent); }
+.yp-back-where { font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .yp-back[hidden] { display: none; }
+@keyframes yp-back-in { from { opacity: 0; transform: translateY(6px); } }
+@media (prefers-reduced-motion: reduce) { .yp-back { animation: none; } }
 
 // Preview of a cross-reference target, on hover (tap on touch screens)
 .yp-pop {
@@ -537,5 +554,5 @@ a.yp-cite { color: var(--yp-accent); }
 @media screen and (prefers-color-scheme: dark) {
   html { filter: invert(0.92) hue-rotate(180deg); }
   // shadows would turn into glows
-  .yp-pop, .yp-back { box-shadow: none; }
+  .yp-pop, .yp-back, .yp-back:hover { box-shadow: none; }
 }
