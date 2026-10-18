@@ -623,6 +623,13 @@ def esc(t):
     return html.escape(t, quote=True)
 
 
+def topic_html(t):
+    """Progress-table topics are plain text: R^d -> R<sup>d</sup>, a_{n} -> a<sub>n</sub>."""
+    tag = {"^": "sup", "_": "sub"}
+    return re.sub(r"([\^_])(?:\{([^}]*)\}|(\w))",
+                  lambda m: f"<{tag[m[1]]}>{m[2] or m[3]}</{tag[m[1]]}>", esc(t))
+
+
 CATEGORY_WORD = {"courses": "Course", "research": "Research notes", "surveys": "Survey"}
 LANG_WORD = {"zh": "中文", "en": "English"}
 
@@ -666,12 +673,12 @@ def write_book_index(book, pages, out, pdf_name, progress):
         aux = (f'<a class="yp-toc-aux" href="{hw["file"]}.html">{"作业" if zh else "Exercises"}</a>'
                if hw else "")
         h.append(f'<li><a class="yp-toc-main" href="{p["file"]}.html"><span class="yp-toc-num">{num}</span>'
-                 f'<span class="yp-toc-title">{esc(name)}</span></a>{aux}</li>')
+                 f'<span class="yp-toc-title">{topic_html(name)}</span></a>{aux}</li>')
     done = {p["unit"] for p in lectures}
     for f, row in progress.items():
         if f not in done and row.get("正文") == "未开始":
             h.append(f'<li class="yp-toc-todo"><span class="yp-toc-main"><span class="yp-toc-num">'
-                     f'{esc(row.get("讲", ""))}</span><span class="yp-toc-title">{esc(row.get("主题", f))}'
+                     f'{esc(row.get("讲", ""))}</span><span class="yp-toc-title">{topic_html(row.get("主题", f))}'
                      f'</span></span></li>')
     h.append("</ol>")
     lines = ["---", f"pagetitle: {json.dumps(book['title'], ensure_ascii=False)}", "toc: false", "---", "",

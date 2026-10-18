@@ -72,6 +72,67 @@ document.addEventListener("DOMContentLoaded", () => {
   const cb = document.getElementById("yp-continue-book");
   if (cb) fill(cb, store.get("yp:last:" + cb.dataset.book), false);
 
+  // Formulas in headings are short (σ-代数, 0-1 律, L^p): written out as text
+  // they show at once, without waiting for MathJax to typeset a long page.
+  const GREEK = { alpha: "α", beta: "β", gamma: "γ", delta: "δ", varepsilon: "ε", epsilon: "ε",
+    eta: "η", theta: "θ", kappa: "κ", lambda: "λ", mu: "μ", nu: "ν", xi: "ξ", pi: "π", rho: "ρ",
+    sigma: "σ", tau: "τ", phi: "φ", varphi: "φ", chi: "χ", omega: "ω", Gamma: "Γ", Delta: "Δ",
+    Lambda: "Λ", Phi: "Φ", Omega: "Ω", infty: "∞", in: "∈", le: "≤", leq: "≤", ge: "≥", geq: "≥",
+    to: "→", times: "×", cdot: "·", ldots: "…", dots: "…" };
+  function plainMath(tex) {
+    const span = document.createElement("span");
+    const t = tex.replace(/^\\\(|\\\)$/g, "")
+      .replace(/\\(?:mathbb|mathcal|mathrm|operatorname|text)\{([^}]*)\}/g, "$1")
+      .replace(/\\([A-Za-z]+)/g, (m, n) => GREEK[n] !== undefined ? GREEK[n] : "");
+    // ^x, ^{xy}, _x, _{xy} as superscripts and subscripts
+    t.split(/([\^_](?:\{[^}]*\}|.))/).forEach(part => {
+      if (/^[\^_]/.test(part)) {
+        const s = document.createElement(part[0] === "^" ? "sup" : "sub");
+        s.textContent = part.slice(1).replace(/^\{|\}$/g, "");
+        span.append(s);
+      } else span.append(part.replace(/[{}]/g, ""));
+    });
+    return span;
+  }
+
+  // ---- On this page: Quarto cannot see the headings inside .yp-body, so the
+  // margin contents are built here, with the section being read highlighted.
+  const margin = document.getElementById("quarto-margin-sidebar");
+  const heads = [...document.querySelectorAll(".yp-body section > h2, .yp-body section > h3")]
+    .filter(h => h.parentElement.id);
+  if (margin && heads.length >= 2) {
+    const nav = document.createElement("nav");
+    nav.className = "yp-onpage";
+    const title = document.createElement("p");
+    title.className = "yp-onpage-title";
+    title.textContent = zh ? "本页" : "On this page";
+    const list = document.createElement("ul");
+    const items = heads.map(h => {
+      const a = document.createElement("a");
+      a.href = "#" + h.parentElement.id;
+      a.innerHTML = h.innerHTML;
+      a.querySelectorAll(".anchorjs-link").forEach(x => x.remove());
+      a.querySelectorAll(".math").forEach(m => m.replaceWith(plainMath(m.textContent)));
+      const li = document.createElement("li");
+      li.className = h.tagName === "H3" ? "yp-onpage-sub" : "";
+      li.append(a);
+      list.append(li);
+      return a;
+    });
+    nav.append(title, list);
+    margin.append(nav);
+    let ticking = false;
+    const spy = () => {
+      ticking = false;
+      let i = heads.findIndex(h => h.getBoundingClientRect().top > 120) - 1;
+      if (i === -2) i = heads.length - 1;   // past the last heading
+      items.forEach((a, k) => a.classList.toggle("active", k === i));
+    };
+    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(spy); } },
+                     { passive: true });
+    spy();
+  }
+
   // ---- Jump back: following a cross-reference remembers where it was clicked;
   // a "Back" button then returns there (one level per click, across pages).
   const BACK = "yp:back";
@@ -81,9 +142,12 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   const refSelector = "a.yp-ref, a.yp-cite, .yp-idx-item a, .yp-body a[href*='#']";
   const refLinks = () => [...document.querySelectorAll(refSelector)];
+  let popOwner = null;    // the link whose preview is showing (set below)
   document.addEventListener("click", ev => {
-    const a = ev.target.closest(refSelector);
+    let a = ev.target.closest(refSelector);
     if (!a || ev.metaKey || ev.ctrlKey || ev.shiftKey || a.target === "_blank") return;
+    // a link inside a preview: come back to the link that opened the preview
+    if (a.closest(".yp-pop") && popOwner) a = popOwner;
     // a short name for the page: the sidebar label, else the page title
     const crumb = document.querySelector(".yp-body[data-crumb]");
     const active = document.querySelector("#quarto-sidebar a.sidebar-link.active");
@@ -153,6 +217,140 @@ document.addEventListener("DOMContentLoaded", () => {
     if (pending && pending.path === location.pathname) restore(pending);
   } catch (e) {}
   showBack();
+
+  // ---- Previews: hovering a cross-reference shows the statement, formula,
+  // exercise, figure or reference it points to. On touch screens the first
+  // tap shows the preview and a second tap (or "Go to") follows the link.
+  const PREVIEW = "a.yp-ref, a.yp-cite, .yp-idx-item a";
+  const touch = matchMedia("(hover: none)").matches;
+  const pages = new Map();
+  const fetchPage = url => {
+    if (!pages.has(url)) {
+      pages.set(url, fetch(url).then(r => r.ok ? r.text() : Promise.reject(r.status))
+        .then(t => new DOMParser().parseFromString(t, "text/html"))
+        .catch(e => { pages.delete(url); throw e; }));
+    }
+    return pages.get(url);
+  };
+  // the part of a page that a label names, as a detached copy
+  function excerpt(doc, id, base) {
+    const el = id && doc.getElementById(id);
+    let parts;
+    if (!el || el.tagName === "SECTION") {
+      // a label on a whole page or section: its title and first paragraph
+      const scope = el || doc.querySelector(".yp-body");
+      if (!scope) return null;
+      const h = el ? el.querySelector("h1, h2, h3") : doc.querySelector("h1.title");
+      const p = [...scope.querySelectorAll(":scope > p, :scope > section > p")]
+        .find(x => !x.closest(".yp-banner"));
+      parts = [h, p].filter(Boolean).map(x => x.cloneNode(true));
+      if (h) parts[0] = Object.assign(doc.createElement("p"), { className: "yp-pop-title",
+                                                               textContent: h.textContent.trim() });
+    } else if (el.dataset.label && !el.textContent.trim()) {
+      // exercise marker: the whole item
+      parts = [(el.closest(".yp-qitem, li, p") || el).cloneNode(true)];
+    } else {
+      parts = [el.cloneNode(true)];
+    }
+    const box = document.createElement("div");
+    box.append(...parts);
+    box.querySelectorAll(".yp-thm-pdf, details.yp-solution, .anchorjs-link").forEach(x => x.remove());
+    box.querySelectorAll("[id]").forEach(x => x.removeAttribute("id"));
+    box.querySelectorAll("a[href]").forEach(x => x.href = new URL(x.getAttribute("href"), base).href);
+    box.querySelectorAll("img[src]").forEach(x => x.src = new URL(x.getAttribute("src"), base).href);
+    return box.textContent.trim() || box.querySelector("img") ? box : null;
+  }
+
+  const pop = document.createElement("div");
+  pop.className = "yp-pop";
+  pop.hidden = true;
+  document.body.append(pop);
+  let showTimer = 0, hideTimer = 0, seq = 0;
+  function hidePop() {
+    clearTimeout(showTimer);
+    seq++;
+    pop.hidden = true;
+    popOwner = null;
+  }
+  function place(a) {
+    const r = a.getClientRects()[0] || a.getBoundingClientRect();
+    const vw = document.documentElement.clientWidth, gap = 8, edge = 16;
+    pop.style.maxWidth = Math.min(36 * 16, vw - 2 * edge) + "px";
+    const w = pop.offsetWidth, h = pop.offsetHeight;
+    const left = Math.max(edge, Math.min(r.left, vw - edge - w));
+    const below = innerHeight - r.bottom - gap >= h || r.top - gap < h;
+    pop.style.left = left + scrollX + "px";
+    pop.style.top = (below ? r.bottom + gap : r.top - gap - h) + scrollY + "px";
+  }
+  async function showPop(a) {
+    const n = ++seq;
+    const url = new URL(a.getAttribute("href"), location.href);
+    const id = decodeURIComponent(url.hash.slice(1));
+    url.hash = "";
+    let doc, box;
+    try { doc = await fetchPage(url.href); box = excerpt(doc, id, url.href); } catch (e) { box = null; }
+    if (n !== seq) return;
+    if (!box) { pop.hidden = true; popOwner = null; return; }
+    // typeset like the page it comes from (Chinese or English book)
+    const body = doc.querySelector(".yp-body");
+    box.className = "yp-body yp-pop-body" + (body ? [...body.classList]
+      .filter(c => /^yp-(zh|en)$/.test(c)).map(c => " " + c).join("") : "");
+    if (touch) {
+      const go = document.createElement("button");
+      go.type = "button";
+      go.className = "yp-pop-go";
+      go.textContent = (zh ? "跳转到 " : "Go to ") + a.textContent.trim() + " →";
+      go.onclick = () => { const o = popOwner; if (o) o.click(); hidePop(); };
+      box.append(go);
+    }
+    pop.replaceChildren(box);
+    popOwner = a;
+    pop.style.visibility = "hidden";
+    pop.hidden = false;
+    place(a);
+    if (window.MathJax && MathJax.typesetPromise) {
+      try { await MathJax.typesetPromise([pop]); } catch (e) {}
+      if (n !== seq) return;
+      place(a);
+    }
+    pop.style.visibility = "";
+  }
+
+  if (!touch) {
+    document.addEventListener("mouseover", e => {
+      const a = e.target.closest(PREVIEW);
+      if (pop.contains(e.target)) { clearTimeout(hideTimer); return; }
+      if (!a) return;
+      clearTimeout(hideTimer);
+      if (a === popOwner && !pop.hidden) return;
+      // start loading the target page now, while the hover delay runs
+      fetchPage(new URL(a.href.split("#")[0], location.href).href).catch(() => {});
+      clearTimeout(showTimer);
+      showTimer = setTimeout(() => showPop(a), 250);
+    });
+    document.addEventListener("mouseout", e => {
+      const from = e.target.closest(PREVIEW) || (pop.contains(e.target) ? pop : null);
+      if (!from) return;
+      const to = e.relatedTarget;
+      if (to && (pop.contains(to) || (popOwner && popOwner.contains(to)))) return;
+      clearTimeout(showTimer);
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(hidePop, 200);
+    });
+  } else {
+    // capture on window, before the "Back" bookkeeping on document sees the click
+    window.addEventListener("click", e => {
+      const a = e.target.closest(PREVIEW);
+      if (pop.contains(e.target)) return;
+      if (!a) { if (!pop.hidden) hidePop(); return; }
+      if (a === popOwner && !pop.hidden) { hidePop(); return; }   // second tap: follow
+      e.preventDefault();
+      e.stopPropagation();
+      showPop(a);
+    }, true);
+  }
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !pop.hidden) hidePop(); });
+  addEventListener("resize", () => { if (!pop.hidden) hidePop(); });
 
   // ---- Index of results: search box and kind filter ("/" focuses the box)
   const q = document.getElementById("yp-idx-q");
