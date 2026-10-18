@@ -50,11 +50,14 @@ books:
     progress: books/advanced-probability/进度.md
 
   - slug: graph-theory
-    title: Graph Theory, Probabilistic Combinatorics and Combinatorial Optimization
-    subtitle: Three graduate courses written up as one book
+    title: 图论、概率组合与组合优化
+    subtitle: 三门研究生课的例题、习题与方法 · 已有：图论第 1 章
     category: courses
-    lang: en
-    status: planned
+    lang: zh
+    status: active
+    source: books/graph-theory
+    main: graph-theory.tex
+    progress: books/graph-theory/进度.md
 
   - slug: locally-sparse-graphs
     title: Locally Sparse Graphs

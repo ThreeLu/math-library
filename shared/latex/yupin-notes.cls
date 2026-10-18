@@ -434,5 +434,8 @@
 \newcommand{\norm}[1]{\lVert #1\rVert}
 \newcommand{\set}[1]{\{#1\}}
 \newcommand{\given}{\mid}
+% 图论记号
+\DeclareMathOperator{\diam}{diam}                     % 直径
+\DeclareMathOperator{\rad}{rad}                       % 半径
 
 \endinput

@@ -1,0 +1,171 @@
+% !TEX root = ../graph-theory.tex
+% =====================================================================
+%  按距离分层：BFS、Moore 界、围长、二部图与奇圈
+% =====================================================================
+\lecture{按距离分层：BFS 树给出最短路，Moore 界，最小度与围长，二部图当且仅当没有奇圈，导出圈，直径与最小度，Petersen 图}
+\label{lec:distance-layers}
+
+固定一个顶点 $u$，把顶点按到 $u$ 的距离分层：$D_i=\{x: d(u,x)=i\}$。很多关于直径、半径、围长、二部性的问题，都是在这些层上数顶点或者看边的位置。这一讲收这类问题。
+
+\topic{方法：BFS 分层}
+
+设 $G$ 连通，$D_i=\{x:d(u,x)=i\}$，$i=0,1,\dots$。
+\begin{enumerate}
+\item 每条边的两个端点在同一层或相邻两层（$\abs{d(u,x)-d(u,y)}\leqslant1$ 对每条边 $xy$ 成立）。
+\item $D_{i+1}$ 中每个顶点在 $D_i$ 中有邻点（它到 $u$ 的最短路上的前一个顶点）。所以 $\abs{D_{i+1}}\leqslant\sum_{x\in D_i}\abs{N(x)\cap D_{i+1}}$，这是 Moore 界的来源。
+\item 若 $d(u,v)=k$，则 $D_0,\dots,D_k$ 都非空（最短 $(u,v)$-路经过每一层）。
+\item 两条不同的 $(u,x)$-路 $P,Q$ 的并含有圈，长度不超过 $\abs{E(P)}+\abs{E(Q)}$（$P\cup Q$ 连通而有两条不同的 $(u,x)$-路，由讲义定理 1.9 不是树）。所以：若 $x\in D_{i+1}$ 在 $D_i$ 中有两个邻点，则 $G$ 有长度 $\leqslant2i+2$ 的圈；若 $D_i$ 中有边，则 $G$ 有长度 $\leqslant2i+1$ 的圈。围长大时，前若干层就像一棵树。
+\item 奇偶性：若 $D_i$ 中有边 $xy$，则 $u\to x\to y\to u$ 是长为 $2i+1$ 的闭途径，其中含有奇圈（引理~\ref{lem:distance-layers:odd-walk}）。
+\end{enumerate}
+
+\begin{proposition}\label{prop:distance-layers:bfs}
+（讲义命题 1.1）BFS 树中从 $s$ 到每个可达顶点的路都是最短路。
+\end{proposition}
+\begin{proof}
+设顶点按进入 $R$ 的先后为 $w_1=s,w_2,\dots$，$\ell(w)$ 是 $w$ 在树中的深度，$p(w)$ 是树中的父亲。BFS 每次扫描的顶点 $v$ 是 $Q$ 中最早进入的顶点，扫描到 $v$ 的全部邻点都在 $R$ 中才把它移出 $Q$。所以被扫描的顶点依次是 $w_1,w_2,\dots$，而且 $w_i$ 的父亲在 $w_{i+1}$ 的父亲之前或相同。
+
+\emph{第一步：$\ell(w_i)$ 关于 $i$ 不减。}对 $i$ 归纳。设 $p(w_i)=w_a$，$p(w_{i+1})=w_b$，则 $a\leqslant b\leqslant i$，由归纳假设 $\ell(w_a)\leqslant\ell(w_b)$，所以 $\ell(w_i)=\ell(w_a)+1\leqslant\ell(w_b)+1=\ell(w_{i+1})$。
+
+\emph{第二步：$\ell(w)=d(s,w)$。}树中的路是 $G$ 中的路，所以 $\ell(w)\geqslant d(s,w)$。设有 $w$ 使 $\ell(w)>d(s,w)=j$，取 $j$ 最小的这种 $w$。$w$ 的最短路上的前一个顶点 $v$ 满足 $d(s,v)=j-1$，由 $j$ 的最小性 $\ell(v)=j-1$。扫描 $v$ 结束时 $w$ 已在 $R$ 中。若 $w$ 是扫描 $v$ 时加入的，则 $\ell(w)=j$；否则 $w$ 在扫描某个更早的顶点 $w_a$ 时加入，由第一步 $\ell(w)=\ell(w_a)+1\leqslant\ell(v)+1=j$。两种情形都与 $\ell(w)>j$ 矛盾。
+\end{proof}
+
+DFS 树没有这个性质：在圈 $C_n$ 上 DFS 树是一条路，从起点到它在圈上的另一个邻点，树中的距离是 $n-1$。
+
+\begin{theorem}\label{thm:distance-layers:moore}
+（讲义定理 1.5）设 $\rad(G)\leqslant k$，$\Delta(G)\leqslant d$，$d\geqslant3$。则 $\abs G<\frac d{d-2}(d-1)^k$。
+\end{theorem}
+\begin{proof}
+设 $u$ 是中心点，则 $V(G)=D_0\cup\dots\cup D_k$。$\abs{D_0}=1$，$\abs{D_1}\leqslant d$；$i\geqslant1$ 时 $D_i$ 中每个顶点在 $D_{i-1}$ 中有邻点，所以在 $D_{i+1}$ 中至多有 $d-1$ 个邻点，由方法第 2 条 $\abs{D_{i+1}}\leqslant(d-1)\abs{D_i}$。于是 $\abs{D_i}\leqslant d(d-1)^{i-1}$（$i\geqslant1$），
+\[
+\abs G\leqslant1+d\sum_{i=0}^{k-1}(d-1)^i=1+\frac d{d-2}\bigl((d-1)^k-1\bigr)=\frac{d(d-1)^k-2}{d-2}<\frac d{d-2}(d-1)^k. \qedhere
+\]
+\end{proof}
+
+反过来，围长大、最小度大的图必须有很多顶点。讲义引用的是 Alon、Hoory 与 Linial 关于平均度的定理（讲义定理 1.6）：若 $d(G)\geqslant d\geqslant2$，$g(G)\geqslant g$，则 $\abs G\geqslant n_0(d,g)$，其中 $g=2r+1$ 时 $n_0=1+d\sum_{i=0}^{r-1}(d-1)^i$，$g=2r$ 时 $n_0=2\sum_{i=0}^{r-1}(d-1)^i$。它的证明要用非回溯随机游走，这里不证。把平均度换成最小度，分层论证就够了；讲义推论 1.2 只需要这个较弱的版本。
+
+\begin{theorem}\label{thm:distance-layers:girth}
+设 $\delta(G)\geqslant d\geqslant2$，$g(G)\geqslant2r+1$。则 $\abs G\geqslant1+d\sum_{i=0}^{r-1}(d-1)^i$。特别地（讲义推论 1.2），若 $\delta(G)\geqslant3$，则 $g(G)<2\log_2\abs G$。
+\end{theorem}
+\begin{proof}
+任取 $u$，考虑 $D_0,\dots,D_r$。对 $1\leqslant i\leqslant r-1$：由方法第 4 条，$D_i$ 中无边（否则有长 $\leqslant2i+1\leqslant2r-1$ 的圈），$D_i$ 中每个顶点在 $D_{i-1}$ 中只有一个邻点（否则有长 $\leqslant2i$ 的圈），所以它在 $D_{i+1}$ 中至少有 $d-1$ 个邻点；又 $D_{i+1}$ 中每个顶点在 $D_i$ 中只有一个邻点（否则有长 $\leqslant2i+2\leqslant2r$ 的圈），所以 $D_i$ 中不同顶点在 $D_{i+1}$ 中的邻点互不相同。于是 $\abs{D_{i+1}}\geqslant(d-1)\abs{D_i}$。同理 $\abs{D_1}=d(u)\geqslant d$。相加即得。
+
+设 $\delta\geqslant3$，$g=g(G)$，$r=\lfloor(g-1)/2\rfloor$，则 $g\geqslant2r+1$，$2^r\geqslant2^{(g-2)/2}$。由第一句
+\[
+\abs G\geqslant1+3(2^r-1)=3\cdot2^r-2\geqslant\tfrac32\,2^{g/2}-2 .
+\]
+所以 $2^{g/2}\leqslant\frac23(\abs G+2)$，当 $\abs G\geqslant5$ 时右边小于 $\abs G$，得 $g<2\log_2\abs G$。$\delta\geqslant3$ 的图至少有 $4$ 个顶点，$4$ 个顶点时只能是 $K_4$，$g=3<4=2\log_24$。（若 $G$ 没有圈，$g=\infty$，但 $\delta\geqslant2$ 的图有圈，所以这种情况不出现。）
+\end{proof}
+
+\topic{方法：奇偶与奇圈}
+
+\begin{lemma}\label{lem:distance-layers:odd-walk}
+奇长度的闭途径含有奇圈，其长度不超过闭途径的长度。
+\end{lemma}
+\begin{proof}
+对长度 $L$ 归纳。若闭途径 $W=x_0x_1\dots x_L$（$x_L=x_0$）除首尾外没有重复顶点，它就是圈（$L$ 是奇数，所以 $L\geqslant3$，$W$ 不是来回走一条边）。否则有 $0\leqslant a<b<L$ 使 $x_a=x_b$，$W$ 分成两个闭途径 $x_a\dots x_b$ 与 $x_b\dots x_Lx_1\dots x_a$，长度之和为 $L$，其中一个是奇数且更短，由归纳假设它含有奇圈。
+\end{proof}
+
+\begin{theorem}\label{thm:distance-layers:bipartite}
+（讲义定理 1.12）图是二部图当且仅当它不含奇圈。
+\end{theorem}
+\begin{proof}
+二部图的圈在两部之间交替，长度为偶数。反之，设 $G$ 无奇圈，不妨设 $G$ 连通（各分支分别处理）。取 $u$，令 $U$ 为到 $u$ 距离为偶数的顶点，$W$ 为距离为奇数的顶点。若某条边 $xy$ 的两端在同一部分，由方法第 1 条，$d(u,x)=d(u,y)=i$，于是“最短 $(u,x)$-路、边 $xy$、最短 $(y,u)$-路”是长为 $2i+1$ 的闭途径，由引理~\ref{lem:distance-layers:odd-walk} 含有奇圈，矛盾。
+\end{proof}
+
+讲义的证明取两条最短路的“最后一个公共顶点”来直接构造奇圈，那里要用到最短路的性质来保证两段路不再相交。用引理~\ref{lem:distance-layers:odd-walk} 就不必处理这个细节。
+
+\begin{workedexample}\label{we:distance-layers:induced-cycles}
+（讲义习题 1.16）证明：图是二部图当且仅当它的每个导出圈都是偶圈。
+\end{workedexample}
+\begin{solution}
+必要性显然。充分性：若 $G$ 不是二部图，由定理~\ref{thm:distance-layers:bipartite} 它有奇圈，取最短的奇圈 $C$，长 $2r+1$。若 $C$ 有弦 $xy$，弦把 $C$ 分成两条弧，长 $a,b\geqslant2$，$a+b=2r+1$，得到两个圈，长 $a+1$ 与 $b+1$。它们的和 $2r+3$ 是奇数，所以其中一个是奇圈，而 $a+1,b+1\leqslant2r$，比 $C$ 短，矛盾。所以 $C$ 是导出的奇圈。
+\end{solution}
+
+\begin{workedexample}\label{we:distance-layers:equal-distance}
+（讲义习题 1.17）证明或否定：图 $G$ 是二部图当且仅当不存在两个相邻顶点 $x,y$ 和第三个顶点 $z$，使 $d(z,x)=d(z,y)$。
+\end{workedexample}
+\begin{remark}[讲义原题有误]
+对不连通的图，结论不成立：$K_2\cup K_1$ 是二部图，但 $K_2$ 的两个端点到孤立点的距离都是 $\infty$。原题应当限定 $G$ 连通（或者只比较有限的距离）。下面证明连通的情形。
+\end{remark}
+\begin{solution}
+设 $G$ 连通。若 $G$ 是二部图 $(X,Y)$，从 $z$ 出发的途径在 $X,Y$ 之间交替，所以 $d(z,v)$ 的奇偶性由 $v$ 所在的部分决定；相邻的 $x,y$ 在不同部分，$d(z,x)\neq d(z,y)$。
+
+若 $G$ 不是二部图，任取 $z$，按 $d(z,\cdot)$ 的奇偶把顶点分成两部分。这不是二部划分，所以有一条边 $xy$ 的两端奇偶相同；由方法第 1 条 $\abs{d(z,x)-d(z,y)}\leqslant1$，所以 $d(z,x)=d(z,y)$。$z\neq x,y$，因为 $d(x,x)=0\neq1=d(x,y)$。
+\end{solution}
+
+\begin{workedexample}\label{we:distance-layers:diameter}
+（讲义习题 1.10）证明：直径为 $k$、最小度为 $d$ 的连通图至少有 $\lfloor\frac{k+2}3\rfloor(d+1)$ 个顶点，约为 $kd/3$。再说明这个量级不能改进。
+\end{workedexample}
+\begin{solution}
+取 $u,v$ 使 $d(u,v)=k$，按到 $u$ 的距离分层，$D_0,\dots,D_k$ 都非空。$x\in D_i$ 的邻点都在 $D_{i-1}\cup D_i\cup D_{i+1}$ 中，所以
+\[
+\abs{D_{i-1}}+\abs{D_i}+\abs{D_{i+1}}\geqslant d(x)+1\geqslant d+1 .
+\]
+（$D_{-1}$、$D_{k+1}$ 等记为空集。）取 $i=1,4,7,\dots$ 中不超过 $k$ 的那些，共 $\lfloor\frac{k+2}3\rfloor$ 个，对应的三层 $\{i-1,i,i+1\}$ 两两不交，相加得 $\abs G\geqslant\lfloor\frac{k+2}3\rfloor(d+1)$。
+
+构造（$k\geqslant2$）：取 $L_0,\dots,L_k$，按 $i\bmod3=0,1,2$ 令 $\abs{L_i}=1,1,d-1$，但把两端的 $L_1$ 与 $L_{k-1}$ 的大小改为 $d$；每个 $L_i$ 是团，相邻两层之间连全部的边，不相邻的层之间不连边。按原来的大小，$\abs{L_i}=1$ 的顶点的邻点是一个相邻的 $1$ 层与一个相邻的 $(d-1)$ 层，度数为 $d$；$(d-1)$ 层的顶点度数为 $(d-2)+1+1=d$。把某些层加大只会增加度数，而两个端点层 $L_0,L_k$ 的顶点度数恰为 $d$。所以最小度为 $d$。不相邻的层之间没有边，$L_i$ 与 $L_j$ 中顶点的距离是 $\abs{i-j}$，直径为 $k$。顶点数约为 $\frac{(k+1)(d+1)}3+2d$，与下界同阶。
+\end{solution}
+
+\begin{workedexample}\label{we:distance-layers:petersen}
+（讲义习题 1.4）Petersen 图是否是二部图？求它的围长、半径与直径。
+\end{workedexample}
+\begin{solution}
+用 Kneser 模型：Petersen 图同构于以 $\{1,\dots,5\}$ 的 $2$-元子集为顶点、两个子集不交时相邻的图。
+\begin{itemize}
+\item 它含有 $5$-圈 $12,34,51,23,45$，所以不是二部图。
+\item 三角形需要三个两两不交的 $2$-元子集，共 $6$ 个元素，不可能。若 $A,C$ 不相邻（$\abs{A\cap C}=1$），它们的公共邻点与 $A\cup C$（$3$ 个元素）不交，只有一个，即 $A\cup C$ 的补集；所以没有 $4$-圈（$4$-圈上相对的两个顶点或者相邻，从而与第三个顶点构成三角形，或者有两个公共邻点）。围长为 $5$。
+\item 不相邻的两个顶点有公共邻点，所以任意两点距离 $\leqslant2$，又图不是完全图，所以直径为 $2$；图是点传递的，每个顶点的离心率都是 $2$，半径为 $2$。
+\end{itemize}
+\end{solution}
+
+\topic{小结}
+
+\begin{itemize}
+\item 分层后，边只在同层或相邻层之间。数每层的顶点给出 Moore 界（定理~\ref{thm:distance-layers:moore}）与围长界（定理~\ref{thm:distance-layers:girth}）；看三层一组给出直径与最小度的关系（\wegref{we:distance-layers:diameter}）。
+\item 同层的边给出奇闭途径，从而给出奇圈（引理~\ref{lem:distance-layers:odd-walk}），这就是二部图判别法的证明。
+\item 围长 $g$ 的图在半径 $<g/2$ 的球内是树。
+\end{itemize}
+
+\homework{分层与奇圈的练习}[分层与奇圈]
+
+\exercisepart{练习}
+
+\begin{exercises}{A}{BFS 分层与奇圈}
+\item\label{ex:distance-layers:A1} 设 $G$ 连通且不是二部图。证明 $G$ 的最短奇圈的长度不超过 $2\diam(G)+1$。
+\begin{solution}
+设 $C$ 是最短奇圈，长 $2r+1$。先证明对 $C$ 上任意两点 $x,y$，$d_G(x,y)=d_C(x,y)$。设不然，取 $(x,y)$-最短路 $P$，长 $p<a:=d_C(x,y)\leqslant r$。$C$ 的两条 $(x,y)$-弧长 $a$ 与 $b=2r+1-a$，分别与 $P$ 拼成闭途径，长 $p+a$ 与 $p+b$。两者之和 $2p+2r+1$ 为奇数，所以有一个是奇数；而 $p+a<2a\leqslant2r$，$p+b<a+b=2r+1$。由引理~\ref{lem:distance-layers:odd-walk}，这给出长度小于 $2r+1$ 的奇圈，矛盾。
+
+在 $C$ 上取 $d_C(x,y)=r$ 的两点，则 $r=d_G(x,y)\leqslant\diam(G)$，所以 $2r+1\leqslant2\diam(G)+1$。
+\end{solution}
+
+\item\label{ex:distance-layers:A2} 设 $G$ 是 $d$-正则图（$d\geqslant2$），$\diam(G)=2$，$\abs G=d^2+1$（这是定理~\ref{thm:distance-layers:moore} 在 $k=2$ 时的上界 $1+d+d(d-1)$）。证明 $G$ 的围长为 $5$。
+\begin{solution}
+任取 $u$，$\abs{D_1}=d$，$\abs{D_2}=d^2+1-1-d=d(d-1)$。$D_1$ 中每个顶点在 $D_2$ 中至多有 $d-1$ 个邻点，而 $D_2$ 的每个顶点在 $D_1$ 中至少有一个邻点，所以等号处处成立：$D_1$ 中每个顶点在 $D_2$ 中恰有 $d-1$ 个邻点（从而 $D_1$ 中无边），并且 $D_2$ 中每个顶点在 $D_1$ 中恰有一个邻点。前者说明经过 $u$ 的三角形不存在；后者说明不存在经过 $u$ 的 $4$-圈（$4$-圈 $u\,a\,x\,b\,u$ 中 $a,b\in D_1$，$x\in D_2$ 在 $D_1$ 中有两个邻点）。$u$ 任意，所以围长至少为 $5$。
+
+取 $x\in D_2$，它在 $D_1$ 中只有一个邻点 $a$，所以在 $D_2$ 中有 $d-1\geqslant1$ 个邻点，取一个 $y$，$y$ 在 $D_1$ 中的邻点为 $b$。$a\neq b$，否则 $axy$ 是三角形。$u\,a\,x\,y\,b\,u$ 是 $5$-圈。围长为 $5$。（$d=2$ 是 $C_5$，$d=3$ 是 Petersen 图。）
+\end{solution}
+
+\item\label{ex:distance-layers:A3} 设 $\delta(G)\geqslant d\geqslant2$，$g(G)\geqslant2r$。证明 $\abs G\geqslant2\sum_{i=0}^{r-1}(d-1)^i$。（这是定理~\ref{thm:distance-layers:girth} 的偶数情形：从一条边出发分层。）
+\begin{solution}
+取边 $xy$。对 $0\leqslant i\leqslant r-1$，令 $A_i=\{v:d(x,v)=i,\ d(y,v)=i+1\}$，$B_i=\{v:d(y,v)=i,\ d(x,v)=i+1\}$。$A_i$ 与 $B_j$ 两两不交。
+
+\emph{(a) $A_i$ 中每个顶点 $v$（$1\leqslant i\leqslant r-1$）在 $A_{i-1}$ 中恰有一个邻点。}有一个：$v$ 的最短 $(x,v)$-路上的前一个顶点 $w$，$d(x,w)=i-1$，$d(y,w)\geqslant d(y,v)-1=i$，又 $d(y,w)\leqslant d(x,w)+1=i$，所以 $w\in A_{i-1}$。有两个则给出两条长 $i$ 的 $(x,v)$-路，从而长 $\leqslant2i\leqslant2r-2$ 的圈。
+
+\emph{(b) $A_i$ 中每个顶点 $v$（$0\leqslant i\leqslant r-2$）在 $A_{i+1}$ 中至少有 $d-1$ 个邻点。}称 (a) 中那个邻点为 $v$ 的父亲（$i=0$ 时 $v=x$，约定父亲是 $y$）。我们证明 $v$ 的其余邻点 $w$ 都在 $A_{i+1}$ 中，$d(x,w)\in\{i-1,i,i+1\}$。
+\begin{itemize}
+\item $d(x,w)=i-1$（$i\geqslant1$）：与 (a) 中一样 $d(y,w)=i$，$w\in A_{i-1}$，由唯一性 $w$ 是父亲。
+\item $d(x,w)=i$ 不可能：最短 $(x,w)$-路与“最短 $(x,v)$-路加边 $vw$”是两条不同的 $(x,w)$-路，长 $i$ 与 $i+1$，给出长 $\leqslant2i+1<2r$ 的圈。
+\item $d(x,w)=i+1$：$d(y,w)\geqslant d(x,w)-1=i$。若 $d(y,w)=i+2$ 则 $w\in A_{i+1}$。若 $d(y,w)=i$，则 $w\in B_i$。$i=0$ 时这说明 $w=y$，是父亲。$i\geqslant1$ 时，“最短 $(x,v)$-路、边 $vw$、最短 $(w,y)$-路、边 $yx$”是长 $2i+2\leqslant2r-2$ 的圈，矛盾。这里要说明两条最短路不相交：最短 $(x,v)$-路上到 $x$ 距离为 $j$ 的顶点 $z$ 满足 $d(y,z)\geqslant d(y,v)-(i-j)=j+1$ 与 $d(y,z)\leqslant d(x,z)+1=j+1$，所以 $z\in A_j$；同理最短 $(w,y)$-路上的顶点都在某个 $B_j$ 中，而 $A_j$ 与 $B_{j'}$ 不交。（$d(y,w)=i+1$ 的情形：$d(x,w)=d(y,w)=i+1$，于是“最短 $(x,v)$-路加 $vw$”与“边 $xy$ 加最短 $(y,w)$-路”是两条不同的 $(x,w)$-路，长 $i+1$ 与 $i+2$，给出长 $\leqslant2i+3\leqslant2r-1$ 的圈，也不可能。）
+\end{itemize}
+$v$ 至少有 $d$ 个邻点，除父亲外都在 $A_{i+1}$ 中。
+
+由 (a)，$A_i$ 中不同顶点在 $A_{i+1}$ 中的邻点互不相同，结合 (b)，$\abs{A_{i+1}}\geqslant(d-1)\abs{A_i}$，$\abs{A_0}=1$，所以 $\abs{A_i}\geqslant(d-1)^i$。$B_i$ 同理。相加得结论。
+\end{solution}
+
+\item\label{ex:distance-layers:A4} 证明：树的中心或者是一个顶点，或者是两个相邻的顶点。
+\begin{solution}
+记 $e(v)=\max_wd(v,w)$ 为离心率。$\abs T\leqslant2$ 时显然。设 $\abs T\geqslant3$，$T'$ 是删去 $T$ 的全部叶子得到的树（非空）。
+
+对 $v\in T'$，$e_T(v)$ 在某个叶子 $w$ 处取到（若 $d(v,w)$ 最大而 $w$ 不是叶子，$w$ 有一个不在 $(v,w)$-路上的邻点，距离更大）。$w$ 的唯一邻点 $w'$ 在 $T'$ 中（$\abs T\geqslant3$，$w'$ 不是叶子），$d(v,w')=e_T(v)-1$。$T'$ 中任何顶点 $x$ 都不是叶子，同样的论证说明 $d(v,x)\leqslant e_T(v)-1$。所以 $e_{T'}(v)=e_T(v)-1$。叶子 $w$ 的离心率等于其邻点的离心率加 $1$，不是最小的。所以 $T$ 的中心等于 $T'$ 的中心。对顶点数归纳，最后得到 $K_1$ 或 $K_2$。
+\end{solution}
+\end{exercises}

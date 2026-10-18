@@ -1,0 +1,135 @@
+% !TEX root = ../graph-theory.tex
+% =====================================================================
+%  双重计数：握手定理、共同邻点、树的叶子、Cayley 公式
+% =====================================================================
+\lecture{双重计数：没有公共熟人的聚会，比赛场数与度数，树的叶子，Cayley 公式（Pitman 的证明）}
+\label{lec:double-counting}
+
+握手定理 $\sum_vd(v)=2m$ 是双重计数最简单的例子：顶点与边的关联对，按顶点数一次，按边数一次。这一讲收几道用同一种想法做的题，最后用 Pitman 的双重计数证明 Cayley 公式。
+
+\topic{方法：双重计数}
+
+\begin{enumerate}
+\item 选一个集合，通常是“对”：（顶点，关联边）、（顶点，一对邻点）即长为 $2$ 的路、（三元组，其中的特殊顶点）、（结构，构造它的步骤序列）。分别按两种方式计数，得到等式或不等式。
+\item 长为 $2$ 的路的条数是 $\sum_v\binom{d(v)}2$；若任意两个顶点至多有 $\lambda$ 个公共邻点，它不超过 $\lambda\binom n2$。
+\item 得到 $\sum_vf(d(v))$ 的界之后，用凸性（Cauchy--Schwarz 或 Jensen）换成关于平均度，也就是边数的界。
+\item 奇偶性：$\sum_vd(v)$ 是偶数，所以奇度顶点有偶数个。
+\item 要证明两个量相等（比如相邻顶点度数相同），可以构造它们之间的单射。
+\end{enumerate}
+
+\begin{workedexample}\label{we:double-counting:acquaintances}
+（讲义习题 1.11）某次会议有 $n$ 个人。每两个互相认识的人都没有共同的熟人，每两个互相不认识的人恰有两个共同的熟人。证明每个人的熟人数相同。
+\end{workedexample}
+\begin{solution}
+把人看成顶点、认识看成边。条件是：相邻的两点没有公共邻点，不相邻的两点恰有两个公共邻点。
+
+\emph{第一步：相邻的顶点度数相同。}设 $uv\in E$。对 $w\in N(u)\setminus\{v\}$，$w$ 与 $v$ 不相邻（否则 $w$ 是 $u,v$ 的公共邻点），所以 $w,v$ 恰有两个公共邻点，一个是 $u$，记另一个为 $\varphi(w)$，它在 $N(v)\setminus\{u\}$ 中。$\varphi$ 是单射：若 $w_1\neq w_2$ 而 $\varphi(w_1)=\varphi(w_2)=w'$，则 $w'$ 与 $u$ 不相邻（$w'\in N(v)$，而 $u,v$ 没有公共邻点），且 $v,w_1,w_2$ 是 $u$ 与 $w'$ 的三个公共邻点，矛盾。所以 $d(u)-1\leqslant d(v)-1$；交换 $u,v$ 得相等。
+
+\emph{第二步：$G$ 连通。}不相邻的两点有公共邻点，所以任意两点的距离不超过 $2$。连通图中相邻顶点度数相同，所以所有顶点度数相同。
+\end{solution}
+
+\begin{remark}
+设度数为 $k$，再数一次可以求出 $n$。固定 $v$，$N(v)$ 是独立集（$N(v)$ 中的边与 $v$ 构成三角形，而相邻的点没有公共邻点）。每个 $a\in N(v)$ 在 $N(v)\cup\{v\}$ 之外有 $k-1$ 个邻点，所以从 $N(v)$ 到其余顶点有 $k(k-1)$ 条边；其余每个顶点与 $v$ 恰有两个公共邻点，被数了两次。于是 $n=1+k+\binom k2$。例如 $k=2$ 是 $C_4$，$k=5$ 是 $16$ 个顶点的 Clebsch 图。
+\end{remark}
+
+\begin{workedexample}\label{we:double-counting:games}
+（讲义习题 1.12）设连通图 $G$ 有 $n\geqslant2$ 个顶点和 $n-1$ 条边，证明 $G$ 有度数为 $1$ 的顶点。并由此证明：$n$ 个球队比赛，已赛完 $n-1$ 场，则必定有一个球队已参加过至少 $3$ 场比赛。
+\end{workedexample}
+\begin{remark}[讲义原题有误]
+第二句是错的。$n\geqslant3$ 时，让第 $i$ 队与第 $i+1$ 队各赛一场（$i=1,\dots,n-1$），共 $n-1$ 场，每队至多赛 $2$ 场。原题应当是“已赛完 $n+1$ 场”。它与第一句无关，是握手定理的直接推论。
+\end{remark}
+\begin{solution}
+第一句：$G$ 连通且 $n\geqslant2$，所以每个顶点的度数至少为 $1$。若都至少为 $2$，则 $2(n-1)=\sum_vd(v)\geqslant2n$，矛盾。
+
+修正后的第二句：以球队为顶点，每场比赛连一条边（同两队若赛多场就连重边）。$\sum_vd(v)=2(n+1)>2n$，所以有顶点度数至少为 $3$。
+\end{solution}
+
+\begin{workedexample}\label{we:double-counting:leaves}
+（讲义习题 1.13）证明每棵树 $T$ 至少有 $\Delta(T)$ 片叶子。
+\end{workedexample}
+\begin{solution}
+$\abs T=1$ 时 $\Delta=0$。$\abs T=2$ 时两片叶子，$\Delta=1$。设 $\abs T=n\geqslant3$，$v$ 是度数为 $\Delta$ 的顶点，$v$ 不是叶子（否则 $\Delta=1$，$T=K_2$）。设有 $L$ 片叶子，其余 $n-1-L$ 个非叶子、非 $v$ 的顶点度数至少为 $2$，所以
+\[
+2(n-1)=\sum_ud(u)\geqslant\Delta+L+2(n-1-L),
+\]
+即 $L\geqslant\Delta$。
+\end{solution}
+
+\begin{theorem}[Cayley 公式]\label{thm:double-counting:cayley}
+（讲义定理 1.13）以 $\{1,\dots,n\}$ 为顶点集的树有 $n^{n-2}$ 棵。
+\end{theorem}
+
+讲义没有给出证明。Prüfer 序列给出一个双射证明；这里写 Pitman 的证明，因为它是双重计数的一个好例子：数“逐步构造出一棵有根树的弧序列”。
+
+\begin{proof}
+称一个有向图是\term{有根森林}，如果每个分支是一棵树，其中有一个根，所有弧都从父亲指向儿子（于是每个非根顶点入度为 $1$，根入度为 $0$）。数下面的序列：从 $n$ 个孤立点（$n$ 棵单点有根树）出发，依次加入 $n-1$ 条弧，每次加入的弧 $a\to b$ 要求 $b$ 是某棵\emph{不含} $a$ 的树的根。加入后两棵树合并，新树的根是 $a$ 所在树的根，仍然是有根森林。
+
+\emph{第一种数法。}第 $j$ 步之前有 $n-j+1$ 棵树。$a$ 可以是 $n$ 个顶点中任何一个，$b$ 可以是另外 $n-j$ 棵树的根中任何一个，所以第 $j$ 步有 $n(n-j)$ 种选法。序列总数为
+\[
+\prod_{j=1}^{n-1}n(n-j)=n^{n-1}(n-1)! .
+\]
+
+\emph{第二种数法。}每个序列最后得到一棵有根树 $(T,r)$（弧从根向外）。反过来，给定 $(T,r)$ 与它的 $n-1$ 条弧的任一排列，按这个顺序加入弧总是合法的：加入 $a\to b$ 时，$b$ 的入弧还没有加入，所以 $b$ 是它当前所在树的根；当前 $b$ 所在的树由 $b$ 在 $T$ 中的一些后代组成，而 $a$ 是 $b$ 的父亲，不是 $b$ 的后代，所以 $a$ 在另一棵树中。所以每棵有根树恰好对应 $(n-1)!$ 个序列。
+
+两种数法相等，有根树共 $n^{n-1}$ 棵。每棵树有 $n$ 种选根的方法，所以树有 $n^{n-2}$ 棵。
+\end{proof}
+
+\topic{小结}
+
+\begin{itemize}
+\item 双重计数的关键是选对被数的集合。长为 $2$ 的路联系起度数与公共邻点（\wegref{we:double-counting:acquaintances}）；构造序列联系起结构的个数与步骤的选法（定理~\ref{thm:double-counting:cayley}）。
+\item 要证明相等时，构造单射往往比直接计算清楚。
+\end{itemize}
+
+\homework{双重计数的练习}[双重计数]
+
+\exercisepart{练习}
+
+\begin{exercises}{A}{双重计数}
+\item\label{ex:double-counting:A1} （Mantel 定理）设 $n$ 阶图 $G$ 不含三角形，有 $m$ 条边。证明 $\sum_vd(v)^2\leqslant mn$，并由此证明 $m\leqslant n^2/4$。
+\begin{solution}
+对边 $xy$，$N(x)\cap N(y)=\varnothing$（否则有三角形），所以 $d(x)+d(y)\leqslant n$。对所有边求和，每个顶点 $v$ 在它的 $d(v)$ 条边中各出现一次：
+\[
+\sum_vd(v)^2=\sum_{xy\in E}\bigl(d(x)+d(y)\bigr)\leqslant mn .
+\]
+由 Cauchy--Schwarz，$\sum_vd(v)^2\geqslant\frac1n\bigl(\sum_vd(v)\bigr)^2=\frac{4m^2}n$。所以 $4m^2/n\leqslant mn$，$m\leqslant n^2/4$。$K_{\lfloor n/2\rfloor,\lceil n/2\rceil}$ 说明这是最好的。
+\end{solution}
+
+\item\label{ex:double-counting:A2} 设 $n$ 阶图 $G$ 不含 $C_4$。证明 $\abs{E(G)}\leqslant\frac n4\bigl(1+\sqrt{4n-3}\bigr)$。
+\begin{solution}
+不含 $C_4$ 说明任意两个顶点至多有一个公共邻点。数长为 $2$ 的路（按中间顶点数，或按两个端点数）：
+\[
+\sum_v\binom{d(v)}2\leqslant\binom n2 .
+\]
+$x\mapsto\binom x2=x(x-1)/2$ 是凸函数，记 $\bar d=2m/n$，由 Jensen 不等式 $n\binom{\bar d}2\leqslant\binom n2$，即 $\bar d(\bar d-1)\leqslant n-1$。解这个二次不等式得 $\bar d\leqslant\frac{1+\sqrt{4n-3}}2$，所以 $m=n\bar d/2\leqslant\frac n4(1+\sqrt{4n-3})$。
+\end{solution}
+
+\item\label{ex:double-counting:A3} 设 $T$ 是 $n$ 阶竞赛图。证明 $T$ 中有向三角形（$3$-圈）的个数是 $\binom n3-\sum_v\binom{d^+(v)}2$。由此证明有向三角形至多有 $\frac{n(n^2-1)}{24}$ 个，$n$ 为奇数时可以取到。
+\begin{solution}
+任意三个顶点上的子竞赛图或者是有向三角形，或者是传递的；传递的恰有一个顶点控制另外两个，有向三角形没有这样的顶点。数对 $(v,\{a,b\})$，其中 $v\to a$，$v\to b$：按 $v$ 数是 $\sum_v\binom{d^+(v)}2$，按三元组数就是传递三元组的个数。所以有向三角形有 $\binom n3-\sum_v\binom{d^+(v)}2$ 个。
+
+$\sum_vd^+(v)=\binom n2$，平均出度为 $\frac{n-1}2$。由凸性，$\sum_v\binom{d^+(v)}2\geqslant n\binom{(n-1)/2}2=\frac{n(n-1)(n-3)}8$，所以有向三角形至多有
+\[
+\frac{n(n-1)(n-2)}6-\frac{n(n-1)(n-3)}8=\frac{n(n-1)(n+1)}{24}
+\]
+个。$n$ 为奇数时，在 $\Z_n$ 上令 $i\to i+1,\dots,i+\frac{n-1}2$，每个顶点出度都是 $\frac{n-1}2$，取到等号。
+\end{solution}
+
+\item\label{ex:double-counting:A4} 设 $n\geqslant2$，$d_1,\dots,d_n\geqslant1$，$\sum_id_i=2n-2$。证明以 $\{1,\dots,n\}$ 为顶点、顶点 $i$ 的度数为 $d_i$ 的树恰有
+\[
+\frac{(n-2)!}{(d_1-1)!\cdots(d_n-1)!}
+\]
+棵。再由此推出 Cayley 公式。
+\begin{solution}
+对 $n$ 归纳。$n=2$ 时 $d_1=d_2=1$，只有一棵树，公式给出 $1$。设 $n\geqslant3$。$\sum d_i=2n-2<2n$，所以有 $d_j=1$。在度数序列为 $(d_i)$ 的树中，$j$ 是叶子，它的邻点 $i$ 满足 $d_i\geqslant2$（否则 $\{i,j\}$ 是一个分支，与 $n\geqslant3$ 矛盾）。删去 $j$ 得到 $\{1,\dots,n\}\setminus\{j\}$ 上的树，$i$ 的度数为 $d_i-1$，其余不变；反过来，在这样的树上把 $j$ 接到 $i$ 上就得到原来的树。由归纳假设，
+\[
+\sum_{i\neq j,\ d_i\geqslant2}\frac{(n-3)!\,(d_i-1)}{\prod_{k\neq j}(d_k-1)!}=\frac{(n-3)!}{\prod_{k}(d_k-1)!}\sum_{i\neq j}(d_i-1).
+\]
+（$d_i=1$ 的项为零，可以加进来；$(d_j-1)!=1$。）$\sum_{i\neq j}(d_i-1)=(2n-3)-(n-1)=n-2$，得到公式。
+
+令 $c_i=d_i-1\geqslant0$，$\sum c_i=n-2$，对所有度数序列求和，由多项式定理
+\[
+\sum_{c_1+\dots+c_n=n-2}\frac{(n-2)!}{c_1!\cdots c_n!}=(1+\dots+1)^{n-2}=n^{n-2}.
+\]
+\end{solution}
+\end{exercises}

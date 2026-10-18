@@ -1,0 +1,209 @@
+% !TEX root = ../graph-theory.tex
+% =====================================================================
+%  极端选择：最长路；删点：平均度与最小度；最大割
+% =====================================================================
+\lecture{极端选择与删点：最长路给出长圈与偶圈，长路与 Dirac 定理，圈外的长路，平均度与最小度，树的贪心嵌入，最大割与二部子图}
+\label{lec:longest-paths}
+
+这一讲收两种最常用的方法。第一种是取一个极端的对象，通常是一条最长路，然后说明“如果结论不成立，就能得到更长的路”。第二种是反复删掉度数小的顶点，把关于平均度（也就是边数）的条件变成关于最小度的条件；与它配套的是最大割，它把任意图变成边数至少一半的二部图。
+
+\topic{方法：取一条最长路}
+
+设 $P=v_0v_1\dots v_\ell$ 是 $G$ 中的一条最长路。
+\begin{enumerate}
+\item 端点 $v_0$ 的邻点全在 $P$ 上。否则 $v_0$ 的一个 $P$ 外的邻点 $u$ 给出更长的路 $uv_0v_1\dots v_\ell$。所以 $d(v_0)\geqslant\delta$ 个邻点都落在 $\{v_1,\dots,v_\ell\}$ 中，于是 $\ell\geqslant\delta$。
+\item 若 $v_0v_j$ 是边，则 $v_0v_1\dots v_jv_0$ 是长为 $j$ 的圈。取 $j$ 为最大的这种下标，就得到长圈；比较几个邻点下标的奇偶，就得到偶圈。
+\item 把两个端点的邻点下标放在一起，用鸽笼原理找一个 $i$ 使 $v_0v_{i+1}$ 与 $v_iv_\ell$ 都是边，就得到一个经过 $P$ 的全部顶点的圈 $v_0v_{i+1}v_{i+2}\dots v_\ell v_iv_{i-1}\dots v_1v_0$。若图连通而 $P$ 不含全部顶点，这个圈加上一条伸出去的边又给出更长的路。
+\item 有向图中把“邻点”换成“出邻点”（或“入邻点”），论证不变。
+\end{enumerate}
+同一个想法的变体：取最长圈、最短圈、边数最少的反例、极大的某种子图。关键是先想清楚：如果结论不成立，能把这个对象改得更极端吗？
+
+\begin{theorem}\label{thm:longest-paths:long-cycle}
+（讲义定理 1.4）设 $G$ 是简单图，$\delta(G)\geqslant2$。则 $G$ 含有长度至少为 $\delta(G)+1$ 的圈。若 $\delta(G)\geqslant3$，则 $G$ 含有偶圈。
+\end{theorem}
+\begin{proof}
+设 $P=v_1v_2\dots v_k$ 是最长路。$v_1$ 的邻点都在 $P$ 上，设 $j$ 是满足 $v_1v_j\in E$ 的最大下标。$v_1$ 至少有 $\delta$ 个邻点，都在 $\{v_2,\dots,v_j\}$ 中，所以 $j-1\geqslant\delta$。圈 $v_1v_2\dots v_jv_1$ 的长度是 $j\geqslant\delta+1$。
+
+设 $\delta\geqslant3$，取 $v_1$ 的两个邻点 $v_i,v_j$，$2<i<j$。圈 $v_1v_2\dots v_iv_1$ 长为 $i$，圈 $v_1v_2\dots v_jv_1$ 长为 $j$，圈 $v_1v_iv_{i+1}\dots v_jv_1$ 长为 $j-i+2$。若 $i,j$ 中有偶数，前两个圈之一是偶圈；若 $i,j$ 都是奇数，$j-i+2$ 是偶数。
+\end{proof}
+
+\begin{remark}
+讲义中的条件“$n\geqslant3$”是多余的：$\delta\geqslant2$ 的简单图至少有三个顶点。界 $\delta+1$ 不能改进：$K_{\delta+1}$ 的最长圈长度恰为 $\delta+1$。
+\end{remark}
+
+\begin{workedexample}\label{we:longest-paths:digraph-cycle}
+（讲义问答题 1.3）设 $D$ 是简单有向图，$\delta^+(D)\geqslant1$。证明 $D$ 含有有向圈。更一般地，若 $\delta^+(D)\geqslant k\geqslant1$，则 $D$ 含有长度至少为 $k+1$ 的有向圈。
+\end{workedexample}
+\begin{solution}
+设 $P=v_1v_2\dots v_m$ 是最长的有向路。$v_m$ 的每个出邻点都在 $P$ 上，否则可以把 $P$ 延长。$v_m$ 没有环，所以它的至少 $k$ 个出邻点都在 $\{v_1,\dots,v_{m-1}\}$ 中，其中下标最小的一个 $v_i$ 满足 $i\leqslant m-k$。于是 $v_iv_{i+1}\dots v_mv_i$ 是长度为 $m-i+1\geqslant k+1$ 的有向圈。$k=1$ 就是第一问（这里长度为 $2$ 的有向圈 $v_{m-1}v_mv_{m-1}$ 也算圈）。
+\end{solution}
+
+\begin{workedexample}\label{we:longest-paths:dirac}
+（讲义习题 1.9）证明：每个连通图 $G$ 都含有一条长度至少为 $\min\{2\delta(G),\abs G-1\}$ 的路。若 $\abs G\geqslant3$ 且 $\delta(G)\geqslant\abs G/2$，则 $G$ 有 Hamilton 圈（Dirac 定理）。
+\end{workedexample}
+\begin{remark}[讲义原题有误]
+讲义的题目是“每个连通图都包含一条长度至少为 $\min\{2\delta(G),\abs G\}$ 的路或圈”。$K_2$ 是反例：$\delta=1$，$\min\{2,2\}=2$，但 $K_2$ 只有一条长为 $1$ 的路，没有圈。原题应当是 Diestel 书中的习题，即上面的第一句。$\abs G\geqslant3$ 时讲义的说法也成立：$2\delta<\abs G$ 时由第一句得到长 $\geqslant2\delta$ 的路，$2\delta\geqslant\abs G$ 时由第二句得到长为 $\abs G$ 的圈。
+\end{remark}
+\begin{solution}
+设 $P=v_0v_1\dots v_\ell$ 是最长路。我们证明：若 $\ell<2\delta$，则 $G$ 有一个恰好经过 $P$ 的全部顶点的圈 $C$。
+
+$v_0$ 与 $v_\ell$ 的邻点都在 $P$ 上。令
+\[
+A=\{i\in\{0,\dots,\ell-1\}: v_0v_{i+1}\in E\},\qquad B=\{i\in\{0,\dots,\ell-1\}: v_iv_\ell\in E\}.
+\]
+$\abs A=d(v_0)\geqslant\delta$，$\abs B=d(v_\ell)\geqslant\delta$，而 $A,B\subseteq\{0,\dots,\ell-1\}$ 只有 $\ell<2\delta$ 个元素，所以存在 $i\in A\cap B$。令
+\[
+C=v_0v_{i+1}v_{i+2}\dots v_\ell v_iv_{i-1}\dots v_1v_0 .
+\]
+（$i=0$ 时 $C=v_0v_1\dots v_\ell v_0$。）$C$ 经过 $v_0,\dots,v_\ell$ 各一次。要使 $C$ 是圈还需 $\ell\geqslant2$：$\delta\geqslant1$ 时 $\ell\geqslant\delta$；若 $\ell=1$，则 $\delta=1$ 且 $\ell<2=2\delta$，这时 $G$ 连通、最长路长为 $1$，$G=K_2$，结论 $\ell\geqslant\min\{2,1\}$ 成立。下设 $\ell\geqslant2$。
+
+现在设 $\ell<\min\{2\delta,\abs G-1\}$。由上面，$C$ 是含 $\ell+1<\abs G$ 个顶点的圈。$G$ 连通，所以有 $C$ 外的顶点 $u$ 与 $C$ 上某个顶点 $w$ 相邻。从 $u$ 出发走到 $w$，再沿 $C$ 绕一圈到 $w$ 在 $C$ 上的一个邻点为止，得到长为 $\ell+1$ 的路，与 $P$ 最长矛盾。所以 $\ell\geqslant\min\{2\delta,\abs G-1\}$。
+
+Dirac 定理：$\delta\geqslant\abs G/2$ 时任意两个不相邻的顶点有公共邻点（$\abs{N(x)}+\abs{N(y)}\geqslant\abs G>\abs{V\setminus\{x,y\}}$），所以 $G$ 连通。$\delta\geqslant3/2$，故 $\delta\geqslant2$，$\ell\geqslant\delta\geqslant2$。最长路的长度 $\ell\leqslant\abs G-1<2\delta$，由上面得到经过 $P$ 全部顶点的圈 $C$；若 $\ell<\abs G-1$，刚才的论证给出更长的路，矛盾。所以 $\ell=\abs G-1$，$C$ 是 Hamilton 圈。
+\end{solution}
+
+\begin{workedexample}\label{we:longest-paths:sqrt-k}
+（讲义习题 1.8）设图 $G$ 含有圈 $C$，并且 $G$ 中有一条长度至少为 $k$ 的路，它的两个端点在 $C$ 上。证明 $G$ 含有长度至少为 $\sqrt k$ 的圈。
+\end{workedexample}
+\begin{remark}
+讲义写的是“$C$ 包含两个顶点，使得连接它们之间的路在 $G$ 中的长度至少为 $k$”。如果理解成这两个顶点在 $G$ 中的\emph{距离}至少为 $k$，那么 $C$ 本身的长度就至少是 $2k$，题目是平凡的。所以应当理解成“存在一条长度至少为 $k$ 的路”，这也是 Diestel 书中的原题。
+\end{remark}
+\begin{solution}
+不妨设 $\abs C<\sqrt k$（否则 $C$ 就是所求的圈）。设 $P$ 是长度 $\geqslant k$ 的路，端点 $x\neq y$ 都在 $C$ 上。沿 $P$ 从 $x$ 走到 $y$，依次记下 $P$ 落在 $C$ 上的顶点 $x=u_0,u_1,\dots,u_r=y$。它们是 $C$ 的不同顶点，所以 $r+1\leqslant\abs C<\sqrt k$，$r<\sqrt k$。
+
+这些点把 $P$ 分成 $r$ 段 $P_s=P[u_{s-1},u_s]$，每段的内部顶点都不在 $C$ 上。总长度至少为 $k$，所以有一段的长度 $q\geqslant k/r>k/\sqrt k=\sqrt k$。$u_{s-1}\neq u_s$ 把 $C$ 分成两条弧，取其中一条弧 $Q$，$P_s\cup Q$ 是一个圈（$P_s$ 与 $Q$ 只在两个端点相交），长度至少为 $q+1>\sqrt k$。
+\end{solution}
+
+\begin{remark}
+这里用到的是另一种极端选择：在 $P$ 被 $C$ 截成的各段中取最长的一段。这样的段称为 $C$-路，它与 $C$ 的一条弧总能拼成圈。
+\end{remark}
+
+\topic{方法：删掉度数小的顶点}
+
+关于边数的条件（$m\geqslant cn$，或者平均度 $d(G)\geqslant2c$）不能直接使用，因为可能有很多度数很小的顶点。办法是把度数不超过当前 $\varepsilon=m/n$ 的顶点一个一个删掉：删一个顶点，顶点数少 $1$，边数至多少 $\varepsilon$，所以比值 $\varepsilon$ 不减。删不动的时候，剩下的子图的最小度大于它自己的 $\varepsilon$。这样就把“平均度大”换成了“某个子图的最小度大”，然后可以用最长路、贪心嵌入等需要最小度的论证。
+
+\begin{theorem}\label{thm:longest-paths:min-degree-subgraph}
+（讲义定理 1.3）记 $\varepsilon(G)=\abs{E(G)}/\abs G$。每个至少有一条边的图 $G$ 都有子图 $H$，满足 $\delta(H)>\varepsilon(H)\geqslant\varepsilon(G)$。
+\end{theorem}
+\begin{proof}
+令 $G_0=G$。若 $G_i$ 有顶点 $v$ 使 $d_{G_i}(v)\leqslant\varepsilon(G_i)$，令 $G_{i+1}=G_i-v$；否则停止，令 $H=G_i$。设 $G_i$ 有 $n_i$ 个顶点、$m_i$ 条边。若 $n_i\geqslant2$，
+\[
+\varepsilon(G_{i+1})=\frac{m_i-d_{G_i}(v)}{n_i-1}\geqslant\frac{m_i-m_i/n_i}{n_i-1}=\frac{m_i}{n_i}=\varepsilon(G_i).
+\]
+所以 $\varepsilon(G_i)\geqslant\varepsilon(G)>0$ 对每个出现的 $G_i$ 成立。单个顶点的图 $\varepsilon=0$，所以序列不会走到单点，上面的计算始终有 $n_i\geqslant2$。过程在有限步内停止，停止时 $H$ 中没有顶点满足 $d_H(v)\leqslant\varepsilon(H)$，即 $\delta(H)>\varepsilon(H)\geqslant\varepsilon(G)$。
+\end{proof}
+
+\begin{workedexample}\label{we:longest-paths:tree-embedding}
+（讲义推论 1.3、1.4）设 $T$ 是树，$\delta(G)\geqslant\abs T-1$。证明 $G$ 含有同构于 $T$ 的子图。由此证明：若 $\abs{E(G)}\geqslant(t-2)\abs G$ 且 $\abs{E(G)}\geqslant1$，则 $G$ 含有每一棵 $t$ 个顶点的树。
+\end{workedexample}
+\begin{solution}
+先把 $T$ 的顶点排成 $v_1,\dots,v_t$，使每个 $v_i$（$i\geqslant2$）在 $\{v_1,\dots,v_{i-1}\}$ 中恰有一个邻点（讲义推论 1.3）。这可以这样得到：从任一顶点出发，每次加入一个与已选顶点相邻的新顶点（$T$ 连通，所以总能加入）；新顶点若在已选部分有两个邻点，则这两条边与已选部分（连通）中连接这两个邻点的路构成圈，矛盾。
+
+现在贪心地嵌入。把 $v_1$ 映到 $G$ 的任一顶点。设 $v_1,\dots,v_{i-1}$ 已经映到不同的顶点 $\varphi(v_1),\dots,\varphi(v_{i-1})$，且保持邻接。$v_i$ 的唯一前邻点 $v_p$ 的像 $\varphi(v_p)$ 至少有 $\delta(G)\geqslant t-1$ 个邻点，其中至多 $i-2\leqslant t-2$ 个已被使用（除 $\varphi(v_p)$ 外的已用顶点），所以有一个未用的邻点，把 $v_i$ 映到它。$i=t$ 时得到 $T$ 的一个拷贝。
+
+第二问：$\varepsilon(G)\geqslant t-2$。由定理~\ref{thm:longest-paths:min-degree-subgraph}，有子图 $H$ 满足 $\delta(H)>\varepsilon(H)\geqslant t-2$，即 $\delta(H)\geqslant t-1$。由第一问，$H$ 含有每一棵 $t$ 个顶点的树。
+\end{solution}
+
+\begin{remark}
+Erdős--Sós 猜想说 $\abs{E(G)}>\frac{t-2}2\abs G$ 就足够，比上面的界小一半。$K_{t-1}$ 的不交并说明这个界如果成立就是最好的。
+\end{remark}
+
+\topic{方法：最大割}
+
+把 $V(G)$ 分成两部分 $(A,B)$，使跨越两部分的边数 $e(A,B)$ 最大。若某个顶点 $v\in A$ 在 $A$ 中的邻点多于在 $B$ 中的邻点，把 $v$ 移到 $B$，$e(A,B)$ 严格增大，矛盾。所以：
+
+\begin{lemma}\label{lem:longest-paths:max-cut}
+每个图 $G$ 的顶点集都有划分 $(A,B)$，使每个顶点在自己那一部分中的邻点数不超过它在另一部分中的邻点数。于是二部子图 $G[A,B]$（只保留跨越的边）满足 $d_{G[A,B]}(v)\geqslant d_G(v)/2$ 对一切 $v$ 成立，边数至少为 $\abs{E(G)}/2$。
+\end{lemma}
+\begin{proof}
+取使 $e(A,B)$ 最大的划分，用上面的论证。第二句：每个顶点至少一半的边跨越两部分，对 $v$ 求和得边数的结论。
+\end{proof}
+
+这是“局部调整”的最简单的例子：取一个使某个量最大（或最小）的对象，然后说明任何一个顶点的移动都不能改进它。第 2 章的 Lovász 划分定理用的是同样的论证，只是把 $e(A,B)$ 换成了加权的量。
+
+\begin{workedexample}\label{we:longest-paths:bipartite-subgraph}
+（讲义习题 1.18）求函数 $f:\N\to\N$，使对每个 $k\in\N$，平均度至少为 $f(k)$ 的图都有最小度至少为 $k$ 的二部子图。
+\end{workedexample}
+\begin{solution}
+取 $f(k)=4k$。设 $d(G)\geqslant4k$，则 $G$ 至少有一条边。由引理~\ref{lem:longest-paths:max-cut}，$G$ 有生成二部子图 $B$，边数至少为 $\abs{E(G)}/2$，所以
+\[
+\varepsilon(B)=\frac{\abs{E(B)}}{\abs G}\geqslant\frac{\abs{E(G)}}{2\abs G}=\frac{d(G)}4\geqslant k .
+\]
+由定理~\ref{thm:longest-paths:min-degree-subgraph}，$B$ 有子图 $H$ 满足 $\delta(H)>\varepsilon(H)\geqslant k$。二部图的子图仍是二部图，所以 $H$ 就是所求的子图。
+
+两步也可以交换：先由定理~\ref{thm:longest-paths:min-degree-subgraph} 取子图 $H_0$，$\delta(H_0)>d(G)/2\geqslant2k$，再对 $H_0$ 用引理~\ref{lem:longest-paths:max-cut}，得到的二部子图中每个顶点保留至少一半的度数，最小度大于 $k$。常数还可以略为改进：$\delta(H)>\varepsilon(H)\geqslant d(G)/4$，所以 $k\geqslant2$ 时 $f(k)=4k-4$ 就够了。
+\end{solution}
+
+\topic{小结}
+
+\begin{itemize}
+\item 最长路的端点把全部邻点“关”在路上。由此得到长圈（定理~\ref{thm:longest-paths:long-cycle}）、有向圈、Dirac 定理（\wegref{we:longest-paths:dirac}）。
+\item 删掉度数不超过 $\varepsilon$ 的顶点不降低 $\varepsilon$，所以平均度大的图有最小度大的子图（定理~\ref{thm:longest-paths:min-degree-subgraph}），再与最小度的论证（贪心嵌入、最长路）配合。
+\item 最大割是局部调整的原型：最优的划分中，没有顶点愿意换边。
+\end{itemize}
+
+\homework{最长路、删点与最大割的练习}[最长路、删点与最大割]
+
+\exercisepart{练习}
+
+\begin{exercises}{A}{最长路与极端选择}
+\item\label{ex:longest-paths:A1} 证明：若 $\delta(G)\geqslant3$，则 $G$ 含有一个带弦的圈（弦是连接圈上两个不相邻顶点的边）。
+\begin{solution}
+取最长路 $P=v_1\dots v_k$。$v_1$ 的至少三个邻点都在 $P$ 上，设为 $v_2,v_i,v_j$，$2<i<j$。圈 $C=v_1v_2\dots v_jv_1$ 上 $v_1$ 的两个邻点是 $v_2$ 与 $v_j$，而 $v_i$ 也在 $C$ 上且 $v_1v_i\in E$，所以 $v_1v_i$ 是 $C$ 的弦。
+\end{solution}
+
+\item\label{ex:longest-paths:A2} 证明：连通图中任意两条最长路都有公共顶点。
+\begin{solution}
+设 $P,Q$ 是两条长为 $\ell$ 的路且不交。$G$ 连通，取 $V(P)$ 与 $V(Q)$ 之间的一条最短路 $R$，它的端点 $u\in P$、$w\in Q$，内部顶点不在 $P\cup Q$ 上，长度至少为 $1$。$u$ 把 $P$ 分成两段，其中较长的一段 $P'$ 以 $u$ 为端点，长度至少为 $\ell/2$；同样 $Q$ 中有以 $w$ 为端点、长度至少为 $\ell/2$ 的一段 $Q'$。$P'\cup R\cup Q'$ 是一条路，长度至少为 $\ell/2+1+\ell/2>\ell$，矛盾。
+\end{solution}
+
+\item\label{ex:longest-paths:A3} 证明：连通图中最长路的端点不是割点。由此推出至少有两个顶点的连通图至少有两个顶点不是割点。
+\begin{solution}
+设 $P$ 是最长路，端点 $v$，且 $v$ 是割点。$P-v$ 连通，落在 $G-v$ 的某个分支 $C_1$ 中。$G$ 连通，所以 $v$ 在 $G-v$ 的另一个分支 $C_2$ 中有邻点 $u$。$u\notin C_1$，所以 $u\notin P$，而最长路端点的邻点都在路上，矛盾。
+
+$\abs G\geqslant2$ 的连通图有边，最长路的长度至少为 $1$，两个端点不同，都不是割点。
+\end{solution}
+
+\item\label{ex:longest-paths:A4} 设 $G$ 不含三角形，$\delta(G)\geqslant k\geqslant2$。证明 $G$ 含有长度至少为 $2k$ 的圈，并说明 $2k$ 不能改进。
+\begin{solution}
+取最长路 $P=v_1\dots v_m$。$v_1$ 的邻点都在 $P$ 上，设它们的下标为 $2=i_1<i_2<\dots<i_d$，$d\geqslant k$。若 $i_{s+1}=i_s+1$，则 $v_1v_{i_s}v_{i_s+1}$ 是三角形，所以相邻两个下标至少差 $2$，$i_d\geqslant2+2(d-1)\geqslant2k$。圈 $v_1v_2\dots v_{i_d}v_1$ 的长度为 $i_d\geqslant2k$。
+
+$K_{k,k}$ 不含三角形，最小度为 $k$，最长圈的长度为 $2k$，所以界不能改进。
+\end{solution}
+\end{exercises}
+
+\begin{exercises}{B}{删点与最大割}
+\item\label{ex:longest-paths:B1} 称 $G$ 是 \term{$k$-退化的}，如果 $G$ 的每个子图都有一个度数至多为 $k$ 的顶点。
+\begin{questions}
+\item 证明 $G$ 是 $k$-退化的，当且仅当 $V(G)$ 可以排成 $v_1,\dots,v_n$，使每个 $v_i$ 在 $\{v_1,\dots,v_{i-1}\}$ 中至多有 $k$ 个邻点。
+\begin{solution}
+必要性：$G$ 有度数 $\leqslant k$ 的顶点，把它排在最后，记为 $v_n$；$G-v_n$ 仍是 $k$-退化的，对它重复。这样从后往前排出的顺序中，$v_i$ 在 $G[v_1,\dots,v_i]$ 中的度数 $\leqslant k$，即它的前邻点至多 $k$ 个。
+
+充分性：任取子图 $H$，设 $v_i$ 是 $H$ 中下标最大的顶点。$v_i$ 在 $H$ 中的邻点都排在它前面，至多 $k$ 个。
+\end{solution}
+\item 证明 $k$-退化图可以用 $k+1$ 种颜色正常着色。
+\begin{solution}
+按 (1) 的顺序依次着色，$v_i$ 的已着色邻点至多 $k$ 个，总有一种颜色可用。
+\end{solution}
+\item 证明 $n\geqslant k$ 个顶点的 $k$-退化图至多有 $kn-\binom{k+1}2$ 条边，并找出达到等号的图。
+\begin{solution}
+按 (1) 的顺序，$v_i$ 的前邻点至多 $\min\{k,i-1\}$ 个。每条边恰被它较后的端点计数一次，所以
+\[
+\abs{E(G)}\leqslant\sum_{i=1}^n\min\{k,i-1\}=\bigl(0+1+\dots+(k-1)\bigr)+k(n-k)=kn-\tbinom{k+1}2 .
+\]
+等号：$K_k$ 与 $n-k$ 个独立顶点的连 $K_k\vee\overline{K_{n-k}}$。它有 $\binom k2+k(n-k)=kn-\binom{k+1}2$ 条边；先排 $K_k$ 的顶点，再排其余顶点，每个顶点的前邻点至多 $k$ 个，所以它是 $k$-退化的。
+\end{solution}
+\end{questions}
+
+\item\label{ex:longest-paths:B2} 证明：每个图的顶点集都可以划分成两部分 $A,B$，使 $\Delta(G[A])\leqslant\Delta(G)/2$，$\Delta(G[B])\leqslant\Delta(G)/2$。
+\begin{solution}
+取引理~\ref{lem:longest-paths:max-cut} 中的划分。每个顶点 $v$ 在自己那一部分中的邻点数不超过 $d(v)/2\leqslant\Delta(G)/2$。（第 2 章的 Lovász 定理把 $\Delta/2,\Delta/2$ 推广为任意满足 $s+t+1\geqslant\Delta$ 的 $s,t$。）
+\end{solution}
+
+\item\label{ex:longest-paths:B3} 证明：若 $\abs{E(G)}\geqslant(k-1)\abs G$ 且 $k\geqslant2$，则 $G$ 含有长度为 $k$ 的路。再说明：不含长为 $k$ 的路的 $n$ 阶图可以有 $\frac{k-1}2n$ 条边（$k\mid n$ 时）。
+\begin{solution}
+$\varepsilon(G)\geqslant k-1>0$。由定理~\ref{thm:longest-paths:min-degree-subgraph}，有子图 $H$ 满足 $\delta(H)>k-1$，即 $\delta(H)\geqslant k$。在 $H$ 中取最长路，它的长度至少为 $\delta(H)\geqslant k$（方法第 1 条），截取一段长为 $k$ 的子路即可。
+
+$\frac nk$ 个 $K_k$ 的不交并有 $\frac nk\binom k2=\frac{k-1}2n$ 条边，最长路有 $k-1$ 条边。Erdős--Gallai 定理说这就是最大值，即 $\abs{E(G)}>\frac{k-1}2n$ 已经保证长为 $k$ 的路；删点的方法损失了因子 $2$。
+\end{solution}
+\end{exercises}

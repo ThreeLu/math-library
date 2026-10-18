@@ -1,0 +1,126 @@
+% !TEX root = ../graph-theory.tex
+% =====================================================================
+%  有向图中的排序：可达集与分支，中位序，Havet–Thomassé 定理
+% =====================================================================
+\lecture{有向图中的排序：可达集与分支，中位序的两个性质，竞赛图的 Hamilton 路，Havet--Thomassé 定理}
+\label{lec:orderings}
+
+许多关于有向图的论证，先选一个顶点的排序，再利用这个排序的极端性。可达集给出“从 $x$ 能走到的顶点”与“走不出去的边界”；中位序使向前的弧最多，于是任何局部的改动（把一段重新排列、把一个顶点挪到别处）都不能增加向前的弧，这就给出关于出邻点的不等式。
+
+\topic{方法：选一个极端的排序，再做局部调整}
+
+\begin{enumerate}
+\item 可达集：$X$ 是从 $x$ 出发可到达的顶点集，则没有弧从 $X$ 指向 $X$ 外。反过来，“没有弧离开 $S$”常常用来证明不连通或不可达。
+\item 中位序：$v_1,\dots,v_n$ 使向前的弧（$v_iv_j$，$i<j$）的条数最多。比较原排序与改动后的排序，算出向前弧条数的变化，它不能是正的。
+\item 改动只影响少数弧的方向状态，所以变化量容易计算：把 $v_i$ 挪到 $v_j$ 之后，只有 $v_i$ 与 $v_{i+1},\dots,v_j$ 之间的弧改变“向前或向后”。
+\item 对排序归纳：删去最后两个顶点，剩下的仍是中位序（性质 (M1)），在其上用归纳假设。为了能把归纳进行下去，常常要加强命题，让嵌入“偏向排序的前部”。
+\end{enumerate}
+
+\begin{theorem}\label{thm:orderings:branching}
+（讲义定理 1.10）设 $x$ 是有向图 $D$ 的顶点，$X$ 是从 $x$ 出发可到达的顶点集。则 $D$ 中存在以 $X$ 为顶点集的 $x$-分支（以 $x$ 为根、其余顶点入度为 $1$ 的有向树）。
+\end{theorem}
+\begin{proof}
+对 $D$ 运行图扫描算法（讲义 1.6 节），起点为 $x$。算法每次加入一个新顶点 $w$ 与一条弧 $vw$，$v$ 是已在 $R$ 中的顶点，所以 $(R,T)$ 始终是一棵 $x$-分支：每个新顶点恰好得到一条入弧，且它来自已有的顶点，不会产生圈。
+
+只需证明算法结束时 $R=X$。$R\subseteq X$ 是显然的。若 $w\in X\setminus R$，取一条有向 $(x,w)$-路，它上面有一条弧 $vw'$ 使 $v\in R$，$w'\notin R$。$v$ 进入过 $Q$，而它被移出 $Q$ 的条件是没有弧从 $v$ 指向 $R$ 外，矛盾。
+\end{proof}
+
+设 $T$ 是竞赛图。$V(T)$ 的排序 $v_1,\dots,v_n$ 称为\term{中位序}，如果向前的弧 $\abs{\{v_iv_j\in A: i<j\}}$ 最多。
+
+\begin{proposition}\label{prop:orderings:median}
+（讲义中位序的性质）设 $v_1,\dots,v_n$ 是竞赛图 $T$ 的中位序，$1\leqslant i<j\leqslant n$。则：
+\begin{enumerate}
+\item[(M1)] $v_i,v_{i+1},\dots,v_j$ 是子竞赛图 $T[\{v_i,\dots,v_j\}]$ 的中位序；
+\item[(M2)] $v_i$ 控制 $v_{i+1},\dots,v_j$ 中的至少一半，$v_j$ 被 $v_i,\dots,v_{j-1}$ 中的至少一半控制。
+\end{enumerate}
+特别地，$v_i\to v_{i+1}$ 对每个 $i$ 成立，所以 $v_1v_2\dots v_n$ 是 Hamilton 路（Rédei 定理：每个竞赛图都有 Hamilton 路）。
+\end{proposition}
+\begin{proof}
+(M1)：若 $v_i,\dots,v_j$ 的另一个排列在子竞赛图中有更多的向前弧，就在原排序中把这一段换成它。一段内部与段外顶点之间的弧，两个端点的先后不变，所以总的向前弧增加了，矛盾。
+
+(M2)：设 $I=\{v_{i+1},\dots,v_j\}$，$a=\abs{N^+(v_i)\cap I}$，$b=\abs{N^-(v_i)\cap I}$，$a+b=j-i$。把 $v_i$ 挪到 $v_j$ 之后，只有 $v_i$ 与 $I$ 之间的弧改变状态：$v_i$ 的 $a$ 条出弧由向前变为向后，$b$ 条入弧由向后变为向前，向前弧的条数改变 $b-a$。由中位序的极大性 $b-a\leqslant0$，即 $a\geqslant\frac{j-i}2$。把 $v_j$ 挪到 $v_i$ 之前，同理得第二句。
+
+$j=i+1$ 时，$v_i$ 控制 $\{v_{i+1}\}$ 的至少一半，即 $v_i\to v_{i+1}$。
+\end{proof}
+
+\begin{theorem}[Havet--Thomassé]\label{thm:orderings:havet-thomasse}
+（讲义定理 1.11）每个 $2k$ 阶竞赛图都包含每一个 $k+1$ 阶的分支。
+\end{theorem}
+
+\begin{remark}[证明思路]
+对 $k$ 归纳：删去分支 $B$ 的一片叶子 $y$，在 $T$ 去掉中位序最后两个顶点后的子竞赛图中嵌入 $B-y$，再给 $y$ 找位置。$y$ 的父亲 $x$ 落在 $v_i$，需要 $v_i$ 的一个排在它后面、尚未使用的出邻点。(M2) 给出 $v_i$ 在后面至少有 $k-i/2$ 个出邻点；要保证它们没有被 $B-y$ 用完，就要求 $B-y$ 有足够多的顶点落在 $v_i$ 的\emph{前面}。所以要加强命题：嵌入的像包含每个初始段的至少一半顶点。
+\end{remark}
+
+\begin{proof}
+设 $v_1,\dots,v_{2k}$ 是 $T$ 的中位序。对 $k$ 归纳证明更强的命题：$T$ 中有 $B$ 的拷贝，它的顶点集包含每个初始段 $\{v_1,\dots,v_s\}$（$1\leqslant s\leqslant2k$）中的至少 $s/2$ 个顶点。
+
+$k=1$：$B$ 是一条弧，由命题~\ref{prop:orderings:median} $v_1\to v_2$，把根放在 $v_1$、叶子放在 $v_2$。
+
+$k\geqslant2$：设 $y$ 是 $B$ 的一片叶子，$x$ 是它的父亲，$B'=B-y$ 有 $k$ 个顶点。令 $T'=T-\{v_{2k-1},v_{2k}\}$，由 (M1)，$v_1,\dots,v_{2k-2}$ 是 $T'$ 的中位序。由归纳假设，$T'$ 中有 $B'$ 的拷贝，包含每个 $\{v_1,\dots,v_s\}$（$s\leqslant2k-2$）的至少 $s/2$ 个顶点。设 $x$ 落在 $v_i$。
+
+由 (M2)，$v_i$ 控制 $v_{i+1},\dots,v_{2k}$ 中至少 $\frac{2k-i}2=k-\frac i2$ 个。另一方面，$B'$ 包含 $\{v_1,\dots,v_{i-1}\}$ 中至少 $\frac{i-1}2$ 个顶点，又包含 $v_i$，所以它在 $v_{i+1},\dots,v_{2k}$ 中至多有 $k-1-\frac{i-1}2=k-\frac{i+1}2$ 个顶点。$k-\frac i2>k-\frac{i+1}2$，所以有 $j>i$ 使 $v_i\to v_j$ 且 $v_j$ 不在 $B'$ 中。把 $y$ 放在 $v_j$，就得到 $B$ 的拷贝。
+
+验证加强的命题：$s\leqslant2k-2$ 时由归纳假设（$B\supseteq B'$）；$s=2k-1$ 时 $B$ 的 $k+1$ 个顶点至多一个是 $v_{2k}$，初始段中至少有 $k\geqslant\frac{2k-1}2$ 个；$s=2k$ 时有 $k+1\geqslant k$ 个。
+\end{proof}
+
+\begin{remark}
+Sumner 猜想说每个 $2n-2$ 阶竞赛图包含每一棵 $n$ 阶定向树（不只是分支）。Havet--Thomassé 定理是分支的情形。Kühn、Mycroft 与 Osthus 对充分大的 $n$ 证明了 Sumner 猜想。
+\end{remark}
+
+\topic{小结}
+
+\begin{itemize}
+\item 可达集没有离开它的弧，扫描算法沿着这一点构造出分支（定理~\ref{thm:orderings:branching}）。
+\item 中位序的局部极大性给出 (M1)(M2)。(M2) 是关于出邻点个数的“一半”不等式，Hamilton 路、王、Havet--Thomassé 定理都由它得到。
+\item 归纳时如果下一步需要的空间不够，就把“空间足够”加进归纳假设。
+\end{itemize}
+
+\homework{排序与局部调整的练习}[排序与局部调整]
+
+\exercisepart{练习}
+
+\begin{exercises}{A}{竞赛图与排序}
+\item\label{ex:orderings:A1} 竞赛图中的顶点 $v$ 称为\term{王}，如果从 $v$ 到每个顶点都有长度至多为 $2$ 的有向路。证明出度最大的顶点是王。
+\begin{solution}
+设 $d^+(v)$ 最大，$u\neq v$ 不是 $v$ 的出邻点，即 $u\to v$。若 $v$ 的出邻点都不指向 $u$，则 $u$ 控制 $N^+(v)$ 中的全部顶点，又控制 $v$，$d^+(u)\geqslant d^+(v)+1$，矛盾。所以有 $w\in N^+(v)$ 使 $w\to u$，$vwu$ 是长为 $2$ 的路。
+\end{solution}
+
+\item\label{ex:orderings:A2} 证明：中位序的第一个顶点 $v_1$ 是王；对称地，每个顶点都能用长度至多为 $2$ 的有向路到达最后一个顶点 $v_n$。
+\begin{solution}
+设 $v_j$（$j\geqslant2$）满足 $v_j\to v_1$，并且没有 $1<i<j$ 使 $v_1\to v_i\to v_j$。对段 $v_1,\dots,v_j$ 用 (M2)：
+\begin{itemize}
+\item $v_1$ 控制 $v_2,\dots,v_j$ 中至少 $\frac{j-1}2$ 个，而 $v_j$ 不在其中，所以 $\abs{N^+(v_1)\cap\{v_2,\dots,v_{j-1}\}}\geqslant\frac{j-1}2$；
+\item $v_j$ 被 $v_1,\dots,v_{j-1}$ 中至少 $\frac{j-1}2$ 个控制。
+\end{itemize}
+控制 $v_j$ 的顶点不是 $v_1$，也不是 $v_1$ 的出邻点（由假设），所以它们在 $\{v_2,\dots,v_{j-1}\}\setminus N^+(v_1)$ 中，至多 $(j-2)-\frac{j-1}2=\frac{j-3}2$ 个，矛盾。所以每个 $v_j$ 或者被 $v_1$ 控制，或者经过某个 $v_i$ 在两步内到达。第二句把所有弧反向即可（反向竞赛图中 $v_n,\dots,v_1$ 是中位序）。
+\end{solution}
+
+\item\label{ex:orderings:A3} （Camion 定理）证明：至少有 $3$ 个顶点的竞赛图是强连通的，当且仅当它有 Hamilton 圈。
+\begin{solution}
+充分性显然。设 $T$ 强连通，$n\geqslant3$。$T$ 有圈：任取弧 $u\to v$，由强连通有 $(v,u)$-路，与 $uv$ 合成圈。设 $C=c_0c_1\dots c_{l-1}c_0$ 是最长的圈，假设 $l<n$。竞赛图没有长为 $2$ 的圈，所以 $l\geqslant3$。
+
+对 $v\notin C$：若 $C$ 上既有 $v$ 的入邻点又有 $v$ 的出邻点，沿 $C$ 走一圈，必有某个 $i$ 使 $c_i\to v\to c_{i+1}$（下标模 $l$），把 $v$ 插入得到更长的圈。所以 $C$ 外的顶点分成两类：$A$ 中的顶点控制 $C$ 的全部顶点，$B$ 中的顶点被 $C$ 的全部顶点控制。
+
+$A\cup B\neq\varnothing$。从 $C$ 出发的弧只能指向 $C\cup B$，进入 $C$ 的弧只能来自 $C\cup A$。若 $A=\varnothing$，$B$ 中的顶点到不了 $C$；若 $B=\varnothing$，$C$ 到不了 $A$。都与强连通矛盾。取 $C$ 到 $A$ 的一条有向路，它第一次进入 $A$ 的那条弧不来自 $C$（$C$ 与 $A$ 之间的弧都指向 $C$），只能来自 $B$，所以有 $b\in B$，$a\in A$，$b\to a$。于是
+\[
+c_0\to b\to a\to c_2\to c_3\to\dots\to c_{l-1}\to c_0
+\]
+是长为 $l+1$ 的圈，矛盾。所以 $l=n$。
+\end{solution}
+
+\item\label{ex:orderings:A4} 证明：有向图 $D$ 没有有向圈，当且仅当它的顶点可以排成 $v_1,\dots,v_n$ 使每条弧都向前。由此证明：没有有向圈的竞赛图恰好是传递竞赛图，并且它只有一条 Hamilton 路。
+\begin{solution}
+充分性：向前的弧不能回到起点。必要性：由\wegref{we:longest-paths:digraph-cycle}（用于反向图），无有向圈的有向图有入度为 $0$ 的顶点；把它排在最前，删去后剩下的图仍无有向圈，重复。
+
+无有向圈的竞赛图按上面的顺序排列，任意 $i<j$ 之间恰有一条弧，它向前，所以 $v_i\to v_j$，这是传递的。反过来，传递竞赛图若有有向圈 $w_1\to w_2\to\dots\to w_k\to w_1$，由传递性 $w_1\to w_k$，与 $w_k\to w_1$ 矛盾。
+
+Hamilton 路 $w_1w_2\dots w_n$ 的每条弧都向前，所以 $w_1,\dots,w_n$ 的下标递增，只能是 $v_1,\dots,v_n$。
+\end{solution}
+
+\item\label{ex:orderings:A5} 证明有向图 $D$ 是强连通的，当且仅当对每个非空真子集 $S\subset V(D)$，都有从 $S$ 指向 $V(D)\setminus S$ 的弧。再证明：把 $D$ 的每个强连通分支收缩成一个点，得到的有向图没有有向圈。
+\begin{solution}
+必要性：取 $s\in S$，$t\notin S$，$(s,t)$-路上有一条弧离开 $S$。充分性：若 $D$ 不强连通，有 $u$ 到不了某个顶点。取 $S$ 为 $u$ 的可达集，$S$ 非空且不是全集，没有弧离开 $S$，矛盾。
+
+若收缩后的图有有向圈 $C_1\to C_2\to\dots\to C_k\to C_1$（$k\geqslant2$，$C_i$ 是不同的强连通分支），则 $C_1$ 中的顶点能到达 $C_2$ 中的顶点，$C_2$ 中的顶点也能（沿圈的其余部分）到达 $C_1$ 中的顶点；由于每个分支内部互相可达，$C_1\cup C_2$ 中任意两点互相可达，与强连通分支的极大性矛盾。
+\end{solution}
+\end{exercises}
