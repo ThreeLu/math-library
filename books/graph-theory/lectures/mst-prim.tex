@@ -1,0 +1,492 @@
+% !TEX root = ../graph-theory.tex
+% =====================================================================
+%  组合优化 · Prim 算法、二叉堆、斐波那契堆
+% =====================================================================
+\lecture{Prim 算法：让一棵树长大，数组实现 $O(n^2)$，优先队列，二叉堆（上浮、下沉、减小键值），$O(m\log n)$ 的实现，斐波那契堆（Plant、Insert、DeleteMin、DecreaseKey），度数引理，$O(m+n\log n)$ 的分析}
+\label{lec:mst-prim}
+
+Kruskal 算法让一片森林逐渐合并；Prim 算法让\emph{一棵}树从一个顶点开始逐渐长大，每一步加入连接树内与树外的最轻的边。正确性来自上一讲的安全边引理。Prim 算法每一步要找“离树最近的顶点”，这就是一个“反复取出最小值、并且某些值会变小”的问题。用数组做是 $O(n^2)$；用二叉堆是 $O(m\log n)$；用斐波那契堆是 $O(m+n\log n)$。这一讲依次讲这三种实现，重点是两种堆。
+
+\topic{一、算法与正确性}
+
+\begin{enumerate}
+\item 任取起点 $v$，$U=\{v\}$，$T=\varnothing$。
+\item 当 $U\neq V$：在割 $\partial(U)$ 中取权最小的边 $uw$（$u\in U$，$w\notin U$），令 $U=U\cup\{w\}$，$T=T\cup\{uw\}$。（讲义算法 3.2。）
+\end{enumerate}
+
+\emph{正确性。}$T$ 始终是 $U$ 上的树，$T\cap\partial(U)=\varnothing$。由上一讲的安全边引理~\ref{lem:mst-kruskal:safe}（取 $X=U$），若 $T$ 含于某棵最小支撑树，则 $T\cup\{uw\}$ 也是。归纳得最后的 $T$ 是最小支撑树。若某一步 $\partial(U)$ 为空而 $U\neq V$，图不连通。
+
+\emph{实现的关键。}不能每一步都把 $\partial(U)$ 的边全部扫一遍（那是 $O(m)$ 一步、$O(nm)$ 总共）。办法是对每个树外的顶点 $w$ 记住它到树的最轻的边：
+\[
+\texttt{lcost}[w]=\min\{c(xw):x\in U\},\qquad \texttt{pre}[w]=\text{取到最小值的那个 }x .
+\]
+于是“$\partial(U)$ 中最轻的边”就是“\texttt{lcost} 最小的树外顶点 $w$ 与 \texttt{pre[w]} 之间的边”。$w$ 加入 $U$ 之后，只有 $w$ 的邻点的 \texttt{lcost} 可能变小，扫一遍 $w$ 的邻接表就能更新。
+
+\topic{二、数组实现（讲义算法 3.2.1）}
+
+\begin{lstlisting}[language=Python]
+def weighted_adjacency(n, wedges):
+    adj = [[] for _ in range(n)]
+    for u, v, w in wedges:
+        adj[u].append((v, w))
+        adj[v].append((u, w))
+    return adj
+
+def prim_array(adj, s=0):
+    n = len(adj)
+    lcost, pre = [INF] * n, [-1] * n
+    in_tree = [False] * n
+    lcost[s] = 0
+    tree = []
+    for _ in range(n):
+        # 在树外的顶点中找 lcost 最小的：O(n)
+        u, best = -1, INF
+        for x in range(n):
+            if not in_tree[x] and lcost[x] < best:
+                u, best = x, lcost[x]
+        if u == -1:
+            break                         # 剩下的顶点都到不了：图不连通
+        in_tree[u] = True
+        if pre[u] != -1:
+            tree.append((pre[u], u, lcost[u]))
+        for v, w in adj[u]:               # 讲义此处误写为 N(v)，应为 u 的邻点
+            if not in_tree[v] and w < lcost[v]:
+                lcost[v], pre[v] = w, u
+    return tree
+\end{lstlisting}
+
+\begin{example}\label{ex:mst-prim:array}
+上一讲的图 \texttt{K\_edges}，从 $0$ 出发。\texttt{adj=[[(1,1),(2,2)],[(0,1),(2,3),(4,5),(3,6)],[(0,2),(1,3),(3,7),(4,8)],[(4,4),(1,6),(2,7)],[(3,4),(1,5),(2,8)]]}。
+\begin{center}
+\small
+\begin{tabular}{cp{2.6cm}p{4.2cm}p{4.2cm}}
+\toprule
+轮 & 取出的 $u$（边） & 更新 & 之后的 \texttt{lcost}；\texttt{pre} \\
+\midrule
+1 & $0$（起点） & $1$：$\infty\to1$；$2$：$\infty\to2$ & \texttt{[0,1,2,inf,inf]}；\texttt{[-1,0,0,-1,-1]} \\
+2 & $1$（边 $01$，权 1） & $2$：$3\not<2$，不变；$4$：$\to5$；$3$：$\to6$ & \texttt{[0,1,2,6,5]}；\texttt{[-1,0,0,1,1]} \\
+3 & $2$（边 $02$，权 2） & $3$：$7\not<6$；$4$：$8\not<5$ & 不变 \\
+4 & $4$（边 $14$，权 5） & $3$：$4<6$，$\to4$，\texttt{pre[3]=4} & \texttt{[0,1,2,4,5]}；\texttt{[-1,0,0,4,1]} \\
+5 & $3$（边 $43$，权 4） & 无 & \\
+\bottomrule
+\end{tabular}
+\end{center}
+得到 $\{01,02,14,34\}$，权 $12$，与 Kruskal 的结果相同。注意第 4 轮：$3$ 原来离树最近的边是 $13$（权 $6$），$4$ 进入树后有了更近的边 $43$（权 $4$），\texttt{lcost[3]} 变小了。
+\end{example}
+
+\emph{复杂度。}外层 $n$ 轮，每轮找最小值扫描 $n$ 个顶点，共 $O(n^2)$；更新共扫描每个邻接表一次，$O(m)$。合计 $O(n^2+m)=O(n^2)$。对稠密图（$m\approx n^2$）这已是最好的；对稀疏图，瓶颈是“找最小值”，要换成能快速找最小值的数据结构。
+
+\topic{三、优先队列}
+
+把树外、\texttt{lcost} 有限的顶点放在一个集合里，Prim 算法对它做三种操作：
+\begin{itemize}
+\item \texttt{insert(w)}：$w$ 第一次有了有限的 \texttt{lcost}，放进集合（至多 $n$ 次）；
+\item \texttt{delete\_min()}：取出 \texttt{lcost} 最小的顶点（至多 $n$ 次）；
+\item \texttt{decrease\_key(w)}：$w$ 的 \texttt{lcost} 变小了，调整（至多 $m$ 次，每条边至多引起一次）。
+\end{itemize}
+支持这三种操作的数据结构叫\term{优先队列}。数组实现中 \texttt{delete\_min} 是 $O(n)$，其他是 $O(1)$，总共 $O(n\cdot n+m)$。二叉堆让三种操作都是 $O(\log n)$，总共 $O((n+m)\log n)$。斐波那契堆让 \texttt{insert}、\texttt{decrease\_key} 平均 $O(1)$、\texttt{delete\_min} 平均 $O(\log n)$，总共 $O(m+n\log n)$。
+
+\topic{四、二叉堆}
+
+\term{二叉堆}是一棵“完全二叉树”：除最后一层外每层都排满，最后一层从左往右排。它满足\term{堆序}：每个结点的键不大于它的孩子的键，所以根是最小的。
+
+完全二叉树可以不用指针，直接存在一个列表 \texttt{a} 里：按层从上到下、每层从左到右编号 $0,1,2,\dots$。结点 $i$ 的孩子是 $2i+1$ 与 $2i+2$，双亲是 $\lfloor(i-1)/2\rfloor$。$k$ 个结点的完全二叉树高 $\lfloor\log_2k\rfloor$。
+
+\begin{itemize}
+\item \emph{上浮}（\texttt{up(i)}）：结点 $i$ 的键变小，可能比双亲小了，就与双亲交换，一直往上，直到不比双亲小或到根。
+\item \emph{下沉}（\texttt{down(i)}）：结点 $i$ 的键变大，可能比某个孩子大了，就与\emph{较小}的孩子交换，一直往下。
+\item \texttt{insert}：放在列表末尾，上浮。\texttt{delete\_min}：取出 \texttt{a[0]}，把最后一个元素移到根，下沉。\texttt{decrease\_key(v)}：从 $v$ 所在的位置上浮；为此要知道 $v$ 在列表的哪个位置，用数组 \texttt{pos[v]} 记录，每次交换时更新。
+\end{itemize}
+
+每次上浮、下沉至多走树高那么多步，所以三种操作都是 $O(\log n)$。
+
+\begin{lstlisting}[language=Python]
+class BinaryHeap:
+    """以 key[v] 为键的最小堆；元素是 0..n-1 的编号。"""
+    def __init__(self, n, key):
+        self.key = key            # 与外面共用同一个列表（Prim 中就是 lcost）
+        self.a = []               # 堆：a[0] 是最小的
+        self.pos = [-1] * n       # pos[v]：v 在 a 中的下标，不在堆中为 -1
+    def __len__(self):
+        return len(self.a)
+    def _swap(self, i, j):
+        a = self.a
+        a[i], a[j] = a[j], a[i]
+        self.pos[a[i]], self.pos[a[j]] = i, j
+    def _up(self, i):
+        while i > 0:
+            p = (i - 1) // 2
+            if self.key[self.a[p]] <= self.key[self.a[i]]:
+                break
+            self._swap(i, p)
+            i = p
+    def _down(self, i):
+        while True:
+            c = 2 * i + 1                       # 左孩子
+            if c >= len(self.a):
+                return
+            if c + 1 < len(self.a) and self.key[self.a[c + 1]] < self.key[self.a[c]]:
+                c += 1                          # 右孩子更小
+            if self.key[self.a[c]] >= self.key[self.a[i]]:
+                return
+            self._swap(i, c)
+            i = c
+    def insert(self, v):
+        self.a.append(v)
+        self.pos[v] = len(self.a) - 1
+        self._up(len(self.a) - 1)
+    def delete_min(self):
+        v = self.a[0]
+        self._swap(0, len(self.a) - 1)          # 最后一个换到根
+        self.a.pop()
+        self.pos[v] = -1
+        if self.a:
+            self._down(0)
+        return v
+    def decrease_key(self, v):                  # 调用前外面已经把 key[v] 改小
+        self._up(self.pos[v])
+\end{lstlisting}
+
+\begin{example}\label{ex:mst-prim:binary}
+元素 $a,\dots,h$（编号 $0,\dots,7$），键 $7,3,9,5,8,2,6,4$，依次插入。下表写出每次插入后的列表 \texttt{a}（字母后面是键）：
+\begin{center}
+\small
+\begin{tabular}{ll}
+\toprule
+插入 & \texttt{a} \\
+\midrule
+$a\,7$ & $[a7]$ \\
+$b\,3$ & 放在下标 $1$，双亲 $a7$ 更大，交换：$[b3,a7]$ \\
+$c\,9$ & 下标 $2$，双亲 $b3$ 更小，不动：$[b3,a7,c9]$ \\
+$d\,5$ & 下标 $3$，双亲（下标 $1$）$a7$ 更大，交换；双亲 $b3$ 更小，停：$[b3,d5,c9,a7]$ \\
+$e\,8$ & 下标 $4$，双亲 $d5$，不动：$[b3,d5,c9,a7,e8]$ \\
+$f\,2$ & 下标 $5$，双亲（下标 $2$）$c9$，交换；双亲 $b3$，交换：$[f2,d5,b3,a7,e8,c9]$ \\
+$g\,6$ & 下标 $6$，双亲 $b3$，不动：$[f2,d5,b3,a7,e8,c9,g6]$ \\
+$h\,4$ & 下标 $7$，双亲（下标 $3$）$a7$，交换；双亲（下标 $1$）$d5$，交换；双亲 $f2$，停 \\
+& $[f2,h4,b3,d5,e8,c9,g6,a7]$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{center}
+\begin{tikzpicture}[level distance=9mm, level 1/.style={sibling distance=34mm}, level 2/.style={sibling distance=17mm}, level 3/.style={sibling distance=9mm}]
+  \node[gv] {f2}
+    child {node[gv] {h4} child {node[gv] {d5} child {node[gv] {a7}}} child {node[gv] {e8}}}
+    child {node[gv] {b3} child {node[gv] {c9}} child {node[gv] {g6}}};
+\end{tikzpicture}
+\end{center}
+\texttt{delete\_min}：取出 $f$；把最后的 $a7$ 换到根，列表 $[a7,h4,b3,d5,e8,c9,g6]$；下沉：孩子 $h4,b3$ 中较小的是 $b3$，$3<7$，交换，$[b3,h4,a7,d5,e8,c9,g6]$；$a7$ 在下标 $2$，孩子 $c9,g6$ 中较小的是 $g6$，$6<7$，交换，$[b3,h4,g6,d5,e8,c9,a7]$；$a7$ 在下标 $6$，没有孩子，停。
+
+把 $c$ 的键从 $9$ 减到 $1$，\texttt{decrease\_key(c)}：\texttt{pos[c]=5}；双亲（下标 $2$）$g6$ 更大，交换，$[b3,h4,c1,d5,e8,g6,a7]$；双亲 $b3$ 更大，交换，$[c1,h4,b3,d5,e8,g6,a7]$；到根，停。
+\end{example}
+
+\begin{lstlisting}[language=Python]
+def prim_heap(adj, s=0, Heap=BinaryHeap):
+    """用优先队列实现的 Prim 算法；Heap 可以是 BinaryHeap 或 FibonacciHeap。"""
+    n = len(adj)
+    lcost, pre = [INF] * n, [-1] * n
+    in_tree = [False] * n
+    heap = Heap(n, lcost)
+    lcost[s] = 0
+    heap.insert(s)
+    tree = []
+    while len(heap) > 0:
+        u = heap.delete_min()
+        in_tree[u] = True
+        if pre[u] != -1:
+            tree.append((pre[u], u, lcost[u]))
+        for v, w in adj[u]:
+            if in_tree[v] or w >= lcost[v]:
+                continue
+            first = lcost[v] == INF          # v 第一次被看到
+            lcost[v], pre[v] = w, u
+            if first:
+                heap.insert(v)
+            else:
+                heap.decrease_key(v)
+    return tree
+\end{lstlisting}
+
+\begin{theorem}\label{thm:mst-prim:binary}
+用二叉堆的 Prim 算法的时间是 $O(m\log n)$（$G$ 连通，$m\geqslant n-1$）。
+\end{theorem}
+\begin{proof}
+至多 $n$ 次 \texttt{insert}、$n$ 次 \texttt{delete\_min}、$m$ 次 \texttt{decrease\_key}，每次 $O(\log n)$；扫描邻接表 $O(m)$。合计 $O((n+m)\log n)=O(m\log n)$。
+\end{proof}
+
+\topic{五、斐波那契堆：结构}
+
+二叉堆的 \texttt{decrease\_key} 是 $O(\log n)$，而 Prim 算法中它可能被调用 $m$ 次，远多于 \texttt{delete\_min} 的 $n$ 次。斐波那契堆的想法是：让 \texttt{decrease\_key} 尽量“偷懒”，只把出问题的结点从树上剪下来，不立即整理；整理的工作留给 \texttt{delete\_min}，并且用一个计数论证说明总的整理工作不多。
+
+讲义采用 Korte 与 Vygen 的写法。斐波那契堆是若干棵有根树（森林），每个结点 $v$ 有键 \texttt{key[v]}（Prim 中就是 \texttt{lcost[v]}）和一个标志 $\texttt{flag}[v]\in\{0,1\}$。$v$ 的\term{度} $d(v)$ 指它的\emph{孩子}个数。要求：
+\begin{enumerate}
+\item[(1)] 任何两棵树的根的度不同；
+\item[(2)] 堆序：若 $u$ 是 $v$ 的孩子，则 $\texttt{key}[v]\leqslant\texttt{key}[u]$；
+\item[(3)] 每个度为 $t$ 的结点 $u$，它的孩子可以编号为 $1,\dots,t$，使第 $i$ 个孩子 $v$ 满足 $d(v)+\texttt{flag}[v]\geqslant i-1$。
+\end{enumerate}
+\texttt{flag[v]}$=1$ 的意思是“$v$ 作为非根结点，已经失去过一个孩子”。条件 (3) 限制了树不能太“瘦”，下面的度数引理说明，度为 $k$ 的结点下面至少有 $2^{k/2}$ 个结点。
+
+\emph{存储。}讲义给每个结点 7 个域：\texttt{lcost}（键）、\texttt{flag}、\texttt{degree}、\texttt{parent}、\texttt{child}（指向某一个孩子）、\texttt{left}、\texttt{right}（同一个双亲的孩子们用 \texttt{left}、\texttt{right} 连成双向循环链表，这样摘下一个孩子是 $O(1)$）。另有数组 \texttt{B}：\texttt{B[i]} 是度为 $i$ 的那棵树的根（由 (1)，至多一棵），没有则为 $-1$。
+
+\topic{六、斐波那契堆：四种操作}
+
+\emph{Plant($v$)：把以 $v$ 为根的树种进堆里。}设 $d(v)=k$。若 \texttt{B[k]} 有一棵树 $T'$（根 $r$），就把两棵树合并：键较大的根成为键较小的根的孩子，得到根的度为 $k+1$ 的树；清空 \texttt{B[k]}，令 $k\gets k+1$，继续。直到 \texttt{B[k]} 为空，令 \texttt{B[k]} 指向当前的根。
+
+\emph{Insert($w$)：}把 $w$ 作为单点树（$\texttt{flag}=0$，度 $0$），Plant($w$)。
+
+\emph{DeleteMin()：}扫描 \texttt{B}，找键最小的根 $v$（由引理~\ref{lem:mst-prim:degree}，\texttt{B} 的长度只需 $O(\log n)$）。从 \texttt{B} 中删去 $v$，对 $v$ 的每个孩子 $x$ 执行 Plant($x$)，返回 $v$。
+
+\emph{DecreaseKey($w$)：}$w$ 的键已经变小。若 $w$ 是根，或者仍不比双亲小，什么也不做。否则，从 $w$ 往上找一条路 $v_1,v_2,\dots,v_t=w$：$v_2,\dots,v_{t-1}$ 的标志都是 $1$，而 $v_1$ 是根或者标志为 $0$（往上走，直到遇到根或标志为 $0$ 的结点为止）。然后\emph{从下往上}，对 $i=t-1,t-2,\dots,1$：把 $v_i$ 的标志取反（$v_1$ 若标志为 $0$ 就变成 $1$，$v_2,\dots,v_{t-1}$ 从 $1$ 变成 $0$），把孩子 $v_{i+1}$ 从 $v_i$ 摘下，Plant($v_{i+1}$)。最后，若 $v_1$ 是根，它的度变了，要先把它从 \texttt{B} 中取下，最后再 Plant($v_1$)。这种连续剪下若干个祖先的现象叫\term{级联剪切}。
+
+\begin{remark}[剪切的顺序]
+讲义正文写“对所有的 $i\in\{1,\dots,t-1\}$……把 $v_i$ 的孩子 $v_{i+1}$ 删除和调用 Plant($v_{i+1}$)”，没有说明顺序；讲义后面的程序是从 $w$ 开始往上剪的。顺序是要紧的：若先剪 $v_2$（从 $v_1$ 上），Plant($v_2$) 时 $v_2$ 还带着孩子 $v_3$，它可能被合并进别的树、成为某个结点的孩子；接着再从 $v_2$ 上剪去 $v_3$，$v_2$ 的度减少而标志已被置为 $0$，条件 (3) 就可能被破坏，\texttt{B} 中记录的度也可能不对。我们的随机测试确实发现了这种情况。所以必须从下往上剪：每个结点被 Plant 时，它的度已经是最终的值。
+\end{remark}
+
+\begin{lstlisting}[language=Python]
+class FibonacciHeap:
+    """Korte-Vygen 式斐波那契堆；元素是 0..n-1，键为 key[v]。"""
+    def __init__(self, n, key):
+        self.key = key
+        self.flag, self.degree, self.parent = [0] * n, [0] * n, [-1] * n
+        self.child = [-1] * n                           # 某一个孩子
+        self.left, self.right = list(range(n)), list(range(n))   # 兄弟的双向循环链表
+        self.B = [-1] * (2 * max(1, n).bit_length() + 2)        # B[i]：度为 i 的根
+        self.size = 0
+    def __len__(self):
+        return self.size
+
+    def _add_child(self, v, u):           # u 成为 v 的孩子，插在 child[v] 的右边
+        self.parent[u] = v
+        c = self.child[v]
+        if c == -1:
+            self.child[v] = u
+            self.left[u] = self.right[u] = u
+        else:
+            r = self.right[c]
+            self.left[u], self.right[u] = c, r
+            self.right[c] = self.left[r] = u
+        self.degree[v] += 1
+
+    def _remove_child(self, v, u):        # 把孩子 u 从 v 的孩子链表中摘下：O(1)
+        if self.right[u] == u:
+            self.child[v] = -1
+        else:
+            l, r = self.left[u], self.right[u]
+            self.right[l], self.left[r] = r, l
+            if self.child[v] == u:
+                self.child[v] = r
+        self.left[u] = self.right[u] = u
+        self.parent[u] = -1
+        self.degree[v] -= 1
+
+    def plant(self, v):
+        self.parent[v] = -1
+        k = self.degree[v]
+        while self.B[k] != -1:            # 已有一棵根的度也是 k 的树：合并
+            u = self.B[k]
+            self.B[k] = -1
+            if self.key[u] < self.key[v]:
+                u, v = v, u               # 让 v 是键较小的根
+            self._add_child(v, u)
+            k += 1
+        self.B[k] = v
+
+    def insert(self, w):
+        self.flag[w], self.degree[w], self.child[w] = 0, 0, -1
+        self.left[w] = self.right[w] = w
+        self.size += 1
+        self.plant(w)
+
+    def delete_min(self):
+        v = -1
+        for r in self.B:                  # 扫描 B，找键最小的根
+            if r != -1 and (v == -1 or self.key[r] < self.key[v]):
+                v = r
+        if v == -1:
+            return -1
+        self.B[self.degree[v]] = -1
+        while self.child[v] != -1:        # v 的孩子逐个种回去
+            c = self.child[v]
+            self._remove_child(v, c)
+            self.plant(c)
+        self.size -= 1
+        return v
+
+    def decrease_key(self, w):            # 调用前外面已经把 key[w] 改小
+        p = self.parent[w]
+        if p == -1 or self.key[w] >= self.key[p]:
+            return
+        path = [w]                        # 从 w 往上：经过标志为 1 的非根结点
+        x = p
+        while self.parent[x] != -1 and self.flag[x] == 1:
+            path.append(x)
+            x = self.parent[x]
+        path.append(x)
+        path.reverse()                    # path = [v1, v2, ..., vt = w]
+        v1 = path[0]
+        v1_is_root = self.parent[v1] == -1
+        if v1_is_root:
+            self.B[self.degree[v1]] = -1  # v1 的度要变，先从 B 中取下
+        for i in reversed(range(len(path) - 1)):    # 从下往上剪
+            vi, below = path[i], path[i + 1]
+            self.flag[vi] = 1 - self.flag[vi]
+            self._remove_child(vi, below)
+            self.plant(below)
+        if v1_is_root:
+            self.plant(v1)
+\end{lstlisting}
+
+\begin{example}\label{ex:mst-prim:fib}
+与二叉堆的例子相同：元素 $a,\dots,h$，键 $7,3,9,5,8,2,6,4$，依次插入。（树中“$x\,k$”表示元素 $x$ 键为 $k$，带 $^*$ 表示标志为 $1$。）
+\begin{center}
+\small
+\begin{tabular}{lp{10.2cm}}
+\toprule
+操作 & 过程与结果 \\
+\midrule
+插入 $a7$ & \texttt{B[0]} 空，\texttt{B[0]=a}。 \\
+插入 $b3$ & 度 $0$，\texttt{B[0]=a}：合并，$b3<a7$，$a$ 成为 $b$ 的孩子，$b$ 的度变成 $1$；\texttt{B[1]} 空，\texttt{B[1]=b}。堆：$b3[a7]$。 \\
+插入 $c9$ & \texttt{B[0]=c}。堆：$c9$，$b3[a7]$。 \\
+插入 $d5$ & 与 \texttt{B[0]} 的 $c9$ 合并：$d5[c9]$，度 $1$；与 \texttt{B[1]} 的 $b3[a7]$ 合并：$b3<d5$，$d$ 成为 $b$ 的孩子，度 $2$；\texttt{B[2]=b}。堆：$b3[a7,\ d5[c9]]$。 \\
+插入 $e8$ & \texttt{B[0]=e}。 \\
+插入 $f2$ & 与 $e8$ 合并：$f2[e8]$，\texttt{B[1]=f}。 \\
+插入 $g6$ & \texttt{B[0]=g}。堆：$g6$，$f2[e8]$，$b3[a7,d5[c9]]$。 \\
+插入 $h4$ & 与 $g6$ 合并：$h4[g6]$，度 $1$；与 \texttt{B[1]} 的 $f2[e8]$ 合并：$f2[e8,h4[g6]]$，度 $2$；与 \texttt{B[2]} 的 $b3[\dots]$ 合并：$f2<b3$，$b$ 成为 $f$ 的孩子，度 $3$；\texttt{B[3]=f}。 \\
+\bottomrule
+\end{tabular}
+\end{center}
+现在整个堆是一棵树：
+\begin{center}
+\begin{tikzpicture}[level distance=9mm, level 1/.style={sibling distance=20mm}, level 2/.style={sibling distance=12mm}]
+  \node[gv] {f2}
+    child {node[gv] {e8}}
+    child {node[gv] {b3} child {node[gv] {a7}} child {node[gv] {d5} child {node[gv] {c9}}}}
+    child {node[gv] {h4} child {node[gv] {g6}}};
+\end{tikzpicture}
+\end{center}
+检查条件 (3)：$f$ 的孩子 $e,h,b$ 的度分别为 $0,1,2$，可以编号为第 $1,2,3$ 个，满足 $d+\texttt{flag}\geqslant0,1,2$。
+
+\emph{把 $a$ 的键减到 $1$。}$a$ 的双亲 $b3$ 比 $1$ 大，要剪。往上找路：$b$ 不是根，标志为 $0$，停，$v_1=b$，路为 $b,a$。$b$ 的标志 $0\to1$，剪下 $a$，Plant($a$)：\texttt{B[0]} 空，\texttt{B[0]=a}。堆：$a1$；$f2[e8,\ b3^*[d5[c9]],\ h4[g6]]$。$b$ 的度从 $2$ 降到 $1$，标志补上了 $1$，在 $f$ 的孩子中 $d(b)+\texttt{flag}[b]=2$，条件 (3) 仍成立。
+
+\emph{把 $d$ 的键减到 $0$。}$d$ 的双亲 $b3$ 比 $0$ 大，要剪。往上找路：$b$ 不是根，标志为 $1$，继续；$f$ 是根，停。路为 $v_1=f,\ v_2=b,\ v_3=d$。$f$ 是根，先从 \texttt{B[3]} 取下。从下往上：
+\begin{enumerate}
+\item $i=2$：$b$ 的标志 $1\to0$；从 $b$ 上剪下 $d$（$d$ 带着孩子 $c$，度 $1$）；Plant($d$)：\texttt{B[1]} 空，\texttt{B[1]=d}。
+\item $i=1$：$f$ 的标志 $0\to1$；从 $f$ 上剪下 $b$（度 $0$）；Plant($b$)：\texttt{B[0]=a}，合并，$a1<b3$，得 $a1[b3]$，度 $1$；\texttt{B[1]=d}，合并，$d0<a1$，得 $d0[c9,\ a1[b3]]$，度 $2$；\texttt{B[2]=d}。
+\item 最后 Plant($f$)：$f$ 现在的孩子是 $e,h$，度 $2$；\texttt{B[2]=d}，合并，$d0<f2$，$f$ 成为 $d$ 的孩子，度 $3$；\texttt{B[3]=d}。
+\end{enumerate}
+\begin{center}
+\begin{tikzpicture}[level distance=9mm, level 1/.style={sibling distance=20mm}, level 2/.style={sibling distance=12mm}]
+  \node[gv] {d0}
+    child {node[gv] {c9}}
+    child {node[gv] {f2$^*$} child {node[gv] {e8}} child {node[gv] {h4} child {node[gv] {g6}}}}
+    child {node[gv] {a1} child {node[gv] {b3}}};
+\end{tikzpicture}
+\end{center}
+
+\emph{DeleteMin。}\texttt{B} 中只有 \texttt{B[3]=d}，取出 $d$。把孩子 $c,f,a$ 逐个种回去：Plant($c$)：\texttt{B[0]=c}；Plant($f$)（度 $2$）：\texttt{B[2]=f}；Plant($a$)（度 $1$）：\texttt{B[1]=a}。堆：$c9$；$a1[b3]$；$f2^*[e8,\ h4[g6]]$。下一次 DeleteMin 扫描 \texttt{B[0..2]}，取出 $a$，把 $b$ 种回去，与 $c9$ 合并为 $b3[c9]$。
+\end{example}
+
+\topic{七、斐波那契堆：为什么快}
+
+\begin{lemma}[度数引理]\label{lem:mst-prim:degree}
+（讲义引理 3.4）在满足条件 (3) 的有根树中，度至少为 $k$ 的结点 $v$ 的子树中至少有 $2^{k/2}$ 个结点。所以 $n$ 个元素的斐波那契堆中每个结点的度至多为 $2\log_2n$。
+\end{lemma}
+\begin{proof}
+令 $N(k)$ 为这样的子树中结点数的最小可能值。$N(0)=1\geqslant2^0$，$N(1)\geqslant2\geqslant2^{1/2}$。设 $k\geqslant2$，$v$ 的度 $t\geqslant k$，孩子按 (3) 编号。第 $t$ 个孩子 $c$ 满足 $d(c)\geqslant t-1-\texttt{flag}[c]\geqslant t-2\geqslant k-2$，所以 $c$ 的子树至少有 $N(k-2)$ 个结点。把 $c$ 的子树整个删去，$v$ 剩下 $t-1\geqslant k-1$ 个孩子，编号 $1,\dots,t-1$ 不变，条件 (3) 对所有结点仍成立，所以剩下的部分至少有 $N(k-1)$ 个结点。于是
+\[
+N(k)\geqslant N(k-1)+N(k-2)\geqslant2^{(k-1)/2}+2^{(k-2)/2}=2^{(k-2)/2}(\sqrt2+1)\geqslant2^{(k-2)/2}\cdot2=2^{k/2}.
+\]
+若 $v$ 的度为 $k$，则 $2^{k/2}\leqslant n$，$k\leqslant2\log_2n$。
+\end{proof}
+
+（$N(k)\geqslant N(k-1)+N(k-2)$ 正是 Fibonacci 数的递推，这是名字的来历。讲义的证明取的是度数最大的孩子，同样可行：它的度不小于第 $t$ 个孩子的度，而删去任何一个孩子后，其余孩子重新编号时编号只会变小，条件 (3) 仍成立。）
+
+\begin{proposition}\label{prop:mst-prim:invariants}
+四种操作都保持条件 (1)(2)(3)。
+\end{proposition}
+\begin{proof}
+(1)：每棵树的根都在 \texttt{B} 中按度登记，Plant 结束时 \texttt{B[k]} 原来为空；DeleteMin、DecreaseKey 改变根的度之前都先把它从 \texttt{B} 中取下。(2)：合并时键小的根在上；DecreaseKey 中 $w$ 的键变小后若比双亲小就被剪下成为根，它的孩子的键不小于它原来的键，更不小于新的键。(3)：Plant 把度为 $k$ 的根 $u$ 接到度为 $k$ 的根下，作为第 $k+1$ 个孩子，$d(u)+\texttt{flag}[u]\geqslant k=(k+1)-1$。剪掉一个孩子后，其余孩子的编号只会变小，不等式仍成立。被剪的结点 $v_i$（$i\geqslant2$）成为根，没有要求。剩下的 $v_1$ 若不是根，它的度减少 $1$，标志从 $0$ 变成 $1$，$d(v_1)+\texttt{flag}[v_1]$ 不变，所以它在自己双亲那里的条件 (3) 仍成立。DeleteMin 中被删的根的孩子变成根，没有要求；其余结点不变。
+\end{proof}
+
+\begin{theorem}\label{thm:mst-prim:fib}
+（讲义定理 3.5）用斐波那契堆的 Prim 算法的时间是 $O(m+n\log n)$。
+\end{theorem}
+\begin{proof}
+至多 $n$ 次 Insert、$n$ 次 DeleteMin、$m$ 次 DecreaseKey。
+
+\emph{DeleteMin 中扫描 \texttt{B}：}由度数引理 \texttt{B} 的长度为 $O(\log n)$，共 $O(n\log n)$。
+
+\emph{树边的产生与删除。}斐波那契堆中的每条“双亲–孩子”边都是 Plant 中的一次合并产生的，每次合并恰好产生一条，并且合并是 Plant 中唯一的循环工作。所以 Plant 的总工作量 $=O(\text{Plant 的调用次数}+\text{合并次数})$。合并次数 $\leqslant$ 最终剩下的边数 $+$ 被删除的边数 $\leqslant n+$ 被删除的边数。边只在两处被删除：
+\begin{itemize}
+\item DeleteMin 删去被取出的根与它的孩子之间的边，每次至多 $2\log_2n$ 条（度数引理），共 $O(n\log n)$；
+\item DecreaseKey 删去路 $v_1\dots v_t$ 上的 $t-1$ 条边。除了 $v_1v_2$ 这一条，其余每条 $v_iv_{i+1}$（$i\geqslant2$）都伴随着 $v_i$ 的标志从 $1$ 变成 $0$。标志从 $0$ 变成 $1$ 只发生在 DecreaseKey 的 $v_1$ 上，每次至多一个，共至多 $m$ 次；所以标志从 $1$ 变成 $0$ 也至多 $m$ 次（再加上开始时为 $0$）。于是 DecreaseKey 删去的边总共至多 $m+m=2m$ 条。
+\end{itemize}
+Plant 的调用次数：Insert 中 $n$ 次，DeleteMin 中每个孩子一次（$O(n\log n)$），DecreaseKey 中每条被删的边一次加上 $v_1$ 一次（$O(m)$）。合计 $O(m+n\log n)$；扫描邻接表另需 $O(m)$。
+\end{proof}
+
+讲义此处的证明引用了“引理 3.1.6”和“算法 3.3”，指的就是引理 3.4 与算法 3.2.2，编号是旧版的。
+
+\topic{小结}
+
+\begin{center}
+\small
+\begin{tabular}{lllll}
+\toprule
+实现 & insert & delete\_min & decrease\_key & Prim 总时间 \\
+\midrule
+数组 & $O(1)$ & $O(n)$ & $O(1)$ & $O(n^2)$ \\
+二叉堆 & $O(\log n)$ & $O(\log n)$ & $O(\log n)$ & $O(m\log n)$ \\
+斐波那契堆 & 平均 $O(1)$ & 平均 $O(\log n)$ & 平均 $O(1)$ & $O(m+n\log n)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{itemize}
+\item Prim 算法的正确性来自安全边引理；实现的核心是维护每个树外顶点到树的最短边 \texttt{lcost}。
+\item 二叉堆用列表存完全二叉树，上浮、下沉都只走树高 $O(\log n)$ 步。
+\item 斐波那契堆把整理推迟到 DeleteMin；标志位限制了级联剪切的总量，度数引理限制了树的宽度。
+\end{itemize}
+
+\homework{Prim 算法与堆的练习}[Prim 算法与堆]
+
+\exercisepart{练习}
+
+\begin{exercises}{A}{Prim 算法与堆}
+\item\label{ex:mst-prim:A1} Python 自带的 \texttt{heapq} 是二叉堆，但没有 \texttt{decrease\_key}。常用的变通办法是“懒删除”：键变小时直接插入一个新的 \texttt{(键,顶点)}，取出时若顶点已在树中就丢掉。写出这样的 Prim 算法，并说明它是 $O(m\log n)$ 的。
+\begin{solution}
+\begin{lstlisting}[language=Python]
+import heapq
+
+def prim_lazy(adj, s=0):
+    n = len(adj)
+    in_tree = [False] * n
+    heap = [(0, s, -1)]                    # (键, 顶点, 从哪个树顶点来)
+    tree = []
+    while heap:
+        w, u, p = heapq.heappop(heap)
+        if in_tree[u]:
+            continue                       # 过期的记录，丢掉
+        in_tree[u] = True
+        if p != -1:
+            tree.append((p, u, w))
+        for v, c in adj[u]:
+            if not in_tree[v]:
+                heapq.heappush(heap, (c, v, u))
+    return tree
+\end{lstlisting}
+每条边至多被压入两次（两个端点各一次），堆中至多 $2m$ 个元素，每次压入、弹出 $O(\log m)=O(\log n)$，共 $O(m\log n)$。代价是堆中可能有很多过期记录，内存是 $O(m)$ 而不是 $O(n)$。
+\end{solution}
+
+\item\label{ex:mst-prim:A2} 证明二叉堆 \texttt{\_down} 的正确性：若除了结点 $i$ 之外整个列表满足堆序，执行 \texttt{\_down(i)} 后整个列表满足堆序。
+\begin{solution}
+不变量：除了当前位置 $i$ 与它的孩子之间的关系外，堆序都成立，并且 $i$ 的双亲的键不大于 $i$ 的两个孩子的键。开始时成立（$i$ 的双亲本来就不大于 $i$ 的子树中的所有键）。若 $i$ 的键不大于较小的孩子 $c$，堆序完全成立，停止。否则交换 $i$ 与 $c$：新的位置 $i$ 上的键是原来的 $c$，它不大于 $c$ 的兄弟（$c$ 是较小的孩子），也不大于原来 $c$ 的孩子（堆序），又不小于 $i$ 的双亲（不变量）；原来 $i$ 上的键现在在 $c$ 处，只有它与 $c$ 的孩子之间可能违反，且 $c$ 的双亲（新的键）不大于 $c$ 的孩子。不变量保持。每次 $i$ 下移一层，至多树高那么多次。
+\end{solution}
+
+\item\label{ex:mst-prim:A3} 斐波那契堆的度数引理中 $2^{k/2}$ 可以改进为 $F_{k+2}$（第 $k+2$ 个 Fibonacci 数，$F_1=F_2=1$）吗？用 $N(k)\geqslant N(k-1)+N(k-2)$ 证明 $N(k)\geqslant F_{k+2}$，并由此得到度的上界 $\log_\varphi n$，$\varphi=\frac{1+\sqrt5}2$。
+\begin{solution}
+$N(0)=1=F_2$，$N(1)\geqslant2=F_3$。归纳：$N(k)\geqslant N(k-1)+N(k-2)\geqslant F_{k+1}+F_k=F_{k+2}$。又 $F_{k+2}\geqslant\varphi^k$（归纳：$F_2=1=\varphi^0$，$F_3=2\geqslant\varphi$，$F_{k+2}=F_{k+1}+F_k\geqslant\varphi^{k-1}+\varphi^{k-2}=\varphi^{k-2}(\varphi+1)=\varphi^k$，因为 $\varphi^2=\varphi+1$）。所以度为 $k$ 的结点满足 $\varphi^k\leqslant n$，$k\leqslant\log_\varphi n\approx1.44\log_2n$，比 $2\log_2n$ 好。
+\end{solution}
+
+\item\label{ex:mst-prim:A4} 在\egref[斐波那契堆的例子]{ex:mst-prim:fib}最后的堆（$b3[c9]$；$f2^*[e8,h4[g6]]$）上，把 $g$ 的键减到 $1$。写出过程与结果。
+\begin{solution}
+$g$ 的双亲 $h4$ 比 $1$ 大，要剪。往上找路：$h$ 不是根，标志为 $0$，停，$v_1=h$，路为 $h,g$。$h$ 的标志 $0\to1$，剪下 $g$，Plant($g$)：\texttt{B[0]} 空（$b$ 的度为 $1$，在 \texttt{B[1]}；$f$ 的度为 $2$，在 \texttt{B[2]}），\texttt{B[0]=g}。结果：$g1$；$b3[c9]$；$f2^*[e8,\ h4^*]$。注意 $f$ 的标志虽然是 $1$，但这次没有被涉及：路在 $h$ 处就停了。
+\end{solution}
+\end{exercises}

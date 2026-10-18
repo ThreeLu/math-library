@@ -1,0 +1,246 @@
+% !TEX root = ../graph-theory.tex
+% =====================================================================
+%  组合优化 · 最大权分枝（Edmonds 算法）
+% =====================================================================
+\lecture{最大权分枝：分枝与树形图，贪心为什么失败，每点取最重的入弧，圈中只丢一条弧的定理，Edmonds 的收缩算法与回展，正确性与 $O(mn)$，最大权分枝、最小树形图与最小有向根树的等价性}
+\label{lec:branchings}
+
+有向图中与“森林”对应的对象是\term{分枝}（branching）：底图是森林，并且每个顶点的入度至多为 $1$。底图是一棵树的分枝叫\term{树形图}（arborescence），它恰有一个入度为 $0$ 的顶点，叫根，从根可以沿弧走到每个顶点。给定弧权 $c$，求权最大的分枝，就是最大权森林问题的有向版本；求权最小的、以给定顶点 $r$ 为根的支撑树形图，是最小支撑树的有向版本。无向的情形贪心就行，有向的情形贪心不行。Edmonds 的算法先贪心地给每个顶点选最重的入弧，再处理由此产生的有向圈：把圈收缩成一个点、改一改权，递归求解，最后把圈“回展”。
+
+\topic{一、贪心为什么不行}
+
+\begin{example}\label{ex:branchings:greedy}
+三个顶点 $x,y,z$，三条权都为 $1$ 的弧 $y\to x$、$x\to y$、$z\to x$。按“依次加入不破坏分枝性质的弧”的贪心，若先选了 $y\to x$，则 $x\to y$ 会形成有向圈，$z\to x$ 会使 $x$ 的入度为 $2$，都不能再加，只得到权 $1$。而 $\{z\to x,\ x\to y\}$ 是权为 $2$ 的分枝。（讲义图 3.2.1 是同一类例子。）
+\end{example}
+
+无向图中贪心之所以对，是因为“森林”构成一个拟阵：任何一个森林都能扩充成同样大小的极大森林。分枝要同时满足“无圈”与“入度 $\leqslant1$”两个条件，两种约束交织在一起，极大的分枝大小可以不同（上例中 $\{y\to x\}$ 就是极大的）。
+
+但如果只保留“入度 $\leqslant1$”这一个条件，贪心就是对的：每个顶点各自选权最大的正权入弧即可。这是一个松弛问题，它的最优解 $B_0$ 的权是最大权分枝的上界。$B_0$ 如果没有有向圈，它本身就是最大权分枝。下面先弄清 $B_0$ 的结构。
+
+\begin{lemma}\label{lem:branchings:cycle}
+（讲义引理 3.6）设子图 $B$ 中每个顶点的入度至多为 $1$。则 $B$ 有有向圈，当且仅当 $B$ 的底图有圈。所以 $B$ 无有向圈时就是分枝。
+\end{lemma}
+\begin{proof}
+必要性显然。设底图有圈 $C$，$C$ 有 $k$ 个顶点、$k$ 条弧。每条弧进入 $C$ 的一个顶点，而每个顶点至多被一条弧进入，所以 $C$ 的每个顶点恰被 $C$ 的一条弧进入。于是在 $C$ 的每个顶点处，两条 $C$ 弧一条进、一条出，$C$ 是有向圈。
+\end{proof}
+
+由引理，$B_0$ 的每个（弱）连通分支至多含一个有向圈（若一个分支有两个圈，它的边数至少等于顶点数加一，而入度 $\leqslant1$ 使边数至多等于顶点数）。
+
+\begin{theorem}\label{thm:branchings:one-arc}
+（讲义定理 3.7）设各弧权为正，$B_0$ 是每个顶点各取一条权最大的入弧得到的子图。则存在最大权分枝 $B$，使对 $B_0$ 的每个有向圈 $C$，$\abs{E(C)\setminus E(B)}=1$。
+\end{theorem}
+\begin{proof}
+在所有最大权分枝中取含 $B_0$ 的弧最多的一个，记为 $B$。
+
+\emph{第一步：对每条 $(u,v)\in B_0\setminus B$，$B$ 中有 $(v,u)$-路。}令 $B'$ 为从 $B$ 中删去进入 $v$ 的那条弧（若有），再加上 $(u,v)$。$(u,v)$ 是进入 $v$ 的最重的弧，所以 $c(B')\geqslant c(B)$；$B'$ 比 $B$ 多含一条 $B_0$ 的弧。由 $B$ 的选取，$B'$ 不是分枝。$B'$ 中每个顶点的入度仍 $\leqslant1$，由引理~\ref{lem:branchings:cycle}，$B'$ 有有向圈，这个圈必经过新加的 $(u,v)$（$B$ 本身无圈），去掉 $(u,v)$ 就是 $B$ 中的一条 $(v,u)$-路。
+
+\emph{第二步。}设 $C$ 是 $B_0$ 的有向圈。$B$ 无圈，所以 $C\not\subseteq B$。设 $C\setminus B=\{(u_1,v_1),\dots,(u_k,v_k)\}$，按它们在 $C$ 上的顺序排列，下标模 $k$。沿 $C$，从 $v_{i-1}$ 到 $u_i$ 的一段弧都在 $B$ 中。设 $k\geqslant2$。由第一步，$B$ 中有 $(v_i,u_i)$-路 $P_i$。在 $B$ 中，每个顶点至多一条入弧，所以从 $u_i$ 沿入弧往回走的路线是唯一的：它沿 $C$ 往回走到 $v_{i-1}$（这一段的入弧都是 $C$ 的弧）。$P_i$ 倒过来走正是这条路线，而 $v_i\neq v_{i-1}$（$k\geqslant2$），所以 $P_i$ 经过 $v_{i-1}$，它从 $v_i$ 到 $v_{i-1}$ 的一段 $Q_i$ 是 $B$ 中的路。把 $Q_k,Q_{k-1},\dots,Q_1$ 接起来，得到 $B$ 中从 $v_k$ 出发经 $v_{k-1},\dots,v_1$ 回到 $v_k$ 的闭途径，它含有向圈，与 $B$ 是分枝矛盾。所以 $k=1$。
+\end{proof}
+
+这个定理是算法的依据：最优解在 $B_0$ 的每个圈上只丢一条弧。至于丢哪一条，要看有没有圈外的弧进入这个圈：若有弧从圈外进入圈上的顶点 $y$，$y$ 原来在圈上的入弧就必须丢掉；若没有，就丢圈上最轻的弧。
+
+\topic{二、Edmonds 算法}
+
+\begin{enumerate}
+\item 删去权 $\leqslant0$ 的弧与环。每个顶点 $v$ 取一条权最大的入弧 $\texttt{best}[v]$，得到 $B_0$。
+\item 若 $B_0$ 无有向圈，它就是答案。
+\item 否则，把 $B_0$ 的每个有向圈 $C$ 收缩成一个新顶点。对从圈外进入 $C$ 的弧 $(x,y)$，$y\in C$，把权改为
+\[
+c'(x,y)=c(x,y)-c(\texttt{best}[y])+c(e_C),
+\]
+其中 $e_C$ 是 $C$ 上最轻的弧。其他弧的权不变，圈内部的弧删去。递归地求收缩后的图的最大权分枝 $B'$。
+\item 回展：$B'$ 的弧都换回原来的弧。对每个圈 $C$：若 $B'$ 中有弧进入 $C$，它在原图中进入 $y\in C$，就加入 $C$ 中除 $\texttt{best}[y]$ 外的全部弧；否则加入 $C$ 中除 $e_C$ 外的全部弧。
+\end{enumerate}
+
+改权的意思：进入 $C$ 的弧 $(x,y)$ 若被选中，就要丢掉圈上的 $\texttt{best}[y]$，而不是本来要丢的最轻的 $e_C$；$c'(x,y)$ 是“选 $(x,y)$ 比不选它多得的净收益”：得到 $c(x,y)$，多损失 $c(\texttt{best}[y])-c(e_C)$。
+
+\begin{lstlisting}[language=Python]
+def max_branching(n, arcs):
+    """最大权分枝。arcs: [(u, v, w, tag)]，tag 用来认出原来的弧。返回所选弧的 tag。"""
+    arcs = [a for a in arcs if a[2] > 0 and a[0] != a[1]]
+    # 第 1 步：每个顶点取最重的入弧
+    best = [None] * n
+    for a in arcs:
+        if best[a[1]] is None or a[2] > best[a[1]][2]:
+            best[a[1]] = a
+    # 找 B0 的有向圈：从每个顶点沿 best 往回走（每个顶点至多一条入弧）
+    state = [0] * n                  # 0 未访问，1 在当前的路上，2 已处理
+    cycle_of = [-1] * n
+    cycles = []
+    for s in range(n):
+        path, x = [], s
+        while x != -1 and state[x] == 0:
+            state[x] = 1
+            path.append(x)
+            x = best[x][0] if best[x] else -1
+        if x != -1 and state[x] == 1:       # 回到了当前路上的点：找到一个新圈
+            cyc = path[path.index(x):]
+            for y in cyc:
+                cycle_of[y] = len(cycles)
+            cycles.append(cyc)
+        for y in path:
+            state[y] = 2
+    # 第 2 步：没有圈就是答案
+    if not cycles:
+        return [best[v][3] for v in range(n) if best[v]]
+    # 第 3 步：收缩。圈外的顶点编号 0..k-1，第 i 个圈收缩成顶点 k+i
+    new = [-1] * n
+    k = 0
+    for v in range(n):
+        if cycle_of[v] == -1:
+            new[v] = k
+            k += 1
+    for v in range(n):
+        if cycle_of[v] != -1:
+            new[v] = k + cycle_of[v]
+    lightest = [min(best[y][2] for y in c) for c in cycles]
+    new_arcs = []
+    for a in arcs:
+        u, v, w, tag = a
+        if new[u] == new[v]:
+            continue                        # 圈内部的弧
+        if cycle_of[v] != -1:               # 进入圈的弧：改权
+            w = w - best[v][2] + lightest[cycle_of[v]]
+        new_arcs.append((new[u], new[v], w, a))   # 新弧的 tag 记住原来的弧
+    sub = max_branching(k + len(cycles), new_arcs)
+    # 第 4 步：回展
+    result = [a[3] for a in sub]            # 换回原来的弧的 tag
+    entered = [None] * len(cycles)
+    for (u, v, w, tag) in sub:
+        if cycle_of[v] != -1:
+            entered[cycle_of[v]] = v        # 这个圈从顶点 v 进入
+    for i, c in enumerate(cycles):
+        drop = entered[i] if entered[i] is not None else min(c, key=lambda y: best[y][2])
+        result += [best[y][3] for y in c if y != drop]
+    return result
+\end{lstlisting}
+
+递归调用返回的是收缩图中所选弧的 tag，而收缩图中弧的 tag 正是原图中的弧 \texttt{a}，所以 \texttt{[a[3] for a in sub]} 得到原图中弧的 tag。\texttt{entered} 中记下的 $v$ 也是原图的顶点，因为 \texttt{sub} 里存的是原图的弧。
+
+\begin{example}\label{ex:branchings:run}
+$5$ 个顶点，七条弧（tag 就写成两端的编号）：
+\texttt{E\_arcs=[(0,1,3,'01'),(1,2,5,'12'),(2,3,6,'23'),(3,1,4,'31'),(0,3,2,'03'),(4,2,1,'42'),(2,4,7,'24')]}。
+\begin{center}
+\begin{tikzpicture}[scale=0.95]
+  \node[gv] (0) at (0,0) {0}; \node[gv] (1) at (2,1.1) {1}; \node[gv] (2) at (4,0) {2};
+  \node[gv] (3) at (2,-1.1) {3}; \node[gv] (4) at (6,0) {4};
+  \draw[arc] (0) -- node[wt] {3} (1); \draw[arch] (1) -- node[wt] {5} (2); \draw[arch] (2) -- node[wt] {6} (3);
+  \draw[arch] (3) -- node[wt] {4} (1); \draw[arc] (0) -- node[wt] {2} (3);
+  \draw[arc] (4) to[bend left=20] node[wt] {1} (2); \draw[arch] (2) to[bend left=20] node[wt] {7} (4);
+\end{tikzpicture}
+\end{center}
+\emph{第 1 步。}入弧中最重的：顶点 $1$：$01$（3）与 $31$（4）中取 $31$；顶点 $2$：$12$（5）与 $42$（1）中取 $12$；顶点 $3$：$23$（6）与 $03$（2）中取 $23$；顶点 $4$：$24$（7）；顶点 $0$：没有入弧。$B_0=\{31,12,23,24\}$（图中粗线），权 $22$。
+
+\emph{找圈。}从 $0$ 出发：\texttt{best[0]} 为空，路 $[0]$ 结束。从 $1$ 出发：$1\leftarrow3\leftarrow2\leftarrow1$，回到路上的 $1$，圈 $[1,3,2]$，即 $1\to2\to3\to1$。从 $4$ 出发：$4\leftarrow2$，$2$ 已处理。只有一个圈 $C=\{1,2,3\}$，最轻的弧 $e_C=31$（权 $4$）。
+
+\emph{第 3 步，收缩。}圈外的顶点 $0,4$ 编为 $0,1$，$C$ 编为 $2$。逐条处理弧：
+\begin{center}
+\small
+\begin{tabular}{llll}
+\toprule
+原弧 & 类型 & 新权 & 新弧 \\
+\midrule
+$01$（3） & 进入 $C$ 于 $1$ & $3-c(31)+4=3-4+4=3$ & $0\to2$，权 $3$ \\
+$12,23,31$ & 圈内部 & & 删去 \\
+$03$（2） & 进入 $C$ 于 $3$ & $2-c(23)+4=2-6+4=0$ & 权 $0$，下一层删去 \\
+$42$（1） & 进入 $C$ 于 $2$ & $1-c(12)+4=1-5+4=0$ & 权 $0$，下一层删去 \\
+$24$（7） & 离开 $C$ & $7$ & $2\to1$，权 $7$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\emph{递归。}收缩后的图有 $3$ 个顶点、正权弧 $0\to2$（3，来自 $01$）与 $2\to1$（7，来自 $24$）。每个顶点的最重入弧就是它们，没有圈，返回 $\{01,24\}$。
+
+\emph{第 4 步，回展。}$B'=\{01,24\}$ 中 $01$ 进入 $C$，进入点是 $1$，所以丢掉 $\texttt{best}[1]=31$，加入 $C$ 的其余弧 $12,23$。结果 $\{01,24,12,23\}$，权 $3+7+5+6=21$。
+
+对比：直接从 $B_0$ 的圈上丢最轻的 $31$，得到 $\{12,23,24\}$，权 $18$，顶点 $1$ 没有入弧；加上 $01$ 后为 $21$。算法通过改权自动做了这个比较：进入 $C$ 的三条弧的“净收益”分别是 $3,0,0$，只有 $01$ 值得选。
+\end{example}
+
+\topic{三、正确性与复杂度}
+
+\begin{theorem}\label{thm:branchings:correct}
+（讲义定理 3.8）Edmonds 算法返回最大权分枝，时间 $O(mn)$。
+\end{theorem}
+\begin{proof}
+对顶点数归纳。没有圈时 $B_0$ 是分枝（引理~\ref{lem:branchings:cycle}），又是松弛问题的最优解，所以是最大权分枝。
+
+有圈时，记原图为 $G$、收缩图为 $G'$，$\mathcal C$ 为 $B_0$ 的圈。先说明回展得到的 $B$ 是分枝：每个圈中加入的弧构成一条经过圈上全部顶点的路，只有路的起点（被丢掉入弧的那个点）可能从圈外得到入弧，而 $B'$ 至多有一条弧进入这个圈，进入的正是这个点；所以入度 $\leqslant1$。若 $B$ 有有向圈，把每个 $C$ 收缩后得到 $B'$ 中的闭途径（$B$ 不含整个 $C$），与 $B'$ 是分枝矛盾。权的关系：
+\[
+c(B)=c'(B')+\sum_{C\in\mathcal C}\bigl(c(C)-c(e_C)\bigr).\tag{$*$}
+\]
+这因为：若 $B'$ 的弧 $(x,y)$ 进入 $C$，$B$ 在 $C$ 上得到 $c(C)-c(\texttt{best}[y])$，加上 $c(x,y)=c'(x,y)+c(\texttt{best}[y])-c(e_C)$，合计 $c'(x,y)+c(C)-c(e_C)$；若没有弧进入 $C$，$B$ 在 $C$ 上得到 $c(C)-c(e_C)$。其余的弧权不变。
+
+再证最优。由定理~\ref{thm:branchings:one-arc}，有最大权分枝 $B^*$，在每个圈上恰好缺一条弧。把每个圈收缩，$B^*$ 变成 $G'$ 中的弧集 $B^{*\prime}$。它是分枝：每个圈上只有缺弧的头可能有来自圈外的入弧，所以收缩后的顶点入度 $\leqslant1$；圈在 $B^*$ 中是一条经过全部顶点的路，$B^{*\prime}$ 中的闭途径可以展开成 $B^*$ 中的闭途径，所以 $B^{*\prime}$ 无圈。与 $(*)$ 同样计算，只是没有弧进入 $C$ 时 $B^*$ 在 $C$ 上缺的是某条弧 $f$，得到 $c(C)-c(f)\leqslant c(C)-c(e_C)$：
+\[
+c(B^*)\leqslant c'(B^{*\prime})+\sum_{C}\bigl(c(C)-c(e_C)\bigr)\leqslant c'(B')+\sum_{C}\bigl(c(C)-c(e_C)\bigr)=c(B).
+\]
+第二个不等号用了归纳假设：$B'$ 是 $G'$ 的最大权分枝（$B^{*\prime}$ 中可能含 $c'\leqslant0$ 的弧，删去它们仍是分枝，权不减）。所以 $B$ 是最大权分枝。
+
+时间：每一层取最重入弧、找圈、收缩、回展都是 $O(m+n)$；每一层至少收缩一个至少有两个顶点的圈，顶点数至少减少 $1$，所以至多 $n$ 层。合计 $O(mn)$。
+\end{proof}
+
+讲义的证明中“根据定理 5.2.3”应为定理 3.7（编号是旧版的）。用斐波那契堆可以把时间降到 $O(m+n\log n)$（Gabow、Galil、Spencer 与 Tarjan，1986），这里不讲。
+
+\topic{四、三个问题的等价性（讲义 3.3.2）}
+
+\begin{theorem}\label{thm:branchings:equivalent}
+（讲义定理 3.10）最大权分枝问题、最小树形图问题（求权最小的支撑树形图，根不指定）、最小有向根树问题（求以给定的 $r$ 为根、权最小的支撑树形图）可以互相归约。
+\end{theorem}
+\begin{proof}
+\emph{最小树形图 $\to$ 最大权分枝。}令 $S=\sum_e\abs{c(e)}$，$K=1+S$，$c'(e)=K-c(e)>0$。弧数多的分枝 $c'$-权一定更大：设 $\abs B>\abs{B'}$，则
+\[
+c'(B)-c'(B')=(\abs B-\abs{B'})K-\bigl(c(B\setminus B')-c(B'\setminus B)\bigr)\geqslant K-S>0,
+\]
+因为 $B\setminus B'$ 与 $B'\setminus B$ 不交，$\abs{c(B\setminus B')-c(B'\setminus B)}\leqslant S$。所以 $(G,c')$ 的最大权分枝的弧数是所有分枝中最多的。若它有 $n-1$ 条弧，它是支撑树形图；所有支撑树形图弧数相同，$c'(T)=(n-1)K-c(T)$，所以它的 $c$-权最小。若它少于 $n-1$ 条弧，$G$ 没有支撑树形图。
+
+\emph{最大权分枝 $\to$ 最小有向根树。}给定 $(G,c)$，加一个新顶点 $r$ 与所有弧 $(r,v)$，权 $0$；原来的弧权取 $-c$。以 $r$ 为根的支撑树形图 $T$ 去掉新弧，就是 $G$ 的一个分枝（每个顶点至多一条入弧，无圈）；反之，$G$ 的任一分枝加上从 $r$ 到它的各个根的新弧，就是以 $r$ 为根的支撑树形图。权为 $-c(\text{分枝})$。所以最小有向根树去掉新弧就是最大权分枝。
+
+\emph{最小有向根树 $\to$ 最小树形图。}给定 $(G,r,c)$，加一个新顶点 $s$ 与一条弧 $(s,r)$，权 $0$。$s$ 没有入弧，所以新图的每个支撑树形图都以 $s$ 为根，并且必须含 $(s,r)$（$s$ 只有这一条出弧），去掉它就是 $G$ 中以 $r$ 为根的支撑树形图，反之亦然。
+\end{proof}
+
+讲义的第一段归约断言“对于任意两个分枝 $B,B'$，$\abs{E(B)}>\abs{E(B')}$ 蕴含 $c'(E(B))>c'(E(B'))$”，没有给出计算；上面的不等式补上了这一步。
+
+\topic{小结}
+
+\begin{itemize}
+\item 只要求入度 $\leqslant1$ 时贪心是对的，得到 $B_0$；$B_0$ 的圈是唯一的麻烦。
+\item 定理~\ref{thm:branchings:one-arc}：存在最优解在 $B_0$ 的每个圈上只丢一条弧。由此可以把圈收缩成一个点，用改过的权 $c(x,y)-c(\texttt{best}[y])+c(e_C)$ 记录“从 $y$ 进入”的净收益，递归求解后回展。
+\item 最大权分枝、最小树形图、最小有向根树三者等价。
+\end{itemize}
+
+\homework{最大权分枝的练习}[最大权分枝]
+
+\exercisepart{练习}
+
+\begin{exercises}{A}{最大权分枝}
+\item\label{ex:branchings:A1} 对 \texttt{F\_arcs=[(0,2,4,'02'),(0,3,7,'03'),(0,4,8,'04'),(1,0,1,'10'),(3,0,2,'30'),(3,1,7,'31')]} 手工运行 Edmonds 算法，写出每一层的 $B_0$、圈、收缩后的弧与权，以及回展的过程。
+\begin{solution}
+\emph{第 0 层。}最重入弧：$0\leftarrow3$（$30$，2；另一条入弧 $10$ 权 1），$1\leftarrow3$（$31$，7），$2\leftarrow0$（$02$，4），$3\leftarrow0$（$03$，7），$4\leftarrow0$（$04$，8）。圈：$0\to3\to0$，$C_0=\{0,3\}$，$e_{C_0}=30$（权 2）。收缩：$1,2,4$ 编为 $0,1,2$，$C_0$ 编为 $3$。弧：$02\to(3,1)$ 权 4；$04\to(3,2)$ 权 8；$10$ 进入 $C_0$ 于 $0$，权 $1-c(30)+2=1$，$\to(0,3)$；$31\to(3,0)$ 权 7；$03,30$ 是圈内部的弧，删去。
+
+\emph{第 1 层}（顶点 $0,1,2,3$ 分别是原来的 $1,2,4,C_0$）。最重入弧：$0\leftarrow3$（$31$，7），$1\leftarrow3$（$02$，4），$2\leftarrow3$（$04$，8），$3\leftarrow0$（$10$，1）。圈：$0\to3\to0$，即原顶点 $1$ 与收缩点 $C_0$，$C_1=\{0,3\}$，$e_{C_1}$ 是权 1 的 $10$。收缩：顶点 $1,2$ 编为 $0,1$，$C_1$ 编为 $2$。弧：$02\to(2,0)$ 权 4，$04\to(2,1)$ 权 8，其余在圈内部。
+
+\emph{第 2 层。}最重入弧：$0\leftarrow2$（$02$），$1\leftarrow2$（$04$），没有圈，返回 $\{02,04\}$。
+
+\emph{回展第 1 层。}$\{02,04\}$ 中没有弧进入 $C_1$，丢掉 $C_1$ 上最轻的 $10$，加入 $31$。得 $\{02,04,31\}$。
+
+\emph{回展第 0 层。}$\{02,04,31\}$ 中没有弧进入 $C_0$（$31$ 离开 $C_0$），丢掉 $C_0$ 上最轻的 $30$，加入 $03$。最后 $\{02,04,31,03\}$，权 $4+8+7+7=26$。它是以 $0$ 为根的树形图。
+\end{solution}
+
+\item\label{ex:branchings:A2} 用定理~\ref{thm:branchings:equivalent} 的第二个归约，借助 \texttt{max\_branching} 写出求“以 $r$ 为根的最小支撑树形图”的函数（假定它存在）。
+\begin{solution}
+以 $r$ 为根的支撑树形图恰好是 $n-1$ 条弧、$r$ 没有入弧的分枝。删去所有进入 $r$ 的弧，令 $c'(e)=K-c(e)$，$K$ 足够大，使弧数多的分枝 $c'$-权一定更大（第一个归约的论证）；最大权分枝就有 $n-1$ 条弧，是以 $r$ 为根的支撑树形图，并且 $c$-权最小。
+\begin{lstlisting}[language=Python]
+def min_arborescence(n, arcs, r):
+    """arcs: [(u, v, w, tag)]。返回以 r 为根的最小支撑树形图的 tag，不存在时返回 None。"""
+    K = 1 + sum(abs(a[2]) for a in arcs)
+    use = [(u, v, K - w, tag) for (u, v, w, tag) in arcs if v != r and u != v]
+    B = max_branching(n, use)
+    return B if len(B) == n - 1 else None
+\end{lstlisting}
+\end{solution}
+
+\item\label{ex:branchings:A3} 证明：若 $G$ 中从 $r$ 出发可以到达每个顶点，则以 $r$ 为根的支撑树形图存在；并说明它可以用一次遍历在 $O(n+m)$ 时间内求出（不考虑权）。
+\begin{solution}
+这就是第一部分第~\ref{lec:orderings} 讲定理~\ref{thm:orderings:branching} 与第~\ref{lec:traversal} 讲定理~\ref{thm:traversal:scan}：从 $r$ 做 BFS 或 DFS，可达集是全部顶点，扫描算法的树 $(R,T)$ 是以 $r$ 为根的分枝，顶点集为 $V$，即支撑树形图。时间 $O(n+m)$。
+\end{solution}
+\end{exercises}

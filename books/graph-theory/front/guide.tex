@@ -1,25 +1,47 @@
 % 说明：本书的来源、编排与标注，讲义勘误
 \frontsection{说明}
 
-这里收的是图论课讲义中不平凡的部分：讲义没有证明或证明不完整的定理，不平凡的例题与课后题的解答，以及对其中经典方法的归纳。定义和简单的题（画图、写矩阵、直接套定义）不收。
+本书收作者的几门研究生课。目前有两部分。
 
-内容按方法编排，不按讲义的章节。每一讲讲一种（或两三种相关的）方法：开头说明方法的要点，然后是例题；讲后的作业是新出的练习，用来熟悉这些方法，每题后面都有解答，网页上默认折叠。
+\textbf{图论。}收图论课讲义第 1、2 章中不平凡的部分：讲义没有证明或证明不完整的定理，不平凡的例题与课后题的解答，以及对其中经典方法的归纳。定义和简单的题不收。内容按方法编排，不按讲义的章节；每一讲讲一种（或两三种相关的）方法，讲后的作业是新出的练习。
+
+\textbf{组合优化。}组合优化课讲义第 2、3 章（图的存储与基本算法、最小支撑树）的完整讲解。这一部分是讲义的重写：图论的基本概念不再重复，但每个算法都从想法讲起，配一个能运行的 Python 程序，在小例子上把每一步的数据（栈、队列、数组、堆）全部列出来，然后证明它是对的并分析它的时间。第 1 讲补充后面要用到的数据结构。书中的程序都实际运行并测试过（测试程序在本书的 \texttt{code/} 目录中）。
 
 \subsection*{标注}
 
-出自讲义的内容，在开头用括号注明，如“（讲义定理 1.4）”“（讲义习题 1.8）”“（讲义问答题 1.3）”。没有注明的是补充的。
+出自讲义的内容，在开头用括号注明，如“（讲义定理 1.4）”“（讲义习题 2.8）”。在“图论”部分，“讲义”指图论课讲义；在“组合优化”部分，指组合优化课讲义。没有注明的是补充的。
 
-\subsection*{讲义勘误}
-
-下面几道讲义习题的原文有误。每题开头的注记给出反例与猜测的原题，解答证明的是猜测的版本。
+\subsection*{讲义勘误：图论}
 
 \begin{enumerate}
-\item 习题 1.9（\wegref{we:longest-paths:dirac}）：“长度至少为 $\min\{2\delta,\abs G\}$ 的路或圈”对 $K_2$ 不成立；应为“长度至少为 $\min\{2\delta,\abs G-1\}$ 的路”。
-\item 习题 1.12（\wegref{we:double-counting:games}）：“$n$ 个球队赛完 $n-1$ 场，必有一队至少赛过 $3$ 场”不成立（各队排成一列，相邻两队各赛一场）；应为“赛完 $n+1$ 场”。
-\item 习题 1.17（\wegref{we:distance-layers:equal-distance}）：对不连通的图不成立（$K_2\cup K_1$）；应限定 $G$ 连通。
+\item 习题 1.9（第一部分\wegref{we:longest-paths:dirac}）：“长度至少为 $\min\{2\delta,\abs G\}$ 的路或圈”对 $K_2$ 不成立；应为“长度至少为 $\min\{2\delta,\abs G-1\}$ 的路”。
+\item 习题 1.12（\wegref{we:double-counting:games}）：“$n$ 个球队赛完 $n-1$ 场，必有一队至少赛过 $3$ 场”不成立；应为“赛完 $n+1$ 场”。
+\item 习题 1.17（\wegref{we:distance-layers:equal-distance}）：对不连通的图不成立；应限定 $G$ 连通。
+\item 习题 1.8（\wegref{we:longest-paths:sqrt-k}）：“连接它们之间的路的长度至少为 $k$”应理解为存在这样一条路。
+\item 习题 2.3（\wegref{we:augmenting-paths:cycle-intersection}）：“仅当”不成立（$K_4$ 中的反例）；应设 $C,C'$ 都是最短圈。
+\item 习题 2.4（\wegref{we:augmenting-paths:exchange}）：缺少条件“$M,N$ 不交”。
+\item 习题 2.6（\wegref{we:augmenting-paths:lower-bound}）：空图是反例；应加条件 $\delta(G)\geqslant k$。
+\item 习题 2.11（\wegref{we:hall-condition:konig-ore}）：不等式应为 $\abs U\geqslant\abs S-\abs{N(S)}$，符号反了。
+\item 习题 2.15（\wegref{we:augmenting-paths:alpha}）：需要 $k\geqslant1$。
+\item 定理 2.10（Petersen 定理，定理~\ref{thm:tutte-condition:petersen}）的证明漏了奇偶性：$2$-边连通只给出 $e(C,S)\geqslant2$。
 \end{enumerate}
-另有一处措辞需要澄清：习题 1.8（\wegref{we:longest-paths:sqrt-k}）中“连接它们之间的路的长度至少为 $k$”应理解为存在这样一条路，而不是两点的距离至少为 $k$。
+
+\subsection*{讲义勘误：组合优化}
+
+\begin{enumerate}
+\item 定理 2.6（定理~\ref{thm:digraph-orders:dag}）：“三个叙述”实为四个；证明中“超过 $2$ 个点”“至少包含 $3$ 个点”都应为“至少 $2$ 个点”。
+\item 强连通分支算法的证明（定理~\ref{thm:digraph-orders:scc}）只证了一个方向。
+\item 定理 2.9（定理~\ref{thm:euler-tours:undirected}）：“度条件显然是充分的”应为“必要的”。定理 2.10：条件应为 $d^+(v)=d^-(v)$。
+\item 算法 2.8.1（欧拉环游）：把结点编号当作顶点编号去查邻接表；循环范围也不对。改正版见第~\ref{lec:euler-tours} 讲。
+\item 2.8 节 DFS 树的性质 (b) 不等号反了；算法 2.10 中 \texttt{stn[i]} 应为 \texttt{stn[u]}；定理 2.14 的证明缺少“老点集对祖先封闭”与“出栈的点的邻点都是老点”两步。
+\item 定理 3.1 的证明中 $C(T,e_i)$ 应为 $C(T',e_i)$；$E(X)$ 与第 2 章的记号冲突。
+\item 算法 3.1.1（标号法）：内层循环拿正在被修改的 \texttt{B[v]} 作比较，合并不完整。
+\item 算法 3.1.3（路径压缩）：从不合并两棵树，实际上取了最轻的 $n-1$ 条边，会选出圈。
+\item 算法 3.2.1（Prim）：\texttt{for each w in N(v)} 应为 $N(u)$。
+\item 斐波那契堆的 DecreaseKey：必须从下往上剪（讲义的程序是对的，文字描述没有说明顺序）。
+\item 定理 3.5、3.8 的证明中引用的编号（引理 3.1.6、算法 3.3、定理 5.2.3）是旧版编号。
+\end{enumerate}
 
 \subsection*{没有收的讲义习题}
 
-第 1 章：习题 1、2、3、5、6、7、14、15、19、20，问答题 1.1、1.2、1--4、1--5。
+图论第 1 章：习题 1、2、3、5、6、7、14、15、19、20，问答题 1.1、1.2、1--4、1--5。第 2 章：习题 13、14。

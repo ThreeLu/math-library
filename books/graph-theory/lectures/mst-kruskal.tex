@@ -1,0 +1,333 @@
+% !TEX root = ../graph-theory.tex
+% =====================================================================
+%  组合优化 · 最小支撑树与 Kruskal 算法
+% =====================================================================
+\lecture{最小支撑树：基本圈与基本割，交换引理，最优性的四个等价条件，安全边引理，Kruskal 算法，并查集的三种实现（标号法、按高度合并、路径压缩），最大权森林}
+\label{lec:mst-kruskal}
+
+给定连通图 $G$ 与边权 $w:E\to\R$，\term{最小支撑树}（MST）是边权之和最小的支撑树。完全图的支撑树有 $n^{n-2}$ 棵（第一部分第~\ref{lec:double-counting} 讲 Cayley 公式），不能枚举。这一讲先回答“怎样判断一棵支撑树是最小的”，答案是几个只看局部的条件；然后由这些条件得到贪心的 Kruskal 算法。Kruskal 算法的瓶颈是反复判断“加这条边会不会成圈”，这需要一种叫并查集的数据结构，讲义给了三种实现，我们一一讲清楚。
+
+\topic{一、基本圈、基本割与交换}
+
+设 $T$ 是 $G$ 的支撑树。
+\begin{itemize}
+\item 对 $e\in E(G)\setminus E(T)$，$T+e$ 恰有一个圈，记为 $C(T,e)$，叫 $e$ 关于 $T$ 的\term{基本圈}：它由 $e$ 与 $T$ 中连接 $e$ 两端的唯一的路组成。
+\item 对 $e\in E(T)$，$T-e$ 恰有两个分支，设其顶点集为 $S$ 与 $V\setminus S$。所有一端在 $S$、一端在 $V\setminus S$ 的边构成一个边割，记为 $\Omega(T,e)$，叫 $e$ 关于 $T$ 的\term{基本割}。$\Omega(T,e)\cap E(T)=\{e\}$。
+\end{itemize}
+本讲用 $\partial(X)$ 表示边割：一端在 $X$、另一端不在 $X$ 中的边的集合。（讲义定理 3.1 中写作 $E(X)$，而讲义第 2 章 $E(X)$ 的意思是“两端都在 $X$ 中的边”，两者冲突，这里统一用 $\partial(X)$。）
+
+\begin{lemma}[交换引理]\label{lem:mst-kruskal:exchange}
+(i) 若 $e\notin T$，$f\in C(T,e)$，则 $T+e-f$ 是支撑树。(ii) 若 $e\in T$，$f\in\Omega(T,e)$，则 $T-e+f$ 是支撑树。
+\end{lemma}
+\begin{proof}
+(i) $T+e-f$ 有 $n-1$ 条边。它连通：$T$ 中原来经过 $f$ 的路，可以改走 $C(T,e)-f$。由树的等价刻画，它是树。(ii) $T-e$ 的两个分支被 $f$ 重新连起来，得到 $n-1$ 条边的连通图。
+\end{proof}
+
+\topic{二、最小支撑树的刻画}
+
+\begin{theorem}\label{thm:mst-kruskal:optimality}
+（讲义定理 3.1）设 $T$ 是 $G$ 的支撑树。下面四条等价：
+\begin{enumerate}
+\item[(1)] $T$ 是最小支撑树；
+\item[(2)] \emph{圈条件：}对每条 $e\notin T$，$e$ 是 $C(T,e)$ 中权最大的边（之一），即 $w(e)=\max\{w(f):f\in C(T,e)\}$；
+\item[(3)] \emph{割条件：}对每条 $e\in T$，$e$ 是 $\Omega(T,e)$ 中权最小的边（之一）；
+\item[(4)] $T$ 的边可以排成 $e_1,\dots,e_{n-1}$，使对每个 $i$，存在 $X\subseteq V$，$e_i$ 是 $\partial(X)$ 中权最小的边（之一），并且 $e_1,\dots,e_{i-1}\notin\partial(X)$。
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+(1)$\Rightarrow$(2)：若 $f\in C(T,e)$，$w(f)>w(e)$，由交换引理 $T+e-f$ 是支撑树，权更小，矛盾。
+
+(2)$\Rightarrow$(3)：设 $e\in T$，$f\in\Omega(T,e)$，$f\neq e$。$f\notin T$，它的两端在 $T-e$ 的两个分支中，所以 $T$ 中连接它两端的路经过 $e$，即 $e\in C(T,f)$。由 (2)，$w(f)\geqslant w(e)$。
+
+(3)$\Rightarrow$(4)：任取 $T$ 的边的一个顺序。对 $e_i$，取 $X$ 为 $T-e_i$ 的一个分支的顶点集，则 $\partial(X)=\Omega(T,e_i)$，由 (3) $e_i$ 在其中权最小；$\Omega(T,e_i)\cap E(T)=\{e_i\}$，所以其他 $e_j\notin\partial(X)$。
+
+(4)$\Rightarrow$(1)：设 $e_1,\dots,e_{n-1}$ 满足 (4)。若 $T$ 本身不是最小支撑树，在所有最小支撑树中取 $T'$，使 $i(T')=\min\{h:e_h\notin T'\}$ 最大（$T'\neq T$，所以这个 $h$ 存在）。记 $i=i(T')$，取 (4) 中对应的 $X$。$T'+e_i$ 中的圈 $C(T',e_i)$ 经过 $\partial(X)$ 中的边 $e_i$，圈穿过割的次数是偶数，所以圈上还有另一条边 $e'\in\partial(X)$，$e'\neq e_i$。由交换引理，$T''=T'+e_i-e'$ 是支撑树。$T'$ 最小，所以 $w(e_i)\geqslant w(e')$；由 (4)，$w(e_i)\leqslant w(e')$。所以 $w(T'')=w(T')$，$T''$ 也是最小支撑树。$e'\in\partial(X)$，所以 $e'\notin\{e_1,\dots,e_{i-1}\}$，$T''$ 仍含 $e_1,\dots,e_{i-1}$，又含 $e_i$，$i(T'')>i$，与 $T'$ 的选取矛盾。
+\end{proof}
+
+\begin{remark}[讲义的笔误]
+讲义 (4)$\Rightarrow$(1) 的证明中写“$T'+e_i$ 有唯一的圈 $C(T,e_i)$”，应为 $C(T',e_i)$：$e_i\in T$，它关于 $T$ 没有基本圈。另外讲义的证明在开头直接设“$T'$ 使 $i$ 最大”，没有说明这个 $T'$ 要在\emph{最小支撑树}中选取，这是证明能够进行的前提。
+\end{remark}
+
+下面的引理是 (4)$\Rightarrow$(1) 的论证的“单步版本”，它直接给出 Kruskal 与 Prim 两个算法的正确性。
+
+\begin{lemma}[安全边引理]\label{lem:mst-kruskal:safe}
+设边集 $F$ 含于某棵最小支撑树中，$X\subseteq V$ 使 $F\cap\partial(X)=\varnothing$，$e$ 是 $\partial(X)$ 中权最小的边。则 $F\cup\{e\}$ 也含于某棵最小支撑树中。
+\end{lemma}
+\begin{proof}
+设 $F\subseteq T'$，$T'$ 是最小支撑树。若 $e\in T'$，结束。否则 $C(T',e)$ 中有另一条边 $e'\in\partial(X)$，$e'\notin F$（$F$ 与 $\partial(X)$ 不交）。$T''=T'+e-e'$ 是支撑树，$w(e)\leqslant w(e')$，所以 $w(T'')\leqslant w(T')$，$T''$ 也是最小的，并且 $F\cup\{e\}\subseteq T''$。
+\end{proof}
+
+\topic{三、Kruskal 算法}
+
+把边按权从小到大排好，依次检查：如果加上这条边不会和已选的边形成圈，就选它；否则丢掉。选够 $n-1$ 条为止（讲义算法 3.1）。
+
+\emph{正确性。}设当前已选的边集为 $F$，它是一个森林，并且（归纳地）含于某棵最小支撑树中。下一条被选中的边 $e=uv$ 连接 $F$ 的两个不同分支；令 $X$ 为 $u$ 所在分支的顶点集，则 $F\cap\partial(X)=\varnothing$。$\partial(X)$ 中比 $e$ 轻的边都已经检查过，它们没有被选中，说明当时它们的两端已在 $F$ 的同一个分支中（之后也一直在同一个分支中），所以它们不在 $\partial(X)$ 中。于是 $e$ 是 $\partial(X)$ 中最轻的边，由安全边引理，$F\cup\{e\}$ 仍含于某棵最小支撑树中。最后选出 $n-1$ 条边时就是一棵最小支撑树（$G$ 连通时一定能选够：若最后的森林不连通，某条连接两个分支的边会被选中）。
+
+剩下的问题是怎样快速判断“$u,v$ 是否在 $F$ 的同一个分支中”。我们需要一种数据结构，支持两种操作：
+\begin{itemize}
+\item \texttt{find(x)}：返回 $x$ 所在集合的“代表”；$u,v$ 在同一分支当且仅当 \texttt{find(u)==find(v)}；
+\item \texttt{union(x,y)}：把 $x$ 所在的集合与 $y$ 所在的集合合并。
+\end{itemize}
+这叫\term{并查集}（union--find）。Kruskal 算法写成：
+
+\begin{lstlisting}[language=Python]
+def kruskal(n, wedges, UF):
+    """wedges: [(u, v, w)]；UF: 并查集的类。返回最小支撑树的边（不连通时返回森林）。"""
+    uf = UF(n)
+    tree = []
+    for u, v, w in sorted(wedges, key=lambda e: e[2]):   # 第 1 步：按权排序
+        if len(tree) == n - 1:
+            break
+        if uf.find(u) != uf.find(v):                     # 不成圈
+            uf.union(u, v)
+            tree.append((u, v, w))
+    return tree
+\end{lstlisting}
+
+这里用到了 Python 的\term{类}：\texttt{class} 把几个数组和操作它们的函数包在一起。\texttt{uf=UF(n)} 造出一个并查集，\texttt{uf.find(u)} 调用它的 \texttt{find}。下面三种实现都提供同样的 \texttt{find} 与 \texttt{union}，可以互换。
+
+\topic{四、并查集之一：标号法（讲义算法 3.1.1）}
+
+给每个顶点一个标号 \texttt{B[x]}，同一分支的顶点标号相同。\texttt{find} 就是读标号；\texttt{union} 把一个分支的顶点全部改成另一个分支的标号。
+
+\begin{lstlisting}[language=Python]
+class LabelUF:
+    def __init__(self, n):
+        self.B = list(range(n))        # 开始时每个顶点自成一个分支
+    def find(self, x):
+        return self.B[x]
+    def union(self, x, y):
+        old, new = self.B[y], self.B[x]   # 先把 y 的旧标号存下来
+        for k in range(len(self.B)):
+            if self.B[k] == old:
+                self.B[k] = new
+\end{lstlisting}
+
+\begin{remark}[讲义算法 3.1.1 的错误]
+讲义的内层循环写的是 \texttt{if B[k] = B[v]: B[k] = B[u]}，每次都拿 \texttt{B[v]} 来比较。循环走到 $k=v$ 时 \texttt{B[v]} 自己被改掉了，此后与 $v$ 原来同标号、但编号比 $v$ 大的顶点就不再被改。例如 \texttt{B=[0,0,0,3,3]}，合并边 $(u,v)=(4,1)$：$k=0$ 时 \texttt{B[0]=3}；$k=1$ 时 \texttt{B[1]=3}；$k=2$ 时比较 \texttt{B[2]=0} 与已经变成 $3$ 的 \texttt{B[1]}，不相等，\texttt{B[2]} 没有被改，结果 \texttt{B=[3,3,0,3,3]}，顶点 $2$ 被错误地留在另一个分支。必须先把旧标号存下来（上面的 \texttt{old}）。讲义的文字还说“重标为该子树中的最小标号”，而代码改成的是 \texttt{B[u]}，不一定最小；用哪个标号都可以，只要一致。
+\end{remark}
+
+\begin{example}\label{ex:mst-kruskal:run}
+讲义例 3.1.1 的边序：$(0,1),(0,2),(1,2),(3,4),(1,4),(1,3),(2,3),(2,4)$（讲义从 $1$ 编号），这里给它们权 $1,2,\dots,8$：
+\texttt{K\_edges=[(0,1,1),(0,2,2),(1,2,3),(3,4,4),(1,4,5),(1,3,6),(2,3,7),(2,4,8)]}。
+\begin{center}
+\begin{tikzpicture}[scale=0.95]
+  \node[gv] (0) at (0,1.3) {0}; \node[gv] (1) at (-1.3,0) {1}; \node[gv] (2) at (1.3,0) {2};
+  \node[gv] (3) at (1.0,-1.8) {3}; \node[gv] (4) at (-1.0,-1.8) {4};
+  \draw[geh] (0) -- node[wt] {1} (1); \draw[geh] (0) -- node[wt] {2} (2); \draw[ge] (1) -- node[wt] {3} (2);
+  \draw[geh] (3) -- node[wt] {4} (4); \draw[geh] (1) -- node[wt] {5} (4);
+  \draw[ge] (1) -- node[wt,pos=0.35] {6} (3); \draw[ge] (2) -- node[wt] {7} (3); \draw[ge] (2) -- node[wt,pos=0.35] {8} (4);
+\end{tikzpicture}
+\end{center}
+\begin{center}
+\small
+\begin{tabular}{llll}
+\toprule
+边（权） & \texttt{find(u)}, \texttt{find(v)} & 动作 & 之后的 \texttt{B} \\
+\midrule
+& & 初始 & \texttt{[0,1,2,3,4]} \\
+$(0,1)$（1） & $0,1$ & 选；把标号 $1$ 改成 $0$ & \texttt{[0,0,2,3,4]} \\
+$(0,2)$（2） & $0,2$ & 选；把标号 $2$ 改成 $0$ & \texttt{[0,0,0,3,4]} \\
+$(1,2)$（3） & $0,0$ & 成圈，丢掉 & \texttt{[0,0,0,3,4]} \\
+$(3,4)$（4） & $3,4$ & 选；把标号 $4$ 改成 $3$ & \texttt{[0,0,0,3,3]} \\
+$(1,4)$（5） & $0,3$ & 选；把标号 $3$ 改成 $0$ & \texttt{[0,0,0,0,0]} \\
+\bottomrule
+\end{tabular}
+\end{center}
+已选 $4=n-1$ 条边，停止。最小支撑树为 $\{01,02,34,14\}$，权 $1+2+4+5=12$。边 $(1,3),(2,3),(2,4)$ 没有被检查。
+\end{example}
+
+\begin{theorem}\label{thm:mst-kruskal:label-time}
+（讲义定理 3.2）用标号法的 Kruskal 算法的时间是 $O(m\log m+n^2)$。
+\end{theorem}
+\begin{proof}
+排序 $O(m\log m)$。至多检查 $m$ 条边，每次 \texttt{find} 是 $O(1)$。\texttt{union} 恰好执行 $n-1$ 次，每次扫描整个数组，$O(n)$，共 $O(n^2)$。
+\end{proof}
+
+稠密图（$m\approx n^2$）中这已经是 $O(n^2\log n)$ 的排序占主导；稀疏图中 $n^2$ 这一项太大。改进的思路有两种：每次只改\emph{较小}一边的标号（练习 A3，总共 $O(n\log n)$）；或者不存标号，而存一棵树。
+
+\topic{五、并查集之二：根树，按高度合并（讲义算法 3.1.2）}
+
+每个集合存成一棵有根树，用双亲数组 \texttt{parent} 表示（第~\ref{lec:data-structures} 讲），根就是集合的代表，根的 \texttt{parent} 为 $-1$。\texttt{find(x)} 从 $x$ 沿双亲走到根。\texttt{union} 只需把一个根接到另一个根下面，$O(1)$。为了让树不太高，总是把\emph{较矮}的树接到\emph{较高}的树的根下；\texttt{height[r]} 记录以 $r$ 为根的树的高度。
+
+\begin{lstlisting}[language=Python]
+class HeightUF:
+    def __init__(self, n):
+        self.parent = [-1] * n
+        self.height = [0] * n
+    def find(self, x):
+        while self.parent[x] != -1:
+            x = self.parent[x]
+        return x
+    def union(self, x, y):
+        rx, ry = self.find(x), self.find(y)
+        if rx == ry:
+            return
+        if self.height[rx] >= self.height[ry]:
+            self.parent[ry] = rx              # 矮的（或一样高的）ry 接到 rx 下面
+            if self.height[rx] == self.height[ry]:
+                self.height[rx] += 1          # 一样高时，合并后高一层
+        else:
+            self.parent[rx] = ry
+\end{lstlisting}
+
+\begin{example}\label{ex:mst-kruskal:height}
+在 $8$ 个元素上依次执行 \texttt{union} $(0,1),(2,3),(0,2),(4,5),(6,7),(4,6),(1,5)$：
+\begin{center}
+\small
+\begin{tabular}{llll}
+\toprule
+\texttt{union} & 两个根（高度） & \texttt{parent} & \texttt{height} \\
+\midrule
+$(0,1)$ & $0\,(0)$, $1\,(0)$ & \texttt{[-1,0,-1,-1,-1,-1,-1,-1]} & \texttt{[1,0,0,0,0,0,0,0]} \\
+$(2,3)$ & $2\,(0)$, $3\,(0)$ & \texttt{[-1,0,-1,2,-1,-1,-1,-1]} & \texttt{[1,0,1,0,0,0,0,0]} \\
+$(0,2)$ & $0\,(1)$, $2\,(1)$ & \texttt{[-1,0,0,2,-1,-1,-1,-1]} & \texttt{[2,0,1,0,0,0,0,0]} \\
+$(4,5)$ & $4\,(0)$, $5\,(0)$ & \texttt{[-1,0,0,2,-1,4,-1,-1]} & \texttt{[2,0,1,0,1,0,0,0]} \\
+$(6,7)$ & $6\,(0)$, $7\,(0)$ & \texttt{[-1,0,0,2,-1,4,-1,6]} & \texttt{[2,0,1,0,1,0,1,0]} \\
+$(4,6)$ & $4\,(1)$, $6\,(1)$ & \texttt{[-1,0,0,2,-1,4,4,6]} & \texttt{[2,0,1,0,2,0,1,0]} \\
+$(1,5)$ & $0\,(2)$, $4\,(2)$ & \texttt{[-1,0,0,2,0,4,4,6]} & \texttt{[3,0,1,0,2,0,1,0]} \\
+\bottomrule
+\end{tabular}
+\end{center}
+最后一行：\texttt{find(1)}：$1\to0$，根 $0$；\texttt{find(5)}：$5\to4$，根 $4$；两个根一样高（$2$），把 $4$ 接到 $0$ 下面，$0$ 的高度变成 $3$。得到的树：
+\begin{center}
+\begin{tikzpicture}[level distance=9mm, level 1/.style={sibling distance=22mm}, level 2/.style={sibling distance=11mm}]
+  \node[gv] {0}
+    child {node[gv] {1}}
+    child {node[gv] {2} child {node[gv] {3}}}
+    child {node[gv] {4} child {node[gv] {5}} child {node[gv] {6} child {node[gv] {7}}}};
+\end{tikzpicture}
+\end{center}
+8 个元素，高度 $3=\log_28$。
+\end{example}
+
+\begin{lemma}\label{lem:mst-kruskal:height}
+按高度合并时，以 $r$ 为根、高度为 $h$ 的树至少有 $2^h$ 个顶点。所以每棵树的高度至多为 $\log_2n$，\texttt{find} 是 $O(\log n)$。
+\end{lemma}
+\begin{proof}
+对合并的次数归纳。开始时每棵树一个顶点，高度 $0$，$2^0=1$。合并高度为 $h_1\geqslant h_2$ 的两棵树：若 $h_1>h_2$，新树高度仍为 $h_1$，顶点更多，结论保持。若 $h_1=h_2=h$，新树高度 $h+1$，顶点数至少 $2^h+2^h=2^{h+1}$。只有根的高度会变，非根顶点的子树从此不再改变。
+\end{proof}
+
+\begin{theorem}\label{thm:mst-kruskal:height-time}
+（讲义定理 3.3）用按高度合并的根树实现，Kruskal 算法的时间是 $O(m\log n)$。
+\end{theorem}
+\begin{proof}
+排序 $O(m\log m)=O(m\log n)$（$m\leqslant n^2$，$\log m\leqslant2\log n$；有重边时先只留每对顶点间最轻的一条）。至多 $2m$ 次 \texttt{find}，每次 $O(\log n)$；$n-1$ 次 \texttt{union}，每次两次 \texttt{find} 加 $O(1)$。
+\end{proof}
+
+讲义说“根据经典数组的排序理论，算法 3.1.2 就是具体实现 Kruskal 算法的最优算法”，意思是：排序本身需要 $\Theta(m\log m)$ 次比较，所以只要先排序，总时间就不可能低于 $O(m\log n)$。但如果边已经排好序，或者权是不大的整数（可以线性时间排序），瓶颈就落在并查集上，这时路径压缩有用。
+
+\topic{六、并查集之三：路径压缩（讲义算法 3.1.3，改正后）}
+
+\texttt{find(x)} 从 $x$ 走到根 $r$ 之后，再把路上每个顶点的双亲直接改成 $r$。以后再找这些顶点就只要一步。
+
+\begin{lstlisting}[language=Python]
+class CompressUF(HeightUF):
+    """按高度（秩）合并 + 路径压缩。union 沿用 HeightUF 的。"""
+    def find(self, x):
+        r = x
+        while self.parent[r] != -1:       # 第一遍：找到根
+            r = self.parent[r]
+        while self.parent[x] != -1:       # 第二遍：路上的点都直接指向根
+            nxt = self.parent[x]
+            if nxt != r:
+                self.parent[x] = r
+            x = nxt
+        return r
+\end{lstlisting}
+
+\texttt{class CompressUF(HeightUF)} 表示 \texttt{CompressUF} 继承 \texttt{HeightUF}：它有 \texttt{HeightUF} 的全部数组与函数，只是把 \texttt{find} 换成新的。路径压缩之后，\texttt{height[r]} 不再是树的真实高度，只是一个上界，通常改称\term{秩}（rank）；按秩合并仍然保证引理~\ref{lem:mst-kruskal:height} 的结论（证明不变，只是“高度”读作“秩”）。
+
+\begin{example}
+接\egref[上例]{ex:mst-kruskal:height}，执行 \texttt{find(7)}：第一遍 $7\to6\to4\to0$，根 $r=0$。第二遍：$x=7$，\texttt{nxt=6}，\texttt{parent[7]=0}；$x=6$，\texttt{nxt=4}，\texttt{parent[6]=0}；$x=4$，\texttt{nxt=0=r}，不改；$x=0$，停。\texttt{parent=[-1,0,0,2,0,4,0,0]}：$6,7$ 现在直接挂在根 $0$ 下面，树的高度从 $3$ 降到 $2$，而 \texttt{height[0]} 仍是 $3$。
+\end{example}
+
+\begin{remark}[讲义算法 3.1.3 的错误]
+讲义的代码在 \texttt{if r\_x != r\_y} 之后只做了“路径压缩”：把 $x$ 到 $r_x$、$y$ 到 $r_y$ 路上的点都指向 $r_x$，却没有把 $r_y$ 接到 $r_x$ 下面。开始时所有 \texttt{parent} 都是 $-1$，压缩的循环 \texttt{while parent[x] != -1} 一次也不会执行，于是 \texttt{parent} 永远不变，每个顶点永远是自己的根，每条边都被判为“不成圈”。整个算法退化为“取最轻的 $n-1$ 条边”。例如 $K_4$ 中令 $01,12,02$ 的权为 $1,2,3$，其余边的权更大，算法会选出三角形 $\{01,12,02\}$，它不是树。改正的办法是把“合并”与“压缩”分开：\texttt{find} 负责压缩，\texttt{union} 负责把一个根接到另一个根下（上面的写法）。另外，讲义说的“几乎线性”的 $O(m\alpha(n))$ 需要路径压缩与按秩合并\emph{同时}使用；只用路径压缩，一般只能保证 $O(m\log n)$ 量级。
+\end{remark}
+
+\begin{theorem}[Tarjan]\label{thm:mst-kruskal:tarjan}
+同时使用按秩合并与路径压缩时，任意 $m$ 次 \texttt{find} 与 \texttt{union} 的总时间是 $O(m\,\alpha(n))$，其中 $\alpha$ 是 Ackermann 函数的反函数，对一切实际可能出现的 $n$（比如 $n\leqslant10^{80}$）都有 $\alpha(n)\leqslant4$。
+\end{theorem}
+
+这个定理的证明较长（见 Cormen 等《算法导论》第 21 章），这里不证。它说明：边已排好序时，Kruskal 算法几乎是线性的。
+
+\topic{七、最大权森林（讲义 3.3.1）}
+
+\begin{theorem}\label{thm:mst-kruskal:forest}
+（讲义定理 3.9）最小支撑树问题与最大权森林问题（求边权之和最大的森林）可以互相归约。
+\end{theorem}
+\begin{proof}
+\emph{最大权森林归约到最小支撑树。}给定 $(G,c)$。权 $\leqslant0$ 的边不必用：从任何森林中删去它们，权不减小。令 $G^+$ 为只留正权边的图，它有 $r$ 个分支。添加 $r-1$ 条新边 $F$，把这些分支连成“一棵树”（比如依次连接第 $i$ 个与第 $i+1$ 个分支中的各一个顶点），得到连通图 $G'$；令 $c'(e)=-c(e)$（$e\in G^+$），$c'(f)=0$（$f\in F$）。
+\begin{itemize}
+\item 每条 $f\in F$ 都是 $G'$ 的割边（$F$ 把 $r$ 个分支连成树），所以 $G'$ 的每棵支撑树 $T$ 都含有 $F$。$T-F$ 有 $r$ 个分支，它们只能是 $G^+$ 的 $r$ 个分支，所以 $T\setminus F$ 是 $G^+$ 的一个\emph{极大}森林（在 $G^+$ 的每个分支中是支撑树）；反过来，$G^+$ 的每个极大森林加上 $F$ 是 $G'$ 的支撑树。
+\item $c'(T)=-c(T\setminus F)$。所以 $T$ 是 $(G',c')$ 的最小支撑树，当且仅当 $T\setminus F$ 是 $G^+$ 中权最大的极大森林。
+\item 权最大的森林可以取成 $G^+$ 的极大森林：删去非正权边，再用正权边扩充到极大，权都不减小。
+\end{itemize}
+所以 $T\setminus F$ 就是 $(G,c)$ 的最大权森林。
+
+\emph{最小支撑树归约到最大权森林。}给定 $(G,c)$，令 $K=1+\max_ec(e)$，$c'(e)=K-c(e)>0$。权全为正时，最大权森林是极大的（否则还能加边），$G$ 连通时它就是支撑树。所有支撑树都有 $n-1$ 条边，$c'(T)=(n-1)K-c(T)$，所以 $(G,c')$ 的最大权森林就是 $(G,c)$ 的最小支撑树。若 $(G,c')$ 的最大权森林不连通，$G$ 没有支撑树。
+\end{proof}
+
+\topic{小结}
+
+\begin{itemize}
+\item 最小支撑树由局部条件刻画：圈条件（树外的边是它的基本圈中最重的）、割条件（树上的边是它的基本割中最轻的）。证明都靠交换引理。
+\item 安全边引理：与已选边不交的割中最轻的边可以安全地加入。Kruskal 每次选的边是某个割中最轻的。
+\item 并查集：标号法 \texttt{find} 快 \texttt{union} 慢；根树按高度合并两者都是 $O(\log n)$；加上路径压缩几乎是常数。
+\end{itemize}
+
+\homework{最小支撑树与并查集的练习}[最小支撑树与并查集]
+
+\exercisepart{练习}
+
+\begin{exercises}{A}{最小支撑树与并查集}
+\item\label{ex:mst-kruskal:A1} 证明：若所有边权互不相同，则最小支撑树唯一。
+\begin{solution}
+设 $T\neq T'$ 都是最小支撑树，$e$ 是 $T\triangle T'$ 中权最小的边，不妨设 $e\in T\setminus T'$。$C(T',e)$ 中有边 $f\notin T$（否则 $C(T',e)\subseteq T$，$T$ 有圈），$f\in T'\setminus T$，$f\neq e$，所以 $w(f)>w(e)$（$e$ 是对称差中最小的，权互不相同）。由交换引理 $T'+e-f$ 是支撑树，权比 $T'$ 小，矛盾。
+\end{solution}
+
+\item\label{ex:mst-kruskal:A2} （瓶颈性质）证明：最小支撑树 $T$ 也使最大边权最小，即对任意支撑树 $T'$，$\max_{e\in T}w(e)\leqslant\max_{e\in T'}w(e)$。
+\begin{solution}
+设 $e\in T$ 是 $T$ 中最重的边。$\Omega(T,e)$ 是一个边割，$T'$ 连通，所以 $T'$ 中有边 $f\in\Omega(T,e)$。由割条件，$w(e)\leqslant w(f)\leqslant\max_{T'}w$。
+\end{solution}
+
+\item\label{ex:mst-kruskal:A3} 改进标号法：合并时只改\emph{较小}的那个分支的标号（为此对每个标号记下它的成员列表）。证明 $n-1$ 次合并总共只改 $O(n\log n)$ 次标号。
+\begin{solution}
+\begin{lstlisting}[language=Python]
+class SmallerHalfUF:
+    def __init__(self, n):
+        self.B = list(range(n))
+        self.members = [[x] for x in range(n)]
+    def find(self, x):
+        return self.B[x]
+    def union(self, x, y):
+        a, b = self.B[x], self.B[y]
+        if a == b:
+            return
+        if len(self.members[a]) < len(self.members[b]):
+            a, b = b, a                    # 让 b 是较小的那个
+        for z in self.members[b]:          # 只改小的一边
+            self.B[z] = a
+        self.members[a] += self.members[b]
+        self.members[b] = []
+\end{lstlisting}
+一个顶点每被改一次标号，它所在的分支至少扩大一倍（它在较小的一边，合并后的分支至少是原来的两倍）。分支大小不超过 $n$，所以每个顶点至多被改 $\log_2n$ 次，总共 $O(n\log n)$。Kruskal 的总时间变成 $O(m\log m+n\log n)$。
+\end{solution}
+
+\item\label{ex:mst-kruskal:A4} （逆删除算法）把边按权从大到小检查：若删去这条边后图仍连通，就删去它。证明最后剩下的是最小支撑树。
+\begin{solution}
+权相同时按检查的先后打破平局（先检查的算“更重”），下面的“重”都按这个顺序理解。设剩下的图为 $T$。$T$ 连通，因为只删去不破坏连通性的边。
+
+\emph{关键事实：}若边 $f$ 被检查时它在当时的图的某个圈上，则 $f$ 被删去。
+
+$T$ 无圈：若 $T$ 有圈 $C$，设 $f$ 是 $C$ 上最重的边。$f$ 被检查时，$C$ 的其他边比 $f$ 轻，还没被检查，都还在图中，所以 $f$ 在当时的圈 $C$ 上，被删去，与 $f\in T$ 矛盾。所以 $T$ 是支撑树。
+
+圈条件：设 $e\notin T$，$f$ 是 $C(T,e)$ 上的一条边，$f\neq e$。若 $f$ 比 $e$ 重，$f$ 被检查时 $e$ 还在图中，$T$ 的边也都在（它们从未被删去），所以 $f$ 在当时的圈 $C(T,e)$ 上，被删去，与 $f\in T$ 矛盾。所以 $e$ 是 $C(T,e)$ 中最重的，由定理~\ref{thm:mst-kruskal:optimality} 的 (2)$\Rightarrow$(1)，$T$ 是最小支撑树。
+\end{solution}
+
+\item\label{ex:mst-kruskal:A5} 用 \texttt{kruskal} 与 \texttt{HeightUF} 在\egref[例子]{ex:mst-kruskal:run}上运行，写出每次选边后的 \texttt{parent} 与 \texttt{height}。
+\begin{solution}
+开始 \texttt{parent=[-1]*5}，\texttt{height=[0]*5}。边 $(0,1)$：根 $0,1$ 等高，\texttt{parent[1]=0}，\texttt{height[0]=1}。边 $(0,2)$：根 $0$（高 $1$）、$2$（高 $0$），\texttt{parent[2]=0}。边 $(1,2)$：\texttt{find(1)=0}，\texttt{find(2)=0}，丢掉。边 $(3,4)$：\texttt{parent[4]=3}，\texttt{height[3]=1}。边 $(1,4)$：根 $0$（高 $1$）、$3$（高 $1$），\texttt{parent[3]=0}，\texttt{height[0]=2}。最后 \texttt{parent=[-1,0,0,0,3]}，\texttt{height=[2,0,0,1,0]}，选出的边与标号法相同。
+\end{solution}
+\end{exercises}
