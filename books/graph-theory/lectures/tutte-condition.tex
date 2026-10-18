@@ -1,0 +1,214 @@
+% !TEX root = ../graph-theory.tex
+% =====================================================================
+%  Tutte 条件：Tutte，Gallai–Edmonds，Petersen，奇分支的计数
+% =====================================================================
+\lecture{Tutte 条件：奇偶引理，Tutte 定理（边极大反例），Gallai--Edmonds 结构定理，Petersen 定理，树的完美匹配，由 Tutte 定理推出 Hall 定理，割边与立方图，Petersen 图的完美匹配，$k$ 条独立边}
+\label{lec:tutte-condition}
+
+一般图的完美匹配由 Tutte 条件 $q(G-S)\leqslant\abs S$ 刻画，$q$ 是奇分支的个数。这一讲收两类题：一类是证明 Tutte 定理及其加强形式，用到“边极大的反例”和“取使亏量最大的集合”两种极端选择；另一类是验证 Tutte 条件，办法几乎总是数奇分支与 $S$ 之间的边，再用奇偶性。
+
+\topic{方法：验证 Tutte 条件}
+
+\begin{enumerate}
+\item 奇偶：$q(G-S)\equiv\abs S+\abs G\pmod2$（引理~\ref{lem:tutte-condition:parity}）。所以 $\abs G$ 为偶数时，只需证明 $q(G-S)\leqslant\abs S+1$。
+\item 数边：对 $G-S$ 的奇分支 $C$，$e(C,S)=\sum_{v\in C}d(v)-2e(C)$。正则图中它与 $\abs C$ 同奇偶，再用连通度给出下界；对所有奇分支求和，与 $e(S,V\setminus S)\leqslant\sum_{s\in S}d(s)$ 比较。
+\item 给出完美匹配就验证了 Tutte 条件（必要性）。
+\item 加辅助顶点：把“$k$ 条独立边”变成“完美匹配”（\wegref{we:tutte-condition:k-edges}）。
+\end{enumerate}
+
+\begin{lemma}\label{lem:tutte-condition:parity}
+（讲义习题 2.19）对任意 $S\subseteq V(G)$，$q(G-S)-\abs S\equiv\abs G\pmod2$。
+\end{lemma}
+\begin{proof}
+$\abs G=\abs S+\sum_C\abs C$，$C$ 取遍 $G-S$ 的分支。模 $2$ 只有奇分支起作用，$\abs G\equiv\abs S+q(G-S)\equiv q(G-S)-\abs S$。
+\end{proof}
+
+\begin{theorem}[Tutte]\label{thm:tutte-condition:tutte}
+（讲义定理 2.8）$G$ 有完美匹配，当且仅当 $q(G-S)\leqslant\abs S$ 对一切 $S\subseteq V(G)$ 成立。
+\end{theorem}
+
+\begin{remark}[证明思路]
+设 $G$ 满足 Tutte 条件却没有完美匹配。加边不会破坏 Tutte 条件，所以可以假设 $G$ 是\emph{边极大}的：再加任何一条边就有完美匹配。这种图的结构很特殊：令 $S$ 是与所有其他顶点相邻的顶点集，若 $G-S$ 的分支都是完全图，就能直接写出完美匹配；若某个分支不是完全图，就在里面找到 $ab,bc\in E$、$ac\notin E$，以及 $bd\notin E$，用 $G+ac$ 与 $G+bd$ 的两个完美匹配拼出 $G$ 自己的完美匹配。
+\end{remark}
+
+\begin{proof}
+必要性：$G-S$ 的每个奇分支 $C$ 不能被内部的边完全匹配，至少有一个顶点与 $S$ 中的顶点匹配，不同的奇分支用到 $S$ 中不同的顶点。
+
+充分性。设 $G$ 满足 Tutte 条件。取 $S=\varnothing$ 得 $q(G)=0$，所以 $\abs G$ 是偶数。
+
+\emph{第一步：可以设 $G$ 边极大。}设 $G$ 满足 Tutte 条件而没有完美匹配。给 $G$ 加一条边时，$G-S$ 的分支只可能合并，合并成的奇分支一定含有原来的某个奇分支，所以 $q(G-S)$ 不增，Tutte 条件保持。只要加一条边后仍没有完美匹配，就把它加上；有限步后得到 $G^*\supseteq G$，它满足 Tutte 条件、没有完美匹配，而对任何 $e\notin E(G^*)$，$G^*+e$ 有完美匹配。下面对 $G^*$ 推出矛盾，为了记号简单仍把它记为 $G$。
+
+\emph{第二步：一个特殊情形。}设 $S$ 满足 $(*)$：$G-S$ 的分支都是完全图，$S$ 中每个顶点与所有其他顶点相邻。由 Tutte 条件 $q(G-S)\leqslant\abs S$，于是可以这样构造完美匹配：每个奇分支取一个顶点，匹配到 $S$ 中互不相同的顶点（$S$ 的顶点与一切顶点相邻）；奇分支剩下的偶数个顶点、偶分支的全部顶点，在各自的完全图内两两配对；$S$ 中剩下 $\abs S-q(G-S)$ 个顶点，两两相邻。剩下的个数是偶数，因为其余顶点都已配对而 $\abs G$ 是偶数。这与 $G$ 没有完美匹配矛盾。所以\emph{没有}满足 $(*)$ 的 $S$。
+
+\emph{第三步：找 $a,b,c,d$。}令 $S$ 为与所有其他顶点都相邻的顶点集。它不满足 $(*)$，所以 $G-S$ 有一个分支不是完全图，其中有不相邻的 $a,a'$。在这个分支中取最短 $(a,a')$-路的前三个顶点，仍记为 $a,b,c$：$ab,bc\in E$，$ac\notin E$。$b\notin S$，所以有 $d\neq b$ 使 $bd\notin E$；$d\notin\{a,c\}$，因为 $a,c$ 都与 $b$ 相邻。由边极大性，$G+ac$ 有完美匹配 $M_1$，$G+bd$ 有完美匹配 $M_2$。$G$ 没有完美匹配，所以 $ac\in M_1$，$bd\in M_2$。
+
+\emph{第四步：拼接。}取 $G$ 中从 $d$ 出发的一条极长的路 $P=d\dots v$，它的第一条边属于 $M_1$，之后交替属于 $M_2,M_1,\dots$。（$d$ 的 $M_1$-边不是 $ac$，所以在 $G$ 中，$P$ 至少有一条边。）先说明 $P$ 上的顶点：内部顶点各有一条 $M_1$-边和一条 $M_2$-边在 $P$ 上；$d$ 的 $M_1$-边在 $P$ 上，$d$ 的 $M_2$-边是 $bd$，不在 $P$ 上（$bd\notin E$）。
+
+\emph{情形 1：$P$ 的最后一条边属于 $M_1$。}$v$ 的 $M_2$-边 $vw$：若 $vw\in E$ 且 $w\notin P$，$P$ 可以延长；若 $w\in P$，$w$ 的 $M_2$-边已在 $P$ 上（$w$ 是内部顶点）或者是 $bd$（$w=d$）；前者说明 $vw$ 在 $P$ 上，与 $v$ 在 $P$ 上只关联最后一条边矛盾。所以 $vw=bd$，$v=b$。令 $C=P+bd$。
+
+\emph{情形 2：$P$ 的最后一条边属于 $M_2$。}$v$ 的 $M_1$-边 $vw$：同样的论证（$d$ 的 $M_1$-边是 $P$ 的第一条边）说明，若 $vw\in E$ 则 $P$ 可以延长。所以 $vw=ac$，$v\in\{a,c\}$。$b$ 不在 $P$ 上：$b$ 的 $M_2$-边是 $bd$，不在 $P$ 上，所以 $b$ 不是 $P$ 的内部顶点；$b\neq d$，$b\neq v$。令 $C=P+vb+bd$。
+
+两种情形中，$C$ 都是圈；沿 $C$，边交替地属于 $M_2$ 与不属于 $M_2$（情形 2 中 $vb\notin M_2$，因为 $v$ 的 $M_2$-边是 $P$ 的最后一条边）；$C$ 上唯一不在 $E$ 中的边是 $bd$（$ac$ 不在 $C$ 上）。所以 $C$ 是偶圈，$M_2\triangle E(C)$ 是完美匹配，它不含 $bd$，含于 $E$ 中。矛盾。
+\end{proof}
+
+讲义的证明是 Lovász 给出的这个证明，但第四步只写了结论，没有说明为什么“否则可以延长”。
+
+\topic{方法：取亏量最大的集合}
+
+记 $d(S)=q(G-S)-\abs S$，叫 $S$ 的亏量。下面的结构定理取使 $d(S)$ 最大、并且在此之下最大的 $S$，然后说明任何“改动”（加一个顶点、换一个子集）都会得到亏量不小的更大集合，从而得到 $S$ 的种种性质。
+
+\begin{theorem}[Gallai--Edmonds]\label{thm:tutte-condition:gallai-edmonds}
+（讲义定理 2.9）每个图 $G$ 都有顶点集 $S$，满足：(i) 在 $G-S$ 的分支收缩成点、删去 $S$ 内部的边后得到的二部图 $G_S$ 中，有饱和 $S$ 的匹配；(ii) $G-S$ 的每个分支都是因子临界的（删去任一顶点后有完美匹配）。对这样的 $S$，$G$ 有完美匹配当且仅当 $\abs S$ 等于 $G-S$ 的分支数。
+\end{theorem}
+\begin{proof}
+\emph{最后一句。}因子临界图是奇数阶的，所以 $G-S$ 的分支都是奇分支，由 (i)，分支数 $q(G-S)\geqslant\abs S$。若 $G$ 有完美匹配，由 Tutte 条件 $q(G-S)\leqslant\abs S$，相等。反之若相等，由 (i) 每个分支恰与 $S$ 的一个顶点匹配，分支 $C$ 被匹配的顶点为 $c$，再由 (ii) 取 $C-c$ 的完美匹配，合起来是 $G$ 的完美匹配。
+
+\emph{存在性}，对 $\abs G$ 归纳。$\abs G=0$ 时取 $S=\varnothing$。设 $\abs G>0$，取使 $d(S)$ 最大的集合中最大的一个 $S$。$d(S)\geqslant d(\varnothing)\geqslant0$。记 $\mathcal C$ 为 $G-S$ 的分支集合。
+
+(a) \emph{每个 $C\in\mathcal C$ 是奇的。}若 $\abs C$ 是偶数，取 $c\in C$，$T=S\cup\{c\}$。$C-c$ 是奇数阶，至少有一个奇分支，它是 $G-T$ 的分支；$G-S$ 的其余分支不变。所以 $q(G-T)\geqslant q(G-S)+1$，$d(T)\geqslant d(S)$，而 $T\supsetneq S$，与 $S$ 的选取矛盾。
+
+(b) \emph{每个 $C\in\mathcal C$ 是因子临界的。}设 $c\in C$ 使 $C'=C-c$ 没有完美匹配。由归纳假设，定理对 $C'$ 成立，由最后一句，Tutte 定理对 $C'$ 成立，所以有 $S'\subseteq V(C')$ 使 $q(C'-S')>\abs{S'}$。$\abs{C'}$ 是偶数，由引理~\ref{lem:tutte-condition:parity}，$q(C'-S')\equiv\abs{S'}$，所以 $q(C'-S')\geqslant\abs{S'}+2$。令 $T=S\cup\{c\}\cup S'$：$G-T$ 的奇分支包括 $G-S$ 中除 $C$ 外的奇分支和 $C'-S'$ 的奇分支，所以
+\[
+d(T)\geqslant\bigl(q(G-S)-1+q(C'-S')\bigr)-\bigl(\abs S+1+\abs{S'}\bigr)\geqslant d(S)-2+2=d(S),
+\]
+而 $T\supsetneq S$，矛盾。
+
+(c) \emph{(i) 成立。}若 $G_S$ 中没有饱和 $S$ 的匹配，由 Hall 定理有 $\varnothing\neq S'\subseteq S$，与 $S'$ 中顶点相邻的分支少于 $\abs{S'}$ 个。令 $T=S\setminus S'$。不与 $S'$ 相邻的分支仍是 $G-T$ 的分支（并且是奇的），所以
+\[
+d(T)\geqslant\bigl(\abs{\mathcal C}-(\abs{S'}-1)\bigr)-(\abs S-\abs{S'})=d(S)+1,
+\]
+与 $d(S)$ 最大矛盾。
+\end{proof}
+
+\begin{corollary}[Tutte--Berge 公式]\label{cor:tutte-condition:berge}
+$G$ 的匹配数 $\nu(G)=\frac12\bigl(\abs G-\max_{S\subseteq V}(q(G-S)-\abs S)\bigr)$。
+\end{corollary}
+\begin{proof}
+任一匹配中，$G-S$ 的每个奇分支要么有一个顶点匹配到 $S$（至多 $\abs S$ 个奇分支能这样），要么有一个顶点未被饱和，所以至少有 $q(G-S)-\abs S$ 个未饱和顶点，$2\nu\leqslant\abs G-d(S)$。反之，取定理中的 $S$（它使 $d(S)$ 最大），把 $S$ 匹配到 $\abs S$ 个分支，每个分支内用因子临界性匹配到只剩一个顶点（与 $S$ 匹配的分支则不剩），未饱和的顶点恰为 $\abs{\mathcal C}-\abs S=d(S)$ 个。
+\end{proof}
+
+\begin{theorem}[Petersen]\label{thm:tutte-condition:petersen}
+（讲义定理 2.10）每个没有割边的立方图都有完美匹配。
+\end{theorem}
+\begin{proof}
+立方图的阶是偶数（$3\abs G=2\abs E$），由引理~\ref{lem:tutte-condition:parity} 只需对 $S\neq\varnothing$ 验证 $q(G-S)\leqslant\abs S$（$S=\varnothing$ 时 $G$ 的各分支都是偶数阶的立方图，$q(G)=0$）。对 $G-S$ 的奇分支 $C$，
+\[
+e(C,S)=\sum_{v\in C}d(v)-2e(C)=3\abs C-2e(C)
+\]
+是奇数。$C$ 的边全部伸向 $S$。$e(C,S)\neq0$：否则 $C$ 是 $G$ 的奇数阶分支，而立方图的分支都是偶数阶。$e(C,S)\neq1$：否则那条边是割边。所以 $e(C,S)\geqslant3$。于是 $3q(G-S)\leqslant e(S,V\setminus S)\leqslant3\abs S$。
+\end{proof}
+
+\begin{remark}
+讲义写“$\abs{E(C,S)}\geqslant3$，因为 $G$ 是 $2$-边连通的”。$2$-边连通只给出 $\geqslant2$，要得到 $\geqslant3$ 还需要上面的奇偶性。
+\end{remark}
+
+\begin{workedexample}\label{we:tutte-condition:tree}
+（讲义习题 2.18）证明：树 $T$ 有完美匹配，当且仅当对任意 $v\in V$，$q(T-v)=1$。
+\end{workedexample}
+\begin{solution}
+必要性：设 $M$ 是完美匹配，$v$ 的配偶 $u$ 在 $T-v$ 的分支 $C_u$ 中。其他分支 $C$ 的顶点都在 $C$ 内部互相匹配，是偶数阶；$C_u$ 的顶点除 $u$ 外在内部匹配，是奇数阶。所以 $q(T-v)=1$。
+
+充分性：先看出 $\abs T$ 是偶数：$\abs T-1=\sum\abs C$，其中恰好一个 $\abs C$ 为奇数。树中 $v$ 在 $T-v$ 的每个分支里恰有一个邻点，记 $u(v)$ 为 $v$ 在那个奇分支里的邻点。断言 $u(u(v))=v$。令 $u=u(v)$。删去边 $uv$，$T$ 分成含 $u$ 的部分 $A$ 与含 $v$ 的部分 $B$；$A$ 就是 $T-v$ 的那个奇分支，所以 $\abs A$ 奇，$\abs B=\abs T-\abs A$ 也是奇数。在 $T-u$ 中，$B$ 是一个分支，它是奇的；由 $q(T-u)=1$，它就是唯一的奇分支，$u$ 在其中的邻点是 $v$，即 $u(u)=v$。于是 $\{v\,u(v)\}$ 把顶点两两配对，是完美匹配。
+\end{solution}
+
+\begin{workedexample}\label{we:tutte-condition:hall}
+（讲义习题 2.20）由 Tutte 定理推出 Hall 定理。
+\end{workedexample}
+\begin{solution}
+设 $G=(X,Y)$ 满足 Hall 条件。取 $S=X$ 得 $\abs Y\geqslant\abs X$。作图 $H$：在 $Y$ 上加边使它成为团；若 $\abs X+\abs Y$ 是奇数，再加一个新顶点 $y_0$ 放进这个团（$y_0$ 与 $X$ 不相邻）。$X$ 在 $H$ 中仍是独立集，所以 $H$ 的完美匹配把 $X$ 的每个顶点匹配到 $Y$ 中，用的都是 $G$ 的边，它就是 $G$ 中饱和 $X$ 的匹配。$\abs H$ 是偶数，只需验证 $H$ 的 Tutte 条件。
+
+任取 $T\subseteq V(H)$，令 $Y_H$ 为 $H$ 中团的顶点集。令 $I=\{x\in X\setminus T:N_G(x)\subseteq T\}$，它们是 $H-T$ 中的孤立点。$H-T$ 的其余顶点：若 $Y_H\setminus T\neq\varnothing$，它们与 $Y_H\setminus T$ 连成一个分支；否则没有其余顶点。所以 $q(H-T)\leqslant\abs I+1$，并且当 $Y_H\subseteq T$ 时 $q(H-T)\leqslant\abs I$。由 Hall 条件 $\abs I\leqslant\abs{N_G(I)}\leqslant\abs{T\cap Y}$。
+\begin{itemize}
+\item 若 $Y_H\subseteq T$：$q(H-T)\leqslant\abs I\leqslant\abs T$。
+\item 若 $\abs I<\abs T$：$q(H-T)\leqslant\abs I+1\leqslant\abs T$。
+\item 若 $\abs I=\abs T$：由 $\abs I\leqslant\abs{T\cap Y}\leqslant\abs T$，$q(H-T)\leqslant\abs T+1$；又由引理~\ref{lem:tutte-condition:parity}，$q(H-T)\equiv\abs T+\abs H\equiv\abs T$，所以 $q(H-T)\leqslant\abs T$。
+\end{itemize}
+由 Tutte 定理，$H$ 有完美匹配。
+\end{solution}
+
+\begin{workedexample}\label{we:tutte-condition:bridges}
+（讲义习题 2.21）利用 Tutte 定理证明：至多有两条割边的立方图都有完美匹配。再构造一个有三条割边但没有完美匹配的立方图。
+\end{workedexample}
+\begin{solution}
+与定理~\ref{thm:tutte-condition:petersen} 一样，对 $G-S$ 的奇分支 $C$，$e(C,S)$ 是正奇数；若 $e(C,S)=1$，那条边是割边，这样的 $C$ 至多两个（不同的奇分支给出不同的割边）。所以
+\[
+3\abs S\geqslant e(S,V\setminus S)\geqslant3\bigl(q(G-S)-2\bigr)+2=3q(G-S)-4,
+\]
+$q(G-S)\leqslant\abs S+\frac43$，即 $q(G-S)\leqslant\abs S+1$。由引理~\ref{lem:tutte-condition:parity}（$\abs G$ 是偶数），$q(G-S)\leqslant\abs S$。
+
+构造：取 $K_4$，把它的一条边 $ab$ 细分为 $a\,w\,b$，得到 $5$ 个顶点的图，$w$ 的度数为 $2$，其余为 $3$。取三个这样的图，把它们的 $w$ 都连到一个新顶点 $v$ 上。得到 $16$ 个顶点的立方图，三条边 $vw_i$ 都是割边。$G-v$ 有三个 $5$ 阶分支，$q(G-v)=3>1$，没有完美匹配。
+\end{solution}
+
+\begin{workedexample}\label{we:tutte-condition:petersen-graph}
+（讲义习题 2.22）利用 Petersen 图的对称性验证它满足 Tutte 条件，求出它的完美匹配的总数，并说明任意一条边包含在多少个完美匹配中。
+\end{workedexample}
+\begin{solution}
+用 Kneser 模型。$S_5$ 置换 $\{1,\dots,5\}$ 时保持“不交”，所以作用在 Petersen 图上；任一条边是一对不交的 $2$-元子集 $\{ab,cd\}$，可以被某个置换映到任何另一条边，所以图是边传递的。
+
+\emph{含边 $12$--$34$ 的完美匹配。}删去 $12,34$，剩下 $8$ 个顶点。其中 $35$ 的邻点只剩 $14,24$；$25$ 的邻点只剩 $13,14$；$45$ 的邻点只剩 $13,23$；$15$ 的邻点只剩 $23,24$。
+\begin{itemize}
+\item 若 $35$--$14$，则 $25$ 只能配 $13$，$45$ 只能配 $23$，$15$ 只能配 $24$。得到一个完美匹配。
+\item 若 $35$--$24$，则 $15$ 只能配 $23$，$45$ 只能配 $13$，$25$ 只能配 $14$。又得到一个。
+\end{itemize}
+所以恰有 $2$ 个完美匹配含边 $12$--$34$；由边传递性，每条边恰在 $2$ 个完美匹配中。每个完美匹配有 $5$ 条边，图有 $15$ 条边，完美匹配的个数是 $15\cdot2/5=6$。
+
+\emph{Tutte 条件。}上面已找到完美匹配，例如 $\{12\text{--}34,\ 35\text{--}14,\ 25\text{--}13,\ 45\text{--}23,\ 15\text{--}24\}$，由 Tutte 定理的必要性，Tutte 条件成立。（Petersen 图是无割边的立方图，也可以直接引用定理~\ref{thm:tutte-condition:petersen}。）
+\end{solution}
+
+\begin{workedexample}\label{we:tutte-condition:k-edges}
+（讲义习题 2.23）证明 $G$ 含有 $k$ 条独立边，当且仅当对一切 $S\subseteq V(G)$，$q(G-S)\leqslant\abs S+\abs G-2k$。
+\end{workedexample}
+\begin{solution}
+由 Tutte--Berge 公式（推论~\ref{cor:tutte-condition:berge}）立即得到。下面给一个只用 Tutte 定理的证明，演示加辅助顶点的方法。
+
+若 $2k>\abs G$，两边都不成立（$S=\varnothing$ 时右边为负）。设 $r=\abs G-2k\geqslant0$，令 $H=G\vee\overline{K_r}$：加 $r$ 个两两不相邻的新顶点，每个都与 $G$ 的全部顶点相邻。$G$ 有 $k$ 条独立边 $\iff$ $H$ 有完美匹配：前者给出后者（剩下的 $r$ 个 $G$-顶点各配一个新顶点）；后者中 $r$ 个新顶点都配到 $G$ 中，剩下 $2k$ 个 $G$-顶点在 $G$ 内两两配对。
+
+验证 $H$ 的 Tutte 条件与题设条件等价。取 $T\subseteq V(H)$，$S=T\cap V(G)$。
+\begin{itemize}
+\item $T$ 含全部新顶点：$H-T=G-S$，条件 $q(H-T)\leqslant\abs T$ 就是 $q(G-S)\leqslant\abs S+r$。
+\item $T$ 漏掉某个新顶点 $u$，且 $S\neq V(G)$：$u$ 与 $G-S$ 的全部顶点相邻，其余新顶点也是，所以 $H-T$ 连通，$q(H-T)\leqslant1$。$T=\varnothing$ 时 $\abs H=2\abs G-2k$ 是偶数，$q=0$；$T\neq\varnothing$ 时 $q\leqslant1\leqslant\abs T$。
+\item $S=V(G)$：$H-T$ 是剩下的孤立新顶点，$q\leqslant r\leqslant\abs G\leqslant\abs T$。
+\end{itemize}
+所以 $H$ 满足 Tutte 条件当且仅当对一切 $S$ 有 $q(G-S)\leqslant\abs S+r$，由 Tutte 定理得结论。
+\end{solution}
+
+\topic{小结}
+
+\begin{itemize}
+\item 证明 Tutte 定理用的是边极大的反例；证明 Gallai--Edmonds 定理用的是亏量最大、在此之下最大的集合。两者都是“极端选择”，只是被极端化的对象不同。
+\item 验证 Tutte 条件：数奇分支与 $S$ 之间的边，加上奇偶性（引理~\ref{lem:tutte-condition:parity}）。
+\end{itemize}
+
+\homework{Tutte 条件的练习}[Tutte 条件]
+
+\exercisepart{练习}
+
+\begin{exercises}{A}{验证 Tutte 条件}
+\item\label{ex:tutte-condition:A1} 设 $k\geqslant1$，$G$ 是偶数阶、$(k-1)$-边连通的 $k$-正则图。证明 $G$ 有完美匹配。（$k=3$ 就是 Petersen 定理。）
+\begin{solution}
+$k=1$ 时 $G$ 本身是完美匹配。设 $k\geqslant2$，则 $G$ 连通，$q(G)=0$。对 $S\neq\varnothing$ 与 $G-S$ 的奇分支 $C$，$e(C,S)=k\abs C-2e(C)\equiv k\pmod2$；$e(C,S)$ 是 $G$ 的一个边割，至少为 $k-1$；与 $k$ 同奇偶，所以至少为 $k$。于是 $k\,q(G-S)\leqslant e(S,V\setminus S)\leqslant k\abs S$。
+\end{solution}
+
+\item\label{ex:tutte-condition:A2} （Sumner）证明：连通、不含导出 $K_{1,3}$、偶数阶的图有完美匹配。
+\begin{solution}
+对 $\abs G$ 归纳，$\abs G=2$ 显然。取 BFS 树 $T$，根为 $r$，设 $x$ 是深度最大的顶点，$y$ 是它的父亲。
+\begin{itemize}
+\item 若 $y$ 只有一个孩子 $x$：$T-\{x,y\}$ 仍是树（$y$ 删去 $x$ 后是叶子），所以 $G-\{x,y\}$ 连通；它仍不含导出 $K_{1,3}$，阶为偶数。由归纳假设有完美匹配，加上 $xy$。
+\item 若 $y$ 有两个以上孩子，它们都是深度最大的叶子。若 $y\neq r$，设 $p$ 是 $y$ 的父亲，取 $y$ 的两个孩子 $x,x'$；$p$ 与 $x,x'$ 不相邻（BFS 树中深度差为 $2$，由讲义命题 1.1 它们距离为 $2$）。$y$ 与 $p,x,x'$ 不构成导出 $K_{1,3}$，所以 $x\sim x'$。若 $y=r$，所有顶点都是 $r$ 的邻点，$\abs G$ 为偶数，$r$ 至少有三个孩子，其中某两个 $x,x'$ 相邻。两种情形下 $T-\{x,x'\}$ 都是树，$G-\{x,x'\}$ 连通，由归纳假设有完美匹配，加上 $xx'$。\qedhere
+\end{itemize}
+\end{solution}
+
+\item\label{ex:tutte-condition:A3} 由讲义习题 2.23（\wegref{we:tutte-condition:k-edges}）推出 Tutte--Berge 公式中“$\geqslant$”的一半：$\nu(G)\geqslant\frac12\bigl(\abs G-\max_S(q(G-S)-\abs S)\bigr)$。
+\begin{solution}
+令 $D=\max_S(q(G-S)-\abs S)$，$k=\frac12(\abs G-D)$。由引理~\ref{lem:tutte-condition:parity}，$D\equiv\abs G$，所以 $k$ 是整数；$D\geqslant d(\varnothing)\geqslant0$。对一切 $S$，$q(G-S)\leqslant\abs S+D=\abs S+\abs G-2k$，由习题 2.23，$G$ 有 $k$ 条独立边。
+\end{solution}
+
+\item\label{ex:tutte-condition:A4} 设 $n$ 是偶数，$G$ 是 $n$ 阶图，$\delta(G)\geqslant n/2$。用 Tutte 定理证明 $G$ 有完美匹配。
+\begin{solution}
+$S=\varnothing$：不相邻的两点有公共邻点（$\abs{N(x)}+\abs{N(y)}\geqslant n$），$G$ 连通，$q(G)=0$。设 $s=\abs S\geqslant1$。若 $s\geqslant n/2$，$q(G-S)\leqslant n-s\leqslant s$。设 $1\leqslant s<n/2$ 而 $q(G-S)\geqslant s+1$。$G-S$ 的每个分支中的顶点至少有 $n/2-s$ 个邻点在本分支内，所以每个分支至少有 $n/2-s+1$ 个顶点，
+\[
+n\geqslant s+(s+1)\Bigl(\frac n2-s+1\Bigr)=:f(s).
+\]
+$f$ 是 $s$ 的凹函数，在 $[1,\frac n2-1]$ 上的最小值在端点取到：$f(1)=n+1$，$f(\frac n2-1)=\frac{3n}2-1>n$（$n\geqslant4$；$n=2$ 时没有这样的 $s$）。都大于 $n$，矛盾。
+\end{solution}
+\end{exercises}

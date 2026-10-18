@@ -1,0 +1,175 @@
+% !TEX root = ../graph-theory.tex
+% =====================================================================
+%  增广路与对称差：Berge，König，两个匹配的对称差
+% =====================================================================
+\lecture{增广路与对称差：Berge 定理，König 定理，两个匹配之间的交换，唯一的完美匹配，奇度图的割边，匹配数的下界，独立数与顶点覆盖}
+\label{lec:augmenting-paths}
+
+两个匹配放在一起，每个顶点至多关联其中各一条边，所以它们的对称差由交错路和交错偶圈组成。这一讲的题目几乎都从这一句话出发：比较一个匹配与另一个（更大的、或者不同的）匹配，在对称差的某个分支上交换，或者从对称差的结构中读出矛盾。
+
+\topic{方法：对称差与交错路}
+
+设 $M,N$ 是两个匹配，$H=M\triangle N$（只看边）。
+\begin{enumerate}
+\item $H$ 中每个顶点的度数至多为 $2$，所以 $H$ 的每个分支是路或圈，边在 $M$ 与 $N$ 之间交替；圈的长度是偶数。
+\item 在一个分支 $P$ 上交换（把 $M\cap P$ 换成 $N\cap P$），得到的仍是匹配，因为 $M$ 中其余的边不碰 $P$ 的顶点（$P$ 是 $M\cup N$ 的分支）。
+\item 计数：若 $\abs N>\abs M$，则有一个分支中 $N$ 的边比 $M$ 的边多，它只能是一条两端边都在 $N$ 中的路，也就是 $M$-增广路。
+\item 两个\emph{完美}匹配的对称差中每个顶点度数为 $0$ 或 $2$，所以由偶圈组成。
+\item 从未饱和顶点出发沿交错路能到达的顶点集 $Z$ 是证明 König、Hall、Gallai--Edmonds 的共同工具：$M$ 最大时，$Z$ 中 $Y$ 一侧的顶点都被匹配，而且它们的配偶也在 $Z$ 中。
+\end{enumerate}
+
+\begin{theorem}[Berge]\label{thm:augmenting-paths:berge}
+（讲义定理 2.1）匹配 $M$ 是最大匹配，当且仅当 $G$ 中没有 $M$-增广路。
+\end{theorem}
+\begin{proof}
+有增广路 $P$ 时，$M\triangle E(P)$ 是比 $M$ 多一条边的匹配。反之，若 $M$ 不是最大的，取最大匹配 $N$，$\abs N>\abs M$，由方法第 3 条，$M\triangle N$ 有一个分支是 $M$-增广路。
+\end{proof}
+
+\begin{theorem}[König]\label{thm:augmenting-paths:konig}
+（讲义定理 2.3）二部图中最大匹配的边数等于最小顶点覆盖的顶点数。
+\end{theorem}
+
+讲义的证明从每条匹配边中选一个端点。下面是同一个证明，换成用可达集 $Z$ 来叙述，这样各个情形更清楚。
+
+\begin{proof}
+任何顶点覆盖都要为每条匹配边提供一个不同的端点，所以覆盖数 $\geqslant$ 匹配数。只需对最大匹配 $M$ 构造一个大小为 $\abs M$ 的覆盖。
+
+设 $G=(X,Y)$，$U$ 是 $X$ 中未被 $M$ 饱和的顶点，$Z$ 是从 $U$ 出发沿 $M$-交错路（第一条边不在 $M$ 中）可以到达的顶点集（$U\subseteq Z$）。令
+\[
+K=(X\setminus Z)\cup(Y\cap Z).
+\]
+\begin{itemize}
+\item \emph{$Y\cap Z$ 中的顶点都被饱和，且配偶在 $X\cap Z$ 中。}到达 $y\in Y$ 的交错路最后一条边不在 $M$ 中；若 $y$ 未饱和，这条路就是增广路，与 Berge 定理矛盾。把 $y$ 的匹配边接在路的末尾，就到达了 $y$ 的配偶。
+\item \emph{$K$ 是覆盖。}任取边 $xy$，$x\in X$。若 $x\notin Z$，则 $x\in K$。若 $x\in Z$：$xy\in M$ 时，$x\notin U$，到达 $x$ 的交错路最后一条边是 $x$ 的匹配边 $yx$，所以 $y\in Z$；$xy\notin M$ 时，到达 $x$ 的交错路（或 $x\in U$ 时的单点路）加上边 $xy$ 仍是交错路（若 $y$ 已在路上，它本来就在 $Z$ 中），所以 $y\in Z$。两种情形都有 $y\in K$。
+\item \emph{$\abs K\leqslant\abs M$。}$X\setminus Z$ 中的顶点不在 $U$ 中，都被饱和；$Y\cap Z$ 的顶点也都被饱和。没有一条匹配边的两端都在 $K$ 中：若 $xy\in M$ 且 $y\in Y\cap Z$，则 $x\in Z$，$x\notin X\setminus Z$。所以 $K$ 中每个顶点对应它的匹配边，这是单射。\qedhere
+\end{itemize}
+\end{proof}
+
+\begin{workedexample}\label{we:augmenting-paths:tree}
+（讲义习题 2.1）证明或否定：每棵树至多有一个完美匹配。
+\end{workedexample}
+\begin{solution}
+正确。若 $M\neq N$ 都是完美匹配，由方法第 4 条，$M\triangle N$ 非空且由偶圈组成，而树没有圈。
+\end{solution}
+
+\begin{workedexample}\label{we:augmenting-paths:cycle-sum}
+（讲义习题 2.2）设 $C,C'$ 是图 $G$ 的两个圈。证明 $E(C)\triangle E(C')$ 是一些边不交的圈的并。
+\end{workedexample}
+\begin{solution}
+记 $F=E(C)\triangle E(C')$。对顶点 $v$，$d_F(v)=d_C(v)+d_{C'}(v)-2d_{C\cap C'}(v)$，其中 $d_C(v),d_{C'}(v)\in\{0,2\}$，所以 $d_F(v)$ 是偶数。下面证明：每个顶点度数都是偶数的图，其边集是边不交的圈的并。对边数归纳：边数为 $0$ 时是空并；否则去掉孤立点后最小度至少为 $2$，由讲义定理 1.4 有圈 $C_1$，删去 $E(C_1)$ 后每个顶点的度数减少 $0$ 或 $2$，仍是偶数，用归纳假设。
+\end{solution}
+
+\begin{workedexample}\label{we:augmenting-paths:cycle-intersection}
+（讲义习题 2.3）设 $G$ 的围长为 $k$，$C$ 和 $C'$ 是它的两个圈。证明 $G[E(C)\triangle E(C')]$ 是一个圈，当且仅当 $C\cap C'$ 是一条非平凡的路。
+\end{workedexample}
+\begin{remark}[讲义原题有误]
+“当且仅当”的“仅当”一半不成立。$K_4$ 的围长为 $3$，取 $C=1234$，$C'=1324$，则 $E(C)\cap E(C')=\{23,14\}$，$C\cap C'$ 是两条不相交的边，不是路；而 $E(C)\triangle E(C')=\{12,34,13,24\}$ 是圈 $1243$。
+
+题中“围长为 $k$”这个条件没有被用到，原题应当是：\emph{$C,C'$ 是两个长度为 $k$（即最短）的圈}。下面证明：“当”的一半对任意两个不同的圈成立；“仅当”的一半在 $\abs C=\abs{C'}=g(G)$ 时成立。
+\end{remark}
+\begin{solution}
+\emph{“当”。}设 $C\cap C'$ 是路 $P$，端点 $a\neq b$。$C-E(P)$ 是一条 $(a,b)$-路 $Q$，$C'-E(P)$ 是一条 $(a,b)$-路 $Q'$。$Q$ 的内部顶点不在 $C'$ 上（否则它在 $C\cap C'=P$ 上），所以 $Q,Q'$ 内部不交；又 $C\neq C'$，$Q\neq Q'$。于是 $E(C)\triangle E(C')=E(Q)\cup E(Q')$ 是圈。
+
+\emph{“仅当”（设 $\abs C=\abs{C'}=g$）。}设 $D=E(C)\triangle E(C')$ 是圈，$H=C\cap C'$。对公共顶点 $v$，$d_D(v)=4-2d_H(v)\in\{0,2,4\}$，而 $D$ 是圈，$d_D(v)\neq4$，所以 $H$ 没有孤立点；$H\neq C$（否则 $C=C'$，$D$ 为空）。所以 $H$ 是 $C$ 上若干条不交的非平凡路 $P_1,\dots,P_r$（$r\geqslant1$）。需证 $r=1$。
+
+设 $r\geqslant2$。$C-E(H)$ 由 $r$ 条弧 $A_1,\dots,A_r$ 组成，每条弧连接两个不同的 $P_i$ 的端点，内部不在 $C'$ 上；$C'-E(H)$ 同样由 $r$ 条弧 $B_1,\dots,B_r$ 组成。取一条弧 $A_i$，端点 $x\neq y$ 都在 $C'$ 上。$C'$ 中有两条 $(x,y)$-路，取较短的一条 $R$，$\abs R\leqslant g/2$。$A_i\cup R$ 是圈（$A_i$ 的内部与 $C'$ 不交），所以 $\abs{A_i}+\abs R\geqslant g$，$\abs{A_i}\geqslant g/2$。同理 $\abs{B_j}\geqslant g/2$。于是
+\[
+\abs D=\sum_i\abs{A_i}+\sum_j\abs{B_j}\geqslant2r\cdot\frac g2=rg\geqslant2g,
+\]
+而 $\abs D=2g-2\abs{E(H)}<2g$，矛盾。
+\end{solution}
+
+\begin{workedexample}\label{we:augmenting-paths:exchange}
+（讲义习题 2.4）设 $M$ 和 $N$ 是图 $G$ 的匹配，$\abs M>\abs N$。证明存在 $G$ 的不相交匹配 $M'$ 和 $N'$，使 $\abs{M'}=\abs M-1$，$\abs{N'}=\abs N+1$，$M'\cup N'=M\cup N$。
+\end{workedexample}
+\begin{remark}[讲义原题有误]
+原题（Bondy--Murty 的习题）要求 $M$ 与 $N$ \emph{不相交}，讲义漏掉了这个条件。没有它结论不成立：设 $e,f$ 是两条不相邻的边，$M=\{e,f\}$，$N=\{e\}$，则 $M\cup N=\{e,f\}$ 只有两条边，放不下大小为 $1$ 与 $2$ 的两个不交匹配。下面设 $M\cap N=\varnothing$。
+\end{remark}
+\begin{solution}
+$M\cup N=M\triangle N$，由方法第 1 条，它的分支是 $M,N$ 交替的路与偶圈。偶圈与两端边分属两边的路，$M$ 与 $N$ 的边数相同；其余的路两端的边同属一边，边数相差 $1$。$\abs M>\abs N$，所以有一条路 $P$，$M$ 的边比 $N$ 的边多一条。令
+\[
+M'=(M\setminus E(P))\cup(N\cap E(P)),\qquad N'=(N\setminus E(P))\cup(M\cap E(P)).
+\]
+由方法第 2 条它们都是匹配，显然不交，并且 $M'\cup N'=M\cup N$，$\abs{M'}=\abs M-1$，$\abs{N'}=\abs N+1$。
+\end{solution}
+
+\begin{workedexample}\label{we:augmenting-paths:bridges}
+（讲义习题 2.5）设 $G$ 的所有顶点度数均为奇数，$M$ 是 $G$ 的完美匹配。证明 $M$ 包含 $G$ 的每条割边。
+\end{workedexample}
+\begin{solution}
+设割边 $e=uv\notin M$。$G-e$ 中 $u$ 所在的分支 $C_u$ 里，$u$ 的度数是 $d(u)-1$，为偶数，其余顶点的度数为奇数。由握手定理，奇度顶点有偶数个，所以 $\abs{C_u}-1$ 是偶数，$\abs{C_u}$ 是奇数。另一方面 $e\notin M$，而 $e$ 是 $C_u$ 与其余部分之间唯一的边，所以 $M$ 用 $C_u$ 内部的边饱和 $C_u$ 的全部顶点，$\abs{C_u}$ 是偶数。矛盾。
+\end{solution}
+
+\begin{workedexample}\label{we:augmenting-paths:lower-bound}
+（讲义习题 2.6）设 $G$ 是阶 $n\geqslant2k$ 的简单图。证明 $G$ 的匹配数至少为 $k$。
+\end{workedexample}
+\begin{remark}[讲义原题有误]
+空图是反例。原题应当还有条件 $\delta(G)\geqslant k$：\emph{若 $\delta(G)\geqslant k$ 且 $n\geqslant2k$，则 $G$ 有 $k$ 条独立边。}下面证明这个版本。
+\end{remark}
+\begin{solution}
+设最大匹配 $M$ 有 $r<k$ 条边。未饱和的顶点至少有 $n-2r\geqslant2$ 个，取其中两个 $u,v$。它们不相邻，且邻点都被饱和（否则 $M$ 不是极大的）。考虑一条匹配边 $xy$：若 $u\sim x$ 且 $v\sim y$，则 $uxyv$ 是增广路；$u\sim y$ 且 $v\sim x$ 同理。$\{u,v\}$ 与 $\{x,y\}$ 之间的四对中，任取三对必包含这两种“交叉”之一，所以至多有两条边。对 $M$ 的 $r$ 条边求和，
+\[
+2k\leqslant d(u)+d(v)\leqslant2r<2k,
+\]
+矛盾。
+\end{solution}
+
+\topic{方法：顶点覆盖的计数}
+
+$K$ 是顶点覆盖当且仅当 $V\setminus K$ 是独立集（讲义定理 2.4），所以 $\alpha+\beta=n$。估计 $\alpha$ 时，常常改为估计补集 $K$：每条边都至少有一个端点在 $K$ 中，所以 $\abs{E(G)}\leqslant\sum_{v\in K}d(v)$。
+
+\begin{workedexample}\label{we:augmenting-paths:alpha}
+（讲义习题 2.15、2.16）(1) 设 $G$ 是 $n$ 阶 $k$-正则图，$k\geqslant1$。证明 $\alpha(G)\leqslant n/2$。(2) 设 $G$ 是 $n$ 阶、$m$ 条边、最大度为 $\Delta\geqslant1$ 的图。证明 $\alpha(G)\leqslant n-m/\Delta$。
+\end{workedexample}
+\begin{remark}
+讲义的 2.15 只说“正则图”，需要 $k\geqslant1$：$0$-正则图（空图）的独立数是 $n$。
+\end{remark}
+\begin{solution}
+(2)：设 $I$ 是最大独立集，$K=V\setminus I$ 是覆盖，$m\leqslant\sum_{v\in K}d(v)\leqslant\Delta(n-\alpha)$，即 $\alpha\leqslant n-m/\Delta$。(1)：$m=kn/2$，$\Delta=k$，代入 (2) 得 $\alpha\leqslant n-n/2=n/2$。
+\end{solution}
+
+\begin{workedexample}\label{we:augmenting-paths:petersen}
+（讲义习题 2.12）求 Petersen 图的独立数与支配数。
+\end{workedexample}
+\begin{solution}
+用 Kneser 模型（第~\ref{lec:distance-layers} 讲\wegref{we:distance-layers:petersen}）：顶点是 $\{1,\dots,5\}$ 的 $2$-元子集，不交时相邻。
+
+\emph{$\alpha=4$。}独立集是两两相交的 $2$-元子集族。$\{12,13,14,15\}$ 是独立集。设 $\mathcal F$ 是两两相交的族，$\abs{\mathcal F}\geqslant4$。若 $\mathcal F$ 的成员没有公共元素，取 $ab\in\mathcal F$，有成员不含 $a$，它含 $b$，记为 $bc$；还有成员不含 $b$，它与 $ab$、$bc$ 都相交，只能是 $ac$。第四个成员要与 $ab,bc,ac$ 都相交，必含 $a,b,c$ 中的两个，只能是其中之一，矛盾。所以 $\mathcal F$ 的成员有公共元素，至多 $4$ 个。
+
+\emph{$\gamma=3$。}每个顶点支配自己和 $3$ 个邻点，两个顶点至多支配 $8<10$ 个顶点，所以 $\gamma\geqslant3$。$\{12,13,23\}$ 是支配集：$N[12]=\{12,34,35,45\}$，$N[13]=\{13,24,25,45\}$，$N[23]=\{23,14,15,45\}$，并集是全部 $10$ 个顶点。
+\end{solution}
+
+\topic{小结}
+
+\begin{itemize}
+\item 两个匹配的对称差是交错路与偶圈；在一个分支上交换仍得到匹配。Berge 定理、交换（\wegref{we:augmenting-paths:exchange}）、唯一性（\wegref{we:augmenting-paths:tree}）都是这一句话。
+\item 交错路的可达集 $Z$ 给出 König 定理中的覆盖 $(X\setminus Z)\cup(Y\cap Z)$。下一讲用同一个 $Z$ 证明 Hall 定理。
+\end{itemize}
+
+\homework{增广路与对称差的练习}[增广路与对称差]
+
+\exercisepart{练习}
+
+\begin{exercises}{A}{对称差与交错路}
+\item\label{ex:augmenting-paths:A1} 证明：极大匹配的边数至少是最大匹配边数的一半。
+\begin{solution}
+设 $M$ 是极大匹配，$M^*$ 是最大匹配。$M^*$ 的每条边至少与 $M$ 的一条边有公共端点（否则可以加入 $M$）。$M$ 的每条边有两个端点，每个端点至多关联 $M^*$ 的一条边，所以至多与 $M^*$ 的两条边相邻。于是 $\abs{M^*}\leqslant2\abs M$。
+\end{solution}
+
+\item\label{ex:augmenting-paths:A2} 设 $M$ 是 $G$ 的完美匹配。证明 $M$ 是 $G$ 唯一的完美匹配，当且仅当 $G$ 中没有 $M$-交错圈（边在 $M$ 与 $E\setminus M$ 之间交替的圈）。
+\begin{solution}
+若有另一个完美匹配 $N$，由方法第 4 条，$M\triangle N$ 非空，由 $M$-交错的偶圈组成。反之，若 $C$ 是 $M$-交错圈，$M\triangle E(C)$ 仍是完美匹配：$C$ 上每个顶点恰好关联 $C$ 上一条 $M$ 边和一条非 $M$ 边，交换后每个顶点仍恰被一条边饱和；它与 $M$ 不同。
+\end{solution}
+
+\item\label{ex:augmenting-paths:A3} （Gallai 恒等式）设 $G$ 没有孤立点，$\rho(G)$ 是最小边覆盖的边数，$\nu(G)$ 是匹配数。证明 $\nu(G)+\rho(G)=\abs G$。
+\begin{solution}
+设 $M$ 是最大匹配。对每个未饱和顶点任取一条关联边（没有孤立点），连同 $M$ 得到边覆盖，边数 $\abs M+(\abs G-2\abs M)=\abs G-\nu$，所以 $\rho\leqslant\abs G-\nu$。
+
+设 $F$ 是最小边覆盖。$F$ 中没有长为 $3$ 的路，也没有三角形（中间那条边可以删去，仍是覆盖），所以 $F$ 的每个分支是星。分支数为 $\abs G-\abs F$（森林）。每个星中取一条边，得到大小为 $\abs G-\rho$ 的匹配，所以 $\nu\geqslant\abs G-\rho$。
+\end{solution}
+
+\item\label{ex:augmenting-paths:A4} （König--Gallai）设二部图 $G$ 没有孤立点。证明 $\alpha(G)=\rho(G)$。
+\begin{solution}
+$\alpha+\beta=\abs G$（讲义定理 2.4），$\nu+\rho=\abs G$（A3），$\nu=\beta$（定理~\ref{thm:augmenting-paths:konig}）。三式合起来得 $\alpha=\rho$。
+\end{solution}
+\end{exercises}

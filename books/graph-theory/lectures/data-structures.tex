@@ -1,0 +1,377 @@
+% !TEX root = ../graph-theory.tex
+% =====================================================================
+%  组合优化 · 数据结构入门
+% =====================================================================
+\lecture{数据结构入门：本书用到的 Python，列表，链表与“用数组模拟链表”，栈，队列，字典与集合，用双亲数组存一棵有根树，复杂度与 O 记号}
+\label{lec:data-structures}
+
+组合优化讲的是算法。一个图算法写出来，除了“先做什么、后做什么”之外，还要回答“数据放在哪里、怎样取出来”。讲义里的 \texttt{stack}、\texttt{Queue()}、\texttt{p.next}、\texttt{NULL}、“头指针”，说的都是后一件事。这一讲把后面要用到的几种数据结构从头讲一遍，每一种都配一个能运行的 Python 小程序，并把它运行时内存里的样子一步一步画出来。
+
+本书的约定：顶点编号为 $0,1,\dots,n-1$（Python 的列表从 $0$ 开始数），$n$ 是顶点数，$m$ 是边数。讲义有时从 $1$ 开始编号，对照时减 $1$ 即可。
+
+\topic{一、本书用到的 Python}
+
+下面这些是 \texttt{if}/\texttt{else} 之外会用到的全部语法。每行 \texttt{\#} 后面是运行结果或说明。
+
+\begin{lstlisting}[language=Python,style=frag]
+def add(a, b):          # 定义函数：名字 add，两个参数
+    return a + b        # 返回值
+
+x = add(2, 3)           # x == 5
+
+L = [4, 7, 1]           # 列表：有顺序的一串数据
+L[0]                    # 4      下标从 0 开始
+L[-1]                   # 1      负下标从末尾数
+len(L)                  # 3      长度
+L.append(9)             # L == [4, 7, 1, 9]   在末尾加一个
+v = L.pop()             # v == 9, L == [4, 7, 1]   取走并返回最后一个
+
+for i in range(3):      # i 依次取 0, 1, 2
+    print(i, L[i])      # 打印 "0 4"  "1 7"  "2 1"
+
+for v in L:             # 直接取遍列表里的每个元素
+    print(v)
+
+k = 0
+while k < 3:            # 条件成立就一直重复
+    k = k + 1           # 结束时 k == 3
+
+p = (2, 5)              # 元组：不能修改的列表
+a, b = p                # 拆开：a == 2, b == 5
+a, b = b, a             # 交换两个变量：a == 5, b == 2
+
+INF = float('inf')      # 正无穷，比任何数都大
+NONE = None             # “什么都没有”
+
+M = [[0] * 3 for _ in range(2)]   # 2 行 3 列的全零表：[[0,0,0],[0,0,0]]
+M[1][2] = 8                       # 第 1 行第 2 列改成 8
+\end{lstlisting}
+
+最后两行要注意：二维的表要用 \texttt{[[0]*3 for \_ in range(2)]} 来造。写成 \texttt{[[0]*3]*2} 会得到“同一行被引用两次”，改一行另一行也跟着变。
+
+\topic{二、列表（数组）}
+
+列表在内存中占一段\emph{连续}的格子，每格放一个数据，格子按 $0,1,2,\dots$ 编号。知道了起点和下标 $i$，就能直接算出第 $i$ 格的位置，所以：
+\begin{itemize}
+\item 读或改 \texttt{L[i]}：一步，记作 $O(1)$；
+\item 在末尾加一个（\texttt{append}）或删去最后一个（\texttt{pop()}）：一步（平均意义下）；
+\item 在\emph{开头}或中间插入、删除：后面的格子都要挪一位，要 $n$ 步，记作 $O(n)$。
+\end{itemize}
+
+\begin{example}
+\texttt{L=[4,7,1,9]}，执行 \texttt{L.insert(0,5)}（在下标 $0$ 处插入 $5$）：
+\begin{center}
+\begin{tikzpicture}
+  \foreach \v [count=\i from 0] in {4,7,1,9} \node[cell] (a\i) at (\i*0.75,0) {\v};
+  \foreach \i in {0,...,3} \node[idx] at (\i*0.75,0.5) {\i};
+  \node[font=\small] at (-1.4,0) {插入前};
+  \foreach \v [count=\i from 0] in {5,4,7,1,9} \node[cell] (b\i) at (\i*0.75,-1.4) {\v};
+  \node[cellh] at (0,-1.4) {5};
+  \foreach \i in {0,...,4} \node[idx] at (\i*0.75,-0.9) {\i};
+  \node[font=\small] at (-1.4,-1.4) {插入后};
+  \foreach \i [evaluate=\i as \j using int(\i+1)] in {0,...,3} \draw[ptr, black!50] (a\i.south) to[bend right=12] (b\j.north);
+\end{tikzpicture}
+\end{center}
+原来的 $4$ 个元素每个都挪了一格。列表越长，挪得越多。
+\end{example}
+
+\topic{三、链表，以及“用数组模拟链表”}
+
+链表把数据放在一个个\emph{结点}里，每个结点除了数据（\texttt{data}）之外，还记着“下一个结点在哪里”（\texttt{next}）。最后一个结点的 \texttt{next} 是空，讲义写作 \texttt{NULL} 或 $\wedge$。另外用一个变量记住第一个结点在哪里，叫\term{头指针}（\texttt{head}）。
+
+链表的好处是：已知某个结点，在它后面插入或删除一个结点只需改两三个 \texttt{next}，$O(1)$，不用挪动别的数据。坏处是：要找第 $i$ 个结点，只能从头一个一个往后走，$O(i)$。
+
+讲义里所有的链表，都可以这样用几个普通的列表来实现：给每个结点一个编号（就是它在列表里的下标），\texttt{data[k]} 是结点 $k$ 的数据，\texttt{nxt[k]} 是结点 $k$ 的下一个结点的编号，空用 $-1$ 表示。讲义写 \texttt{p.data}、\texttt{p.next}，就对应这里的 \texttt{data[p]}、\texttt{nxt[p]}。
+
+\begin{example}\label{ex:data-structures:linked}
+依次把 $7,3,5$ 放进链表，再在 $3$ 的后面插入 $9$。
+\begin{lstlisting}[language=Python]
+NULL = -1
+
+def new_list():
+    """一个空链表：三个列表 data, nxt 与头指针 head。"""
+    return {"data": [], "nxt": [], "head": NULL}
+
+def push_front(lst, x):
+    """在链表开头放入 x，返回新结点的编号。"""
+    k = len(lst["data"])          # 新结点的编号 = 已有结点的个数
+    lst["data"].append(x)
+    lst["nxt"].append(lst["head"])  # 新结点指向原来的第一个结点
+    lst["head"] = k                 # 头指针改指新结点
+    return k
+
+def insert_after(lst, p, x):
+    """在结点 p 的后面插入 x。"""
+    k = len(lst["data"])
+    lst["data"].append(x)
+    lst["nxt"].append(lst["nxt"][p])  # 新结点指向 p 原来的下一个
+    lst["nxt"][p] = k                 # p 改指新结点
+    return k
+
+def to_python_list(lst):
+    """从头指针出发，沿 nxt 走到底，依次收集数据。"""
+    out, p = [], lst["head"]
+    while p != NULL:
+        out.append(lst["data"][p])
+        p = lst["nxt"][p]
+    return out
+\end{lstlisting}
+\end{example}
+
+下面一步一步执行。为了让最后的顺序是 $7,3,5$，我们倒着放：先放 $5$，再放 $3$，再放 $7$，每次都放在开头。
+
+\begin{lstlisting}[language=Python,style=frag]
+lst = new_list()
+a = push_front(lst, 5)     # 结点 0 存 5
+b = push_front(lst, 3)     # 结点 1 存 3
+c = push_front(lst, 7)     # 结点 2 存 7
+\end{lstlisting}
+
+每一行执行后三个变量的样子：
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+执行完 & \texttt{data} & \texttt{nxt} & \texttt{head} \\
+\midrule
+\texttt{new\_list()} & \texttt{[]} & \texttt{[]} & $-1$ \\
+\texttt{push\_front(lst,5)} & \texttt{[5]} & \texttt{[-1]} & $0$ \\
+\texttt{push\_front(lst,3)} & \texttt{[5, 3]} & \texttt{[-1, 0]} & $1$ \\
+\texttt{push\_front(lst,7)} & \texttt{[5, 3, 7]} & \texttt{[-1, 0, 1]} & $2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+读法：从 \texttt{head}$=2$ 出发，结点 $2$ 的数据是 $7$，\texttt{nxt[2]}$=1$；结点 $1$ 的数据是 $3$，\texttt{nxt[1]}$=0$；结点 $0$ 的数据是 $5$，\texttt{nxt[0]}$=-1$，结束。所以链表是 $7\to3\to5$。注意数据在列表里的\emph{存放顺序}（$5,3,7$）与链表的\emph{顺序}（$7,3,5$）无关，顺序完全由 \texttt{nxt} 决定。
+
+\begin{center}
+\begin{tikzpicture}
+  \node[font=\small] (h) at (0,0) {\texttt{head}};
+  \node[cell] (n2) at (1.6,0) {7}; \node[cell] (p2) at (2.35,0) {1};
+  \node[cell] (n1) at (3.8,0) {3}; \node[cell] (p1) at (4.55,0) {0};
+  \node[cell] (n0) at (6.0,0) {5}; \node[cell] (p0) at (6.75,0) {$-1$};
+  \node[idx] at (1.97,0.5) {结点 2}; \node[idx] at (4.17,0.5) {结点 1}; \node[idx] at (6.37,0.5) {结点 0};
+  \draw[ptr] (h) -- (n2); \draw[ptr] (p2) -- (n1); \draw[ptr] (p1) -- (n0);
+\end{tikzpicture}
+\end{center}
+
+现在在 $3$（结点 $1$）后面插入 $9$：
+
+\begin{lstlisting}[language=Python,style=frag]
+d = insert_after(lst, b, 9)    # b == 1 是存 3 的结点；新结点编号 d == 3
+\end{lstlisting}
+
+\texttt{insert\_after} 里只有两句改动了链接：
+\begin{enumerate}
+\item \texttt{nxt.append(nxt[p])}：新结点 $3$ 的下一个，设为结点 $1$ 原来的下一个，即结点 $0$。此时 \texttt{nxt=[-1,0,1,0]}。
+\item \texttt{nxt[p]=k}：结点 $1$ 的下一个改成新结点 $3$。此时 \texttt{nxt=[-1,3,1,0]}。
+\end{enumerate}
+\texttt{data=[5,3,7,9]}，\texttt{head=2}。从头走：$2\,(7)\to1\,(3)\to3\,(9)\to0\,(5)$，链表是 $7\to3\to9\to5$。结点 $0$、$2$ 的数据一个都没有挪动。两句的顺序不能颠倒：若先执行 \texttt{nxt[p]=k}，结点 $1$ 原来的下一个（结点 $0$）就找不到了。
+
+\topic{四、栈}
+
+栈是一种只能在一端放入、在同一端取出的序列，像一摞盘子：最后放上去的最先拿走，叫“后进先出”（last in, first out，LIFO）。放入叫\term{进栈}（push），取出叫\term{出栈}（pop），能取的那一端叫\term{栈顶}。
+
+Python 的列表直接就是栈：\texttt{append} 进栈，\texttt{pop()} 出栈，\texttt{S[-1]} 看栈顶而不取走。三者都是 $O(1)$。
+
+\begin{example}
+\begin{lstlisting}[language=Python,style=frag]
+S = []
+S.append('a'); S.append('b'); S.append('c')
+x = S.pop()
+S.append('d')
+y = S.pop(); z = S.pop()
+\end{lstlisting}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+操作 & 之后的 \texttt{S}（右端是栈顶） & 取出 \\
+\midrule
+进栈 a, b, c & \texttt{['a','b','c']} & \\
+出栈 & \texttt{['a','b']} & \texttt{x='c'} \\
+进栈 d & \texttt{['a','b','d']} & \\
+出栈两次 & \texttt{['a']} & \texttt{y='d'}，\texttt{z='b'} \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{example}
+
+讲义有时不用 \texttt{append}/\texttt{pop}，而用一个固定长度的数组 \texttt{stack} 和一个整数 \texttt{top}（栈顶的下标）：进栈写成 \texttt{top=top+1; stack[top]=i}，出栈写成 \texttt{i=stack[top]; top=top-1}，栈空就是 \texttt{top} 回到初值。这与 Python 的写法完全一样，只是自己记录了长度。
+
+\topic{五、队列}
+
+队列是一端放入、另一端取出的序列，像排队：先来的先走，叫“先进先出”（first in, first out，FIFO）。放入叫\term{进队}，取出叫\term{出队}。
+
+用列表的 \texttt{pop(0)} 出队是 $O(n)$ 的（后面的元素都要往前挪一格）。正确的做法是用 \texttt{collections.deque}：\texttt{append} 进队，\texttt{popleft()} 出队，都是 $O(1)$。讲义里的 \texttt{q=Queue()}、\texttt{q.put(v)}、\texttt{q.get()}，就是 \texttt{deque()}、\texttt{append}、\texttt{popleft}。
+
+\begin{lstlisting}[language=Python]
+from collections import deque
+\end{lstlisting}
+
+\begin{example}
+\begin{lstlisting}[language=Python,style=frag]
+Q = deque()
+Q.append('a'); Q.append('b'); Q.append('c')
+x = Q.popleft()
+Q.append('d')
+y = Q.popleft(); z = Q.popleft()
+\end{lstlisting}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+操作 & 之后的 \texttt{Q}（左端出、右端进） & 取出 \\
+\midrule
+进队 a, b, c & \texttt{[a, b, c]} & \\
+出队 & \texttt{[b, c]} & \texttt{x='a'} \\
+进队 d & \texttt{[b, c, d]} & \\
+出队两次 & \texttt{[d]} & \texttt{y='b'}，\texttt{z='c'} \\
+\bottomrule
+\end{tabular}
+\end{center}
+与栈的例子操作完全相同，取出的顺序却不同：栈取出 c, d, b，队列取出 a, b, c。DFS 与 BFS 的区别就在这里（第~\ref{lec:traversal} 讲）。
+\end{example}
+
+如果不用 \texttt{deque}，也可以用一个足够长的数组加两个下标实现：\texttt{head} 指向队首，\texttt{tail} 指向下一个空位，进队 \texttt{Q[tail]=x; tail+=1}，出队 \texttt{x=Q[head]; head+=1}，队空当且仅当 \texttt{head==tail}。图算法中每个顶点至多进队一次，所以数组开 $n$ 格就够了。
+
+\topic{六、字典与集合}
+
+\term{字典}（\texttt{dict}）存“键 $\to$ 值”的对应，例如 \texttt{w=\{(0,1):5,(1,2):3\}} 记录两条边的权。\texttt{w[(0,1)]} 取值，\texttt{(0,1) in w} 判断键是否存在。\term{集合}（\texttt{set}）只存键，用来判断“某个东西在不在里面”。两者的查找、插入、删除平均都是 $O(1)$（内部用的是散列表，这里不需要细节）。
+
+讲义提到“Python 语言用的是字典类型的存储结构”，指的是用字典 \texttt{adj=\{v:[邻点列表]\}} 存图。顶点编号是 $0,\dots,n-1$ 时，用列表的列表 \texttt{adj=[[...],[...],\dots]} 效果相同，本书都用后者。
+
+\topic{七、用双亲数组存一棵有根树}
+
+有根树中，除根以外每个顶点恰有一个双亲（父亲）。所以只要一个列表 \texttt{parent}，\texttt{parent[v]} 是 $v$ 的双亲，根的 \texttt{parent} 设为 $-1$，就存下了整棵树。这是后面 DFS 树、BFS 树、并查集、斐波那契堆的共同存法。讲义里遍历算法的数组 \texttt{tree} 也是双亲数组，只是多用了一个特殊值：\texttt{tree[v]}$=-2$ 表示 $v$ 还没被访问到，$-1$ 表示根。
+
+\begin{lstlisting}[language=Python]
+def root_of(parent, v):
+    """沿双亲一直往上走，返回 v 所在树的根。"""
+    while parent[v] != -1:
+        v = parent[v]
+    return v
+
+def depth_of(parent, v):
+    """v 到根的边数。"""
+    d = 0
+    while parent[v] != -1:
+        v = parent[v]
+        d += 1
+    return d
+\end{lstlisting}
+
+\begin{example}
+\texttt{parent=[-1,0,0,1,1,2]} 表示的树：$0$ 是根；$1,2$ 的双亲是 $0$；$3,4$ 的双亲是 $1$；$5$ 的双亲是 $2$。\texttt{root\_of(parent,4)} 的执行过程：$v=4$，\texttt{parent[4]}$=1\neq-1$，$v\gets1$；\texttt{parent[1]}$=0\neq-1$，$v\gets0$；\texttt{parent[0]}$=-1$，停，返回 $0$。\texttt{depth\_of(parent,4)}$=2$。
+\begin{center}
+\begin{tikzpicture}[level distance=10mm, sibling distance=16mm]
+  \node[gv] {0}
+    child {node[gv] {1} child {node[gv] {3}} child {node[gv] {4}}}
+    child {node[gv] {2} child {node[gv] {5}}};
+\end{tikzpicture}
+\end{center}
+\end{example}
+
+\topic{八、复杂度与 O 记号}
+
+算法的\term{时间复杂度}是它在输入规模为 $n$（图算法中是 $n$ 与 $m$）时执行的基本步骤数（一次比较、一次赋值、一次加法……）的上界。我们只关心增长的快慢，不关心常数倍。
+
+\begin{definition}\label{def:data-structures:big-o}
+设 $f,g$ 是正整数上的非负函数。若存在常数 $C>0$ 与 $n_0$，使 $n\geqslant n_0$ 时 $f(n)\leqslant Cg(n)$，则记 $f=O(g)$。若 $f=O(g)$ 且 $g=O(f)$，记 $f=\Theta(g)$。
+\end{definition}
+
+例如 $3n^2+5n+7=O(n^2)$：取 $C=15$，$n_0=1$，因为 $n\geqslant1$ 时 $3n^2+5n+7\leqslant3n^2+5n^2+7n^2$。
+
+数步数的几条规则：
+\begin{enumerate}
+\item 一串操作依次执行，步数相加；循环执行 $k$ 次、每次 $O(t)$ 步，共 $O(kt)$ 步。
+\item 两重循环 \texttt{for i in range(n): for j in range(n):} 共 $n^2$ 次。
+\item \emph{对每个顶点扫一遍它的邻接表}：外层 $n$ 次，内层第 $v$ 次是 $d(v)$ 次，共 $\sum_v(1+d(v))=n+2m$ 次，是 $O(n+m)$，而不是 $O(n\cdot\Delta)$ 或 $O(n^2)$。这是后面几乎所有“线性时间”结论的来源。
+\item 每次把问题规模减半（$n\to n/2\to n/4\to\cdots$），减到 $1$ 需要 $\log_2n$ 次。
+\end{enumerate}
+
+\begin{center}
+\begin{tabular}{rrrr}
+\toprule
+$n$ & $n\log_2n$ & $n^2$ & $2^n$ \\
+\midrule
+$10$ & $33$ & $100$ & $1024$ \\
+$10^3$ & $\approx10^4$ & $10^6$ & $\approx10^{301}$ \\
+$10^6$ & $\approx2\times10^7$ & $10^{12}$ & 不可想象 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+计算机每秒大约做 $10^8$ 到 $10^9$ 次基本操作。$n=10^6$ 时，$O(n\log n)$ 的算法瞬间完成，$O(n^2)$ 的要算几十分钟到几小时，指数时间的算法永远算不完。所以同一个问题，$O(m+n\log n)$ 与 $O(n^2)$ 的区别在大图上是实质的，这就是第~\ref{lec:mst-prim} 讲要引入斐波那契堆的原因。
+
+\topic{小结}
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+结构 & 取第 $i$ 个 & 在已知位置插入、删除 & 用途 \\
+\midrule
+列表 & $O(1)$ & 末尾 $O(1)$，其他 $O(n)$ & 邻接矩阵、各种标记数组 \\
+链表 & $O(i)$ & $O(1)$ & 邻接表、欧拉环游的拼接 \\
+栈 & 只取栈顶 $O(1)$ & 只在栈顶 $O(1)$ & DFS \\
+队列 & 只取队首 $O(1)$ & 队尾进、队首出 $O(1)$ & BFS \\
+字典、集合 & 按键 $O(1)$ & 按键 $O(1)$ & 边权、判断成员 \\
+双亲数组 & 双亲 $O(1)$ & 改双亲 $O(1)$ & DFS/BFS 树、并查集 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\homework{数据结构的练习}[数据结构]
+
+\exercisepart{练习}
+
+\begin{exercises}{A}{数据结构}
+\item\label{ex:data-structures:A1} 在例子~\ref{ex:data-structures:linked} 的链表（\texttt{data=[5,3,7,9]}，\texttt{nxt=[-1,3,1,0]}，\texttt{head=2}）上，写一个函数 \texttt{delete\_after(lst,p)} 删去结点 \texttt{p} 后面的那个结点，并写出删去 $3$ 后面的 $9$ 之后 \texttt{nxt} 的值。
+\begin{solution}
+只需让 \texttt{p} 跳过它的下一个结点，指向下一个的下一个：
+\begin{lstlisting}[language=Python]
+def delete_after(lst, p):
+    q = lst["nxt"][p]            # 要删的结点
+    if q != NULL:
+        lst["nxt"][p] = lst["nxt"][q]
+\end{lstlisting}
+$3$ 在结点 $1$，\texttt{q=nxt[1]=3}，\texttt{nxt[1]=nxt[3]=0}，于是 \texttt{nxt=[-1,0,1,0]}。从头走 $2\to1\to0$，链表是 $7\to3\to5$。结点 $3$ 还留在列表里，但已经没有指针指向它，走不到了。
+\end{solution}
+
+\item\label{ex:data-structures:A2} 写一个函数 \texttt{reverse(lst)}，把链表的顺序倒过来，只改 \texttt{nxt} 与 \texttt{head}，并说明它是 $O(n)$ 的。
+\begin{solution}
+从头往后走，把每个结点的 \texttt{nxt} 改指它的前一个结点：
+\begin{lstlisting}[language=Python]
+def reverse(lst):
+    prev, p = NULL, lst["head"]
+    while p != NULL:
+        q = lst["nxt"][p]       # 先记住下一个，否则改完就找不到了
+        lst["nxt"][p] = prev
+        prev, p = p, q
+    lst["head"] = prev
+\end{lstlisting}
+在 $7\to3\to5$（结点 $2,1,0$）上：开始 \texttt{prev=-1}，\texttt{p=2}；第一轮 \texttt{q=1}，\texttt{nxt[2]=-1}，\texttt{prev=2}，\texttt{p=1}；第二轮 \texttt{q=0}，\texttt{nxt[1]=2}，\texttt{prev=1}，\texttt{p=0}；第三轮 \texttt{q=-1}，\texttt{nxt[0]=1}，\texttt{prev=0}，\texttt{p=-1}，结束，\texttt{head=0}。得到 $5\to3\to7$。每个结点处理一次，每次 $O(1)$，共 $O(n)$。
+\end{solution}
+
+\item\label{ex:data-structures:A3} 用两个栈实现一个队列：进队时放进栈 \texttt{IN}；出队时若栈 \texttt{OUT} 为空，就把 \texttt{IN} 的元素逐个出栈、进栈到 \texttt{OUT}，然后从 \texttt{OUT} 出栈。说明这样取出的顺序确实是先进先出，并说明 $k$ 次操作总共只用 $O(k)$ 步。
+\begin{solution}
+把 \texttt{IN} 整个倒进 \texttt{OUT} 时，\texttt{IN} 中最早进来的元素在最底下，倒过去之后在 \texttt{OUT} 的最顶上，所以 \texttt{OUT} 从顶到底恰是进队的先后顺序；只有 \texttt{OUT} 空了才再倒，所以 \texttt{OUT} 中的元素总比 \texttt{IN} 中的早进来。每个元素一生中至多进 \texttt{IN} 一次、出 \texttt{IN} 一次、进 \texttt{OUT} 一次、出 \texttt{OUT} 一次，$k$ 次操作涉及至多 $k$ 个元素，总步数 $O(k)$，尽管某一次出队可能要倒很多个元素。这种“单次可能很慢、总数却很少”的分析叫\term{摊还分析}，第~\ref{lec:mst-prim} 讲分析斐波那契堆用的就是它。
+\end{solution}
+
+\item\label{ex:data-structures:A4} 求下面三段程序的复杂度（\texttt{adj} 是 $n$ 个顶点、$m$ 条边的图的邻接表）。
+\begin{lstlisting}[language=Python,style=frag]
+# (a)
+for u in range(n):
+    for v in range(n):
+        if v in adj[u]: c += 1
+# (b)
+for u in range(n):
+    for v in adj[u]:
+        c += 1
+# (c)
+k = n
+while k > 1:
+    k = k // 2
+\end{lstlisting}
+\begin{solution}
+(a) 两重循环 $n^2$ 次，每次 \texttt{v in adj[u]} 要在列表 \texttt{adj[u]} 中从头找，$O(d(u))$ 步。总共 $\sum_u n\cdot O(1+d(u))=O(n^2+nm)$。若把 \texttt{adj[u]} 换成集合，每次查找 $O(1)$，总共 $O(n^2)$。(b) 规则 3，$O(n+m)$；循环结束时 $c=2m$（无向图每条边在两个端点的表里各出现一次）。(c) 每次 $k$ 减半，约 $\log_2n$ 次，$O(\log n)$。
+\end{solution}
+\end{exercises}

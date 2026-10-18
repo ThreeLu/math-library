@@ -1,0 +1,327 @@
+% !TEX root = ../graph-theory.tex
+% =====================================================================
+%  组合优化 · 欧拉环游
+% =====================================================================
+\lecture{欧拉环游：无向图与有向图的判定定理，Fleury 算法为什么慢，Hierholzer 的拼接思想，用链表拼接的线性算法，栈的写法，无向图中给边打标记}
+\label{lec:euler-tours}
+
+连通图（有向图要求强连通）的\term{欧拉环游}是经过每条边恰好一次的闭迹。这一讲先证明存在的充要条件，然后讲怎样在 $O(n+m)$ 时间内把它找出来。找的想法很朴素：从一个顶点出发随便走，走不动时一定回到了起点；如果还有边没走，就从环游上某个还有剩余边的顶点出发再走一圈，把这一圈“插”进原来的环游。困难只在实现：插入要快，就得用链表。
+
+\topic{一、判定定理}
+
+\begin{theorem}\label{thm:euler-tours:undirected}
+（讲义定理 2.9）连通无向图 $G$ 有欧拉环游，当且仅当每个顶点的度都是偶数。
+\end{theorem}
+\begin{proof}
+必要性：沿欧拉环游走一遍，每次经过顶点 $v$（进入一次、离开一次）用掉 $v$ 的两条边；起点处把最后的进入与最初的离开配成一对。每条边恰好用一次，所以 $d(v)$ 是偶数。
+
+充分性：设所有度为偶数。取 $G$ 中最长的迹（边不重复的途径）$W=v_0e_0v_1\dots e_{l-1}v_l$。
+\begin{itemize}
+\item \emph{$W$ 是闭的。}$W$ 不能再延长，所以 $v_l$ 关联的边都在 $W$ 上。若 $v_l\neq v_0$，$W$ 每次经过 $v_l$ 用两条边，最后到达 $v_l$ 又用一条，$v_l$ 在 $W$ 上用掉奇数条边；而 $d(v_l)$ 是偶数，所以还有一条边没用，可以延长，矛盾。
+\item \emph{$W$ 用到了所有边。}否则，由于 $G$ 连通，有一条不在 $W$ 上的边 $e=uv_i$ 关联 $W$ 上的某个顶点 $v_i$。从 $u$ 出发，走 $e$ 到 $v_i$，再沿闭迹 $W$ 从 $v_i$ 绕一圈回到 $v_i$：$u\,e\,v_i\,e_i\,v_{i+1}\dots v_l(=v_0)\,e_0\,v_1\dots e_{i-1}\,v_i$，这是比 $W$ 长的迹，矛盾。\qedhere
+\end{itemize}
+\end{proof}
+
+\begin{remark}[讲义的笔误]
+讲义的证明开头写“度条件显然是充分的”，后面证明的其实是必要性（“如果一个顶点在欧拉环游中出现 $k$ 次，则它的度一定是 $2k$”），应为“度条件显然是必要的”。
+\end{remark}
+
+\begin{theorem}\label{thm:euler-tours:directed}
+（讲义定理 2.10）强连通有向图 $G$ 有欧拉环游，当且仅当每个顶点 $v$ 满足 $d^+(v)=d^-(v)$。
+\end{theorem}
+\begin{proof}
+必要性：每次经过 $v$ 用一条入弧和一条出弧。充分性：与无向的情形相同，取最长的有向迹 $W$。若终点 $v_l\neq v_0$，$W$ 在 $v_l$ 处用掉的入弧比出弧多一条，而 $d^+(v_l)=d^-(v_l)$，所以还有出弧没用，可以延长；所以 $W$ 是闭的。若有弧不在 $W$ 上，由强连通（底图连通就够了），有一条不在 $W$ 上的弧关联 $W$ 上的某个顶点 $v_i$。在 $v_i$ 处，$W$ 用掉的入弧与出弧一样多（闭迹），而 $d^+(v_i)=d^-(v_i)$，所以 $v_i$ 还有一条没用的\emph{出}弧 $v_iu$（若那条弧是入弧，则出弧也有剩余）。从 $v_i$ 出发绕 $W$ 一圈回到 $v_i$，再走 $v_iu$，得到更长的迹，矛盾。
+\end{proof}
+
+\begin{remark}
+讲义定理 2.10 的条件印成了 $d^+(v)=d^+(v)$，应为 $d^+(v)=d^-(v)$；讲义省略了证明。
+\end{remark}
+
+\topic{二、为什么不用 Fleury 算法}
+
+讲义提到的“一笔画算法”（Fleury 算法）：从任意顶点出发，每一步优先走\emph{不是割边}的边（在剩下的图中），走过就删掉。它是对的，但每一步都要判断一条边是不是割边，这本身要做一次遍历，$O(n+m)$；共 $m$ 步，总共 $O(m(n+m))$。下面的算法不需要判断割边。
+
+\topic{三、Hierholzer 的拼接思想}
+
+\begin{lemma}\label{lem:euler-tours:stuck}
+设每个顶点的出度等于入度（无向图：每个度为偶数）。从顶点 $w$ 出发沿着\emph{还没用过}的弧一直走，走不动时一定停在 $w$。即使之前已经有一些闭迹的弧被用掉，只要用掉的部分在每个顶点处入弧与出弧一样多，结论仍然成立。
+\end{lemma}
+\begin{proof}
+在每个顶点处，“剩余”的出弧数等于剩余的入弧数。行走中每次经过 $x\neq w$，进入用掉 $x$ 的一条剩余入弧，离开用掉一条剩余出弧；到达 $x$ 时，$x$ 已用的剩余入弧比剩余出弧多一条，所以 $x$ 一定还有剩余的出弧，可以继续走。只有在 $w$ 处，出发时多用了一条出弧，到达时恰好补平，才可能走不动。
+\end{proof}
+
+于是算法是：
+\begin{enumerate}
+\item 从起点 $s$ 出发走，直到走不动，得到闭迹 $W$（由引理，回到了 $s$）。
+\item 沿 $W$ 依次检查每个位置上的顶点 $w$：若 $w$ 还有没用过的弧，就从 $w$ 出发走，得到闭迹 $W'$（由引理，回到 $w$），把 $W'$ 插在 $W$ 中 $w$ 的这个位置后面。继续检查（包括新插入的部分）。
+\item 检查完所有位置时，若 $G$ 强连通（无向图：连通），所有弧都已用过；否则不是欧拉图。
+\end{enumerate}
+
+最后一句的理由：若还有弧没用过，取一条剩余弧的尾 $x$；由（弱）连通性，有一条从环游上的某个顶点到 $x$ 的路，路上第一条剩余的弧的尾在环游上——它在某个位置被检查时应当已经出发走过，矛盾。
+
+\topic{四、用链表拼接（讲义算法 2.8.1，改正后）}
+
+“把 $W'$ 插在 $w$ 的某个位置后面”若用列表实现，要挪动后面所有元素。用链表则是 $O(1)$。按讲义的做法，用两个数组模拟链表：\texttt{node[i]} 是环游第 $i$ 个结点上的顶点，\texttt{nxt[i]} 是下一个结点的编号。结点按\emph{创建}的先后编号 $0,1,2,\dots$，环游中的顺序由 \texttt{nxt} 决定。
+
+\begin{lstlisting}[language=Python]
+def euler_tour_linked(adj, s):
+    """有向图的欧拉环游（链表拼接）。adj 是邻接表；不是欧拉图时返回 None。"""
+    n = len(adj)
+    m = sum(len(a) for a in adj)
+    cur = [0] * n                 # cur[x]：adj[x] 中下一条没用过的弧
+    node, nxt = [s], [-1]         # 只有一个结点的环游：s
+    k = 0                         # 最后创建的结点编号
+    i = 0
+    while i <= k:                 # 按创建顺序检查每个结点
+        w = node[i]
+        if cur[w] < len(adj[w]):  # w 还有没用过的弧：从 w 走一圈
+            after = nxt[i]        # 记住 w 后面原来是谁
+            nxt[i] = k + 1        # w 后面接新走出来的这一段
+            x = w
+            while cur[x] < len(adj[x]):
+                y = adj[x][cur[x]]
+                cur[x] += 1       # 用掉弧 x -> y
+                k += 1
+                node.append(y)
+                nxt.append(k + 1) # 先假设后面还有
+                x = y
+            nxt[k] = after        # 这一段的最后一个结点接回原来的后继
+            if x != w:            # 没有回到 w：某处出度不等于入度
+                return None
+        i += 1
+    if k != m:                    # 有弧没走到：图不（弱）连通
+        return None
+    tour, p = [], 0
+    while p != -1:                # 从结点 0 沿 nxt 读出环游
+        tour.append(node[p])
+        p = nxt[p]
+    return tour
+\end{lstlisting}
+
+\begin{remark}[讲义算法 2.8.1 的问题]
+讲义的循环写的是 \texttt{for i = 0 to m-1: if adj[i] = NULL: continue}，其中 \texttt{i} 是\emph{结点编号}，却被当成顶点编号去查 \texttt{adj[i]}；应当先取 \texttt{w=Euler[i].node}，再判断 \texttt{adj[w]}。另外循环要检查到最后创建的结点为止（上面的 \texttt{while i <= k}），因为新插入的结点也可能还有剩余的弧。上面是改正后的版本。
+\end{remark}
+
+\begin{example}\label{ex:euler-tours:linked}
+讲义的例子：\texttt{adj=[[1],[2,3],[0,1],[4],[2]]}，$n=5$，$m=7$。每个顶点出度等于入度（出度 $1,2,2,1,1$；入度：$0$ 来自 $2$，$1$ 来自 $0,2$，$2$ 来自 $1,4$，$3$ 来自 $1$，$4$ 来自 $3$）。为了看到拼接，从 $s=0$ 出发（讲义从 $1$ 出发，那时一圈就走完了，没有拼接）。
+\begin{center}
+\begin{tikzpicture}[scale=0.95]
+  \node[gv] (0) at (0,0) {0}; \node[gv] (1) at (1.8,1) {1}; \node[gv] (2) at (1.8,-1) {2};
+  \node[gv] (3) at (3.6,1) {3}; \node[gv] (4) at (3.6,-1) {4};
+  \draw[arc] (0) -- (1); \draw[arc] (1) to[bend left=15] (2); \draw[arc] (2) to[bend left=15] (1);
+  \draw[arc] (2) -- (0); \draw[arc] (1) -- (3); \draw[arc] (3) -- (4); \draw[arc] (4) -- (2);
+\end{tikzpicture}
+\end{center}
+
+\emph{初始。}\texttt{node=[0]}，\texttt{nxt=[-1]}，$k=0$，\texttt{cur=[0,0,0,0,0]}。
+
+\emph{$i=0$，$w=0$。}\texttt{cur[0]=0<1}，从 $0$ 出发走。\texttt{after=nxt[0]=-1}，\texttt{nxt[0]=1}。
+\begin{center}
+\small
+\begin{tabular}{lllll}
+\toprule
+当前 $x$ & 用掉的弧 & 新结点 $k$ & \texttt{node} & \texttt{nxt} \\
+\midrule
+$0$ & $0\to1$（\texttt{cur[0]=1}） & $1$ & \texttt{[0,1]} & \texttt{[1,2]} \\
+$1$ & $1\to2$（\texttt{cur[1]=1}） & $2$ & \texttt{[0,1,2]} & \texttt{[1,2,3]} \\
+$2$ & $2\to0$（\texttt{cur[2]=1}） & $3$ & \texttt{[0,1,2,0]} & \texttt{[1,2,3,4]} \\
+$0$ & 走不动（\texttt{cur[0]=1=len(adj[0])}） & & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+\texttt{nxt[3]=after=-1}，\texttt{nxt=[1,2,3,-1]}。回到了 $w=0$。现在环游是 $0\to1\to2\to0$。
+
+\emph{$i=1$，$w=\texttt{node[1]}=1$。}\texttt{cur[1]=1<2}，还有弧 $1\to3$。\texttt{after=nxt[1]=2}（$1$ 后面原来是结点 $2$），\texttt{nxt[1]=4}。
+\begin{center}
+\small
+\begin{tabular}{lllll}
+\toprule
+当前 $x$ & 用掉的弧 & 新结点 $k$ & \texttt{node} & \texttt{nxt} \\
+\midrule
+$1$ & $1\to3$ & $4$ & \texttt{[0,1,2,0,3]} & \texttt{[1,4,3,-1,5]} \\
+$3$ & $3\to4$ & $5$ & \texttt{[\dots,3,4]} & \texttt{[1,4,3,-1,5,6]} \\
+$4$ & $4\to2$ & $6$ & \texttt{[\dots,3,4,2]} & \texttt{[1,4,3,-1,5,6,7]} \\
+$2$ & $2\to1$（\texttt{cur[2]=2}） & $7$ & \texttt{[0,1,2,0,3,4,2,1]} & \texttt{[1,4,3,-1,5,6,7,8]} \\
+$1$ & 走不动 & & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+\texttt{nxt[7]=after=2}，\texttt{nxt=[1,4,3,-1,5,6,7,2]}。新的一段 $1\to3\to4\to2\to1$ 插在结点 $1$ 与结点 $2$ 之间。
+
+\emph{$i=2,\dots,7$。}结点 $2,3,\dots,7$ 上的顶点 $2,0,3,4,2,1$ 都没有剩余的弧，跳过。$i=8>k=7$，结束。$k=7=m$。
+
+\emph{读出。}从结点 $0$ 沿 \texttt{nxt}：$0\,(0)\to1\,(1)\to4\,(3)\to5\,(4)\to6\,(2)\to7\,(1)\to2\,(2)\to3\,(0)$，括号里是 \texttt{node}。环游为
+\[
+0\to1\to3\to4\to2\to1\to2\to0 .
+\]
+七条弧各用一次。
+\end{example}
+
+\begin{theorem}\label{thm:euler-tours:time}
+（讲义定理 2.11）对每个顶点出度等于入度的强连通有向图，\texttt{euler\_tour\_linked} 在 $O(n+m)$ 时间内返回欧拉环游。
+\end{theorem}
+\begin{proof}
+正确性就是第三节的三步：每次走出的一段是闭迹（引理~\ref{lem:euler-tours:stuck}），插入闭迹后仍是闭迹，并且每个顶点处已用的入弧、出弧仍然一样多；最后一句保证所有弧都被用到。时间：每条弧被 \texttt{cur} 跳过恰好一次，创建一个结点；外层 \texttt{while} 检查 $m+1$ 个结点，每次 $O(1)$（加上可能的一次行走，已计入弧的次数）；读出 $O(m)$。合计 $O(n+m)$。
+\end{proof}
+
+讲义定理 2.11 的证明中引用的“当④被执行时”指的是另一种写法的步骤编号，与算法 2.8 对不上；上面的证明不依赖于那种写法。
+
+\topic{五、栈的写法}
+
+同样的思想还有一种更短的写法，也是最常见的写法：用一个栈记录“当前走到哪里”。栈顶有剩余的弧就沿它走一步并进栈；没有就出栈，并把它记到结果的\emph{前面}。
+
+\begin{lstlisting}[language=Python]
+def euler_tour_stack(adj, s):
+    """有向图的欧拉环游（栈的写法）。假定图是欧拉图。"""
+    n = len(adj)
+    cur = [0] * n
+    stack, circuit = [s], []
+    while stack:
+        v = stack[-1]
+        if cur[v] < len(adj[v]):        # 还有没用过的弧：往前走
+            w = adj[v][cur[v]]
+            cur[v] += 1
+            stack.append(w)
+        else:                           # 走不动：退回，并把 v 记下
+            stack.pop()
+            circuit.append(v)
+    return circuit[::-1]                # 记下的顺序倒过来就是环游
+\end{lstlisting}
+
+\begin{example}
+同一个图，从 $0$ 出发：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+栈顶 & 动作 & 之后的栈；已记下的 \texttt{circuit} \\
+\midrule
+$0$ & 走 $0\to1$ & \texttt{[0,1]}；\texttt{[]} \\
+$1$ & 走 $1\to2$ & \texttt{[0,1,2]} \\
+$2$ & 走 $2\to0$ & \texttt{[0,1,2,0]} \\
+$0$ & 走不动，出栈 & \texttt{[0,1,2]}；\texttt{[0]} \\
+$2$ & 走 $2\to1$ & \texttt{[0,1,2,1]} \\
+$1$ & 走 $1\to3$ & \texttt{[0,1,2,1,3]} \\
+$3$ & 走 $3\to4$ & \texttt{[0,1,2,1,3,4]} \\
+$4$ & 走 $4\to2$ & \texttt{[0,1,2,1,3,4,2]} \\
+$2$ & 走不动，出栈 & \texttt{[0,1,2,1,3,4]}；\texttt{[0,2]} \\
+$4,3,1,2,1,0$ & 依次走不动，出栈 & \texttt{[]}；\texttt{[0,2,4,3,1,2,1,0]} \\
+\bottomrule
+\end{tabular}
+\end{center}
+倒过来：$0\to1\to2\to1\to3\to4\to2\to0$。与链表版的结果不同，但也是欧拉环游（欧拉环游一般不唯一）。
+
+为什么倒过来就对：栈中自底向上始终是一条从 $s$ 出发的迹；一个顶点出栈时它已没有剩余的弧，所以它在最后的环游中“之后”的部分已经全部确定，它前面的部分要等栈中它下面的顶点决定。第 $4$ 行 $0$ 出栈，相当于链表版中第一圈 $0\to1\to2\to0$ 走完；接着栈顶 $2$ 还有弧，从 $2$ 再走一圈 $2\to1\to3\to4\to2$，这一圈就插在 $2$ 这个位置上。
+\end{example}
+
+\topic{六、无向图：给边打标记}
+
+无向图中，边 $uv$ 同时出现在 \texttt{adj[u]} 和 \texttt{adj[v]} 中。从 $u$ 走过 $uv$ 之后，$v$ 那一边也必须知道这条边已经用过，否则会走回头。讲义用邻接多重表（每条边只存一个结点，加一个 \texttt{flag} 域，讲义算法 2.8.2）来解决。更简单的做法是给每条边一个编号 $k$，邻接表里存 \texttt{(邻点,k)}，再用一个数组 \texttt{used[k]} 标记；两个端点的表里存的是同一个编号，标记一次两边都知道。这与多重表的 \texttt{flag} 作用完全相同。
+
+\begin{lstlisting}[language=Python]
+def euler_tour_undirected(n, edges, s):
+    """无向图的欧拉环游。edges = [(u, v), ...]；假定是连通的欧拉图。"""
+    adj = [[] for _ in range(n)]
+    for k, (u, v) in enumerate(edges):
+        adj[u].append((v, k))
+        adj[v].append((u, k))
+    used = [False] * len(edges)
+    cur = [0] * n
+    stack, circuit = [s], []
+    while stack:
+        v = stack[-1]
+        while cur[v] < len(adj[v]) and used[adj[v][cur[v]][1]]:
+            cur[v] += 1                 # 跳过已经从另一端走过的边
+        if cur[v] < len(adj[v]):
+            w, k = adj[v][cur[v]]
+            cur[v] += 1
+            used[k] = True
+            stack.append(w)
+        else:
+            stack.pop()
+            circuit.append(v)
+    return circuit[::-1]
+\end{lstlisting}
+
+每条边在两个端点处各被 \texttt{cur} 跳过一次，仍是 $O(n+m)$。
+
+\begin{example}
+“蝴蝶结”：\texttt{B\_edges=[(0,1),(1,2),(2,0),(2,3),(3,4),(4,2)]}，邻接表 \texttt{adj=[[(1,0),(2,2)],[(0,0),(2,1)],[(1,1),(0,2),(3,3),(4,5)],[(2,3),(4,4)],[(3,4),(2,5)]]}。从 $0$ 出发：走边 $0$ 到 $1$，走边 $1$ 到 $2$，走边 $2$ 到 $0$；$0$ 的表中 \texttt{(1,0)}、\texttt{(2,2)} 都已用过，出栈；栈顶 $2$：表中 \texttt{(1,1)}、\texttt{(0,2)} 已用过（被跳过），走边 $3$ 到 $3$，走边 $4$ 到 $4$，走边 $5$ 到 $2$；之后 $2,4,3,2,1,0$ 依次出栈。得到环游 $0\,1\,2\,3\,4\,2\,0$。
+\end{example}
+
+\topic{小结}
+
+\begin{itemize}
+\item 欧拉图的条件是局部的（度数），因为“走不动时一定回到起点”（引理~\ref{lem:euler-tours:stuck}）。
+\item 线性算法的关键：用链表 $O(1)$ 地把新走出的闭迹插进旧的环游；或者等价地，用栈，出栈的顺序倒过来就是环游。
+\item 无向图给每条边一个编号，在两个端点共用一个“已用”标记。
+\end{itemize}
+
+\homework{欧拉环游的练习}[欧拉环游]
+
+\exercisepart{练习}
+
+\begin{exercises}{A}{欧拉环游}
+\item\label{ex:euler-tours:A1} 证明：连通无向图有一条经过每条边恰好一次的（不必闭合的）迹，当且仅当奇度顶点的个数为 $0$ 或 $2$；为 $2$ 时迹的两端就是这两个奇度顶点。写出求这条迹的程序。
+\begin{solution}
+必要性：迹的内部顶点每次经过用掉两条边，只有两端可能用掉奇数条。充分性：若有两个奇度顶点 $a,b$，加一条新边 $ab$（允许与已有的边平行），所有度数变为偶数，由定理~\ref{thm:euler-tours:undirected} 有欧拉环游；在环游中把新边断开，剩下的是从 $a$ 到 $b$（或从 $b$ 到 $a$）的迹。
+
+程序中要知道新边在环游的哪个位置，所以让栈里同时记住“沿哪条边走到这个顶点”：
+\begin{lstlisting}[language=Python]
+def euler_tour_with_edges(n, edges, s):
+    """返回 (顶点序列, 边编号序列)：第 i 条边连接第 i 与第 i+1 个顶点。"""
+    adj = [[] for _ in range(n)]
+    for k, (u, v) in enumerate(edges):
+        adj[u].append((v, k)); adj[v].append((u, k))
+    used, cur = [False] * len(edges), [0] * n
+    stack, verts, eids = [(s, -1)], [], []     # (顶点, 走到它所用的边)
+    while stack:
+        v, k_in = stack[-1]
+        while cur[v] < len(adj[v]) and used[adj[v][cur[v]][1]]:
+            cur[v] += 1
+        if cur[v] < len(adj[v]):
+            w, k = adj[v][cur[v]]
+            cur[v] += 1; used[k] = True
+            stack.append((w, k))
+        else:
+            stack.pop()
+            verts.append(v)
+            if k_in != -1:
+                eids.append(k_in)
+    return verts[::-1], eids[::-1]
+
+def euler_trail_undirected(n, edges):
+    deg = [0] * n
+    for u, v in edges:
+        deg[u] += 1; deg[v] += 1
+    odd = [v for v in range(n) if deg[v] % 2 == 1]
+    if not odd:
+        return euler_tour_with_edges(n, edges, edges[0][0])[0]
+    a, b = odd
+    t, e = euler_tour_with_edges(n, edges + [(a, b)], a)
+    i = e.index(len(edges))          # 新边是第 i 步：t[i] -- t[i+1]
+    return t[i + 1:] + t[1:i + 1]    # 从新边之后走到新边之前
+\end{lstlisting}
+最后一行：环游 $t_0t_1\dots t_M$（$t_M=t_0$）中第 $i$ 步是新边，断开后从 $t_{i+1}$ 出发走到 $t_M=t_0$，再接着走 $t_1,\dots,t_i$，这正是去掉新边后的迹。
+\end{solution}
+
+\item\label{ex:euler-tours:A2} （de Bruijn 序列）设 $k\geqslant1$。以所有长为 $k-1$ 的 $0$-$1$ 串为顶点，对每个长为 $k$ 的串 $a_1\dots a_k$ 连一条弧 $a_1\dots a_{k-1}\to a_2\dots a_k$。证明这个有向图有欧拉环游，并由此得到一个长为 $2^k$ 的环形 $0$-$1$ 序列，使所有 $2^k$ 个长为 $k$ 的串都恰好作为连续子串出现一次。
+\begin{solution}
+每个顶点 $x=a_1\dots a_{k-1}$ 有两条出弧（末尾加 $0$ 或 $1$）、两条入弧（开头加 $0$ 或 $1$），出度等于入度。强连通：从 $x$ 出发，依次在末尾加上 $y$ 的各位，$k-1$ 步走到任意 $y$。由定理~\ref{thm:euler-tours:directed} 有欧拉环游，共 $2^k$ 条弧。把环游中每条弧 $a_1\dots a_k$ 的最后一位依次写下，得到环形序列；相邻的 $k$ 位恰是一条弧的标签，每条弧用一次，所以每个长为 $k$ 的串恰出现一次。
+\begin{lstlisting}[language=Python]
+def de_bruijn(k):
+    if k == 1:
+        return [0, 1]
+    n = 2 ** (k - 1)                         # 顶点：k-1 位二进制数 0..n-1
+    adj = [[(2 * x) % n, (2 * x + 1) % n] for x in range(n)]  # 末尾加 0 或 1
+    tour = euler_tour_stack(adj, 0)          # 2^k + 1 个顶点
+    return [v % 2 for v in tour[1:]]         # 每一步到达的顶点的最后一位
+\end{lstlisting}
+\texttt{de\_bruijn(3)} 给出 \texttt{[0,1,0,1,1,1,0,0]}。环形地读（读到末尾再接回开头），从第 $1,2,\dots,8$ 位开始的长为 $3$ 的子串依次是 $010,101,011,111,110,100,000,001$，$8$ 个串各出现一次。
+\end{solution}
+
+\item\label{ex:euler-tours:A3} 证明：每个连通图（不必是欧拉图）都有一条闭途径，它经过每条边恰好两次。
+\begin{solution}
+把每条边换成两条平行边，得到的多重图中每个度数都是偶数（原来的两倍），并且连通，由定理~\ref{thm:euler-tours:undirected}（对多重图证明完全相同）有欧拉环游，它在原图中就是经过每条边恰好两次的闭途径。也可以直接看出：从任一顶点做 DFS，每条树边进去一次、出来一次，每条非树边来回各一次。
+\end{solution}
+\end{exercises}

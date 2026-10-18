@@ -1,0 +1,129 @@
+% !TEX root = ../graph-theory.tex
+% =====================================================================
+%  填装：Erdős–Pósa，Corrádi–Hajnal 的两个步骤
+% =====================================================================
+\lecture{圈的填装与覆盖：极大填装给出平凡的覆盖，立方多重图中的不交圈，Erdős--Pósa 定理，Corrádi--Hajnal 定理的两个步骤，Bermond--Thomassen 猜想的紧性}
+\label{lec:packing}
+
+给定一类子图（这里是圈），$\nu$ 是两两点不交的成员的最大个数，$\tau$ 是与所有成员都相交的顶点集的最小大小。总有 $\nu\leqslant\tau$。这一讲的问题是：反方向能否有只依赖于 $\nu$ 的界。方法上有两个要点：取一个极大的结构（极大填装、极大的子图），说明它外面的对象都被少数顶点控制；把 $2$ 度点压缩掉，化成立方多重图，那里顶点多就一定有很多不交圈。
+
+\topic{方法：极大结构与压缩}
+
+\begin{enumerate}
+\item \emph{平凡界：}取一个极大的不交族 $\mathcal F$，它的全部顶点与每个成员都相交。若成员至多有 $h$ 个顶点，则 $\tau\leqslant h\nu$。对圈这类大小没有上界的对象，这个界失效，需要更细的结构。
+\item \emph{极大子图：}取 $G$ 的一个极大子图 $H$，使每个顶点在 $H$ 中的度数为 $2$ 或 $3$。$H$ 的极大性说明 $H$ 外的圈都“挂”在 $H$ 上，并且不能连接 $H$ 的两个 $2$ 度点。
+\item \emph{压缩：}删去 $H$ 中的 $2$-正则分支，把其余分支中的 $2$ 度点压缩掉，得到以 $3$ 度点为顶点的立方多重图（可能有环和重边）。立方多重图中不交的圈对应 $H$ 中不交的圈。
+\item \emph{最短圈：}在立方多重图中取最短圈 $C$，它很短（$\leqslant2\log_2\abs H$，第~\ref{lec:distance-layers} 讲定理~\ref{thm:distance-layers:girth}），删去它损失的顶点少。
+\end{enumerate}
+
+对 $k\in\N$，令（对数以 $2$ 为底）
+\[
+r_k=\log k+\log\log k+4,\qquad s_k=\begin{cases}4kr_k,&k\geqslant2,\\1,&k\leqslant1.\end{cases}
+\]
+
+\begin{lemma}\label{lem:packing:cubic}
+（讲义引理 2.1）设 $H$ 是立方多重图，$\abs H\geqslant s_k$。则 $H$ 含有 $k$ 个点不交的圈。
+\end{lemma}
+\begin{proof}
+对 $k$ 归纳。$k=0$ 显然；$k=1$ 时 $H$ 非空，最小度为 $3$，有圈。设 $k\geqslant2$，$C$ 是 $H$ 的最短圈。
+
+\emph{第一步：$H-C$ 含有某个立方多重图 $H'$ 的细分，$\abs{H'}\geqslant\abs H-2\abs C$。}$C$ 上每个顶点的度数 $3$ 中有 $2$ 用在 $C$ 上（$C$ 是环时，环本身贡献 $2$），至多剩一条边，所以 $C$ 与 $H-C$ 之间的边数 $m\leqslant\abs C$。令 $V_1=V(C)$，$V_2=V(H)\setminus V_1$。只要 $H[V_2]$ 中有度数 $\leqslant1$ 的顶点，就把它移到 $V_1$；这个顶点至少有 $2$ 条边连到 $V_1$、至多 $1$ 条连到 $V_2$，移动后跨越两部分的边数至少减少 $1$。设共移动了 $n'$ 次后停止，此时跨越的边至多 $m-n'$ 条。$H[V_2]$ 中每个顶点度数为 $2$ 或 $3$（不能再移动），度数为 $2$ 的顶点关联一条跨越的边，所以至多 $m-n'$ 个。删去 $H[V_2]$ 的 $2$-正则分支（它们只由 $2$ 度点组成），压缩其余分支的 $2$ 度点，得到立方多重图 $H'$，$H[V_2]$ 含有 $H'$ 的细分，并且
+\[
+\abs{H'}\geqslant\abs{V_2}-(m-n')=\abs H-\abs C-n'-(m-n')\geqslant\abs H-2\abs C .
+\]
+
+\emph{第二步：$\abs{H'}\geqslant s_{k-1}$。}若 $H$ 不是简单图，$\abs C\leqslant2$；若是简单图，由定理~\ref{thm:distance-layers:girth}，$\abs C<2\log\abs H$。又 $\abs H\geqslant s_k\geqslant s_2=40$，两种情形都有 $\abs C\leqslant2\log\abs H$。函数 $x\mapsto x-4\log x$ 在 $x\geqslant6$ 时递增（导数 $1-\frac4{x\ln2}>0$），所以
+\[
+\abs{H'}\geqslant\abs H-4\log\abs H\geqslant s_k-4\log s_k .
+\]
+$k=2$：$s_2-4\log s_2=40-4\log40>18>1=s_1$。$k\geqslant3$：先验证 $r_k\leqslant4\log k$，即 $\log\log k+4\leqslant3\log k$。$k=3$ 时 $\log\log3+4\approx4.66$，$3\log3\approx4.75$；$k\geqslant4$ 时 $3\log k-\log\log k$ 递增，且 $k=4$ 时为 $5$。于是 $\log r_k\leqslant2+\log\log k$。又 $r_{k-1}\leqslant r_k$，所以
+\[
+\begin{aligned}
+s_k-4\log s_k-s_{k-1}&\geqslant4kr_k-4\log(4kr_k)-4(k-1)r_k=4r_k-8-4\log k-4\log r_k\\
+&=4\log\log k+8-4\log r_k\geqslant4\log\log k+8-4(2+\log\log k)=0 .
+\end{aligned}
+\]
+
+\emph{第三步。}由归纳假设，$H'$ 有 $k-1$ 个不交的圈，它们对应 $H-C$ 中 $k-1$ 个不交的圈，再加上 $C$。
+\end{proof}
+
+\begin{theorem}[Erdős--Pósa]\label{thm:packing:erdos-posa}
+（讲义定理 2.11）对每个 $k\in\N$ 和每个图 $G$，$G$ 或者含有 $k$ 个点不交的圈，或者有至多 $f(k)=\lfloor s_k+k-1\rfloor$ 个顶点的集合与所有圈相交。
+\end{theorem}
+\begin{proof}
+设 $G$ 有圈（否则取空集）。取 $G$ 的极大子图 $H$，使 $H$ 中每个顶点的度数为 $2$ 或 $3$（一个圈就是这样的子图，所以 $H$ 非空）。记 $U$ 为 $H$ 中 $3$ 度点的集合。称两端在 $H$ 中、内部顶点和边都在 $H$ 外的路为 $H$-路。由 $H$ 的极大性：
+\begin{enumerate}
+\item[(a)] 没有 $H$-路连接 $H$ 的两个不同的 $2$ 度点（加上它，两端变成 $3$ 度，内部顶点为 $2$ 度）；
+\item[(b)] 没有与 $H$ 不交的圈（加上它）。
+\end{enumerate}
+
+令 $\mathcal C$ 为 $G$ 中与 $U$ 不交、与 $H$ 恰好交于一个顶点的圈的集合，$Z$ 为这些交点的集合。对每个 $z\in Z$ 取一个 $C_z\in\mathcal C$。不同的 $C_z,C_{z'}$ 不相交：否则 $C_z\cup C_{z'}$ 中有一条连接 $z,z'$ 的 $H$-路（$C_z$ 与 $H$ 只交于 $z$，$C_{z'}$ 只交于 $z'$），与 (a) 矛盾。令 $\mathcal D$ 为 $H$ 中与 $Z$ 不交的 $2$-正则分支的集合。$\{C_z\}\cup\mathcal D$ 是两两不交的圈族。
+
+若这个族至少有 $k$ 个圈，证明完毕。否则，令 $X$ 为 $Z$ 加上 $\mathcal D$ 中每个圈上的一个顶点，$\abs X\leqslant k-1$。$X$ 与 $\mathcal C$ 中每个圈相交，也与 $H$ 的每个 $2$-正则分支相交。
+
+\emph{断言：与 $X$ 不交的圈 $C$ 一定与 $U$ 相交。}设 $C$ 与 $X\cup U$ 都不交。由 (b)，$C$ 与 $H$ 相交。$C$ 不是 $H$ 的 $2$-正则分支，也不在 $\mathcal C$ 中，所以 $C$ 不在 $H$ 内，并且与 $H$ 至少交于两个顶点。于是 $C$ 含有一条 $H$-路，两端是 $H$ 中不同的顶点；它们不在 $U$ 中，是 $2$ 度点，与 (a) 矛盾。
+
+所以 $X\cup U$ 与所有圈相交。若 $\abs U\geqslant s_k$：删去 $H$ 的 $2$-正则分支并压缩 $2$ 度点，得到以 $U$ 为顶点集的立方多重图（$H$ 的分支若没有 $3$ 度点就是 $2$-正则的），由引理~\ref{lem:packing:cubic} 它有 $k$ 个不交圈，对应 $H$ 中 $k$ 个不交圈。否则 $\abs U<s_k$，$\abs{X\cup U}\leqslant k-1+\lfloor s_k\rfloor=f(k)$。
+\end{proof}
+
+\topic{方法：极值的圈族}
+
+Corrádi--Hajnal 定理（讲义定理 2.12）：若 $\abs G\geqslant3k$，$\delta(G)\geqslant2k$，则 $G$ 有 $k$ 个点不交的圈。讲义没有证明它。讲义习题 2.24、2.25 是标准证明的前两步：取一个极大的不交圈族，数剩下的顶点向圈族伸出的边；再取总长度最小的圈族，用“替换一段弧”缩短圈。完整的证明还要做相当多的情形分析，见 Corrádi 与 Hajnal 的原文。
+
+\begin{workedexample}\label{we:packing:ch-step1}
+（讲义习题 2.24）设 $k\geqslant1$，$\abs G\geqslant3k$，$\delta(G)\geqslant2k$。设 $C_1,\dots,C_r$ 是 $G$ 中一个极大的点不交圈族，$r<k$，令 $R=G-\bigcup_iV(C_i)$，并设 $R\neq\varnothing$。证明 $R$ 是森林，并且 $e\bigl(R,\bigcup_iC_i\bigr)\geqslant(2k-2)\abs R+2$。由此推出有某个 $i$ 和 $x\in V(R)$，使 $x$ 在 $C_i$ 上至少有三个邻点。
+\end{workedexample}
+\begin{solution}
+$R$ 中的圈与 $C_1,\dots,C_r$ 都不交，可以加入族中，与极大性矛盾，所以 $R$ 是森林，$e(R)\leqslant\abs R-1$。于是
+\[
+e\Bigl(R,\bigcup_iC_i\Bigr)=\sum_{x\in R}d(x)-2e(R)\geqslant2k\abs R-2(\abs R-1)=(2k-2)\abs R+2 .
+\]
+若每个 $x\in R$ 在每个 $C_i$ 上至多有两个邻点，则左边至多为 $2r\abs R\leqslant2(k-1)\abs R$，矛盾。
+\end{solution}
+
+\begin{workedexample}\label{we:packing:ch-step2}
+（讲义习题 2.25）在上一题的条件下，设 $x$ 在 $C_i$ 上的两个邻点为 $u,v$。若 $C_i$ 的一段 $(u,v)$-弧的长度至少为 $3$，证明用路 $uxv$ 替换这一段可以得到更短的圈。若在所有含 $r$ 个点不交圈的圈族中选取总长度最小的一族，说明这种替换为什么与极值选择矛盾。注意仅有上一题的极大性并不排除这种缩短。
+\end{workedexample}
+\begin{solution}
+设被替换的弧 $A$ 长 $a\geqslant3$，$C_i$ 的另一段弧长 $\abs{C_i}-a$。新圈由另一段弧与 $u\,x\,v$ 组成（$x\notin C_i$，所以它确实是圈），长度为 $\abs{C_i}-a+2<\abs{C_i}$。$x\in R$ 与其他 $C_j$ 不交，所以把 $C_i$ 换成新圈，仍得到 $r$ 个不交的圈，总长度严格减少。若原来的族是总长度最小的，这不可能。
+
+所以在总长度最小的族中，若 $x$ 在 $C_i$ 上有三个邻点，它们把 $C_i$ 分成的三段弧长度都至多为 $2$，$\abs{C_i}\leqslant6$。极大性本身不排除缩短：缩短后圈的个数不变，极大族换成另一个极大族，例如 $C_i$ 很长而 $x$ 与它相邻的两点之间的弧很长时，族是极大的，但不是总长度最小的。这一步是后续情形分析的起点：短的圈上有很多顶点被 $R$ 中的点“看到”，可以重新组合出更多的圈。
+\end{solution}
+
+\begin{remark}[Bermond--Thomassen 猜想的紧性]
+猜想（讲义猜想 2.1）说 $\delta^+(D)\geqslant2k-1$ 的有向图有 $k$ 个点不交的有向圈。$2k-1$ 个顶点上的完全有向图（每对顶点之间两个方向的弧都有）满足 $\delta^+=2k-2$；每个有向圈至少有两个顶点，$k$ 个不交的圈至少需要 $2k$ 个顶点。所以阈值 $2k-1$ 不能降低。
+\end{remark}
+
+\topic{小结}
+
+\begin{itemize}
+\item 平凡界 $\tau\leqslant h\nu$ 来自极大填装；对圈要用极大的 $\{2,3\}$-度子图。
+\item 极大子图外面的圈只能“挂在”$2$ 度点上，被少数顶点控制；里面的圈靠立方多重图的引理找到。
+\item 极大族与总长度最小的族是两种不同的极值选择，后者更强（\wegref{we:packing:ch-step2}）。
+\end{itemize}
+
+\homework{填装与覆盖的练习}[填装与覆盖]
+
+\exercisepart{练习}
+
+\begin{exercises}{A}{填装与覆盖}
+\item\label{ex:packing:A1} 证明 $\beta(G)\leqslant2\nu(G)$，并说明等号可以成立。
+\begin{solution}
+取最大匹配 $M$，它是极大的，所以每条边都与 $M$ 的某条边有公共端点，$M$ 的全部 $2\nu$ 个端点构成覆盖。等号：$K_{2t+1}$ 中 $\nu=t$，任意 $2t-1$ 个顶点之外还剩两个顶点，它们之间的边没有被覆盖，所以 $\beta=2t$。
+\end{solution}
+
+\item\label{ex:packing:A2} 设 $\nu_3(G)$ 是两两点不交的三角形的最大个数，$\tau_3(G)$ 是与所有三角形都相交的顶点集的最小大小。证明 $\tau_3\leqslant3\nu_3$，并找一个 $\tau_3=3\nu_3$ 的图。
+\begin{solution}
+取极大的不交三角形族，它的 $3\nu_3$ 个顶点与每个三角形都相交（否则可以加入族中）。$K_5$：任何两个三角形都相交（共 $6$ 个顶点），$\nu_3=1$；删去两个顶点剩下 $K_3$，所以 $\tau_3=3$。
+\end{solution}
+
+\item\label{ex:packing:A3} 证明 Corrádi--Hajnal 定理中的 $\delta(G)\geqslant2k$ 不能改成 $\delta(G)\geqslant2k-1$。
+\begin{solution}
+取 $G=K_{2k-1,N}$，$N\geqslant2k-1$，则 $\delta(G)=2k-1$，$\abs G\geqslant3k$。二部图的圈在两部之间交替，每个圈至少用到小的一侧的两个顶点，所以不交的圈至多有 $\lfloor(2k-1)/2\rfloor=k-1$ 个。
+\end{solution}
+
+\item\label{ex:packing:A4} 设 $H$ 是每个顶点度数为 $2$ 或 $3$ 的图，$U$ 是 $3$ 度点的集合。证明 $\abs U$ 是偶数，并且 $H$ 的每个不是 $2$-正则的分支至少含两个 $3$ 度点。说明为什么压缩 $2$ 度点后得到的立方多重图可以有环，但不会出现“只有一个顶点而没有边”的分支。
+\begin{solution}
+由握手定理，每个分支中度数之和为偶数，$2$ 度点贡献偶数，所以每个分支中 $3$ 度点的个数是偶数；不是 $2$-正则的分支至少有一个，从而至少有两个。压缩时，连接两个 $3$ 度点（或同一个 $3$ 度点自己）的、内部全是 $2$ 度点的路变成一条边；若路的两端是同一个顶点就是环。每个 $3$ 度点在压缩后仍有度数 $3$，所以不会出现孤立点。
+\end{solution}
+\end{exercises}

@@ -1,0 +1,93 @@
+% !TEX root = ../graph-theory.tex
+% =====================================================================
+%  度条件下的划分：Lovász，Stiebitz 的延拓引理，有向图的划分
+% =====================================================================
+\lecture{度条件下的划分：Lovász 最大度划分定理，Stiebitz 定理的延拓引理与多部分形式，有向图的 $(\delta^+\geqslant1,\delta^+\geqslant1)$-划分，路划分猜想}
+\label{lec:partitions}
+
+把顶点集分成两部分，使每部分的导出子图满足度数条件。上界条件（每部分最大度小）用局部调整：取使某个加权的“内部边数”最小的划分，任何一个顶点都不愿意换边。下界条件（每部分最小度大）难得多：Stiebitz 定理的困难全在于找到两个不交的、各自最小度够大的集合；一旦找到，用一个简单的延拓引理就能扩成划分。
+
+\topic{方法：加权的局部调整}
+
+要让 $A$ 中每个顶点在 $A$ 内的邻点不超过 $s$、$B$ 中的不超过 $t$，就最小化 $\Phi(A,B)=(t+1)e(A)+(s+1)e(B)$。权 $t+1$ 与 $s+1$ 的选择是为了让“把违反条件的顶点移走”严格减小 $\Phi$。这是第~\ref{lec:longest-paths} 讲最大割（$s=t$ 时）的推广。
+
+\begin{theorem}[Lovász]\label{thm:partitions:lovasz}
+（讲义 2.5 节）设 $s,t\geqslant0$，$\Delta(G)\leqslant s+t+1$。则 $V(G)$ 可以划分成 $A\cup B$，使 $\Delta(G[A])\leqslant s$，$\Delta(G[B])\leqslant t$。
+\end{theorem}
+\begin{proof}
+取使 $\Phi(A,B)=(t+1)e(A)+(s+1)e(B)$ 最小的划分。设 $v\in A$ 且 $d_A(v)\geqslant s+1$。则 $d_B(v)\leqslant\Delta-d_A(v)\leqslant t$。把 $v$ 移到 $B$，$\Phi$ 的改变量为
+\[
+-(t+1)d_A(v)+(s+1)d_B(v)\leqslant-(t+1)(s+1)+(s+1)t=-(s+1)<0,
+\]
+与最小性矛盾。$v\in B$ 且 $d_B(v)\geqslant t+1$ 的情形对称。
+\end{proof}
+
+\topic{方法：先找一对不交的好集合，再延拓}
+
+\begin{lemma}[延拓引理]\label{lem:partitions:extend}
+设 $\delta(G)\geqslant s+t+1$，$A,B$ 是不交的非空顶点集，$\delta(G[A])\geqslant s$，$\delta(G[B])\geqslant t$。则有划分 $V=A'\cup B'$，$A\subseteq A'$，$B\subseteq B'$，$\delta(G[A'])\geqslant s$，$\delta(G[B'])\geqslant t$。
+\end{lemma}
+\begin{proof}
+在所有满足条件的不交对 $(A,B)$ 中取 $\abs A+\abs B$ 最大的一对。设 $W=V\setminus(A\cup B)\neq\varnothing$。若 $\delta(G[A\cup W])\geqslant s$，$(A\cup W,B)$ 是更大的对，矛盾。所以 $G[A\cup W]$ 中有顶点 $w$ 的度数 $\leqslant s-1$；$A$ 中顶点在 $A$ 内已有 $s$ 个邻点，所以 $w\in W$。于是 $d_B(w)\geqslant d(w)-(s-1)\geqslant t+2$，$(A,B\cup\{w\})$ 仍满足条件（$B$ 中顶点的度数不减），是更大的对，矛盾。所以 $W=\varnothing$。
+\end{proof}
+
+\begin{theorem}[Stiebitz]\label{thm:partitions:stiebitz}
+（讲义定理 2.13）设 $s,t\geqslant1$，$\delta(G)\geqslant s+t+1$。则 $V(G)$ 可以划分成非空的 $V_1\cup V_2$，使 $\delta(G[V_1])\geqslant s$，$\delta(G[V_2])\geqslant t$。
+\end{theorem}
+
+讲义没有给出证明。由延拓引理，只需找到不交的非空 $A,B$ 使 $\delta(G[A])\geqslant s$，$\delta(G[B])\geqslant t$；Stiebitz 用退化性与一个极值权函数做到了这一点，见他的原文。下面的多部分形式只用定理本身。
+
+\begin{workedexample}\label{we:partitions:many-parts}
+（讲义 2.5 节）设 $r_1,\dots,r_m$ 是正整数，$\delta(G)\geqslant\sum_{i=1}^mr_i+(m-1)$。证明 $V(G)$ 可以划分成 $V_1\cup\dots\cup V_m$，使 $\delta(G[V_i])\geqslant r_i$。
+\end{workedexample}
+\begin{solution}
+对 $m$ 归纳，$m=1$ 平凡。$m\geqslant2$ 时，令 $s=r_1$，$t=\sum_{i\geqslant2}r_i+(m-2)\geqslant1$，则 $\delta(G)\geqslant s+t+1$。由 Stiebitz 定理，有划分 $V_1\cup V'$，$\delta(G[V_1])\geqslant r_1$，$\delta(G[V'])\geqslant t=\sum_{i=2}^mr_i+\bigl((m-1)-1\bigr)$。对 $G[V']$ 和 $r_2,\dots,r_m$ 用归纳假设。每增加一个部分，度数条件多付出 $1$。
+\end{solution}
+
+\begin{workedexample}\label{we:partitions:digraph}
+（讲义习题 2.26）设 $D$ 是有向图，$\delta^+(D)\geqslant2$。证明 $D$ 有 $(\delta^+\geqslant1,\delta^+\geqslant1)$-划分，当且仅当 $D$ 含有两个顶点不交的有向圈。
+\end{workedexample}
+\begin{solution}
+必要性：$\delta^+(D[V_i])\geqslant1$，由第~\ref{lec:longest-paths} 讲\wegref{we:longest-paths:digraph-cycle}，每个 $D[V_i]$ 有有向圈，两个圈不交。
+
+充分性：这是延拓引理的有向版本。设 $C_1,C_2$ 是不交的有向圈，$A=V(C_1)$，$B=V(C_2)$ 满足 $\delta^+(D[A])\geqslant1$，$\delta^+(D[B])\geqslant1$。在满足这两个条件的不交对中取 $\abs A+\abs B$ 最大的。设 $W=V\setminus(A\cup B)\neq\varnothing$。若 $\delta^+(D[A\cup W])\geqslant1$，$(A\cup W,B)$ 更大。否则有 $w\in W$ 在 $A\cup W$ 中没有出邻点（$A$ 中的顶点在 $A$ 中已有出邻点），$w$ 的出邻点都在 $B$ 中，于是 $(A,B\cup\{w\})$ 更大。矛盾，所以 $W=\varnothing$。
+
+这里只用到了 $\delta^+(D)\geqslant1$；题中的 $\delta^+\geqslant2$ 是为了与 Thomassen 定理 $F(1,1)=3$ 的语境一致。
+\end{solution}
+
+\begin{remark}[路划分猜想]
+讲义猜想 2.3：若 $D$ 的最长有向路有 $\ell_1+\ell_2$ 个顶点，则 $V(D)$ 可以分成 $V_1,V_2$，使 $D[V_i]$ 的最长路至多有 $\ell_i$ 个顶点。$\ell_1=1$ 时 $V_1$ 是独立集，猜想说存在一个独立集，删去它之后最长路严格缩短。它与度划分的区别在于：度条件是局部的，可以一个顶点一个顶点地调整；最长路是全局的，移动一个顶点可能同时影响很多条路，上面的局部调整论证不再适用。
+\end{remark}
+
+\topic{小结}
+
+\begin{itemize}
+\item 上界条件：最小化 $(t+1)e(A)+(s+1)e(B)$，局部调整（定理~\ref{thm:partitions:lovasz}）。
+\item 下界条件：难点在于找到一对不交的好集合；找到之后，延拓引理（引理~\ref{lem:partitions:extend}）是一个“把剩下的顶点倒进某一边”的简单极值论证，有向图同样适用（\wegref{we:partitions:digraph}）。
+\end{itemize}
+
+\homework{划分的练习}[划分]
+
+\exercisepart{练习}
+
+\begin{exercises}{A}{度条件下的划分}
+\item\label{ex:partitions:A1} 不引用 Stiebitz 定理，证明它在 $s=t=1$ 时成立：若 $\delta(G)\geqslant3$，则 $V(G)$ 可以分成两个非空部分，每部分的导出子图没有孤立点。
+\begin{solution}
+$\delta\geqslant3$ 时 $\abs G\geqslant4$，由第~\ref{lec:augmenting-paths} 讲\wegref{we:augmenting-paths:lower-bound}（$k=2$），$G$ 有两条不相邻的边 $a_1a_2$、$b_1b_2$。$A=\{a_1,a_2\}$，$B=\{b_1,b_2\}$ 满足 $\delta(G[A])\geqslant1$，$\delta(G[B])\geqslant1$。由延拓引理（$s+t+1=3$）得结论。
+\end{solution}
+
+\item\label{ex:partitions:A2} 承认 Corrádi--Hajnal 定理，证明 Stiebitz 定理在 $s=t=2$ 时成立：若 $\delta(G)\geqslant5$，则 $V(G)$ 可以分成两部分，每部分的导出子图最小度至少为 $2$。
+\begin{solution}
+$\delta\geqslant5$ 时 $\abs G\geqslant6$，由 Corrádi--Hajnal 定理（$k=2$：$\abs G\geqslant6$，$\delta\geqslant4$），$G$ 有两个不交的圈 $C_1,C_2$。$A=V(C_1)$，$B=V(C_2)$ 满足 $\delta(G[A])\geqslant2$，$\delta(G[B])\geqslant2$。由延拓引理（$s+t+1=5$）得结论。
+\end{solution}
+
+\item\label{ex:partitions:A3} 证明：若 $\Delta(G)\leqslant3$，则 $G$ 有独立集 $I$，使 $G-I$ 是若干条路与圈的不交并。由此证明 $\chi(G)\leqslant4$。
+\begin{solution}
+对 $s=0$，$t=2$ 用 Lovász 定理：$\Delta\leqslant3=s+t+1$，有划分 $A\cup B$，$\Delta(G[A])=0$，$\Delta(G[B])\leqslant2$。$I=A$ 是独立集，$G[B]$ 的分支是路或圈。路与圈可以用 $3$ 种颜色正常着色（偶圈和路用 $2$ 种，奇圈用 $3$ 种），$I$ 用第 $4$ 种。
+\end{solution}
+
+\item\label{ex:partitions:A4} 记 $F(1,1)$ 为使“最小出度至少为 $d$ 的有向图都有 $(\delta^+\geqslant1,\delta^+\geqslant1)$-划分”成立的最小 $d$。证明 $F(1,1)\geqslant3$。
+\begin{solution}
+三个顶点上的完全有向图满足 $\delta^+=2$。它的有向圈至少有两个顶点，两个不交的圈至少需要 $4$ 个顶点，所以没有两个不交的圈；由\wegref{we:partitions:digraph}，它没有 $(\delta^+\geqslant1,\delta^+\geqslant1)$-划分。（Thomassen 证明了 $\delta^+\geqslant3$ 足够，所以 $F(1,1)=3$。）
+\end{solution}
+\end{exercises}

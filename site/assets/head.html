@@ -22,7 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // in place of a section that folds out to one item (the CSS hides those).
   document.querySelectorAll("#quarto-sidebar .sidebar-item-section").forEach(sec => {
     const items = sec.querySelectorAll(":scope > ul > li");
-    const hw = items.length === 1 && items[0].querySelector('a[href$="-hw.html"]');
+    // (a course part with a single lecture is a section too; leave it alone)
+    const hw = items.length === 1 && !items[0].classList.contains("sidebar-item-section")
+      && items[0].querySelector('a[href$="-hw.html"]');
     const row = sec.querySelector(":scope > .sidebar-item-container");
     if (!hw || !row) return;
     const a = document.createElement("a");

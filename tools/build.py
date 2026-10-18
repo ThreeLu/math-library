@@ -431,9 +431,16 @@ def compile_latex(src, main):
 
 
 def find_units(src, main):
+    """[(unit, part)]: the \\input files in order, each with the \\coursepart it falls under."""
     text = strip_comments((src / main).read_text(encoding="utf-8"))
     body = text.split(r"\begin{document}", 1)[-1]
-    return [m.group(1) for m in re.finditer(r"\\(?:input|include)\{([^}]+)\}", body)]
+    units, part = [], ""
+    for m in re.finditer(r"\\coursepart\{([^}]+)\}|\\(?:input|include)\{([^}]+)\}", body):
+        if m.group(1) is not None:
+            part = m.group(1)
+        else:
+            units.append((m.group(2), part))
+    return units
 
 
 def run_pandoc(tex, meta):
@@ -485,7 +492,7 @@ def build_book(book, no_latex):
     # ---- collect pages -------------------------------------------------
     pages = []  # dicts: file, kind, tex, unit
     hw_no = 0
-    for unit in find_units(src, main):
+    for unit, part in find_units(src, main):
         path = src / (unit if unit.endswith(".tex") else unit + ".tex")
         if not path.exists():
             continue
@@ -501,14 +508,15 @@ def build_book(book, no_latex):
             continue
         lecture, hw, hw_title = split_homework(raw)
         pages.append({"file": ("front-" if front else "") + uname, "kind": "front" if front else "lecture",
-                      "tex": lecture, "unit": uname})
+                      "tex": lecture, "unit": uname, "part": "" if front else part})
         if hw is not None:
             hw_no += 1
             # the PDF's homework box (title bar and rules) is left out on the web
             word = "作业" if lang == "zh" else "Exercises"
             sep = "：" if lang == "zh" else ": "
             hw_tex = r"\section{" + word + (sep + hw_title if hw_title.strip() else "") + "}\n" + hw
-            pages.append({"file": uname + "-hw", "kind": "homework", "tex": hw_tex, "unit": uname})
+            pages.append({"file": uname + "-hw", "kind": "homework", "tex": hw_tex, "unit": uname,
+                          "part": part})
 
     # BibTeX books: the .bbl is the reference list
     bbl = src / "build" / f"{stem}.bbl"
@@ -530,7 +538,7 @@ def build_book(book, no_latex):
     index_path = out / ".index.jsonl"
     index_path.write_text("", encoding="utf-8")
     thm_offset = sec_offset = 0
-    lecture_no = 0
+    lecture_no, cur_part = 0, None
     for p in pages:
         clean = strip_comments(p["tex"])
         row = progress.get(p["unit"], {})
@@ -539,18 +547,21 @@ def build_book(book, no_latex):
                 "yp-numbering": numbering, "yp-thm-offset": thm_offset,
                 "yp-sec-offset": sec_offset, "yp-pdf": pdf_name if pdf.exists() else "",
                 "yp-index": index_path, "yp-book": slug, "yp-book-title": book["title"]}
+        part_word = (p.get("part") + " · ") if p.get("part") else ""
         if p["kind"] == "lecture":
+            if p.get("part") != cur_part:  # lectures are numbered afresh in each course part
+                cur_part, lecture_no = p.get("part"), 0
             lecture_no += 1
             p["no"] = lecture_no
             if lang == "zh":
-                meta["yp-kicker"] = f"第 {lecture_no} 讲"
+                meta["yp-kicker"] = f"{part_word}第 {lecture_no} 讲"
             lec = labels.get(f"lec:{p['unit']}")
             if lec:
                 meta["yp-pdf-page"] = lec["pdfpage"]
         elif p["kind"] == "homework":
             p["no"] = lecture_no
             if lang == "zh":
-                meta["yp-kicker"] = f"第 {lecture_no} 讲 · 作业"
+                meta["yp-kicker"] = f"{part_word}第 {lecture_no} 讲 · 作业"
             hw = labels.get(f"hw:{p['unit']}")
             if hw:
                 meta["yp-pdf-page"] = hw["pdfpage"]
@@ -664,7 +675,11 @@ def write_book_index(book, pages, out, pdf_name, progress):
         links = " ".join(f'<a href="{p["file"]}.html">{esc(plain_title(p["title"]))}</a>' for p in extra)
         h.append(f'<nav class="yp-front">{links}</nav>')
     h.append('<ol class="yp-toc">')
+    part = None
     for p in lectures:
+        if p.get("part") and p["part"] != part:
+            part = p["part"]
+            h.append(f'<li class="yp-toc-part">{esc(part)}</li>')
         hw = next((q for q in pages if q["kind"] == "homework" and q["unit"] == p["unit"]), None)
         name = p["topic"] or plain_title(p["title"])
         num = p["no"] if zh else re.match(r"\[?(\d+)", plain_title(p["title"]) or "0").group(1)
@@ -708,22 +723,30 @@ def sidebar_for(book, pages):
         contents.append({"section": "前言与导读" if zh else "Front matter",
                          "contents": [{"href": f"{base}/{p['file']}.qmd",
                                        "text": plain_title(p["title"])} for p in front]})
+    groups = {}  # course part -> its sidebar entries; books without parts use the top level
     for p in pages:
         if p["kind"] != "lecture":
             continue
         text = short_label(p, zh)
         hw = [q for q in pages if q["kind"] == "homework" and q["unit"] == p["unit"]]
         if hw:
-            contents.append({"section": text, "href": f"{base}/{p['file']}.qmd",
-                             "contents": [{"href": f"{base}/{hw[0]['file']}.qmd",
-                                           "text": "作业与解答" if zh else "Exercises"}]})
+            item = {"section": text, "href": f"{base}/{p['file']}.qmd",
+                    "contents": [{"href": f"{base}/{hw[0]['file']}.qmd",
+                                  "text": "作业与解答" if zh else "Exercises"}]}
         else:
-            contents.append({"href": f"{base}/{p['file']}.qmd", "text": text})
+            item = {"href": f"{base}/{p['file']}.qmd", "text": text}
+        if p.get("part"):
+            if p["part"] not in groups:
+                groups[p["part"]] = {"section": p["part"], "contents": []}
+                contents.append(groups[p["part"]])
+            groups[p["part"]]["contents"].append(item)
+        else:
+            contents.append(item)
     for p in pages:
         if p["kind"] == "back":
             contents.append({"href": f"{base}/{p['file']}.qmd", "text": plain_title(p["title"])})
     return {"id": book["slug"], "title": book["title"], "style": "floating",
-            "collapse-level": 1, "contents": contents}
+            "collapse-level": 2 if groups else 1, "contents": contents}
 
 
 def write_quarto_yml(lib, sidebars):
@@ -850,6 +873,8 @@ def write_results(lib, results):
             if not es:
                 continue
             label = short_label(p, zh) if p["kind"] != "front" else plain_title(p["title"])
+            if p.get("part"):
+                label = f"{p['part']} · {label}"
             if p["kind"] == "homework":
                 label += "（作业）" if zh else " — exercises"
             md += ['::: {.yp-idx-group}', "", f"### {label} {{.unnumbered .unlisted}}", ""]

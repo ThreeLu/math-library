@@ -1,5 +1,7 @@
 % !TEX program = xelatex
 \documentclass{yupin-notes}
+\usepackage{yp-figures}
+\input{figures/preamble}
 \input{课程设置}
 
 \begin{document}
@@ -7,9 +9,24 @@
 \input{front/guide}
 \tableofcontents
 
-% 图论 · 讲义第 1 章（按方法重新编排）
+\coursepart{图论}
+% 讲义第 1、2 章，按方法重新编排
 \input{lectures/longest-paths}
 \input{lectures/distance-layers}
 \input{lectures/double-counting}
 \input{lectures/orderings}
+\input{lectures/augmenting-paths}
+\input{lectures/hall-condition}
+\input{lectures/tutte-condition}
+\input{lectures/packing}
+\input{lectures/partitions}
+
+\coursepart{组合优化}
+% 讲义第 2、3 章
+\input{lectures/data-structures}
+\input{lectures/graph-storage}
+\input{lectures/traversal}
+\input{lectures/digraph-orders}
+\input{lectures/euler-tours}
+\input{lectures/st-numbering}
 \end{document}

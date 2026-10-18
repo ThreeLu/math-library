@@ -692,6 +692,12 @@ end
 --  Page assembly
 -- ---------------------------------------------------------------------
 function Pandoc(doc)
+  -- a bare \includegraphics (a TikZ figure without \caption) has the alt text
+  -- "image", which the markdown writer would print under the figure
+  doc = doc:walk({Image = function(el)
+    if stringify(el.caption) == 'image' then el.caption = {} end
+    return el
+  end})
   read_meta(doc.meta)
   local blocks = walk_blocks(pandoc.List(doc.blocks))
   blocks = pandoc.Blocks(blocks):walk(inline_filter)

@@ -1,0 +1,309 @@
+% !TEX root = ../graph-theory.tex
+% =====================================================================
+%  组合优化 · 强连通分支与拓扑排序
+% =====================================================================
+\lecture{有向图的强连通分支与拓扑排序：DFS 的出栈顺序，白路引理，两次搜索的强连通分支算法及其完整证明，有向无环图的四个等价刻画，入度为零的拓扑排序算法，DFS 给出拓扑排序}
+\label{lec:digraph-orders}
+
+有向图中 $u,v$ 强连通是指 $u$ 能到 $v$、$v$ 也能到 $u$；这是一个等价关系，等价类叫\term{强连通分支}。把每个强连通分支收缩成一个点，得到的有向图没有有向圈（第一部分第~\ref{lec:orderings} 讲习题~\exref{ex:orderings:A5}），所以可以把它的顶点排成一列，使所有弧都向前，这叫\term{拓扑排序}。这一讲的两个算法都只做一两次遍历，是线性时间的。它们的正确性都依赖于 DFS 的出栈顺序的一个性质，我们先把这个性质讲清楚。
+
+\topic{一、DFS 的出栈顺序}
+
+对整个有向图做 DFS：按 $0,1,\dots,n-1$ 的顺序，遇到还没访问的顶点就从它开始一次 DFS（上一讲的 \texttt{dfs}，只是 \texttt{visited} 在各次之间共用）。记录每个顶点\emph{出栈}的先后，得到一个排列 \texttt{order}。讲义说“按照出栈的顺序对顶点从小到大标号”，就是 $\psi(v)=v$ 在 \texttt{order} 中的位置。
+
+\begin{lstlisting}[language=Python]
+def finishing_order(adj):
+    """对整个有向图做 DFS，返回顶点出栈的先后顺序。"""
+    n = len(adj)
+    visited = [False] * n
+    cur = [0] * n
+    order = []
+    for s in range(n):
+        if visited[s]:
+            continue
+        visited[s] = True
+        stack = [s]
+        while stack:
+            u = stack[-1]
+            if cur[u] < len(adj[u]):
+                v = adj[u][cur[u]]
+                cur[u] += 1
+                if not visited[v]:
+                    visited[v] = True
+                    stack.append(v)
+            else:
+                stack.pop()
+                order.append(u)          # u 的出邻点都处理完了
+    return order
+\end{lstlisting}
+
+\begin{lemma}[白路引理]\label{lem:digraph-orders:white-path}
+设 $x$ 进栈时，有一条从 $x$ 到 $y$ 的有向路，路上的顶点（除 $x$ 外）都还没被访问。则 $y$ 在 $x$ 出栈之前进栈，并在 $x$ 之前出栈。反过来，在 $x$ 进栈之后、出栈之前进栈的顶点，都是从 $x$ 可到达的。
+\end{lemma}
+\begin{proof}
+设路为 $x=p_0,p_1,\dots,p_k=y$。若有某个 $p_i$ 在 $x$ 出栈之前没有进栈，取最小的这样的 $i\geqslant1$。$p_{i-1}$ 在 $x$ 进栈后（或就是 $x$）、$x$ 出栈前进栈，所以它在栈中位于 $x$ 之上（或就是 $x$），在 $x$ 出栈时或之前出栈。而 $p_{i-1}$ 出栈的条件是它的出邻点都已被访问，其中包括 $p_i$；访问就是进栈。所以 $p_i$ 在 $x$ 出栈前进栈，矛盾。于是每个 $p_i$ 都在 $x$ 进栈后、出栈前进栈，位于 $x$ 之上，先于 $x$ 出栈。
+
+后一句：在 $x$ 之上进栈的顶点，是当时栈顶的出邻点；对进栈的先后归纳，当时的栈顶要么是 $x$，要么是之前在 $x$ 之上进栈的顶点，都从 $x$ 可到达。
+\end{proof}
+
+\begin{lemma}\label{lem:digraph-orders:finish}
+设 $C,C'$ 是不同的强连通分支，有从 $C$ 到 $C'$ 的弧。则 $C$ 中最晚出栈的顶点比 $C'$ 中所有顶点都晚出栈：$\max_{x\in C}\psi(x)>\max_{y\in C'}\psi(y)$。
+\end{lemma}
+\begin{proof}
+设 $x$ 是 $C\cup C'$ 中第一个被访问（进栈）的顶点。
+\begin{itemize}
+\item 若 $x\in C$：$x$ 进栈时 $C\cup C'$ 的顶点都未被访问。$C$ 强连通，有从 $C$ 到 $C'$ 的弧，$C'$ 强连通，所以从 $x$ 到 $C\cup C'$ 中任何一个顶点都有一条全在 $C\cup C'$ 中的路，由白路引理，它们都比 $x$ 先出栈。于是 $\psi(x)>\psi(y)$ 对一切 $y\in C'$ 成立。
+\item 若 $x\in C'$：同理 $C'$ 的其余顶点都比 $x$ 先出栈，$\psi(x)=\max_{C'}\psi$。$C'$ 到不了 $C$（否则 $C,C'$ 是同一个强连通分支），由白路引理的后一句，$x$ 在栈中期间 $C$ 的顶点都不会进栈；而 $x$ 进栈时它们还没被访问，所以它们都在 $x$ 出栈之后才进栈、出栈。于是 $C$ 中每个顶点都比 $x$ 晚出栈。\qedhere
+\end{itemize}
+\end{proof}
+
+\topic{二、强连通分支算法（讲义算法 2.6）}
+
+\begin{enumerate}
+\item 对整个有向图做 DFS，得到出栈顺序 \texttt{order}。
+\item 按出栈的\emph{逆序}（最晚出栈的先）处理顶点 $w$：若 $w$ 还不属于任何分支，就在\emph{逆图}（所有弧反向）上从 $w$ 出发做一次 BFS，只走到还没有分支的顶点；走到的顶点组成一个新的强连通分支。
+\end{enumerate}
+
+逆图上从 $w$ 能走到的顶点，就是原图中能走到 $w$ 的顶点。所以第 2 步说的正是讲义的“$w$ 和能到达它且还未进入其他强连通分支的所有点构成一个新的强连通分支”。
+
+\begin{lstlisting}[language=Python]
+def strongly_connected_components(adj):
+    """comp[v] = v 所在强连通分支的编号（按找到的先后 0, 1, 2, ...）。"""
+    n = len(adj)
+    radj = [[] for _ in range(n)]            # 逆邻接表
+    for u in range(n):
+        for v in adj[u]:
+            radj[v].append(u)
+    order = finishing_order(adj)             # 第 1 步
+    comp = [-1] * n
+    k = 0
+    for w in reversed(order):                # 第 2 步：最晚出栈的先处理
+        if comp[w] != -1:
+            continue
+        comp[w] = k
+        queue = deque([w])
+        while queue:
+            x = queue.popleft()
+            for u in radj[x]:                # 弧 u -> x，即 u 能走到 x
+                if comp[u] == -1:
+                    comp[u] = k
+                    queue.append(u)
+        k += 1
+    return comp
+\end{lstlisting}
+
+\begin{theorem}\label{thm:digraph-orders:scc}
+（讲义定理 2.5）上面的算法在 $O(n+m)$ 时间内正确地求出所有强连通分支。
+\end{theorem}
+\begin{proof}
+时间：一次 DFS、建逆邻接表、所有 BFS 合起来一次遍历逆图，各 $O(n+m)$。
+
+正确性。对第 2 步中开始新分支的次数归纳，证明：每次从 $w$ 开始的 BFS 恰好标出 $w$ 所在的强连通分支 $C$。设之前的各次都正确，那么此时没有分支的顶点恰是若干个完整的强连通分支的并，$w$ 是其中出栈最晚的顶点（比 $w$ 晚出栈的顶点都已处理），所以 $C$ 的全体顶点都还没有分支。
+\begin{itemize}
+\item BFS 会走到 $C$ 的每个顶点：$C$ 中的顶点都能走到 $w$，而且路可以取在 $C$ 内，路上的顶点都没有分支。
+\item BFS 不会走到 $C$ 以外的顶点：设它走到了某个没有分支的顶点 $u\notin C$，$u$ 属于强连通分支 $C'$，$C'$ 也全无分支。$u$ 能走到 $w$，所以在收缩后的图中有从 $C'$ 到 $C$ 的有向路 $C'=C_0\to C_1\to\dots\to C_r=C$。由引理~\ref{lem:digraph-orders:finish}，$\max_{C_0}\psi>\max_{C_1}\psi>\dots>\max_{C}\psi=\psi(w)$，所以 $C'$ 中有顶点比 $w$ 晚出栈。这个顶点还没有分支，却比 $w$ 晚出栈，与 $w$ 的选取矛盾。\qedhere
+\end{itemize}
+\end{proof}
+
+\begin{remark}[讲义的证明]
+讲义只证明了“标号相同的顶点属于同一个强连通分支”（并且那里“$u,v$ 和 $w$ 在第一次遍历时一定属于同一个树形图”这一步没有说明理由，它正是白路引理），没有证明反方向：同一个强连通分支的顶点标号相同，以及 BFS 不会越过分支的边界。上面第二个要点就是反方向，它是证明中真正用到出栈顺序的地方。
+\end{remark}
+
+\begin{example}\label{ex:digraph-orders:scc}
+有向图 $D_1$ 的 $8$ 个顶点、$11$ 条弧：
+\texttt{S\_arcs=[(5,6),(6,7),(7,5),(7,2),(2,3),(3,4),(4,2),(3,0),(0,1),(1,0),(6,1)]}。
+邻接表 \texttt{adj=[[1],[0],[3],[4,0],[2],[6],[7,1],[5,2]]}，逆邻接表 \texttt{radj=[[3,1],[0,6],[7,4],[2],[3],[7],[5],[6]]}。
+\begin{center}
+\begin{tikzpicture}[scale=0.95]
+  \node[gv] (5) at (0,0.9) {5}; \node[gv] (6) at (1.6,0.9) {6}; \node[gv] (7) at (0.8,-0.5) {7};
+  \node[gv] (2) at (3.4,-0.5) {2}; \node[gv] (3) at (5.0,-0.5) {3}; \node[gv] (4) at (4.2,-1.9) {4};
+  \node[gv] (0) at (6.6,0.9) {0}; \node[gv] (1) at (4.4,0.9) {1};
+  \draw[arc] (5) -- (6); \draw[arc] (6) -- (7); \draw[arc] (7) -- (5); \draw[arc] (7) -- (2);
+  \draw[arc] (2) -- (3); \draw[arc] (3) -- (4); \draw[arc] (4) -- (2); \draw[arc] (3) -- (0);
+  \draw[arc] (0) to[bend left=15] (1); \draw[arc] (1) to[bend left=15] (0); \draw[arc] (6) -- (1);
+  \draw[dashed, black!40, rounded corners] (-0.5,1.4) rectangle (2.1,-1.0);
+  \draw[dashed, black!40, rounded corners] (2.9,0.0) rectangle (5.5,-2.4);
+  \draw[dashed, black!40, rounded corners] (3.9,1.4) rectangle (7.1,0.4);
+\end{tikzpicture}
+\end{center}
+
+\emph{第 1 步。}从 $0$ 开始 DFS：栈 \texttt{[0]}；$0$ 看 $1$，新，栈 \texttt{[0,1]}；$1$ 看 $0$，已访问；$1$ 看完，出栈，\texttt{order=[1]}；$0$ 看完，出栈，\texttt{order=[1,0]}。顶点 $1$ 已访问，跳过。从 $2$ 开始：栈 \texttt{[2]}；$2$ 看 $3$，新，栈 \texttt{[2,3]}；$3$ 看 $4$，新，栈 \texttt{[2,3,4]}；$4$ 看 $2$，已访问；$4$ 出栈，\texttt{order=[1,0,4]}；$3$ 看 $0$，已访问；$3$ 出栈；$2$ 出栈，\texttt{order=[1,0,4,3,2]}。$3,4$ 已访问。从 $5$ 开始：栈 \texttt{[5]}；$5$ 看 $6$，新；$6$ 看 $7$，新，栈 \texttt{[5,6,7]}；$7$ 看 $5$、$2$，都已访问，出栈；$6$ 看 $1$，已访问，出栈；$5$ 出栈。最后
+\[
+\texttt{order}=[1,0,4,3,2,7,6,5].
+\]
+
+\emph{第 2 步。}逆序是 $5,6,7,2,3,4,0,1$。
+\begin{center}
+\small
+\begin{tabular}{lp{8.4cm}p{2.6cm}}
+\toprule
+$w$ & 逆图上的 BFS & 新分支 \\
+\midrule
+$5$ & 出队 $5$：\texttt{radj[5]=[7]}，$7$ 进队；出队 $7$：\texttt{radj[7]=[6]}，$6$ 进队；出队 $6$：\texttt{radj[6]=[5]}，已有分支 & $\{5,7,6\}$，编号 $0$ \\
+$6,7$ & 已有分支，跳过 & \\
+$2$ & 出队 $2$：\texttt{radj[2]=[7,4]}，$7$ 已有分支，$4$ 进队；出队 $4$：$3$ 进队；出队 $3$：\texttt{radj[3]=[2]}，已有 & $\{2,4,3\}$，编号 $1$ \\
+$3,4$ & 跳过 & \\
+$0$ & 出队 $0$：\texttt{radj[0]=[3,1]}，$3$ 已有分支，$1$ 进队；出队 $1$：\texttt{radj[1]=[0,6]}，都已有 & $\{0,1\}$，编号 $2$ \\
+$1$ & 跳过 & \\
+\bottomrule
+\end{tabular}
+\end{center}
+\texttt{comp=[2,2,1,1,1,0,0,0]}。注意从 $w=2$ 出发的 BFS 在逆图上看到了 $7$（因为 $7\to2$），但 $7$ 已经属于分支 $0$，没有被算进来；如果第 2 步不按逆序处理，比如先从 $0$ 开始，逆图上从 $0$ 能走到所有顶点，就会把整个图当成一个分支。逆序保证了每次开始的 $w$ 所在的分支在收缩图中是“源头”（没有未处理的分支能走到它）。
+\end{example}
+
+\topic{三、有向无环图与拓扑排序}
+
+\begin{theorem}\label{thm:digraph-orders:dag}
+（讲义定理 2.6）对有向图 $G$，下面四个叙述等价：
+(1) $G$ 没有有向圈；(2) $G$ 有拓扑排序；(3) $G$ 的每条弧都属于某个有向割 $\partial^+(X)$（即 $\partial^-(X)=\varnothing$ 而 $\partial^+(X)\neq\varnothing$）；(4) $G$ 的每个强连通分支都只有一个顶点。
+\end{theorem}
+\begin{proof}
+(1)$\Rightarrow$(2)：没有有向圈时有入度为 $0$ 的顶点（否则 $\delta^-\geqslant1$，由第一部分第~\ref{lec:longest-paths} 讲\wegref{we:longest-paths:digraph-cycle} 用于反向图，有有向圈）。把它排在第一个，删去后剩下的图仍无有向圈，对顶点数归纳。
+
+(2)$\Rightarrow$(3)：设 $v_1,\dots,v_n$ 是拓扑排序，弧 $v_iv_j$（$i<j$）。令 $X=\{v_1,\dots,v_i\}$。所有弧都向前，所以没有弧从 $X$ 外进入 $X$，$\partial^-(X)=\varnothing$；$v_iv_j\in\partial^+(X)$。
+
+(3)$\Rightarrow$(4)：设强连通分支 $H$ 至少有两个顶点。取 $u\neq v\in H$ 与一条 $(u,v)$-路，它的第一条弧 $uu'$ 满足 $u'$ 能到 $v$，$v$ 能到 $u$，所以 $u'\in H$；于是弧 $uu'$ 在一个有向圈上（$uu'$ 加上 $u'$ 到 $u$ 的路）。若 $uu'\in\partial^+(X)$，这个圈从 $X$ 出去，必须再回到 $X$，所以有一条圈上的弧在 $\partial^-(X)$ 中，$\partial^-(X)\neq\varnothing$。所以 $uu'$ 不属于任何有向割，与 (3) 矛盾。
+
+(4)$\Rightarrow$(1)：有向圈上的顶点两两强连通，而简单有向图中有向圈至少有两个顶点，它们在同一个强连通分支中，与 (4) 矛盾。
+\end{proof}
+
+\begin{remark}[讲义的错误]
+讲义说“以下三个叙述等价”，实际列了四个。(3)$\Rightarrow$(4) 写的是“如果一个强连通分支超过 $2$ 个点”，(4)$\Rightarrow$(1) 写的是“包含任何有向圈的强连通分支至少包含 $3$ 个点”，都应改为“至少 $2$ 个点”：长为 $2$ 的有向圈 $u\to v\to u$ 只有两个顶点。按讲义的写法，只有两个顶点的强连通分支就被漏掉了。
+\end{remark}
+
+由 (1)$\Rightarrow$(2) 的证明得到算法（讲义算法 2.7）：反复取出一个入度为 $0$ 的顶点，排在后面，删去它的出弧（只需把它的出邻点的入度减 $1$）。入度变成 $0$ 的顶点放进一个栈（讲义注明，用队列也可以），等待取出。
+
+\begin{lstlisting}[language=Python]
+def topological_sort(adj):
+    """返回拓扑排序（顶点列表）；若有有向圈，返回 None。"""
+    n = len(adj)
+    indeg = [0] * n
+    for u in range(n):
+        for v in adj[u]:
+            indeg[v] += 1
+    stack = [v for v in range(n) if indeg[v] == 0]
+    out = []
+    while stack:
+        u = stack.pop()
+        out.append(u)
+        for v in adj[u]:              # “删去”弧 u -> v
+            indeg[v] -= 1
+            if indeg[v] == 0:
+                stack.append(v)
+    return out if len(out) == n else None
+\end{lstlisting}
+
+\begin{theorem}\label{thm:digraph-orders:kahn}
+（讲义定理 2.7）\texttt{topological\_sort} 在 $O(n+m)$ 时间内返回一个拓扑排序；$G$ 有有向圈时返回 \texttt{None}。
+\end{theorem}
+\begin{proof}
+\emph{不变量}：任何时刻，\texttt{indeg[v]} 等于 $v$ 来自尚未输出的顶点的入弧数；栈中恰是尚未输出、\texttt{indeg} 为 $0$ 的顶点。开始时成立；输出 $u$ 时把 $u$ 的出邻点的 \texttt{indeg} 减 $1$，恰好保持第一条；减到 $0$ 的进栈，保持第二条。
+
+\emph{输出的是拓扑排序}：输出 $u$ 时 \texttt{indeg[u]}$=0$，即 $u$ 的入弧都来自已输出的顶点，所以每条弧的尾在头之前输出。
+
+\emph{无圈时输出全部顶点}：若算法停止时还有未输出的顶点，它们导出的子图中每个顶点的 \texttt{indeg}（即在这个子图中的入度）都 $\geqslant1$（否则在栈中，算法不会停），由\wegref{we:longest-paths:digraph-cycle} 它有有向圈。反之有有向圈时，圈上第一个被输出的顶点在输出时还有来自圈上前一个顶点的入弧，不可能，所以圈上的顶点都不会输出，返回 \texttt{None}。
+
+时间：数入度 $O(n+m)$；每个顶点进栈出栈一次，每条弧在它的尾输出时被处理一次，$O(n+m)$。
+\end{proof}
+
+\begin{example}\label{ex:digraph-orders:kahn}
+\texttt{T\_arcs=[(0,1),(0,2),(1,3),(2,3),(3,4),(2,5),(5,4)]}，\texttt{adj=[[1,2],[3],[3,5],[4],[],[4]]}，开始时 \texttt{indeg=[0,1,1,2,2,1]}，栈 \texttt{[0]}。
+\begin{center}
+\small
+\begin{tabular}{llll}
+\toprule
+出栈 & 处理出弧 & 之后的栈 & 之后的 \texttt{indeg} \\
+\midrule
+$0$ & $1$：$1\to0$，进栈；$2$：$1\to0$，进栈 & \texttt{[1,2]} & \texttt{[0,0,0,2,2,1]} \\
+$2$ & $3$：$2\to1$；$5$：$1\to0$，进栈 & \texttt{[1,5]} & \texttt{[0,0,0,1,2,0]} \\
+$5$ & $4$：$2\to1$ & \texttt{[1]} & \texttt{[0,0,0,1,1,0]} \\
+$1$ & $3$：$1\to0$，进栈 & \texttt{[3]} & \texttt{[0,0,0,0,1,0]} \\
+$3$ & $4$：$1\to0$，进栈 & \texttt{[4]} & \texttt{[0,0,0,0,0,0]} \\
+$4$ & 无 & \texttt{[]} & \\
+\bottomrule
+\end{tabular}
+\end{center}
+输出 $0,2,5,1,3,4$。逐条检查：$0\to1,0\to2,1\to3,2\to3,3\to4,2\to5,5\to4$ 都是从前往后。
+\end{example}
+
+\topic{四、DFS 给出拓扑排序}
+
+\begin{theorem}\label{thm:digraph-orders:dfs-topo}
+（讲义定理 2.8）若 $G$ 没有有向圈，则出栈顺序的逆序是拓扑排序；因此强连通分支算法中 \texttt{comp} 的编号顺序也是拓扑排序。
+\end{theorem}
+\begin{proof}
+无圈时每个强连通分支是单点。对弧 $u\to v$，由引理~\ref{lem:digraph-orders:finish}（$C=\{u\}$，$C'=\{v\}$），$\psi(u)>\psi(v)$：$u$ 比 $v$ 晚出栈，在逆序中排在 $v$ 前面。强连通分支算法按出栈的逆序依次开出新分支，每个分支是一个顶点，所以 \texttt{comp[v]} 就是 $v$ 在逆序中的位置。
+\end{proof}
+
+讲义的证明说“最后出栈的点 $u$ 必没有入弧，否则 $u$ 一定要比 $v$ 先出栈”，这是引理~\ref{lem:digraph-orders:finish} 在 $u$ 为最后出栈的顶点时的特例；“依次类推”要用到的正是引理对一般的弧都成立。在\egref[上面的例子]{ex:digraph-orders:kahn}上，\texttt{finishing\_order} 给出 $4,3,1,5,2,0$，逆序 $0,2,5,1,3,4$，碰巧与入度算法的输出相同。
+
+\topic{小结}
+
+\begin{itemize}
+\item DFS 的出栈顺序有一个关键性质：若有从分支 $C$ 到分支 $C'$ 的弧，$C$ 中最晚出栈的顶点晚于 $C'$ 的全部顶点（引理~\ref{lem:digraph-orders:finish}）。它来自白路引理。
+\item 强连通分支：按出栈逆序，在逆图上遍历。逆序保证每次从一个“源头分支”开始，遍历不会越界。
+\item 拓扑排序：反复删去入度为 $0$ 的顶点；或者取 DFS 出栈顺序的逆序。两者都是 $O(n+m)$，前者顺带判断有没有有向圈。
+\end{itemize}
+
+\homework{强连通分支与拓扑排序的练习}[强连通分支与拓扑排序]
+
+\exercisepart{练习}
+
+\begin{exercises}{A}{强连通分支与拓扑排序}
+\item\label{ex:digraph-orders:A1} 有人想省去逆图：第 2 步改为按出栈的\emph{正序}处理顶点，并在\emph{原图}上做 BFS。举例说明这样做是错的，并指出错在哪里。
+\begin{solution}
+取三条弧 $0\to1$，$1\to0$，$0\to2$，\texttt{adj=[[1,2],[0],[]]}。DFS：栈 \texttt{[0]}；$0$ 看 $1$，新，栈 \texttt{[0,1]}；$1$ 看 $0$，已访问，$1$ 出栈；$0$ 看 $2$，新，栈 \texttt{[0,2]}；$2$ 出栈；$0$ 出栈。\texttt{order=[1,2,0]}。正序先处理 $1$，在原图上从 $1$ 出发走到 $0$，再走到 $2$，于是把 $\{0,1,2\}$ 当成一个分支；而真正的分支是 $\{0,1\}$ 与 $\{2\}$。
+
+错在：最早出栈的顶点（这里是 $1$）不一定在收缩图的“汇”（走不出去的分支）中。引理~\ref{lem:digraph-orders:finish} 只比较各分支中\emph{最晚}出栈的顶点，所以只能保证按逆序处理时每次从“源”分支的最晚顶点开始；它对最早出栈的顶点什么也没说。
+\end{solution}
+
+\item\label{ex:digraph-orders:A2} 写出强连通分支收缩后的有向图（每个分支一个点）的邻接表，要求 $O(n+m)$ 时间，并对\egref[例子]{ex:digraph-orders:scc}写出结果。
+\begin{solution}
+\begin{lstlisting}[language=Python]
+def condensation(adj):
+    comp = strongly_connected_components(adj)
+    k = max(comp) + 1 if comp else 0
+    cadj = [set() for _ in range(k)]
+    for u in range(len(adj)):
+        for v in adj[u]:
+            if comp[u] != comp[v]:
+                cadj[comp[u]].add(comp[v])     # 集合自动去掉重复的弧
+    return comp, [sorted(s) for s in cadj]
+\end{lstlisting}
+例子中分支 $0=\{5,6,7\}$、$1=\{2,3,4\}$、$2=\{0,1\}$，跨分支的弧是 $7\to2$（$0\to1$）、$3\to0$（$1\to2$）、$6\to1$（$0\to2$），收缩图为 \texttt{[[1,2],[2],[]]}。分支编号 $0,1,2$ 恰是收缩图的一个拓扑排序：这是定理~\ref{thm:digraph-orders:dfs-topo} 的推广（引理~\ref{lem:digraph-orders:finish} 说明按出栈逆序开出的分支编号，沿收缩图的弧递增）。
+\end{solution}
+
+\item\label{ex:digraph-orders:A3} 修改 \texttt{topological\_sort}，在有有向圈时返回一个有向圈（顶点序列），仍为 $O(n+m)$。
+\begin{solution}
+算法停止时，未输出的顶点导出的子图中每个顶点都有来自未输出顶点的入弧。从任一未输出的顶点出发，不断沿“一条来自未输出顶点的入弧”往回走，必然在 $n$ 步内重复某个顶点，重复部分就是有向圈（方向与行走方向相反）。
+\begin{lstlisting}[language=Python]
+def find_cycle_if_any(adj):
+    n = len(adj)
+    order = topological_sort(adj)
+    if order is not None:
+        return None
+    radj = [[] for _ in range(n)]
+    for u in range(n):
+        for v in adj[u]:
+            radj[v].append(u)
+    # 重新跑一遍，记下哪些顶点被输出了
+    indeg = [len(radj[v]) for v in range(n)]
+    stack = [v for v in range(n) if indeg[v] == 0]
+    done = [False] * n
+    while stack:
+        u = stack.pop(); done[u] = True
+        for v in adj[u]:
+            indeg[v] -= 1
+            if indeg[v] == 0:
+                stack.append(v)
+    x = next(v for v in range(n) if not done[v])
+    seen, walk = {}, []
+    while x not in seen:                     # 沿入弧往回走
+        seen[x] = len(walk); walk.append(x)
+        x = next(u for u in radj[x] if not done[u])
+    cyc = walk[seen[x]:]                     # 往回走的顺序
+    return cyc[::-1]                         # 倒过来就是沿弧的方向
+\end{lstlisting}
+每一步往回走要在 \texttt{radj[x]} 中找一个未输出的入邻点，最坏 $O(d^-(x))$，每个顶点至多走到一次，总共 $O(n+m)$。
+\end{solution}
+\end{exercises}

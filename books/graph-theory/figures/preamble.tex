@@ -1,0 +1,15 @@
+% 本书 TikZ 图的共用样式（正文与网页的单独编译都会读入）
+\tikzset{
+  gv/.style    = {circle, draw, thick, fill=white, minimum size=6.2mm, inner sep=0pt, font=\small},
+  gvh/.style   = {gv, fill=RainbowAmber!35},            % 高亮的顶点
+  gvd/.style   = {gv, fill=black!12},                    % 已处理的顶点
+  ge/.style    = {thick},
+  geh/.style   = {line width=2.2pt, RainbowBlue},        % 高亮的边
+  arc/.style   = {thick, -{Stealth[length=2.6mm]}},
+  arch/.style  = {line width=1.8pt, RainbowBlue, -{Stealth[length=3mm]}},
+  wt/.style    = {font=\footnotesize, fill=white, inner sep=1pt},
+  cell/.style  = {draw, minimum width=7.5mm, minimum height=6mm, inner sep=0pt, font=\small\ttfamily},
+  cellh/.style = {cell, fill=RainbowAmber!35},
+  idx/.style   = {font=\scriptsize\ttfamily, text=black!55},
+  ptr/.style   = {thick, -{Stealth[length=2.2mm]}},
+}

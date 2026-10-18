@@ -1,0 +1,175 @@
+% !TEX root = ../graph-theory.tex
+% =====================================================================
+%  Hall 条件：Hall，Frobenius，正则二部图，2-因子，König–Ore，稳定匹配
+% =====================================================================
+\lecture{Hall 条件：Hall 定理，正则二部图的完美匹配，Petersen 的 2-因子定理，邻集的次模性，König--Ore 公式，用加权计数验证 Hall 条件，稳定匹配}
+\label{lec:hall-condition}
+
+要证明二部图有饱和 $X$ 的匹配，标准的做法是验证 Hall 条件 $\abs{N(S)}\geqslant\abs S$。验证的办法通常是数边：从 $S$ 出发的边都落在 $N(S)$ 上，比较两边的度数。条件不满足时，常用的技巧是加一些辅助顶点，把“缺 $d$ 条边的匹配”变成“完美匹配”。这里 $N(S)=\bigcup_{v\in S}N(v)$。
+
+\topic{方法：验证 Hall 条件}
+
+\begin{enumerate}
+\item 双重计数：$e(S,N(S))=\sum_{x\in S}d(x)\leqslant\sum_{y\in N(S)}d(y)$。度数有界时直接比较；度数不等时给每条边加权（\wegref{we:hall-condition:degree-weights}）。
+\item 从更强的定理推出：由 König 定理或 Tutte 定理推出 Hall 定理。
+\item 加辅助顶点：在 $Y$ 一侧加 $d$ 个与 $X$ 全部相连的新点，“匹配缺 $d$”变成“饱和 $X$”；把 $x$ 复制 $k$ 份，“每个 $x$ 匹配 $k$ 个”变成普通匹配。
+\item 把一般图变成二部图：顶点分裂（$v\mapsto v^+,v^-$），使有向的出、入度变成二部图的两侧。
+\end{enumerate}
+
+\begin{theorem}[Hall]\label{thm:hall-condition:hall}
+（讲义定理 2.6）二部图 $G=(X,Y)$ 有饱和 $X$ 的匹配，当且仅当 $\abs{N(S)}\geqslant\abs S$ 对一切 $S\subseteq X$ 成立。
+\end{theorem}
+\begin{proof}
+必要性：匹配把 $S$ 单射到 $N(S)$ 中。充分性：设 $M$ 是最大匹配而 $u\in X$ 未饱和。与 König 定理的证明一样，令 $Z$ 是从 $u$ 出发沿 $M$-交错路可到达的顶点集，$S=Z\cap X$，$T=Z\cap Y$。
+\begin{itemize}
+\item $T$ 中的顶点都被饱和，配偶在 $S$ 中；$S\setminus\{u\}$ 中的顶点都是经过它的匹配边到达的，配偶在 $T$ 中。所以 $M$ 在 $T$ 与 $S\setminus\{u\}$ 之间是一一对应，$\abs T=\abs S-1$。
+\item $N(S)=T$。$T\subseteq N(S)$：到达 $t\in T$ 的交错路的倒数第二个顶点在 $S$ 中。$N(S)\subseteq T$：若 $s\in S$，$y\sim s$，则 $sy\notin M$ 时，到达 $s$ 的交错路（最后一条边在 $M$ 中，或 $s=u$）加上 $sy$ 是交错路；$sy\in M$ 时 $y$ 是 $s$ 的配偶，在 $T$ 中。
+\end{itemize}
+于是 $\abs{N(S)}=\abs S-1<\abs S$，与条件矛盾。
+\end{proof}
+
+\begin{corollary}\label{cor:hall-condition:regular}
+（讲义推论 2.1、2.2）$k$-正则二部图（$k\geqslant1$）有完美匹配。
+\end{corollary}
+\begin{proof}
+$k\abs X=\abs E=k\abs Y$，所以 $\abs X=\abs Y$。对 $S\subseteq X$，从 $S$ 出发的 $k\abs S$ 条边都落在 $N(S)$ 上，而 $N(S)$ 一共只关联 $k\abs{N(S)}$ 条边，所以 $\abs{N(S)}\geqslant\abs S$。由 Hall 定理有饱和 $X$ 的匹配，它是完美的。
+\end{proof}
+
+\begin{corollary}[Petersen]\label{cor:hall-condition:two-factor}
+（讲义推论 2.3）每个 $2k$-正则图（$k\geqslant1$）都有 $2$-因子（每个顶点度数为 $2$ 的生成子图）。
+\end{corollary}
+\begin{proof}
+对每个分支分别证明，设 $G$ 连通。所有度数是偶数，所以 $G$ 有欧拉环游（讲义定理 2.9，组合优化部分第~\ref{lec:euler-tours} 讲）。沿环游的方向给每条边定向，每个顶点进入和离开环游的次数相同，所以出度与入度都等于 $k$。
+
+构造二部图 $G'$：每个顶点 $v$ 分成 $v^+$（出口）与 $v^-$（入口），每条弧 $u\to w$ 换成边 $u^+w^-$。$G'$ 是 $k$-正则二部图，由推论~\ref{cor:hall-condition:regular} 有完美匹配 $M'$。$M'$ 给每个 $v$ 选出一条出弧（$v^+$ 的匹配边）和一条入弧（$v^-$ 的匹配边）。把它们看成 $G$ 的边：每个顶点恰好关联两条被选中的边。这两条不是同一条边，因为同一条边 $vw$ 只有一个方向，不能既是 $v$ 的出弧又是 $v$ 的入弧；它们也不重复计数，因为 $G$ 是简单图，$v\to w$ 与 $w\to v$ 不会同时出现。所以被选中的边构成 $2$-因子。
+\end{proof}
+
+\begin{workedexample}\label{we:hall-condition:submodular}
+（讲义习题 2.7）设 $G=(X,Y)$ 是二部图，$S_1,S_2\subseteq X$。证明
+\[
+\abs{N(S_1)}+\abs{N(S_2)}\geqslant\abs{N(S_1\cup S_2)}+\abs{N(S_1\cap S_2)} .
+\]
+\end{workedexample}
+\begin{solution}
+$N(S_1\cup S_2)=N(S_1)\cup N(S_2)$，$N(S_1\cap S_2)\subseteq N(S_1)\cap N(S_2)$。由容斥，
+\[
+\abs{N(S_1)}+\abs{N(S_2)}=\abs{N(S_1)\cup N(S_2)}+\abs{N(S_1)\cap N(S_2)}\geqslant\abs{N(S_1\cup S_2)}+\abs{N(S_1\cap S_2)} .
+\]
+这个性质叫次模性。它的一个用处：若 $S_1,S_2$ 都是“紧的”（$\abs{N(S_i)}=\abs{S_i}$）且 Hall 条件成立，则 $S_1\cup S_2$ 与 $S_1\cap S_2$ 也是紧的，因为右边两项各自不小于 $\abs{S_1\cup S_2}$、$\abs{S_1\cap S_2}$，而它们之和等于左边。
+\end{solution}
+
+\begin{workedexample}\label{we:hall-condition:from-konig}
+（讲义习题 2.8）从 König 定理推导 Hall 定理。
+\end{workedexample}
+\begin{solution}
+设 Hall 条件成立，$K=A\cup B$ 是最小顶点覆盖，$A\subseteq X$，$B\subseteq Y$。$X\setminus A$ 中顶点关联的边，$X$ 一端不在 $K$ 中，所以 $Y$ 一端在 $B$ 中：$N(X\setminus A)\subseteq B$。由 Hall 条件 $\abs B\geqslant\abs{N(X\setminus A)}\geqslant\abs{X\setminus A}$，所以 $\abs K\geqslant\abs A+\abs{X\setminus A}=\abs X$。由 König 定理，最大匹配有 $\abs K\geqslant\abs X$ 条边，它饱和 $X$。
+\end{solution}
+
+\begin{workedexample}\label{we:hall-condition:degree-weights}
+（讲义习题 2.9）设 $G$ 是二部划分为 $\{A,B\}$ 的二部图，$\delta(G)\geqslant1$，并且对每条边 $ab$（$a\in A$）都有 $d(a)\geqslant d(b)$。证明 $G$ 有饱和 $A$ 的匹配。
+\end{workedexample}
+\begin{solution}
+验证 Hall 条件。给每条边 $ab$ 两个权：从 $a$ 看是 $1/d(a)$，从 $b$ 看是 $1/d(b)$，由条件前者不超过后者。对 $S\subseteq A$，
+\[
+\abs S=\sum_{a\in S}\sum_{b\sim a}\frac1{d(a)}\leqslant\sum_{a\in S}\sum_{b\sim a}\frac1{d(b)}\leqslant\sum_{b\in N(S)}\sum_{a\sim b}\frac1{d(b)}=\abs{N(S)} .
+\]
+第一个等号：$a$ 的 $d(a)$ 条边各贡献 $1/d(a)$（这里用了 $d(a)\geqslant1$）。第二个不等号：左边的边 $ab$（$a\in S$）都出现在右边，右边还多了 $a\notin S$ 的边。由 Hall 定理得结论。
+\end{solution}
+
+\begin{workedexample}\label{we:hall-condition:perfect}
+（讲义习题 2.10）证明二部图 $G$ 有完美匹配，当且仅当对任意 $S\subseteq V(G)$ 都有 $\abs{N(S)}\geqslant\abs S$。并举反例说明这一结论不是对所有的图都成立。
+\end{workedexample}
+\begin{solution}
+这里 $N(S)=\bigcup_{v\in S}N(v)$，不去掉 $S$ 本身（若去掉，$S=V$ 时 $N(S)=\varnothing$，条件永远不成立）。
+
+必要性：完美匹配把 $S$ 中每个顶点映到它的配偶，这是从 $S$ 到 $N(S)$ 的单射。充分性：对 $S\subseteq X$ 用条件，由 Hall 定理有饱和 $X$ 的匹配，所以 $\abs X\leqslant\abs Y$；同理 $\abs Y\leqslant\abs X$。于是 $\abs X=\abs Y$，饱和 $X$ 的匹配也饱和 $Y$，是完美的。
+
+反例：$K_3$。单点 $S$ 有 $\abs{N(S)}=2$；两个点或三个点的 $S$ 有 $N(S)=V$，$\abs{N(S)}=3$。条件成立，但 $K_3$ 是奇数阶，没有完美匹配。
+\end{solution}
+
+\begin{workedexample}\label{we:hall-condition:konig-ore}
+（讲义习题 2.11，König--Ore 公式）设 $G=(X,Y)$ 是二部图，$M$ 是匹配，$U$ 是 $X$ 中未被 $M$ 饱和的顶点集。(a) 证明：(i) 对任意 $S\subseteq X$，$\abs U\geqslant\abs S-\abs{N(S)}$；(ii) 存在 $S$ 使等号成立，当且仅当 $M$ 是最大匹配。(b) 证明 $G$ 的匹配数是 $\abs X-\max\{\abs S-\abs{N(S)}:S\subseteq X\}$。
+\end{workedexample}
+\begin{remark}[讲义原题有误]
+讲义 (a)(i) 写的是 $\abs U\geqslant\abs{N(S)}-\abs S$，符号反了：取 $S=\varnothing$ 得 $\abs U\geqslant0$ 还看不出问题，但取 $X=\{x\}$、$Y=\{y_1,y_2\}$、$M=\{xy_1\}$、$S=\{x\}$，则 $\abs U=0<1=\abs{N(S)}-\abs S$。(ii) 也应写成“存在 $S$ 使等号成立”。下面证明改正后的版本。
+\end{remark}
+\begin{solution}
+(i)：$S\setminus U$ 中的顶点被 $M$ 单射到 $N(S)$ 中，所以 $\abs S-\abs{U\cap S}\leqslant\abs{N(S)}$，于是 $\abs U\geqslant\abs{U\cap S}\geqslant\abs S-\abs{N(S)}$。
+
+(ii)：设 $M$ 是最大匹配。令 $Z$ 是从 $U$ 出发沿交错路可到达的顶点集，$S=Z\cap X$，$T=Z\cap Y$。与定理~\ref{thm:hall-condition:hall} 的证明一样，$N(S)=T$，且 $M$ 是 $T$ 与 $S\setminus U$ 之间的一一对应，所以 $\abs S=\abs U+\abs{N(S)}$，等号成立。反之，若某个 $S$ 使 $\abs U=\abs S-\abs{N(S)}$ 而 $M$ 不是最大的，取更大的匹配 $M'$，它的未饱和集 $U'$ 满足 $\abs{U'}=\abs X-\abs{M'}<\abs X-\abs M=\abs U=\abs S-\abs{N(S)}$，与 (i) 矛盾。
+
+(b)：取最大匹配 $M$，匹配数 $\abs M=\abs X-\abs U$；由 (i)(ii)，$\abs U=\max_S(\abs S-\abs{N(S)})$（$S=\varnothing$ 保证最大值 $\geqslant0$）。
+\end{solution}
+
+\topic{稳定匹配}
+
+\begin{theorem}[Gale--Shapley]\label{thm:hall-condition:stable}
+（讲义定理 2.7）设 $G=(X,Y)$ 是二部图，每个顶点对关联的边有严格的偏好序。则 $G$ 有稳定匹配：对每条不在 $M$ 中的边 $xy$，$x$ 或 $y$ 被 $M$ 中一条它更偏好的边饱和。
+\end{theorem}
+
+讲义按 Diestel 的写法用“快乐”“可接受”来叙述。下面用通常的“求婚算法”写同一个证明。
+
+\begin{proof}
+\emph{算法。}开始时所有顶点都未匹配。只要还有未匹配的 $x\in X$，并且 $x$ 还有没求过婚的邻点，$x$ 就向其中它最偏好的 $y$ 求婚。$y$ 若未匹配，接受；若已与 $x'$ 匹配，$y$ 保留 $x,x'$ 中它更偏好的一个，拒绝另一个。
+
+\emph{终止。}每个 $x$ 对每个邻点至多求婚一次，求婚总次数不超过 $\abs E$。
+
+\emph{两个单调性。}(a) $x$ 按偏好从高到低求婚，所以 $x$ 的配偶（若有）是它求过婚的对象中最后的一个。(b) $y$ 一旦被求婚就一直有配偶，并且配偶只会变得更好。
+
+\emph{稳定性。}设最后得到 $M$，$xy\in E\setminus M$。若 $x$ 向 $y$ 求过婚，$x$ 当时被拒绝或后来被换掉，由 (b) 最后 $y$ 的配偶比 $x$ 更好，$y$ 被一条它更偏好的边饱和。若 $x$ 没有向 $y$ 求过婚，算法结束时 $x$ 已匹配（未匹配的 $x$ 会向所有邻点求婚），由 (a) $x$ 的配偶在 $x$ 的偏好中排在 $y$ 之前。两种情形 $xy$ 都不是受阻对。
+\end{proof}
+
+\begin{workedexample}\label{we:hall-condition:no-stable}
+（讲义习题 2.17）找一个二部图以及它的一个优先集，使它没有最大匹配是稳定的，同时没有稳定匹配是最大的。再找一个非二部的圈以及它的一个优先集，使这个图没有稳定匹配。
+\end{workedexample}
+\begin{solution}
+\emph{二部图。}路 $x_1y_1x_2y_2$（边 $x_1y_1$、$y_1x_2$、$x_2y_2$）。偏好：$y_1$ 偏好 $x_2$ 胜过 $x_1$；$x_2$ 偏好 $y_1$ 胜过 $y_2$。逐个检查全部匹配：
+\begin{itemize}
+\item $\{x_1y_1,x_2y_2\}$（唯一的最大匹配）：边 $y_1x_2$ 不在其中，$y_1$ 与 $x_2$ 都更偏好它，是受阻对，不稳定。
+\item $\{x_1y_1\}$：边 $x_2y_2$ 的两个端点都未匹配，不稳定。$\{x_2y_2\}$：边 $x_1y_1$ 同理，不稳定。空匹配不稳定。
+\item $\{y_1x_2\}$：边 $x_1y_1$ 在 $y_1$ 处被更好的 $y_1x_2$ 压住；边 $x_2y_2$ 在 $x_2$ 处被更好的 $x_2y_1$ 压住。稳定，但不是最大的。
+\end{itemize}
+
+\emph{奇圈。}三角形 $abc$，偏好轮换：$a$ 偏好 $ab$ 胜过 $ac$，$b$ 偏好 $bc$ 胜过 $ba$，$c$ 偏好 $ca$ 胜过 $cb$。匹配至多一条边。空匹配不稳定。$\{ab\}$：边 $bc$ 在 $b$ 处比 $ba$ 更好，$c$ 未匹配，所以 $bc$ 没有被压住，不稳定。由轮换对称性，$\{bc\}$、$\{ca\}$ 也不稳定。
+\end{solution}
+
+\topic{小结}
+
+\begin{itemize}
+\item Hall 条件靠数边来验证；度数不均匀时给边加权（\wegref{we:hall-condition:degree-weights}）。
+\item 加辅助顶点把各种变体变成 Hall 定理：亏量版本、König--Ore 公式。
+\item 顶点分裂把“出度 $=$ 入度 $=k$”变成 $k$-正则二部图（推论~\ref{cor:hall-condition:two-factor}）。
+\end{itemize}
+
+\homework{Hall 条件的练习}[Hall 条件]
+
+\exercisepart{练习}
+
+\begin{exercises}{A}{Hall 条件与辅助构造}
+\item\label{ex:hall-condition:A1} 证明 $k$-正则二部图（$k\geqslant1$）的边集可以分解成 $k$ 个完美匹配。
+\begin{solution}
+对 $k$ 归纳。由推论~\ref{cor:hall-condition:regular} 取完美匹配 $M$，$G-M$ 是 $(k-1)$-正则二部图，$k-1\geqslant1$ 时用归纳假设，$k=1$ 时 $G=M$。
+\end{solution}
+
+\item\label{ex:hall-condition:A2} 设 $r<n$。$r\times n$ 的 Latin 矩形是每行是 $1,\dots,n$ 的一个排列、每列没有重复数字的矩阵。证明它可以添加一行成为 $(r+1)\times n$ 的 Latin 矩形，从而可以补成 Latin 方阵。
+\begin{solution}
+二部图：一侧是 $n$ 列，一侧是 $n$ 个数字，列 $j$ 与数字 $s$ 相邻当且仅当 $s$ 还没出现在第 $j$ 列中。每列已有 $r$ 个数字，缺 $n-r$ 个；每个数字在每行出现一次，共出现在 $r$ 列中，缺 $n-r$ 列。这是 $(n-r)$-正则二部图，$n-r\geqslant1$，由推论~\ref{cor:hall-condition:regular} 有完美匹配，把列 $j$ 匹配到的数字写在新一行的第 $j$ 个位置即可。重复 $n-r$ 次得到 Latin 方阵。
+\end{solution}
+
+\item\label{ex:hall-condition:A3} （Birkhoff--von Neumann）非负方阵若每行每列之和都为 $1$，称为双随机矩阵。证明每个双随机矩阵都是置换矩阵的凸组合。
+\begin{solution}
+对 $A$ 的非零元个数归纳。作二部图：行 $i$ 与列 $j$ 相邻当且仅当 $a_{ij}>0$。对行的集合 $S$，$S$ 中各行的元素和为 $\abs S$，这些非零元都在 $N(S)$ 的列中，而这些列的元素和为 $\abs{N(S)}$，所以 $\abs{N(S)}\geqslant\abs S$。由 Hall 定理（推论~\ref{cor:hall-condition:regular} 的同一论证）有完美匹配，即一个置换矩阵 $P$，它的 $1$ 都落在 $A$ 的正元素上。令 $\lambda=\min\{a_{ij}:P_{ij}=1\}>0$。若 $\lambda=1$，$A=P$。否则 $A'=(A-\lambda P)/(1-\lambda)$ 是双随机矩阵，非零元至少少一个，由归纳假设是置换矩阵的凸组合，于是 $A=\lambda P+(1-\lambda)A'$ 也是。
+\end{solution}
+
+\item\label{ex:hall-condition:A4} 设 $G=(X,Y)$ 是二部图，$k\geqslant1$。证明：可以给每个 $x\in X$ 选出 $k$ 个邻点，使不同的 $x$ 选出的顶点互不相同，当且仅当 $\abs{N(S)}\geqslant k\abs S$ 对一切 $S\subseteq X$ 成立。
+\begin{solution}
+把每个 $x$ 复制成 $k$ 个顶点 $x^{(1)},\dots,x^{(k)}$，它们的邻集都等于 $N(x)$，得到二部图 $G_k$。所求的选择就是 $G_k$ 中饱和复制后的 $X$ 的匹配。对复制后的集合 $S'$，设它来自 $S\subseteq X$，则 $\abs{N(S')}=\abs{N(S)}\geqslant k\abs S\geqslant\abs{S'}$；反之，取 $S'$ 为 $S$ 的全部复制，条件就是 $\abs{N(S)}\geqslant k\abs S$。由 Hall 定理得结论。
+\end{solution}
+
+\item\label{ex:hall-condition:A5} 在完全二部图 $K_{n,n}$ 上，每个人对异性的全部 $n$ 人有严格偏好。证明：男方求婚的 Gale--Shapley 算法给出的稳定匹配，对每个男人来说都是所有稳定匹配中最好的。
+\begin{solution}
+称 $w$ 是 $m$ 的可能对象，如果某个稳定匹配把 $m,w$ 配在一起。只需证明：算法中没有男人被他的可能对象拒绝；那么每个男人最后得到的是他的可能对象中他最偏好的一个（他按偏好从高到低求婚，比最后配偶更好的对象都拒绝过他，因而都不是可能对象）。
+
+设不然，考虑算法中\emph{第一次}出现的这种拒绝：$w$ 拒绝了 $m$（拒绝新求婚或甩掉原配偶），$w$ 是 $m$ 在稳定匹配 $S$ 中的配偶，$w$ 当时留下的是她更偏好的 $m'$。$m'$ 向 $w$ 求过婚，所以 $m'$ 偏好胜过 $w$ 的女人都已拒绝过 $m'$。若 $m'$ 在 $S$ 中的配偶 $S(m')$ 是这样的女人，那么 $m'$ 被可能对象拒绝的事发生在这次之前，与“第一次”矛盾。所以 $m'$ 偏好 $w$ 胜过 $S(m')$（$S(m')\neq w$，因为 $S(m)=w$）。而 $w$ 偏好 $m'$ 胜过 $m=S(w)$。于是 $(m',w)$ 是 $S$ 的受阻对，与 $S$ 稳定矛盾。
+\end{solution}
+\end{exercises}

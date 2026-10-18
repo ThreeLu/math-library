@@ -1,0 +1,487 @@
+% !TEX root = ../graph-theory.tex
+% =====================================================================
+%  组合优化 · 图的存储
+% =====================================================================
+\lecture{图的存储：邻接矩阵，邻接表（列表版、链表版、顺序数组版），逆邻接表，三元组（边列表），十字链表，邻接多重表，关联矩阵，六种结构的比较}
+\label{lec:graph-storage}
+
+同一个图可以有很多种存法。存法决定了两件事：占多少内存，以及几种基本操作（判断 $u,v$ 是否相邻；列出 $v$ 的全部邻点；加一条边；删一条边）各要多少步。一个算法要反复做哪种操作，就该选让这种操作快的存法。这一讲把讲义 2.2 节的六种结构在同几个小图上全部写出来，最后列表比较。
+
+\topic{本讲的例子}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.95]
+  \begin{scope}
+    \node[gv] (0) at (0,1.5) {0}; \node[gv] (1) at (-1.5,0) {1}; \node[gv] (2) at (0,0) {2};
+    \node[gv] (3) at (1.5,0) {3}; \node[gv] (4) at (0,-1.5) {4};
+    \foreach \a/\b in {0/1,0/2,0/3,1/2,1/4,2/3,2/4,3/4} \draw[ge] (\a) -- (\b);
+    \node at (0,-2.3) {$G$：无向图};
+  \end{scope}
+  \begin{scope}[xshift=4cm,yshift=0.6cm]
+    \node[gv] (0) at (0,0) {0}; \node[gv] (1) at (2,0) {1}; \node[gv] (2) at (1,-1.7) {2}; \node[gv] (3) at (3,-1.7) {3};
+    \draw[arc] (0) to[bend left=15] (1); \draw[arc] (1) to[bend left=15] (0);
+    \draw[arc] (0) -- (2); \draw[arc] (1) to[bend left=15] (2); \draw[arc] (2) to[bend left=15] (1);
+    \draw[arc] (1) -- (3); \draw[arc] (3) -- (2);
+    \node at (1.5,-2.9) {$D$：有向图};
+  \end{scope}
+  \begin{scope}[xshift=10cm]
+    \node[gv] (0) at (-1.8,0) {0}; \node[gv] (1) at (-0.4,1.3) {1}; \node[gv] (2) at (-0.4,-1.3) {2};
+    \node[gv] (3) at (1.5,1.3) {3}; \node[gv] (4) at (1.5,-1.3) {4};
+    \foreach \a/\b/\w in {0/1/1,0/2/2,1/2/2,1/3/4,2/4/4,3/4/2} \draw[ge] (\a) -- node[wt] {\w} (\b);
+    \draw[ge] (1) -- node[wt,pos=0.3] {3} (4); \draw[ge] (2) -- node[wt,pos=0.3] {4} (3);
+    \node at (0,-2.3) {$N$：带权无向图};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}
+\item $G$（讲义图 1.1）：$5$ 个顶点、$8$ 条边，\texttt{G\_edges=[(0,1),(0,2),(0,3),(1,2),(1,4),(2,3),(2,4),(3,4)]}。
+\item $D$（讲义图 1.2）：$4$ 个顶点、$7$ 条弧，\texttt{D\_arcs=[(0,1),(0,2),(1,0),(1,2),(1,3),(2,1),(3,2)]}，$(u,v)$ 表示弧 $u\to v$。
+\item $N$（讲义图 1.3）：$5$ 个顶点、$8$ 条带权边，\texttt{N\_edges=[(0,1,1),(0,2,2),(1,2,2),(1,3,4),(1,4,3),(2,3,4),(2,4,4),(3,4,2)]}，$(u,v,c)$ 表示边 $uv$ 的权为 $c$。
+\end{itemize}
+
+我们假设图一开始是以“边的列表”给出的（这也是读入数据时最常见的形式），然后把它转成各种结构。
+
+\begin{lstlisting}[language=Python]
+INF = float('inf')
+NULL = -1
+G_edges = [(0, 1), (0, 2), (0, 3), (1, 2), (1, 4), (2, 3), (2, 4), (3, 4)]
+D_arcs = [(0, 1), (0, 2), (1, 0), (1, 2), (1, 3), (2, 1), (3, 2)]
+N_edges = [(0, 1, 1), (0, 2, 2), (1, 2, 2), (1, 3, 4), (1, 4, 3),
+           (2, 3, 4), (2, 4, 4), (3, 4, 2)]
+\end{lstlisting}
+
+\topic{一、邻接矩阵}
+
+$n\times n$ 的表 $A$，$A[u][v]=1$ 当且仅当 $uv$ 是边（有向图中：$u\to v$ 是弧）。带权时 $A[u][v]$ 存权，没有边的位置存 $0$ 或 $\infty$，取哪个看问题：求最短路、最小树时存 $\infty$（“不能走”），求最大权时存 $0$。
+
+\begin{lstlisting}[language=Python]
+def adjacency_matrix(n, edges, directed=False):
+    A = [[0] * n for _ in range(n)]
+    for u, v in edges:
+        A[u][v] = 1
+        if not directed:          # 无向边要填两个对称的位置
+            A[v][u] = 1
+    return A
+
+def weighted_matrix(n, edges, none=INF):
+    W = [[none] * n for _ in range(n)]
+    for u, v, c in edges:
+        W[u][v] = W[v][u] = c
+    return W
+\end{lstlisting}
+
+对三个例子：
+\[
+A(G)=\begin{pmatrix}0&1&1&1&0\\1&0&1&0&1\\1&1&0&1&1\\1&0&1&0&1\\0&1&1&1&0\end{pmatrix},\quad
+A(D)=\begin{pmatrix}0&1&1&0\\1&0&1&1\\0&1&0&0\\0&0&1&0\end{pmatrix},
+\]
+\[
+W(N)=\begin{pmatrix}\infty&1&2&\infty&\infty\\1&\infty&2&4&3\\2&2&\infty&4&4\\\infty&4&4&\infty&2\\\infty&3&4&2&\infty\end{pmatrix}.
+\]
+无向图的矩阵对称，第 $v$ 行中 $1$ 的个数是 $d(v)$；有向图的第 $v$ 行之和是出度，第 $v$ 列之和是入度。
+
+\emph{代价。}判断 $u,v$ 是否相邻：看 \texttt{A[u][v]}，$O(1)$。加边、删边：改一格，$O(1)$。列出 $v$ 的邻点：要扫描整个第 $v$ 行，$O(n)$，不论 $v$ 有几个邻点。内存 $n^2$ 格。边很少的图（比如 $m\approx3n$）大部分格子是 $0$，既浪费内存，也让“扫一遍所有邻点”的算法变成 $O(n^2)$。
+
+\topic{二、邻接表}
+
+给每个顶点一张表，列出它的邻点。最直接的 Python 写法是“列表的列表”：
+
+\begin{lstlisting}[language=Python]
+def adjacency_list(n, edges, directed=False):
+    adj = [[] for _ in range(n)]
+    for u, v in edges:
+        adj[u].append(v)
+        if not directed:
+            adj[v].append(u)
+    return adj
+\end{lstlisting}
+
+\texttt{adjacency\_list(5,G\_edges)} 得到 \texttt{[[1,2,3],[0,2,4],[0,1,3,4],[0,2,4],[1,2,3]]}；\texttt{adjacency\_list(4,D\_arcs,True)} 得到 \texttt{[[1,2],[0,2,3],[1],[2]]}。带权时表里存 \texttt{(邻点,权)}。
+
+\emph{代价。}列出 $v$ 的邻点：$O(d(v))$，这是邻接表最大的优点。对所有顶点各列一遍，共 $O(n+m)$（第~\ref{lec:data-structures} 讲复杂度规则 3）。判断 $u,v$ 是否相邻：要在 \texttt{adj[u]} 里找，$O(d(u))$。内存 $n+2m$（无向）或 $n+m$（有向）。
+
+\topic{二之一、讲义的写法：点表加边表（链表）}
+
+讲义把邻接表描述为两部分：\emph{点表}是长为 $n$ 的数组，第 $v$ 格存 $v$ 的边表的\emph{头指针}；\emph{边表}是每个顶点一条单链表，每个结点存一个邻点（\texttt{data}）、可能还有权，以及下一个结点（\texttt{next}）。按第~\ref{lec:data-structures} 讲的办法，用数组模拟：\texttt{head[v]} 是点表，\texttt{data}、\texttt{nxt} 存所有结点。
+
+\begin{lstlisting}[language=Python]
+def linked_adjacency(n, arcs):
+    """有向图的链表式邻接表：点表 head，边表结点的 data 与 nxt。"""
+    head = [NULL] * n
+    data, nxt = [], []
+    for u, v in arcs:
+        k = len(data)            # 新结点的编号
+        data.append(v)
+        nxt.append(head[u])      # 插在 u 的边表最前面
+        head[u] = k
+    return head, data, nxt
+
+def neighbours_linked(head, data, nxt, u):
+    out, p = [], head[u]
+    while p != NULL:             # 讲义写作 while p != NULL: ... p = p.next
+        out.append(data[p])
+        p = nxt[p]
+    return out
+\end{lstlisting}
+
+对 $D$ 逐条插入弧，每条弧占一个结点，结点编号就是弧在 \texttt{D\_arcs} 中的位置：
+
+\begin{center}
+\begin{tabular}{cccccc}
+\toprule
+第几条弧 & 弧 & 结点 $k$ & \texttt{data[k]} & \texttt{nxt[k]}（$u$ 原来的头） & 之后的 \texttt{head} \\
+\midrule
+1 & $0\to1$ & 0 & 1 & $-1$ & \texttt{[0,-1,-1,-1]} \\
+2 & $0\to2$ & 1 & 2 & 0 & \texttt{[1,-1,-1,-1]} \\
+3 & $1\to0$ & 2 & 0 & $-1$ & \texttt{[1,2,-1,-1]} \\
+4 & $1\to2$ & 3 & 2 & 2 & \texttt{[1,3,-1,-1]} \\
+5 & $1\to3$ & 4 & 3 & 3 & \texttt{[1,4,-1,-1]} \\
+6 & $2\to1$ & 5 & 1 & $-1$ & \texttt{[1,4,5,-1]} \\
+7 & $3\to2$ & 6 & 2 & $-1$ & \texttt{[1,4,5,6]} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+最后 \texttt{head=[1,4,5,6]}，\texttt{data=[1,2,0,2,3,1,2]}，\texttt{nxt=[-1,0,-1,2,3,-1,-1]}。列出顶点 $1$ 的出邻点：\texttt{p=head[1]=4}，\texttt{data[4]=3}；\texttt{p=nxt[4]=3}，\texttt{data[3]=2}；\texttt{p=nxt[3]=2}，\texttt{data[2]=0}；\texttt{p=nxt[2]=-1}，停。得到 $3,2,0$。顺序与插入顺序相反，因为每次都插在最前面；对图算法来说邻点的顺序无关紧要。
+
+\begin{center}
+\begin{tikzpicture}
+  \foreach \v in {0,...,3} { \node[cell] (h\v) at (0,-\v*0.8) {\v}; }
+  \node[idx] at (0,0.55) {点表};
+  % vertex 0: nodes 1 -> 0
+  \node[cell] (a1) at (1.8,0) {2}; \node[cell] (b1) at (2.55,0) {};
+  \node[cell] (a0) at (3.9,0) {1}; \node[cell] (b0) at (4.65,0) {$\wedge$};
+  \draw[ptr] (h0) -- (a1); \draw[ptr] (b1.center) -- (a0);
+  % vertex 1: 4 -> 3 -> 2
+  \node[cell] (a4) at (1.8,-0.8) {3}; \node[cell] (b4) at (2.55,-0.8) {};
+  \node[cell] (a3) at (3.9,-0.8) {2}; \node[cell] (b3) at (4.65,-0.8) {};
+  \node[cell] (a2) at (6.0,-0.8) {0}; \node[cell] (b2) at (6.75,-0.8) {$\wedge$};
+  \draw[ptr] (h1) -- (a4); \draw[ptr] (b4.center) -- (a3); \draw[ptr] (b3.center) -- (a2);
+  % vertex 2: 5
+  \node[cell] (a5) at (1.8,-1.6) {1}; \node[cell] (b5) at (2.55,-1.6) {$\wedge$};
+  \draw[ptr] (h2) -- (a5);
+  % vertex 3: 6
+  \node[cell] (a6) at (1.8,-2.4) {2}; \node[cell] (b6) at (2.55,-2.4) {$\wedge$};
+  \draw[ptr] (h3) -- (a6);
+  \node[idx] at (2.17,0.55) {data \ next};
+\end{tikzpicture}
+\end{center}
+
+链表版的好处是加边只需 $O(1)$ 地插入一个结点；删去一条已知前驱结点的边也是 $O(1)$。Python 的列表也能在末尾 $O(1)$ 地加边，所以本书的程序一般直接用 \texttt{adj[u].append(v)}；需要“逐个往后取下一个邻点、并记住取到了哪里”的算法（DFS 的非递归写法、欧拉环游），本书用一个下标 \texttt{cur[u]} 记住 \texttt{adj[u]} 中下一个要看的位置，它的作用与讲义中“把 \texttt{adj[u]} 指针移到 \texttt{adj[u].next}”完全相同。
+
+\topic{二之二、讲义的顺序数组版（压缩行存储）}
+
+讲义还给出一种只用两个数组的邻接表：\texttt{Edge} 把 $0$ 号顶点的邻点、$1$ 号顶点的邻点、……依次连续地排在一起；\texttt{Vertex[v]} 记 $v$ 的邻点从 \texttt{Edge} 的哪一格开始，\texttt{Vertex[n]} 是 \texttt{Edge} 的总长。于是 $v$ 的邻点是 \texttt{Edge[Vertex[v]:Vertex[v+1]]}。这种结构在数值计算里叫 CSR（compressed sparse row）。
+
+\begin{lstlisting}[language=Python]
+def csr(n, edges):
+    """无向图的顺序数组邻接表 (Vertex, Edge)。"""
+    deg = [0] * n
+    for u, v in edges:                # 第一遍：数度数
+        deg[u] += 1
+        deg[v] += 1
+    Vertex = [0] * (n + 1)
+    for v in range(n):                # 前缀和：v 的邻点从哪一格开始
+        Vertex[v + 1] = Vertex[v] + deg[v]
+    Edge = [0] * Vertex[n]
+    pos = Vertex[:n]                  # pos[v]：v 的下一个邻点该填在哪一格
+    for u, v in edges:                # 第二遍：把邻点填进去
+        Edge[pos[u]] = v
+        pos[u] += 1
+        Edge[pos[v]] = u
+        pos[v] += 1
+    return Vertex, Edge
+\end{lstlisting}
+
+在 $G$ 上一步一步做：
+\begin{enumerate}
+\item 度数 \texttt{deg=[3,3,4,3,3]}。
+\item 前缀和：\texttt{Vertex[0]=0}，\texttt{Vertex[1]=0+3=3}，\texttt{Vertex[2]=3+3=6}，\texttt{Vertex[3]=6+4=10}，\texttt{Vertex[4]=10+3=13}，\texttt{Vertex[5]=13+3=16}。所以 \texttt{Vertex=[0,3,6,10,13,16]}：顶点 $0$ 占第 $0$–$2$ 格，顶点 $1$ 占第 $3$–$5$ 格，顶点 $2$ 占第 $6$–$9$ 格，顶点 $3$ 占第 $10$–$12$ 格，顶点 $4$ 占第 $13$–$15$ 格。
+\item 填数。\texttt{pos=[0,3,6,10,13]}。边 $(0,1)$：\texttt{Edge[0]=1}，\texttt{Edge[3]=0}，\texttt{pos=[1,4,6,10,13]}。边 $(0,2)$：\texttt{Edge[1]=2}，\texttt{Edge[6]=0}。边 $(0,3)$：\texttt{Edge[2]=3}，\texttt{Edge[10]=0}。边 $(1,2)$：\texttt{Edge[4]=2}，\texttt{Edge[7]=1}。边 $(1,4)$：\texttt{Edge[5]=4}，\texttt{Edge[13]=1}。边 $(2,3)$：\texttt{Edge[8]=3}，\texttt{Edge[11]=2}。边 $(2,4)$：\texttt{Edge[9]=4}，\texttt{Edge[14]=2}。边 $(3,4)$：\texttt{Edge[12]=4}，\texttt{Edge[15]=3}。
+\end{enumerate}
+结果 \texttt{Edge=[1,2,3,0,2,4,0,1,3,4,0,2,4,1,2,3]}，与讲义的数组（讲义从 $1$ 编号，每个数大 $1$）一致。顶点 $2$ 的邻点是 \texttt{Edge[6:10]=[0,1,3,4]}。
+
+\begin{center}
+\begin{tikzpicture}
+  \foreach \v [count=\i from 0] in {0,3,6,10,13,16} \node[cell] (V\i) at (\i*0.8,0) {\v};
+  \node[font=\small] at (-1.1,0) {\texttt{Vertex}};
+  \foreach \i in {0,...,5} \node[idx] at (\i*0.8,0.5) {\i};
+  \foreach \v [count=\i from 0] in {1,2,3,0,2,4,0,1,3,4,0,2,4,1,2,3} \node[cell] (E\i) at (\i*0.62-0.5,-1.6) {\v};
+  \foreach \i in {6,7,8,9} \node[cellh] at (\i*0.62-0.5,-1.6) {};
+  \foreach \v [count=\i from 6] in {0,1,3,4} \node[font=\small\ttfamily] at (\i*0.62-0.5,-1.6) {\v};
+  \node[font=\small] at (-1.6,-1.6) {\texttt{Edge}};
+  \foreach \i in {0,...,15} \node[idx] at (\i*0.62-0.5,-2.1) {\i};
+  \draw[ptr] (V2.south) -- (E6.north); \draw[ptr] (V3.south) -- (E10.north);
+\end{tikzpicture}
+\end{center}
+
+\emph{代价。}内存 $n+1+2m$，没有指针，取邻点和列表版一样快。但加边、删边要挪动大段数组，所以只适合图建好之后不再改变的场合。
+
+\topic{二之三、逆邻接表}
+
+有向图的邻接表只存出邻点。有些算法要“反着走”（强连通分支算法的第二步要找“能到达 $w$ 的点”），这时再存一份\emph{逆邻接表}，即把所有弧反向之后的邻接表，它列出每个顶点的入邻点。
+
+\begin{lstlisting}[language=Python]
+def reverse_adjacency(n, arcs):
+    radj = [[] for _ in range(n)]
+    for u, v in arcs:
+        radj[v].append(u)        # 弧 u->v 记在 v 的表里
+    return radj
+\end{lstlisting}
+
+$D$ 的逆邻接表是 \texttt{[[1],[0,2],[0,1,3],[1]]}：例如顶点 $2$ 的入邻点是 $0,1,3$。
+
+\topic{三、三元组（边列表）}
+
+最朴素的存法：一个列表，每个元素是一条边 $(u,v,c)$，再记下 $n$ 与 $m$。讲义称每个元素为一个“三元组”，三个分量叫行号、列号与权，因为它们正是邻接矩阵中一个非零元的位置与数值。不带权时就是边列表，例如 \texttt{G\_edges}。
+
+\emph{代价。}内存 $3m$。列出某个顶点的邻点要扫描全部 $m$ 条边。它的用处是可以\emph{按权排序}：Kruskal 算法第一步就是把边按权从小到大排好（第~\ref{lec:mst-kruskal} 讲）。
+
+\begin{lstlisting}[language=Python,style=frag]
+sorted(N_edges, key=lambda e: e[2])   # 按第 3 个分量（权）排序
+# [(0,1,1), (0,2,2), (1,2,2), (3,4,2), (1,4,3), (1,3,4), (2,3,4), (2,4,4)]
+\end{lstlisting}
+
+\topic{四、十字链表（有向图）}
+
+想同时快速地列出出邻点和入邻点，可以把邻接表与逆邻接表合在一起：每条弧只存\emph{一个}结点，但这个结点同时挂在两条链表上，一条是它的尾的出弧链表（矩阵的“行”），一条是它的头的入弧链表（矩阵的“列”），像一个十字。
+
+每条弧 $k$ 存五项：尾 \texttt{tail[k]}、头 \texttt{head[k]}、权 \texttt{w[k]}、同一行的下一条弧 \texttt{tnext[k]}（讲义的 \texttt{linnext}）、同一列的下一条弧 \texttt{hnext[k]}（讲义的 \texttt{colnext}）。每个顶点存两个头指针：\texttt{firstout[v]}（讲义的 \texttt{firstout}，第一条出弧）与 \texttt{firstin[v]}（第一条入弧）。
+
+\begin{lstlisting}[language=Python]
+def orthogonal_list(n, warcs):
+    """warcs: [(u, v, c)]。返回十字链表的七个数组。"""
+    firstout, firstin = [NULL] * n, [NULL] * n
+    tail, head, w, tnext, hnext = [], [], [], [], []
+    for u, v, c in warcs:
+        k = len(tail)
+        tail.append(u); head.append(v); w.append(c)
+        tnext.append(firstout[u]); firstout[u] = k   # 挂到 u 的出弧链表最前面
+        hnext.append(firstin[v]);  firstin[v] = k    # 挂到 v 的入弧链表最前面
+    return firstout, firstin, tail, head, w, tnext, hnext
+
+def out_arcs(L, u):
+    firstout, firstin, tail, head, w, tnext, hnext = L
+    out, k = [], firstout[u]
+    while k != NULL:
+        out.append((head[k], w[k]))
+        k = tnext[k]
+    return out
+
+def in_arcs(L, v):
+    firstout, firstin, tail, head, w, tnext, hnext = L
+    out, k = [], firstin[v]
+    while k != NULL:
+        out.append((tail[k], w[k]))
+        k = hnext[k]
+    return out
+\end{lstlisting}
+
+例子（讲义图 1.4）的邻接矩阵是
+\[
+\begin{pmatrix}0&8&7&0\\0&0&0&0\\6&0&0&8\\5&6&9&0\end{pmatrix},
+\]
+即七条带权的弧：
+
+\begin{lstlisting}[language=Python]
+O_arcs = [(0, 1, 8), (0, 2, 7), (2, 0, 6), (2, 3, 8), (3, 0, 5), (3, 1, 6), (3, 2, 9)]
+\end{lstlisting}
+
+按顺序插入七条弧，得到的数组：
+
+\begin{center}
+\begin{tabular}{cccccc}
+\toprule
+弧 $k$ & \texttt{tail} & \texttt{head} & \texttt{w} & \texttt{tnext}（同尾的下一条） & \texttt{hnext}（同头的下一条） \\
+\midrule
+0 & 0 & 1 & 8 & $-1$ & $-1$ \\
+1 & 0 & 2 & 7 & 0 & $-1$ \\
+2 & 2 & 0 & 6 & $-1$ & $-1$ \\
+3 & 2 & 3 & 8 & 2 & $-1$ \\
+4 & 3 & 0 & 5 & $-1$ & 2 \\
+5 & 3 & 1 & 6 & 4 & 0 \\
+6 & 3 & 2 & 9 & 5 & 1 \\
+\bottomrule
+\end{tabular}
+\qquad
+\begin{tabular}{ccc}
+\toprule
+顶点 & \texttt{firstout} & \texttt{firstin} \\
+\midrule
+0 & 1 & 4 \\
+1 & $-1$ & 5 \\
+2 & 3 & 6 \\
+3 & 6 & 3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+例如 \texttt{hnext[4]=2}：插入弧 $4$（$3\to0$）时，顶点 $0$ 的入弧链表原来以弧 $2$（$2\to0$）开头，弧 $4$ 插到它前面。列出顶点 $3$ 的出弧：\texttt{k=firstout[3]=6}（$3\to2$，权 $9$），\texttt{k=tnext[6]=5}（$3\to1$，权 $6$），\texttt{k=tnext[5]=4}（$3\to0$，权 $5$），\texttt{k=tnext[4]=-1}，停。列出顶点 $0$ 的入弧：\texttt{k=firstin[0]=4}（来自 $3$），\texttt{k=hnext[4]=2}（来自 $2$），\texttt{k=hnext[2]=-1}，停。
+
+\emph{代价。}出弧、入弧都能按 $O(\text{个数})$ 列出，内存 $2n+5m$。它是“邻接矩阵的稀疏存储”：只存非零元，并把同一行、同一列的非零元各串成链。
+
+\topic{五、邻接多重表（无向图）}
+
+无向图的邻接表中，每条边 $uv$ 出现两次（在 $u$ 的表里一次，在 $v$ 的表里一次）。求欧拉环游时要标记“这条边已经走过”，若边存了两份，就要同时找到并标记两份，很麻烦。邻接多重表让每条边只存一个结点，这个结点同时挂在两个端点的链表上：边 $k$ 存端点 \texttt{I[k]}、\texttt{J[k]}、权 \texttt{W[k]}，以及“在 \texttt{I[k]} 的链表上的下一条边” \texttt{inext[k]}、“在 \texttt{J[k]} 的链表上的下一条边” \texttt{jnext[k]}；顶点 $v$ 存 \texttt{first[v]}。
+
+\begin{lstlisting}[language=Python]
+def multilist(n, wedges):
+    first = [NULL] * n
+    I, J, W, inext, jnext = [], [], [], [], []
+    for u, v, c in wedges:
+        k = len(I)
+        I.append(u); J.append(v); W.append(c)
+        inext.append(first[u]); first[u] = k     # 挂到 u 的链表最前面
+        jnext.append(first[v]); first[v] = k     # 也挂到 v 的链表最前面
+    return first, I, J, W, inext, jnext
+
+def edges_at(M, v):
+    """v 关联的全部边的编号。"""
+    first, I, J, W, inext, jnext = M
+    out, e = [], first[v]
+    while e != NULL:
+        out.append(e)
+        e = inext[e] if I[e] == v else jnext[e]  # v 是这条边的哪一端，就走哪一个 next
+    return out
+\end{lstlisting}
+
+对 $N$：
+
+\begin{center}
+\begin{tabular}{ccccccc}
+\toprule
+边 $k$ & \texttt{I} & \texttt{J} & \texttt{W} & \texttt{inext} & \texttt{jnext} \\
+\midrule
+0 & 0 & 1 & 1 & $-1$ & $-1$ \\
+1 & 0 & 2 & 2 & 0 & $-1$ \\
+2 & 1 & 2 & 2 & 0 & 1 \\
+3 & 1 & 3 & 4 & 2 & $-1$ \\
+4 & 1 & 4 & 3 & 3 & $-1$ \\
+5 & 2 & 3 & 4 & 2 & 3 \\
+6 & 2 & 4 & 4 & 5 & 4 \\
+7 & 3 & 4 & 2 & 5 & 6 \\
+\bottomrule
+\end{tabular}
+\qquad \texttt{first=[1,4,6,7,7]}
+\end{center}
+
+列出顶点 $2$ 关联的边：\texttt{e=first[2]=6}，\texttt{I[6]=2}，所以下一条是 \texttt{inext[6]=5}；\texttt{I[5]=2}，下一条 \texttt{inext[5]=2}；边 $2$ 是 $(1,2)$，$2$ 是 \texttt{J} 端，下一条 \texttt{jnext[2]=1}；边 $1$ 是 $(0,2)$，$2$ 是 \texttt{J} 端，下一条 \texttt{jnext[1]=-1}，停。得到边 $6,5,2,1$，即 $24,23,12,02$。
+
+\topic{六、关联矩阵}
+
+$n\times m$ 的矩阵 $B$，行对应顶点，列对应边。无向图中 $B[v][k]=1$ 当且仅当 $v$ 是边 $k$ 的端点；有向图中 $B[v][k]=1$ 若 $v$ 是弧 $k$ 的尾，$-1$ 若是头，否则 $0$。每列恰有两个非零元。
+
+\begin{lstlisting}[language=Python]
+def incidence_matrix(n, edges, directed=False):
+    B = [[0] * len(edges) for _ in range(n)]
+    for k, (u, v) in enumerate(edges):   # enumerate 同时给出编号 k 与边 (u, v)
+        B[u][k] = 1
+        B[v][k] = -1 if directed else 1
+    return B
+\end{lstlisting}
+
+$G$ 的关联矩阵（列按 \texttt{G\_edges} 的顺序：$01,02,03,12,14,23,24,34$）：
+\[
+B(G)=\begin{pmatrix}
+1&1&1&0&0&0&0&0\\
+1&0&0&1&1&0&0&0\\
+0&1&0&1&0&1&1&0\\
+0&0&1&0&0&1&0&1\\
+0&0&0&0&1&0&1&1
+\end{pmatrix}.
+\]
+关联矩阵有 $nm$ 格，几乎全是 $0$，不用来写程序。它的用处在理论上：有向图的关联矩阵是\emph{全单模}的（每个方子式都是 $0$ 或 $\pm1$），这是网络流、最短路等问题的线性规划有整数最优解的原因，以后会用到。
+
+\topic{七、比较}
+
+\begin{center}
+\small
+\begin{tabular}{lccccc}
+\toprule
+结构 & 内存 & $u,v$ 是否相邻 & 列出 $N^+(v)$ & 列出 $N^-(v)$ & 加边 \\
+\midrule
+邻接矩阵 & $n^2$ & $O(1)$ & $O(n)$ & $O(n)$ & $O(1)$ \\
+邻接表（列表、链表） & $n+m$ & $O(d^+(u))$ & $O(d^+(v))$ & $O(m)$ & $O(1)$ \\
+邻接表 $+$ 逆邻接表 & $n+2m$ & $O(d^+(u))$ & $O(d^+(v))$ & $O(d^-(v))$ & $O(1)$ \\
+顺序数组（CSR） & $n+m$ & $O(d^+(u))$ & $O(d^+(v))$ & $O(m)$ & $O(n+m)$ \\
+三元组（边列表） & $3m$ & $O(m)$ & $O(m)$ & $O(m)$ & $O(1)$ \\
+十字链表 & $2n+5m$ & $O(d^+(u))$ & $O(d^+(v))$ & $O(d^-(v))$ & $O(1)$ \\
+邻接多重表（无向） & $n+5m$ & $O(d(u))$ & $O(d(v))$ & — & $O(1)$ \\
+关联矩阵 & $nm$ & $O(m)$ & $O(m)$ & $O(m)$ & — \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+（无向图把 $d^+$、$d^-$ 都读作 $d$，邻接表的内存是 $n+2m$。）选择的原则：
+\begin{itemize}
+\item 算法的主要工作是“对每个顶点扫一遍它的邻点”（遍历、强连通分支、拓扑排序、Prim）：用邻接表，得到 $O(n+m)$ 的时间。
+\item 要大量回答“$u,v$ 是否相邻”，或图很稠密（$m$ 接近 $n^2$）：用邻接矩阵。
+\item 要按权排序所有边：用三元组。
+\item 有向图要双向走：邻接表加逆邻接表，或十字链表。
+\item 无向图要给边打标记：邻接多重表，或者给每条边一个编号、在邻接表里存编号（第~\ref{lec:euler-tours} 讲就这样做）。
+\end{itemize}
+
+\homework{图的存储的练习}[图的存储]
+
+\exercisepart{练习}
+
+\begin{exercises}{A}{图的存储}
+\item\label{ex:graph-storage:A1} 写出把邻接矩阵转成邻接表、以及把邻接表转成邻接矩阵的函数，并说明各自的复杂度。
+\begin{solution}
+\begin{lstlisting}[language=Python]
+def matrix_to_list(A):
+    n = len(A)
+    return [[v for v in range(n) if A[u][v]] for u in range(n)]
+
+def list_to_matrix(adj):
+    n = len(adj)
+    A = [[0] * n for _ in range(n)]
+    for u in range(n):
+        for v in adj[u]:
+            A[u][v] = 1
+    return A
+\end{lstlisting}
+第一个要看矩阵的每一格，$O(n^2)$。第二个造全零矩阵要 $O(n^2)$，填数只要 $O(n+m)$，合计 $O(n^2)$。所以矩阵与表之间的转换都是 $O(n^2)$，转换本身就可能比后面要跑的线性算法慢。
+\end{solution}
+
+\item\label{ex:graph-storage:A2} 有向图 $D$ 以邻接表给出。写一个 $O(n+m)$ 的函数求它的逆邻接表，只用 \texttt{adj}，不用弧的列表。
+\begin{solution}
+\begin{lstlisting}[language=Python]
+def reverse_of(adj):
+    n = len(adj)
+    radj = [[] for _ in range(n)]
+    for u in range(n):
+        for v in adj[u]:          # 弧 u->v
+            radj[v].append(u)
+    return radj
+\end{lstlisting}
+两重循环共执行 $\sum_u(1+d^+(u))=n+m$ 次。对 $D$ 的邻接表 \texttt{[[1,2],[0,2,3],[1],[2]]} 得到 \texttt{[[1],[0,2],[0,1,3],[1]]}。
+\end{solution}
+
+\item\label{ex:graph-storage:A3} 用 \texttt{csr} 得到的 $(\texttt{Vertex},\texttt{Edge})$，写一个函数在 $O(\log d(u))$ 时间内判断 $u,v$ 是否相邻（提示：先把每个顶点的邻点排好序）。
+\begin{solution}
+先对每段 \texttt{Edge[Vertex[u]:Vertex[u+1]]} 排序（总共 $O(m\log n)$，只做一次）。查询时在这一段里二分查找：
+\begin{lstlisting}[language=Python]
+def sort_csr(Vertex, Edge):
+    for u in range(len(Vertex) - 1):
+        Edge[Vertex[u]:Vertex[u + 1]] = sorted(Edge[Vertex[u]:Vertex[u + 1]])
+
+def adjacent_csr(Vertex, Edge, u, v):
+    lo, hi = Vertex[u], Vertex[u + 1]      # 在 Edge[lo:hi] 中找 v
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if Edge[mid] < v:
+            lo = mid + 1
+        else:
+            hi = mid
+    return lo < Vertex[u + 1] and Edge[lo] == v
+\end{lstlisting}
+每轮把区间 $[lo,hi)$ 减半，$O(\log d(u))$ 轮。循环结束时 $lo$ 是第一个 $\geqslant v$ 的位置。
+\end{solution}
+
+\item\label{ex:graph-storage:A4} 证明：有向图的关联矩阵 $B$ 的每一列之和为 $0$，所以 $B$ 的秩至多为 $n-1$；并说明当底图连通时秩恰为 $n-1$。
+\begin{solution}
+每列恰有一个 $1$（尾）和一个 $-1$（头），列和为 $0$，即全 $1$ 行向量 $\mathbf 1^\top$ 满足 $\mathbf1^\top B=0$，所以 $B$ 的行向量线性相关，秩 $\leqslant n-1$。设底图连通，$y^\top B=0$，则对每条弧 $u\to v$ 有 $y_u-y_v=0$；沿底图中的路传递，所有 $y_v$ 相等，所以左零空间是一维的，秩为 $n-1$。
+\end{solution}
+\end{exercises}

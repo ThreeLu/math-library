@@ -139,6 +139,38 @@
 % 讲内小标题：不编号、不进目录
 \newcommand{\topic}[1]{\subsection*{#1}}
 
+% 课程分部：一本书收几门课时，每门课一部分，讲次在每部分内从 1 重新编号。
+%   \coursepart{图论}   排一页分部标题，进目录；网页上目录与侧栏按分部分组
+\newcounter{coursepart}
+\newcommand{\coursepart}[1]{%
+  \clearpage\stepcounter{coursepart}\setcounter{section}{0}%
+  \phantomsection\addcontentsline{toc}{part}{#1}%
+  \thispagestyle{empty}\vspace*{0.3\textheight}%
+  \begin{center}{\Huge\bfseries #1\par}\end{center}\clearpage}
+\renewcommand{\theHsection}{\arabic{coursepart}.\arabic{section}}
+
+% 代码：listings。可运行的代码写 [language=Python]；只用来演示、不参与测试的片段写 [language=Python,style=frag]。
+\RequirePackage{listings}
+\lstdefinestyle{yp}{basicstyle=\small\ttfamily,columns=fullflexible,keepspaces=true,
+  keywordstyle=\color{ypblue!70!black}\bfseries,commentstyle=\color{ypgreen!80!black},
+  stringstyle=\color{ypred!60!black},showstringspaces=false,breaklines=true,
+  numbers=left,numberstyle=\tiny\color{black!50},numbersep=6pt,xleftmargin=1.6em,
+  frame=leftline,framerule=0.6pt,rulecolor=\color{black!25},aboveskip=1ex,belowskip=1ex,
+  upquote=true}
+\lstdefinestyle{frag}{style=yp}
+\lstset{style=yp}
+% 行内代码 \texttt{...} 可以在逗号后断行（讲义里常有 \texttt{[0,1,2,...]} 这样的长列表）
+\NewCommandCopy{\yp@texttt}{\texttt}
+\ExplSyntaxOn
+\tl_new:N \l__yp_tt_tl
+\RenewDocumentCommand{\texttt}{m}
+  {
+    \tl_set:Nn \l__yp_tt_tl {#1}
+    \tl_replace_all:Nnn \l__yp_tt_tl { , } { , \allowbreak }
+    \yp@texttt { \tl_use:N \l__yp_tt_tl }
+  }
+\ExplSyntaxOff
+
 % ---------------------------------------------------------------------
 %  文字强调
 % ---------------------------------------------------------------------
@@ -221,10 +253,13 @@
   left=2.2mm, right=1.2mm, top=.8mm, bottom=.8mm,
   before skip=.8ex plus .2ex, after skip=1.2ex plus .3ex,
   parbox=false, before upper={\parindent=2em}}
-\NewDocumentEnvironment{solution}{O{解答} +b}{%
-  \ifshowsolutions
-    \begin{yp@solutionbox}\normalfont\noindent{\small\itshape #1:}\ \ignorespaces#2\hfill$\square$\end{yp@solutionbox}%
-  \fi}{}
+% 不把内容读成参数，所以解答里可以放代码（lstlisting 等逐字环境）。
+% 是否排出解答在 \begin{document} 时决定：\showsolutionsfalse 时整个环境被 comment 宏包跳过。
+\RequirePackage{comment}
+\NewDocumentEnvironment{solution}{O{解答}}{%
+  \begin{yp@solutionbox}\normalfont\noindent{\small\itshape #1:}\ \ignorespaces}%
+  {\ifhmode\unskip\fi\hfill$\square$\end{yp@solutionbox}}
+\AtBeginDocument{\ifshowsolutions\else\excludecomment{solution}\fi}
 
 % 附录内的定义、命题、引理、定理、推论另起编号，排作“定理 A.1”；
 % 在附录的 \section 之后使用，不影响正文各讲的连续编号。
