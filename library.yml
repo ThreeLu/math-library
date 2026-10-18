@@ -56,15 +56,6 @@ books:
     lang: en
     status: planned
 
-  - slug: rainbow-subgraphs
-    title: Rainbow Subgraphs
-    subtitle: Rainbow matchings, transversals and spanning structures
-    category: research
-    lang: en
-    status: active
-    source: books/rainbow-subgraphs
-    main: main.tex
-
   - slug: locally-sparse-graphs
     title: Locally Sparse Graphs
     category: research
