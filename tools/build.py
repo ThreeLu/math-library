@@ -629,7 +629,10 @@ def source_version(book):
     """Short commit of the last build; "-dirty" when the book has uncommitted edits."""
     r = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT, capture_output=True, text=True)
     commit = r.stdout.strip()
-    dirty = subprocess.run(["git", "status", "--porcelain", "--", book["source"]],
+    # GitHub Actions builds exactly the pushed commit (its LaTeX output is untracked noise)
+    if os.environ.get("GITHUB_ACTIONS"):
+        return commit
+    dirty = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no", "--", book["source"]],
                            cwd=ROOT, capture_output=True, text=True).stdout.strip()
     return commit + ("-dirty" if commit and dirty else "")
 
