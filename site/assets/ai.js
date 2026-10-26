@@ -105,10 +105,13 @@
     document.body.append(shade);
     key.focus();
   }
-  if (location.hash === "#ai") {
+  const settingsFromHash = () => {
+    if (location.hash !== "#ai") return;
     history.replaceState(null, "", location.pathname + location.search);
-    openSettings();
-  }
+    if (!document.querySelector(".yp-ai-modal")) openSettings();
+  };
+  settingsFromHash();
+  addEventListener("hashchange", settingsFromHash);
 
   // ---------------------------------------------------------------------
   //  Everything else needs a key and a page of notes

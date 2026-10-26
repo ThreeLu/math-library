@@ -447,12 +447,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---- AI questions: only in a browser where the author turned them on
   // (#ai opens the settings); the code is in assets/ai.js.
   const ai = store.get("yp:ai");
-  if ((ai && ai.key) || location.hash === "#ai") {
+  const loadAI = () => {
+    if (document.getElementById("yp-ai-js")) return;
     const s = document.createElement("script");
     const offset = document.querySelector('meta[name="quarto:offset"]');
+    s.id = "yp-ai-js";
     s.src = (offset ? offset.content : "./") + "assets/ai.js";
     document.head.append(s);
-  }
+  };
+  if ((ai && ai.key) || location.hash === "#ai") loadAI();
+  // #ai typed after the address of a page already open: no reload, only this event
+  addEventListener("hashchange", () => { if (location.hash === "#ai") loadAI(); });
 
   // ---- Index of results: search box and kind filter ("/" focuses the box)
   const q = document.getElementById("yp-idx-q");
