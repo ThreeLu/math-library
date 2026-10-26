@@ -41,6 +41,13 @@ make preview   # 本地预览 http://localhost:4200
 - 深色模式跟随系统：整页 `filter: invert(0.92) hue-rotate(180deg)`，TikZ 图随之反色，不必单独配色。
 - 点交叉引用（定理/公式编号、文献、索引条目）跳转后，右下角出现“返回”按钮（键盘 `b`），可逐级退回跳转前的位置，跨页面也有效；记录存在 sessionStorage 里，关掉标签页即清空。
 
+## AI 问答（只在作者自己的浏览器里）
+
+- 在任一页网址后加 `#ai` 打开设置，填 DeepSeek API key、GitHub token、记录仓库（默认 `ThreeLu/math-library-notes`，私有）。这些只存在该浏览器的 localStorage `yp:ai` 里；没填 key 的浏览器不加载 `site/assets/ai.js`，读者看不到这个功能。
+- 选中正文 → “问 AI” → 右侧面板（窄屏为底部面板）。键盘 `a` 重新打开面板。模型 `deepseek-chat`，浏览器直接调用 API。
+- 发给模型的上下文：本页 LaTeX 源码、记号宏、选中部分（公式还原成 TeX）。源码由 `tools/build.py` 的 `write_page_sources` 写到 `books/<slug>/src/<页>.tex`，`src/book.json` 带书名、记号宏和构建时的提交号。
+- 每段对话存成记录仓库里的 `<书>/<页>/<日期时间>-<定理名>.md`：front matter 有 book、page、anchor（定理 id 和编号）、commit、note（作者备注）；`<!-- yp:q -->` / `<!-- yp:a -->` 标出问答轮次，面板的“记录”按它读回。改讲义时 clone 这个仓库，按书和页读记录。
+
 ## 新增、收纳一本书
 
 1. 复制 `templates/english-book/` 到 `books/<slug>/`（中文书照 `books/advanced-probability/` 的结构）。

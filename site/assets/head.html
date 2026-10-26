@@ -444,6 +444,16 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !pop.hidden) hidePop(); });
   addEventListener("resize", () => { if (!pop.hidden) hidePop(); });
 
+  // ---- AI questions: only in a browser where the author turned them on
+  // (#ai opens the settings); the code is in assets/ai.js.
+  const ai = store.get("yp:ai");
+  if ((ai && ai.key) || location.hash === "#ai") {
+    const s = document.createElement("script");
+    const offset = document.querySelector('meta[name="quarto:offset"]');
+    s.src = (offset ? offset.content : "./") + "assets/ai.js";
+    document.head.append(s);
+  }
+
   // ---- Index of results: search box and kind filter ("/" focuses the box)
   const q = document.getElementById("yp-idx-q");
   if (q) {

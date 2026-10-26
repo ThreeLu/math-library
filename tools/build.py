@@ -574,6 +574,7 @@ def build_book(book, no_latex):
         thm_offset += len(re.findall(r"\\begin\{(" + "|".join(NUMBERED_ENVS) + r")\}", clean))
         sec_offset += len(re.findall(r"\\section\{", clean))
 
+    write_page_sources(book, pages, out, macros)
     write_book_index(book, pages, out, pdf_name if pdf.exists() else None, progress)
     write_dir_metadata(book, out)
     entries = [json.loads(l) for l in index_path.read_text(encoding="utf-8").splitlines() if l.strip()]
@@ -622,6 +623,29 @@ def tex_to_unicode(s):
 def tex_to_unicode_text(s):
     """Search text for the index: \\sigma -> σ etc., other commands dropped."""
     return re.sub(r"\\([A-Za-z]+)", lambda m: GREEK.get(m.group(1), " "), s)
+
+
+def source_version(book):
+    """Short commit of the last build; "-dirty" when the book has uncommitted edits."""
+    r = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT, capture_output=True, text=True)
+    commit = r.stdout.strip()
+    dirty = subprocess.run(["git", "status", "--porcelain", "--", book["source"]],
+                           cwd=ROOT, capture_output=True, text=True).stdout.strip()
+    return commit + ("-dirty" if commit and dirty else "")
+
+
+def write_page_sources(book, pages, out, macros):
+    """src/<page>.tex and src/book.json: what the AI questions in head.html send
+    along with a selection (the page's LaTeX, the notation, the version)."""
+    d = out / "src"
+    d.mkdir()
+    figure = "[图]" if book.get("lang") == "zh" else "[figure]"
+    for p in pages:
+        tex = TIKZ.sub(figure, strip_comments(p["tex"]))
+        (d / f"{p['file']}.tex").write_text(re.sub(r"\n{3,}", "\n\n", tex).strip() + "\n", encoding="utf-8")
+    info = {"title": book["title"], "lang": book.get("lang", "en"),
+            "commit": source_version(book), "macros": macros}
+    (d / "book.json").write_text(json.dumps(info, ensure_ascii=False), encoding="utf-8")
 
 
 def write_dir_metadata(book, out):
@@ -755,7 +779,7 @@ def write_quarto_yml(lib, sidebars):
     repo = f"https://github.com/{cfg['github']}/{cfg['repo']}"
     q = {
         "project": {"type": "website", "output-dir": "_site",
-                    "resources": ["books/*/*.pdf"]},
+                    "resources": ["books/*/*.pdf", "books/*/src/*", "assets/ai.js"]},
         "website": {
             "title": cfg["title"],
             "description": cfg.get("description", ""),
