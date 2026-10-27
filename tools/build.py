@@ -555,6 +555,8 @@ def build_book(book, no_latex):
             p["no"] = lecture_no
             if lang == "zh":
                 meta["yp-kicker"] = f"{part_word}第 {lecture_no} 讲"
+            if p["topic"]:  # short title; the long \lecture heading becomes the lede
+                meta["yp-short-title"] = topic_name(p["topic"])
             lec = labels.get(f"lec:{p['unit']}")
             if lec:
                 meta["yp-pdf-page"] = lec["pdfpage"]
@@ -582,10 +584,15 @@ def build_book(book, no_latex):
     return pages, entries
 
 
+def topic_name(topic):
+    """"独立性，分组定理，……" -> "独立性" (progress-table topic, first item)."""
+    return re.split(r"[，：；（(]", topic)[0].strip()
+
+
 def short_label(p, zh):
     """Sidebar / index label: "1. 集合系" from the progress-table topic, else the title."""
     if p.get("topic"):
-        name = re.split(r"[，：；（(]", p["topic"])[0].strip()
+        name = topic_name(p["topic"])
         return f"{p['no']}. {name}" if zh else name
     return plain_title(p.get("title", ""))
 

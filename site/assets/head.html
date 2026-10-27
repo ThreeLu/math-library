@@ -3,6 +3,22 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.7.0/style.css">
 <script>
+// MathJax 4 breaks long in-line formulas before a relation or operator
+// ("B" | "= {...}"); TeX breaks after it, which reads better.
+window.MathJax = {
+  startup: {
+    ready() {
+      MathJax.startup.defaultReady();
+      MathJax.startup.input[0].postFilters.add(({math, data}) => {
+        const root = data && data.walkTree ? data : (data && data.root) || math.root;
+        root.walkTree(node => {
+          if (node.isKind("mo")) node.attributes.set("linebreakstyle", "after");
+        });
+      });
+    },
+  },
+};
+
 // Hidden contents columns (left: the book, right: this page), set before the
 // first paint so the page does not jump.
 try {

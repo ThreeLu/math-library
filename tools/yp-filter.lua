@@ -21,6 +21,7 @@
 --    yp-sec-offset  sections before this page (section mode)
 --    yp-pdf         URL of the book PDF
 --    yp-kicker, yp-pdf-page   banner contents
+--    yp-short-title  short page title; the long \lecture heading becomes the lede
 --    yp-index       file to append index-of-results entries to (JSON lines)
 -- =====================================================================
 
@@ -704,14 +705,25 @@ function Pandoc(doc)
   blocks = blocks:walk({Inlines = glue_punct})
 
   -- The page title is the first level-1 heading (\lecture or \section).
+  -- A lecture with a short title (from the progress table) shows that instead,
+  -- and its long heading, a list of the lecture's topics, goes under the banner.
+  local short = stringify(doc.meta['yp-short-title'] or '')
+  local lede
   for i, b in ipairs(blocks) do
     if b.t == 'Header' and b.level == 1 then
-      doc.meta.title = b.content
-      doc.meta.pagetitle = plain_text(b.content)
+      if short ~= '' then
+        doc.meta.title = pandoc.Inlines({pandoc.Str(short)})
+        doc.meta.pagetitle = short
+        lede = pandoc.Div({pandoc.Para(b.content)}, {class = 'yp-lede'})
+      else
+        doc.meta.title = b.content
+        doc.meta.pagetitle = plain_text(b.content)
+      end
       blocks:remove(i)
       break
     end
   end
+  if lede then blocks:insert(1, lede) end
 
   -- Banner: lecture number and a link into the PDF.
   local banner = pandoc.List()
@@ -733,7 +745,7 @@ function Pandoc(doc)
   doc.blocks = {pandoc.Div(blocks, body_attr)}
   for _, k in ipairs({'yp-labels', 'yp-page', 'yp-lang', 'yp-numbering', 'yp-thm-offset',
       'yp-sec-offset', 'yp-pdf', 'yp-kicker', 'yp-pdf-page', 'yp-index',
-      'yp-book', 'yp-book-title', 'yp-crumb'}) do
+      'yp-book', 'yp-book-title', 'yp-crumb', 'yp-short-title'}) do
     doc.meta[k] = nil
   end
   return doc
