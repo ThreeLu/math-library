@@ -589,7 +589,7 @@ def build_book(book, no_latex):
 
 def topic_name(topic):
     """"独立性，分组定理，……" -> "独立性" (progress-table topic, first item)."""
-    return re.split(r"[，：；（(]", topic)[0].strip()
+    return plain_title(re.split(r"[，：；（(]", topic)[0].strip())
 
 
 def short_label(p, zh):
@@ -645,10 +645,15 @@ def esc(t):
 
 
 def topic_html(t):
-    """Progress-table topics are plain text: R^d -> R<sup>d</sup>, a_{n} -> a<sub>n</sub>."""
+    """Progress-table topic on the contents page: $...$ is set by MathJax; in the
+    plain text, R^d -> R<sup>d</sup>, a_{n} -> a<sub>n</sub> (older tables)."""
     tag = {"^": "sup", "_": "sub"}
-    return re.sub(r"([\^_])(?:\{([^}]*)\}|(\w))",
-                  lambda m: f"<{tag[m[1]]}>{m[2] or m[3]}</{tag[m[1]]}>", esc(t))
+
+    def text(u):
+        return re.sub(r"([\^_])(?:\{([^}]*)\}|(\w))",
+                      lambda m: f"<{tag[m[1]]}>{m[2] or m[3]}</{tag[m[1]]}>", esc(u))
+    parts = re.split(r"\$([^$]*)\$", t)
+    return "".join(r"\(" + esc(x) + r"\)" if i % 2 else text(x) for i, x in enumerate(parts))
 
 
 CATEGORY_WORD = {"courses": "Course", "research": "Research notes", "surveys": "Survey"}
@@ -710,6 +715,10 @@ def write_book_index(book, pages, out, pdf_name, progress):
     lines = ["---", f"pagetitle: {json.dumps(book['title'], ensure_ascii=False)}", "toc: false",
              "sidebar: false", "---", "",
              "```{=html}", "\n".join(h), "```", ""]
+    if r"\(" in "\n".join(h):
+        # Quarto loads MathJax only if pandoc sees math, and it does not look
+        # inside raw HTML; one hidden formula makes it load for the topics.
+        lines += ["[$\\,$]{style=\"display:none\"}", ""]
     (out / "index.qmd").write_text("\n".join(lines), encoding="utf-8")
 
 
