@@ -189,6 +189,10 @@ html[lang|="zh"] .quarto-title h1.title { font-family: var(--yp-song); font-size
   p { margin: 0.75em 0; }
   mjx-container[display="true"] { margin: 1em 0 !important; overflow-x: auto; overflow-y: hidden; }
   h2 { font-family: var(--yp-serif); font-size: 1.22rem; font-weight: 700; margin-top: 2.6em; margin-bottom: 0.6em; }
+  h2::before {          // a short rule marks where a section starts
+    content: ""; display: block; width: 2.4rem; height: 2px;
+    background: var(--yp-accent-soft); margin-bottom: 0.9em;
+  }
   h3 { font-family: var(--yp-serif); font-size: 1.05rem; font-weight: 700; margin-top: 2em; }
   a.yp-ref { color: var(--yp-accent); }
 }
@@ -230,16 +234,21 @@ html[lang|="en"] .quarto-title h1.title { font-family: "LM Roman", Georgia, seri
 .yp-secnum { color: var(--yp-accent); font-weight: 400; margin-right: 0.15em; }
 html[lang|="en"] #refs, html[lang|="en"] #quarto-bibliography { font-family: "LM Roman", Georgia, serif; font-size: 0.95rem; }
 
-// Page banner: 第 N 讲 · open in PDF
+// Page banner: 第 N 讲 · open in PDF. It comes first in the body but is shown
+// as an eyebrow line above the title (the title block sits outside the body).
+main.content { position: relative; }
+main.content:has(.yp-banner) #title-block-header { padding-top: 2.1rem; }
 .yp-banner {
-  font-family: var(--yp-sans); font-size: 0.76rem; margin: 0.7rem 0 2em;
+  position: absolute; top: 0; left: 0; right: 0;
+  font-family: var(--yp-sans); font-size: 0.74rem; margin: 0;
   p { margin: 0; display: flex; gap: 0.9em; align-items: baseline; flex-wrap: wrap; text-align: left !important; }
 }
 .yp-kicker { color: var(--yp-accent); letter-spacing: 0.12em; }
 // A lecture's full heading (its list of topics), under the short title
 .yp-lede {
-  margin: -1.2em 0 2.2em; color: var(--yp-muted); font-size: 0.86rem; line-height: 1.75;
+  margin: 0.2em 0 2.4em; color: var(--yp-muted); font-size: 0.86rem; line-height: 1.75;
   p { margin: 0; }
+  @media (max-width: 599.98px) { margin-top: 0.7em; }
 }
 .yp-banner-pdf { color: var(--yp-faint) !important; }
 .yp-banner-pdf::after { content: " ↗"; }
@@ -257,17 +266,24 @@ html[lang|="en"] #refs, html[lang|="en"] #quarto-bibliography { font-family: "LM
   @media (max-width: 1199.98px), (hover: none) { display: none; }
 }
 .yp-thm:hover .yp-thm-pdf a { opacity: 1; }
-// A hairline in the left gutter marks statements, so they can be found by
-// skimming: purple for results, beige for definitions, dashed for open ones.
-// Examples and remarks stay unmarked.
+// A rule in the left gutter marks statements, so they can be found by
+// skimming: the accent for results (whose heads take the accent too), the soft
+// accent for definitions, dashed for open ones. Examples and remarks stay
+// unmarked, with a quieter head.
 .yp-theorem, .yp-proposition, .yp-lemma, .yp-corollary, .yp-fact, .yp-claim,
 .yp-definition, .yp-conjecture, .yp-problem {
-  border-left: 2px solid var(--yp-accent-soft);
+  border-left: 2px solid var(--yp-accent);
   padding-left: 0.95rem; margin-left: -1.1rem;
   @media (max-width: 599.98px) { margin-left: -0.75rem; padding-left: 0.6rem; }
 }
-.yp-definition { border-left-color: var(--yp-beige); }
+.yp-definition, .yp-conjecture, .yp-problem { border-left-color: var(--yp-accent-soft); }
 .yp-conjecture, .yp-problem { border-left-style: dashed; }
+.yp-theorem, .yp-proposition, .yp-lemma, .yp-corollary, .yp-fact, .yp-claim {
+  > p:first-of-type .yp-thm-head strong, > .yp-thm-pdf + p .yp-thm-head strong { color: var(--yp-accent); }
+}
+.yp-example, .yp-remark, .yp-workedexample, .yp-historynote {
+  .yp-thm-head strong { color: var(--yp-muted); }
+}
 .yp-thm:target, .yp-eq:target, .yp-qitem:has(:target) {
   background: rgba(106, 90, 138, 0.05);
   box-shadow: -0.6rem 0 0 rgba(106, 90, 138, 0.05), 0.6rem 0 0 rgba(106, 90, 138, 0.05);
