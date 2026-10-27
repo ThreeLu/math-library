@@ -307,7 +307,10 @@ def figure_preamble(src, lang, macros):
            r"\usepackage{amsmath,amssymb,mathtools}",
            r"\usepackage{yp-figures}"]
     if lang == "zh":
-        pre.insert(1, r"\usepackage[UTF8,fontset=none]{ctex}\setCJKmainfont{Songti SC}")
+        # Songti SC is macOS only; CI (Linux) has Noto Serif CJK from fonts-noto-cjk
+        pre.insert(1, r"\usepackage[UTF8,fontset=none]{ctex}"
+                      r"\IfFontExistsTF{Songti SC}{\setCJKmainfont{Songti SC}}"
+                      r"{\setCJKmainfont{Noto Serif CJK SC}}")
     extra = src / "figures" / "preamble.tex"
     body = macros + (extra.read_text(encoding="utf-8") if extra.exists() else "")
     return "\n".join(pre) + "\n" + body + "\n"
