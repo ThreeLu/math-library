@@ -1,0 +1,363 @@
+% !TEX root = ../graph-theory.tex
+% =====================================================================
+%  颜-第三章问题解答：Mader 定理；Menger 定理（边形式、点形式、整体、A-B 形式）
+% =====================================================================
+\lecture{颜-第三章问题解答：Mader 定理，Menger 定理的边形式与点形式，整体连通度，$A$--$B$ 形式}
+\label{lec:yan-ch3-problems}
+
+这一讲是讲义第 3 章五个问题的完整解答。问题 1 是 Mader 的定理：平均度高的图含有连通度高的子图，证明的办法是取一个“极小的稠密子图”。问题 2--5 都是 Menger 定理：问题 2（边的形式）用增广路直接证明；问题 3（点的形式）用拆点化归到问题 2；问题 4 与问题 5 再化归到问题 2、3，后者用的是加点。
+
+记号：$\abs G$ 是顶点数，$e(G)=\abs{E(G)}$ 是边数，$d(G)=2e(G)/\abs G$ 是平均度，$\varepsilon(G)=e(G)/\abs G=d(G)/2$。有向图中 $d_F^+(v)$、$d_F^-(v)$ 是 $v$ 在弧集 $F$ 中的出度与入度。“删除”一组边或顶点后得到的图记作 $G-F$、$G-Y$。
+
+\topic{方法：极小的稠密子图}
+
+要在 $G$ 中找一个“好”的子图，可以在一族子图中取\emph{极小}的一个，而这一族用一个带余量的不等式来定义。极小性给出两种操作都不能做：删一个低度顶点；沿一个小的分离把图切成两块。前者推出最小度大，后者推出连通度高。
+
+\begin{workedexample}[问题 1]\label{we:yan-ch3-problems:mader}
+（讲义第 3 章）设 $k\geqslant1$ 是整数，简单图 $G$ 满足 $d(G)\geqslant4k$。证明 $G$ 含有一个 $(k+1)$-连通子图 $H$，使得 $\varepsilon(H)>\varepsilon(G)-k$。
+\end{workedexample}
+\begin{solution}
+记 $\gamma=\varepsilon(G)=d(G)/2\geqslant2k$。称子图 $G'\subseteq G$ \emph{稠密}，如果
+\[
+\text{(i)}\ \abs{G'}\geqslant2k,\qquad\text{(ii)}\ e(G')>\gamma\,(\abs{G'}-k).
+\]
+$G$ 本身是稠密的：$G$ 的最大度不小于平均度 $4k$，所以 $\abs G\geqslant4k+1$；又 $e(G)=\gamma\abs G>\gamma(\abs G-k)$。在稠密子图中取一个\emph{极小}的 $H$，即 $H$ 的真子图都不稠密。下面分四步证明 $H$ 就是所求的子图。
+
+(ii) 中的“$-k$”是证明的关键。沿一个至多 $k$ 个顶点的分离把 $H$ 切成两块时，公共的顶点被数了两次，两块各有一个“$-k$”，合起来正好抵消多数的部分（第 4 步）。
+
+\emph{第 1 步：$\abs H\geqslant2k+1$。}由 (i)，$\abs H\geqslant2k$。若 $\abs H=2k$，由 (ii)，
+\[
+e(H)>\gamma k\geqslant2k^2>k(2k-1)=\binom{2k}{2},
+\]
+而 $2k$ 个顶点的简单图至多有 $\binom{2k}2$ 条边，矛盾。
+
+\emph{第 2 步：$\delta(H)>\gamma$。}设有顶点 $v$ 使 $d_H(v)\leqslant\gamma$。令 $H'=H-v$。由第 1 步，$\abs{H'}=\abs H-1\geqslant2k$；又
+\[
+e(H')=e(H)-d_H(v)>\gamma(\abs H-k)-\gamma=\gamma(\abs{H'}-k).
+\]
+所以 $H'$ 是稠密的，而它是 $H$ 的真子图，与 $H$ 的极小性矛盾。（下图左：删去一个度数不超过 $\gamma$ 的顶点，边数至多减少 $\gamma$，顶点数减少 $1$，不等式 (ii) 保持。）
+
+\emph{第 3 步：$\varepsilon(H)>\gamma-k$。}由第 2 步，$\abs H\geqslant\delta(H)+1>\gamma$。由 (ii)，
+\[
+\varepsilon(H)=\frac{e(H)}{\abs H}>\gamma-\frac{\gamma k}{\abs H}>\gamma-k.
+\]
+
+\emph{第 4 步：$H$ 是 $(k+1)$-连通的。}由第 1 步，$\abs H\geqslant2k+1\geqslant k+2$。设 $H$ 不是 $(k+1)$-连通的，则有 $X\subseteq V(H)$，$\abs X\leqslant k$，使 $H-X$ 不连通。取 $H-X$ 的一个分支 $C$，令
+\[
+V_1=V(C)\cup X,\qquad V_2=V(H)\setminus V(C),\qquad H_1=H[V_1],\quad H_2=H[V_2].
+\]
+则 $V_1\cap V_2=X$，$V_1\cup V_2=V(H)$，$V_1\setminus V_2=V(C)$ 与 $V_2\setminus V_1$（$H-X$ 的其余分支）都非空。$C$ 与 $H-X$ 的其余分支之间没有边，所以 $H$ 的每条边都落在 $H_1$ 或 $H_2$ 中（下图右）。
+
+$V_1\setminus V_2$ 中的顶点的邻点都在 $V_1$ 中，由第 2 步，$\abs{H_1}\geqslant\delta(H)+1>\gamma+1>2k$，所以 $H_1$ 满足 (i)。$H_1$ 缺少 $V_2\setminus V_1$ 中的顶点，是 $H$ 的真子图，由极小性它不稠密，只能不满足 (ii)：$e(H_1)\leqslant\gamma(\abs{H_1}-k)$。同理 $e(H_2)\leqslant\gamma(\abs{H_2}-k)$。于是，由 $\abs{H_1}+\abs{H_2}=\abs H+\abs X\leqslant\abs H+k$，
+\[
+e(H)\leqslant e(H_1)+e(H_2)\leqslant\gamma\bigl(\abs{H_1}+\abs{H_2}-2k\bigr)\leqslant\gamma(\abs H-k),
+\]
+与 $H$ 满足 (ii) 矛盾。
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+  % 左：删去一个低度顶点
+  \draw[dashed, black!40, rounded corners=12pt] (-0.4,-1.7) rectangle (3.4,1.7);
+  \node[font=\small] at (1.5,2.05) {$H$};
+  \node[gv] (a1) at (0.4,1.0) {}; \node[gv] (a2) at (1.5,1.15) {}; \node[gv] (a3) at (2.6,0.9) {};
+  \node[gv] (a4) at (0.5,-0.3) {}; \node[gv] (a5) at (1.6,0.05) {}; \node[gv] (a6) at (2.7,-0.4) {};
+  \node[gvh] (v) at (1.5,-1.25) {$v$};
+  \draw[ge] (a1)--(a2) (a2)--(a3) (a1)--(a4) (a1)--(a5) (a2)--(a5) (a3)--(a5) (a3)--(a6) (a4)--(a5) (a5)--(a6) (a2)--(a6) (a1)--(a3);
+  \draw[geh] (v)--(a4) (v)--(a6);
+  \node[font=\footnotesize, align=left, anchor=west] at (3.6,-1.25) {$d_H(v)\leqslant\gamma$};
+  % 右：沿分离 X 切开
+  \begin{scope}[xshift=7.2cm]
+    \draw[black!50, rounded corners=14pt] (-0.4,-1.7) rectangle (2.6,1.7);
+    \draw[black!50, rounded corners=14pt] (1.4,-1.7) rectangle (4.6,1.7);
+    \node[font=\small] at (0.3,2.05) {$H_1$}; \node[font=\small] at (3.9,2.05) {$H_2$};
+    \node[font=\small] at (2.0,-2.05) {$X$};
+    \node[gvh] (x1) at (2.0,0.95) {}; \node[gvh] (x2) at (2.0,0) {}; \node[gvh] (x3) at (2.0,-0.95) {};
+    \node[gv] (c1) at (0.2,0.9) {}; \node[gv] (c2) at (0.2,-0.6) {}; \node[gv] (c3) at (1.0,0.15) {};
+    \node[gv] (d1) at (3.0,1.0) {}; \node[gv] (d2) at (3.9,0.4) {}; \node[gv] (d3) at (3.0,-0.5) {}; \node[gv] (d4) at (3.9,-1.0) {};
+    \draw[ge] (c1)--(c2) (c1)--(c3) (c2)--(c3) (c1)--(x1) (c3)--(x1) (c3)--(x2) (c2)--(x3) (c3)--(x3);
+    \draw[ge] (d1)--(d2) (d1)--(d3) (d2)--(d3) (d3)--(d4) (d2)--(d4) (x1)--(d1) (x2)--(d3) (x2)--(d2) (x3)--(d4) (x3)--(d3);
+    \draw[ge] (x1)--(x2);
+    \draw[RainbowRed, thick, dashed] (c1) to[bend left=35] (d1);
+    \node[RainbowRed, font=\small] at (1.6,1.95) {$\times$};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+右图中，黄色的顶点是 $X$（$\abs X\leqslant k$），左框是 $H_1$，右框是 $H_2$；红色虚线表示 $V_1\setminus V_2$ 与 $V_2\setminus V_1$ 之间不可能有边。计算 $e(H_1)+e(H_2)$ 时，$X$ 内部的边被数了两次，所以只有不等号 $e(H)\leqslant e(H_1)+e(H_2)$；顶点数一边，$X$ 被数了两次，多出的 $\abs X\leqslant k$ 被两个“$-k$”吸收。
+
+综合第 3、4 步，$H$ 是 $(k+1)$-连通的，且 $\varepsilon(H)>\varepsilon(G)-k$。
+\end{solution}
+\begin{remark}
+(1) 结论推出 $\varepsilon(H)>\gamma-k\geqslant k$，所以 $H$ 不是平凡的；常用的形式是：\emph{$d(G)\geqslant4k$ 的图含有 $(k+1)$-连通子图}（Mader）。(2) “简单图”不能去掉：两个顶点之间连 $4k$ 条重边，平均度为 $4k$，但 $(k+1)$-连通的图至少有 $k+2\geqslant3$ 个顶点，这个图没有这样的子图。证明中只有第 1 步用到了简单图。
+\end{remark}
+
+\topic{方法：增广路}
+
+设已有 $r$ 条两两弧不交的 $(s,t)$-路，它们的弧的并是 $F$。\emph{剩余图} $D_F$ 把 $F$ 中的弧反向，其余的弧不变。$D_F$ 中的 $(s,t)$-路叫\emph{增广路}。
+\begin{enumerate}
+\item 有增广路时，沿它“改道”：增广路上向前走的弧加进 $F$，向后走的弧（$F$ 中的弧反过来）从 $F$ 中删去，得到 $r+1$ 条弧不交的路。新的 $F$ 不一定直接是路的并，要用下面的引理把它分解成路。
+\item 没有增广路时，从 $s$ 在 $D_F$ 中可以到达的顶点集 $S$ 给出一个恰好有 $r$ 条弧的割：离开 $S$ 的弧都在 $F$ 中，进入 $S$ 的弧都不在 $F$ 中。
+\end{enumerate}
+两者合起来就是“最多的路数 $=$ 最小的割”。证明是构造性的，就是单位容量网络上的 Ford--Fulkerson 算法。
+
+\begin{lemma}[按出入度差分解成路]\label{lem:yan-ch3-problems:decompose}
+设 $D$ 是有向图（允许重弧），$s\neq t$ 是两个顶点，$m\geqslant0$ 是整数，弧集 $F\subseteq A(D)$ 满足
+\[
+d_F^+(v)-d_F^-(v)=\begin{cases}m,&v=s,\\0,&v\neq s,t.\end{cases}
+\]
+则 $F$ 中含有 $m$ 条两两弧不交的 $(s,t)$-路。
+\end{lemma}
+\begin{proof}
+对 $m$ 归纳，$m=0$ 时无需证明。设 $m\geqslant1$。从 $s$ 出发沿 $F$ 中的弧走，每条弧至多走一次，到达 $t$ 就停。这样的走法只能停在 $t$：
+\begin{itemize}
+\item 若当前在顶点 $v\neq s,t$，则进入 $v$ 的次数比离开 $v$ 的次数多一，已用的出弧数 $<$ 已用的入弧数 $\leqslant d_F^-(v)=d_F^+(v)$，还有没用过的出弧；
+\item 若当前在 $s$，则离开 $s$ 与进入 $s$ 的次数相同，已用的出弧数 $=$ 已用的入弧数 $\leqslant d_F^-(s)<d_F^+(s)$，也还有没用过的出弧。
+\end{itemize}
+$F$ 是有限的，所以最终到达 $t$，得到一条弧互不相同的 $(s,t)$-途径 $W$。每当 $W$ 重复经过一个顶点，就删去两次经过之间的闭途径，最后得到一条 $(s,t)$-路 $P$，$A(P)\subseteq A(W)\subseteq F$。从 $F$ 中删去 $A(P)$：$s$ 的出度少一，$t$ 的入度少一，$P$ 的内部顶点出度、入度各少一，所以 $F\setminus A(P)$ 满足 $m-1$ 时的条件。由归纳假设，它含有 $m-1$ 条弧不交的 $(s,t)$-路，加上 $P$ 即得。
+\end{proof}
+
+\begin{workedexample}[问题 2]\label{we:yan-ch3-problems:edge-menger}
+（讲义第 3 章）设 $G$ 是无向图或有向图，$s,t\in V(G)$ 是两个不同的顶点，$k$ 是正整数。证明：$G$ 中存在 $k$ 条两两边不交的 $(s,t)$-路，当且仅当删除任意至多 $k-1$ 条边（弧）后，$t$ 仍可由 $s$ 到达。
+\end{workedexample}
+\begin{solution}
+有向情形中的“路”指有向路，“由 $s$ 可到达 $t$”指有 $(s,t)$-有向路。图可以有重边。
+
+\emph{必要性。}设 $P_1,\dots,P_k$ 两两边不交，删去至多 $k-1$ 条边，每条边至多在一条 $P_i$ 上，所以至少有一条 $P_i$ 完整保留，$t$ 仍可由 $s$ 到达。
+
+\emph{充分性，有向情形。}设 $G=D$ 是有向图。取两两弧不交的 $(s,t)$-路 $P_1,\dots,P_r$，使 $r$ 最大（$r=0$ 也允许，所以这样的 $r$ 存在；且 $r\leqslant d^+(s)$）。设 $r\leqslant k-1$，下面推出矛盾。令 $F=A(P_1)\cup\dots\cup A(P_r)$。每条路从 $s$ 出发、到 $t$ 结束、不重复经过顶点，所以它给 $s$ 贡献出度 $1$，给内部顶点贡献出度、入度各 $1$，于是
+\[
+d_F^+(v)-d_F^-(v)=\begin{cases}r,&v=s,\\0,&v\neq s,t.\end{cases}\tag{$*$}
+\]
+剩余图 $D_F$：顶点集是 $V(D)$；$D$ 的每条弧 $a=(u,v)$ 对应 $D_F$ 中的一条弧，$a\notin F$ 时是 $u\to v$（\emph{向前弧}），$a\in F$ 时是 $v\to u$（\emph{向后弧}）。令 $S$ 是 $D_F$ 中从 $s$ 可以到达的顶点的集合。
+
+\emph{情形 1：$t\in S$。}取 $D_F$ 中的一条 $(s,t)$-路 $Q$，令
+\[
+F'=\bigl(F\setminus\{a\in F:\ a\text{ 的反向在 }Q\text{ 上}\}\bigr)\cup\{a\notin F:\ a\text{ 在 }Q\text{ 上}\}.
+\]
+考察 $d_{F'}^+-d_{F'}^-$ 的变化。$Q$ 从 $u$ 走到 $v$ 的一步：若走的是向前弧 $(u,v)$，它加入 $F'$，$u$ 的出度、$v$ 的入度各加一；若走的是向后弧，即 $(v,u)\in F$ 被删去，$v$ 的出度、$u$ 的入度各减一。两种情形下都是 $u$ 的“出度减入度”加一，$v$ 的减一。$Q$ 是路，内部顶点进一次、出一次，变化抵消；$s$ 只出不进，加一；$t$ 只进不出。所以 $F'$ 满足 $(*)$，其中 $r$ 换成 $r+1$。由引理~\ref{lem:yan-ch3-problems:decompose}，$F'$ 含有 $r+1$ 条弧不交的 $(s,t)$-路，与 $r$ 的最大性矛盾。
+
+\emph{情形 2：$t\notin S$。}
+\begin{itemize}
+\item $D$ 中从 $S$ 指向 $V\setminus S$ 的弧都在 $F$ 中：若 $(u,v)\notin F$，$u\in S$，则 $D_F$ 中有向前弧 $u\to v$，$v\in S$。
+\item $D$ 中从 $V\setminus S$ 指向 $S$ 的弧都不在 $F$ 中：若 $(u,v)\in F$，$v\in S$，则 $D_F$ 中有向后弧 $v\to u$，$u\in S$。
+\end{itemize}
+把 $(*)$ 对 $v\in S$ 求和（$s\in S$，$t\notin S$）。两端都在 $S$ 中的弧对出度、入度的贡献相等，互相抵消，所以
+\[
+\begin{aligned}
+r=\sum_{v\in S}\bigl(d_F^+(v)-d_F^-(v)\bigr)&=\#\{F\text{ 中离开 }S\text{ 的弧}\}-\#\{F\text{ 中进入 }S\text{ 的弧}\}\\
+&=\#\{F\text{ 中离开 }S\text{ 的弧}\}.
+\end{aligned}
+\]
+再由第一条，$D$ 中离开 $S$ 的弧恰好有 $r\leqslant k-1$ 条。删去这些弧后，任何 $(s,t)$-路都从 $S$ 出发、在 $S$ 外结束，必经过一条离开 $S$ 的弧，所以 $t$ 不能由 $s$ 到达，与假设矛盾。
+
+所以 $r\geqslant k$，取其中 $k$ 条即可。
+
+下图是情形 1 的例子。左：$r=1$，$F$（蓝）是 $s\to a\to b\to t$，它“挡住”了另外两条路。中：剩余图 $D_F$，$F$ 的弧反向画成虚线；红色是增广路 $s\to b\to a\to t$，其中 $b\to a$ 是向后弧。右：$F'$ 中删去了 $(a,b)$，加入了 $(s,b)$、$(a,t)$，分解为两条路 $s\to a\to t$（蓝）与 $s\to b\to t$（黄）。
+\begin{center}
+\begin{tikzpicture}[scale=0.95]
+  \foreach \dx/\name in {0/L, 4.4/M, 8.8/R} {
+    \begin{scope}[xshift=\dx cm]
+      \node[gv] (s\name) at (0,0) {$s$}; \node[gv] (a\name) at (1.5,1.0) {$a$};
+      \node[gv] (b\name) at (1.5,-1.0) {$b$}; \node[gv] (t\name) at (3.0,0) {$t$};
+    \end{scope}
+  }
+  % 左：F = s a b t
+  \draw[arch] (sL)--(aL); \draw[arch] (aL)--(bL); \draw[arch] (bL)--(tL);
+  \draw[arc, black!45] (sL)--(bL); \draw[arc, black!45] (aL)--(tL);
+  % 中：剩余图与增广路
+  \draw[arc, dashed, black!45] (aM)--(sM); \draw[arc, dashed, black!45] (tM)--(bM);
+  \draw[arc, RainbowRed, line width=1.6pt] (sM)--(bM);
+  \draw[arc, RainbowRed, line width=1.6pt, dashed] (bM)--(aM);
+  \draw[arc, RainbowRed, line width=1.6pt] (aM)--(tM);
+  % 右：两条路
+  \draw[arch] (sR)--(aR); \draw[arch] (aR)--(tR);
+  \draw[archo] (sR)--(bR); \draw[archo] (bR)--(tR);
+  \draw[black!25, thick, dotted] (aR)--(bR);
+  \node at (1.5,-1.75) {$F$}; \node at (5.9,-1.75) {$D_F$}; \node at (10.3,-1.75) {$F'$};
+\end{tikzpicture}
+\end{center}
+
+下图是情形 2 的例子：$D$ 有弧 $s\to a$，$a\to t$，$s\to b$，$b\to a$，$F$ 是 $s\to a\to t$（$r=1$）。剩余图（右）中从 $s$ 可以到达 $b$，再到 $a$，但 $(a,t)\in F$ 被反向成 $t\to a$，所以 $S=\{s,a,b\}$（虚线框），$t\notin S$。离开 $S$ 的弧只有 $(a,t)$，恰好 $r=1$ 条，且在 $F$ 中；删去它，$t$ 就不能由 $s$ 到达。
+\begin{center}
+\begin{tikzpicture}[scale=0.95]
+  \foreach \dx/\name in {0/L, 5.2/R} {
+    \begin{scope}[xshift=\dx cm]
+      \node[gv] (s\name) at (0,0) {$s$}; \node[gv] (a\name) at (1.6,0.9) {$a$};
+      \node[gv] (b\name) at (1.6,-0.9) {$b$}; \node[gv] (t\name) at (3.4,0.9) {$t$};
+    \end{scope}
+  }
+  \draw[arch] (sL)--(aL); \draw[arch] (aL)--(tL);
+  \draw[arc] (sL)--(bL); \draw[arc] (bL)--(aL);
+  \draw[arc, dashed] (aR)--(sR); \draw[arc, dashed] (tR)--(aR);
+  \draw[arc] (sR)--(bR); \draw[arc] (bR)--(aR);
+  \draw[dashed, RainbowRed, rounded corners=10pt] (4.75,-1.45) rectangle (7.25,1.45);
+  \node[RainbowRed] at (7.55,-1.2) {$S$};
+  \node at (1.7,-1.75) {$D,\ F$}; \node at (6.9,-1.75) {$D_F$};
+\end{tikzpicture}
+\end{center}
+
+\emph{充分性，无向情形。}把 $G$ 的每条边 $uv$ 换成两条弧 $(u,v)$、$(v,u)$，得到有向图 $D$。
+
+$D$ 满足有向情形的条件：设 $X\subseteq A(D)$，$\abs X\leqslant k-1$。在 $G$ 中删去 $X$ 中的弧对应的边（至多 $k-1$ 条），由假设剩下的图中有 $(s,t)$-路 $P$；沿 $P$ 的方向走得到 $D$ 中的一条 $(s,t)$-路，它的弧对应的边都没有被删去，所以它不用 $X$ 中的弧。
+
+由有向情形，$D$ 中有 $k$ 条弧不交的 $(s,t)$-路。在所有这样的 $k$ 条路的组中，取弧的总数最少的一组 $P_1,\dots,P_k$，令 $F$ 是它们的弧的并，$F$ 满足 $(*)$（$r$ 换成 $k$）。断言：没有一条边 $uv$ 被两个方向都用到。一条路不重复经过顶点，不会既走 $u\to v$ 又走 $v\to u$；若 $P_i$ 走 $u\to v$，$P_j$ 走 $v\to u$（$i\neq j$），从 $F$ 中删去这两条弧：$u$ 的出度、入度各少一，$v$ 也是，$(*)$ 仍成立。由引理~\ref{lem:yan-ch3-problems:decompose}，剩下的弧中含有 $k$ 条弧不交的 $(s,t)$-路，弧的总数更少，矛盾。所以 $P_1,\dots,P_k$ 对应 $G$ 中 $k$ 条两两边不交的 $(s,t)$-路。
+
+下图左：$P_1$（蓝）走 $u\to v$，$P_2$（黄）走 $v\to u$。右：删去这两条弧，重新分解，得到 $s\to x\to u\to z\to t$ 与 $s\to w\to v\to y\to t$，不再使用边 $uv$。
+\begin{center}
+\begin{tikzpicture}[scale=0.95]
+  \foreach \dx/\name in {0/L, 6.6/R} {
+    \begin{scope}[xshift=\dx cm]
+      \node[gv] (s\name) at (0,0) {$s$}; \node[gv] (t\name) at (5.2,0) {$t$};
+      \node[gv] (x\name) at (1.2,1.1) {$x$}; \node[gv] (w\name) at (1.2,-1.1) {$w$};
+      \node[gv] (u\name) at (2.0,0) {$u$}; \node[gv] (v\name) at (3.2,0) {$v$};
+      \node[gv] (y\name) at (4.0,1.1) {$y$}; \node[gv] (z\name) at (4.0,-1.1) {$z$};
+    \end{scope}
+  }
+  \draw[arch] (sL)--(xL); \draw[arch] (xL)--(uL); \draw[arch] (uL) to[bend left=25] (vL); \draw[arch] (vL)--(yL); \draw[arch] (yL)--(tL);
+  \draw[archo] (sL)--(wL); \draw[archo] (wL)--(vL); \draw[archo] (vL) to[bend left=25] (uL); \draw[archo] (uL)--(zL); \draw[archo] (zL)--(tL);
+  \draw[arch] (sR)--(xR); \draw[arch] (xR)--(uR); \draw[arch] (uR)--(zR); \draw[arch] (zR)--(tR);
+  \draw[archo] (sR)--(wR); \draw[archo] (wR)--(vR); \draw[archo] (vR)--(yR); \draw[archo] (yR)--(tR);
+  \draw[black!25, thick, dotted] (uR)--(vR);
+\end{tikzpicture}
+\end{center}
+\end{solution}
+\begin{remark}
+证明给出了算法：从 $r=0$ 开始，每次在剩余图中用 BFS 找增广路并改道，至多 $k$ 次。找不到增广路时，集合 $S$ 就是一个最小的割。
+\end{remark}
+
+\topic{方法：拆点与加点}
+
+\begin{enumerate}
+\item \emph{拆点}把“点不交”变成“弧不交”：每个顶点 $v$ 拆成 $v^-\to v^+$，进入 $v$ 的弧改为进入 $v^-$，离开 $v$ 的弧改为从 $v^+$ 出发。经过 $v$ 的路都要用弧 $(v^-,v^+)$，所以弧不交的路在原图中经过不同的顶点。删去顶点 $v$ 相当于删去弧 $(v^-,v^+)$。
+\item \emph{加点}把“集合到集合”变成“点到点”：加一个新顶点 $s$ 与 $A$ 中的每个顶点相邻，加一个新顶点 $t$ 与 $B$ 中的每个顶点相邻。
+\item 无向图化为有向图：每条边换成两条反向的弧。
+\end{enumerate}
+
+\begin{workedexample}[问题 3]\label{we:yan-ch3-problems:vertex-menger}
+（讲义第 3 章）设 $G$ 是无向图或有向图，$s,t\in V(G)$ 是两个不同的顶点，$k$ 是正整数；在无向情形假设 $st\notin E(G)$，在有向情形假设 $(s,t)\notin A(G)$。证明：$G$ 中存在 $k$ 条两两内点不交的 $(s,t)$-路，当且仅当删除任意至多 $k-1$ 个不同于 $s,t$ 的顶点后，$t$ 仍可由 $s$ 到达。
+\end{workedexample}
+\begin{solution}
+\emph{必要性。}设 $P_1,\dots,P_k$ 两两内点不交。一个不同于 $s,t$ 的顶点至多是一条 $P_i$ 的内点，所以删去至多 $k-1$ 个这样的顶点，至少有一条 $P_i$ 完整保留。
+
+\emph{充分性，有向情形。}设 $G=D$ 是有向图。进入 $s$ 的弧与离开 $t$ 的弧不在任何 $(s,t)$-路上，删去它们，条件与结论都不变；以下设 $D$ 中没有这样的弧。构造有向图 $D'$：
+\begin{itemize}
+\item 每个顶点 $v\neq s,t$ 换成两个顶点 $v^-$、$v^+$ 和一条\emph{内部弧} $(v^-,v^+)$；$s$、$t$ 不拆，并约定 $s^+=s$，$t^-=t$；
+\item $D$ 的每条弧 $(u,v)$ 换成 $D'$ 的弧 $(u^+,v^-)$。
+\end{itemize}
+
+\emph{$D'$ 满足问题 2 的条件。}设 $X\subseteq A(D')$，$\abs X\leqslant k-1$。对 $X$ 中的每条弧选一个 $D$ 的顶点：内部弧 $(v^-,v^+)$ 选 $v$；弧 $(u^+,v^-)$（来自 $D$ 的弧 $(u,v)$）在 $u\neq s$ 时选 $u$，在 $u=s$ 时选 $v$。后一种情形 $v\neq t$，因为 $(s,t)\notin A(D)$；$v\neq s$，因为没有进入 $s$ 的弧。所以选出的顶点集 $Y$ 不含 $s,t$，且 $\abs Y\leqslant k-1$。由假设，$D-Y$ 中有 $(s,t)$-路 $s\,v_1v_2\cdots v_m\,t$（$m\geqslant1$，因为 $(s,t)$ 不是弧）。它在 $D'$ 中对应路
+\[
+s\to v_1^-\to v_1^+\to v_2^-\to v_2^+\to\cdots\to v_m^-\to v_m^+\to t.
+\]
+这条路不用 $X$ 中的弧：内部弧 $(v_i^-,v_i^+)$ 若在 $X$ 中，则 $v_i\in Y$；弧 $(s,v_1^-)$ 若在 $X$ 中，则 $v_1\in Y$；弧 $(v_i^+,v_{i+1}^-)$ 或 $(v_m^+,t)$ 若在 $X$ 中，则 $v_i\in Y$ 或 $v_m\in Y$。都与 $v_i\notin Y$ 矛盾。所以删去 $X$ 后 $t$ 仍可由 $s$ 到达。
+
+由问题 2（有向情形），$D'$ 中有 $k$ 条弧不交的 $(s,t)$-路。$v^-$ 唯一的出弧和 $v^+$ 唯一的入弧都是内部弧 $(v^-,v^+)$，所以 $D'$ 中的 $(s,t)$-路必定形如上式；它经过每个 $v^-$ 至多一次，所以 $s\,v_1\cdots v_m\,t$ 是 $D$ 中的一条路。两条路若有公共内点 $v$，就都要用内部弧 $(v^-,v^+)$，与弧不交矛盾。所以得到 $D$ 中 $k$ 条两两内点不交的 $(s,t)$-路。
+
+下图左是 $D$，右是 $D'$，粗线是内部弧；两条弧不交的路（蓝、黄）对应 $D$ 中两条内点不交的路 $s\,a\,c\,t$ 与 $s\,b\,d\,t$。删去 $D$ 的顶点 $c$ 相当于删去 $D'$ 的弧 $(c^-,c^+)$。
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+  \node[gv] (s) at (0,0) {$s$}; \node[gv] (a) at (1.4,1.0) {$a$}; \node[gv] (b) at (1.4,-1.0) {$b$};
+  \node[gv] (c) at (2.8,1.0) {$c$}; \node[gv] (d) at (2.8,-1.0) {$d$}; \node[gv] (t) at (4.2,0) {$t$};
+  \draw[arc] (s)--(a); \draw[arc] (s)--(b); \draw[arc] (a)--(c); \draw[arc] (b)--(c);
+  \draw[arc] (b)--(d); \draw[arc] (c)--(t); \draw[arc] (d)--(t);
+  \node at (2.1,-1.85) {$D$};
+  \begin{scope}[xshift=5.6cm, every node/.append style={font=\footnotesize}]
+    \node[gv] (S) at (0,0) {$s$};
+    \node[gv] (am) at (1.3,1.1) {$a^-$}; \node[gv] (ap) at (2.3,1.1) {$a^+$};
+    \node[gv] (bm) at (1.3,-1.1) {$b^-$}; \node[gv] (bp) at (2.3,-1.1) {$b^+$};
+    \node[gv] (cm) at (3.6,1.1) {$c^-$}; \node[gv] (cp) at (4.6,1.1) {$c^+$};
+    \node[gv] (dm) at (3.6,-1.1) {$d^-$}; \node[gv] (dp) at (4.6,-1.1) {$d^+$};
+    \node[gv] (T) at (5.9,0) {$t$};
+    \draw[arch] (S)--(am); \draw[arch] (am)--(ap); \draw[arch] (ap)--(cm); \draw[arch] (cm)--(cp); \draw[arch] (cp)--(T);
+    \draw[archo] (S)--(bm); \draw[archo] (bm)--(bp); \draw[archo] (bp)--(dm); \draw[archo] (dm)--(dp); \draw[archo] (dp)--(T);
+    \draw[arc, black!45] (bp)--(cm);
+    \node[font=\normalsize] at (2.95,-1.85) {$D'$};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+
+\emph{充分性，无向情形。}把 $G$ 的每条边换成两条反向的弧，得到有向图 $D$。删去同一组顶点后，$G$ 中 $t$ 可由 $s$ 到达当且仅当 $D$ 中如此，所以 $D$ 满足条件；$st\notin E(G)$ 给出 $(s,t)\notin A(D)$。由有向情形，$D$ 中有 $k$ 条内点不交的 $(s,t)$-路，它们也是 $G$ 中内点不交的路。
+\end{solution}
+\begin{remark}
+条件 $st\notin E(G)$ 不能去掉：$G$ 只有两个顶点 $s,t$ 和一条边 $st$，取 $k=2$。除 $s,t$ 外没有顶点可删，$t$ 总可由 $s$ 到达；但 $(s,t)$-路只有一条。证明中，这个条件用在为弧 $(s,v^-)$ 选顶点的地方：弧 $(s,t)$ 不能用删去一个内部顶点来代替。
+\end{remark}
+
+\begin{workedexample}[问题 4]\label{we:yan-ch3-problems:whitney}
+（讲义第 3 章）设 $G$ 是阶大于 $k$ 的简单无向图。证明：
+(1) $G$ 是 $k$-连通的，当且仅当 $G$ 中任意两个顶点之间都有 $k$ 条内点不交的路；
+(2) $G$ 是 $k$-边连通的，当且仅当 $G$ 中任意两个顶点之间都有 $k$ 条边不交的路。
+\end{workedexample}
+\begin{solution}
+$G$ 是 $k$-连通的，指 $\abs G>k$ 且删去任意至多 $k-1$ 个顶点后仍连通；$k$-边连通，指删去任意至多 $k-1$ 条边后仍连通。
+
+\emph{(1) 充分性。}设 $X\subseteq V(G)$，$\abs X\leqslant k-1$，而 $G-X$ 不连通。取 $G-X$ 不同分支中的顶点 $u,v$。$G$ 中 $u,v$ 之间的每条路都经过 $X$ 的顶点，而这个顶点不是 $u$ 或 $v$，所以是路的内点。$k$ 条内点不交的路经过 $X$ 中 $k$ 个不同的顶点，$\abs X\geqslant k$，矛盾。又 $\abs G>k$，所以 $G$ 是 $k$-连通的。
+
+\emph{(1) 必要性。}设 $G$ 是 $k$-连通的，$u\neq v$。
+
+\emph{$u,v$ 不相邻。}删去任意至多 $k-1$ 个不同于 $u,v$ 的顶点，图仍连通，$v$ 可由 $u$ 到达。由问题 3（无向情形），有 $k$ 条内点不交的 $(u,v)$-路。
+
+\emph{$u,v$ 相邻。}令 $G'=G-uv$。只需证明 $G'$ 中有 $k-1$ 条内点不交的 $(u,v)$-路，再加上边 $uv$ 这条路即可（$k=1$ 时显然）。$u,v$ 在 $G'$ 中不相邻，由问题 3，只需证明：对任意 $Y\subseteq V(G)\setminus\{u,v\}$，$\abs Y\leqslant k-2$，$G'-Y$ 中 $v$ 可由 $u$ 到达。
+
+设不然，$u,v$ 在 $G'-Y$ 的不同分支中。$\abs{G}-\abs Y-2\geqslant(k+1)-(k-2)-2=1$，所以有顶点 $w\notin Y\cup\{u,v\}$。$w$ 不能同时与 $u$、$v$ 在同一分支中，不妨设 $w$ 与 $u$ 不在 $G'-Y$ 的同一分支中（另一种情形交换 $u,v$）。考虑
+\[
+G-(Y\cup\{v\})=G'-(Y\cup\{v\}),
+\]
+等号成立是因为删去 $v$ 时边 $uv$ 也被删去。它是 $G'-Y$ 的子图，$u,w$ 在其中仍不连通。而 $\abs{Y\cup\{v\}}\leqslant k-1$，与 $G$ 是 $k$-连通的矛盾。
+
+下图：删去 $uv$ 与 $Y$ 后，$u$ 所在的分支（左）与 $v$、$w$ 所在的分支（右）分开；于是 $Y\cup\{v\}$ 在 $G$ 中分离 $u$ 与 $w$。
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+  \draw[black!40, rounded corners=14pt] (-0.5,-1.3) rectangle (2.0,1.3);
+  \draw[black!40, rounded corners=14pt] (4.6,-1.3) rectangle (7.4,1.3);
+  \draw[dashed, RainbowAmber, thick, rounded corners=8pt] (2.75,-1.5) rectangle (3.85,1.5);
+  \node at (3.3,-1.85) {$Y$};
+  \node[gv] (u) at (1.3,0.55) {$u$}; \node[gv] (p) at (0.2,0.6) {}; \node[gv] (q) at (0.6,-0.6) {};
+  \node[gv] (v) at (5.3,0.55) {$v$}; \node[gv] (w) at (6.6,-0.5) {$w$}; \node[gv] (r) at (5.4,-0.7) {}; \node[gv] (r2) at (6.7,0.65) {};
+  \node[gvh] (y1) at (3.3,0.6) {}; \node[gvh] (y2) at (3.3,-0.6) {};
+  \draw[ge] (u)--(p) (p)--(q) (u)--(q) (v)--(r) (r)--(w) (v)--(r2) (r2)--(w) (v)--(w);
+  \draw[ge] (u)--(y1) (q)--(y2) (y1)--(v) (y2)--(r) (y2)--(w);
+  \draw[RainbowRed, thick, dashed] (u) to[bend left=55] node[above, font=\small] {$uv$} (v);
+\end{tikzpicture}
+\end{center}
+
+\emph{(2) 充分性。}设 $F\subseteq E(G)$，$\abs F\leqslant k-1$，而 $G-F$ 不连通。取不同分支中的顶点 $u,v$，$u,v$ 之间的每条路都用到 $F$ 中的边，$k$ 条边不交的路用到 $F$ 中 $k$ 条不同的边，矛盾。
+
+\emph{(2) 必要性。}$G$ 是 $k$-边连通的，删去任意至多 $k-1$ 条边后 $v$ 仍可由 $u$ 到达，由问题 2（无向情形）即得。
+\end{solution}
+\begin{remark}
+(1) 中相邻的情形不能直接用问题 3：问题 3 要求 $uv\notin E(G)$。去掉边 $uv$ 后连通度可能下降 $1$，所以只需要 $k-1$ 条路；“阶大于 $k$”保证了第三个顶点 $w$ 的存在。
+\end{remark}
+
+\begin{workedexample}[问题 5]\label{we:yan-ch3-problems:ab-menger}
+（讲义第 3 章）设 $G=(V,E)$ 是一个图，$A,B\subseteq V$。证明：$G$ 中分离 $A$ 与 $B$ 的最小顶点数，等于 $G$ 中两两点不交的 $(A,B)$-路的最大数目。
+\end{workedexample}
+\begin{solution}
+\emph{定义。}路 $P=x_0x_1\cdots x_m$ 叫 \emph{$(A,B)$-路}，如果 $V(P)\cap A=\{x_0\}$，$V(P)\cap B=\{x_m\}$（$m=0$ 时 $P$ 是 $A\cap B$ 中的一个顶点）。顶点集 $X$ \emph{分离 $A$ 与 $B$}，如果每条 $(A,B)$-路都含有 $X$ 的顶点；特别地 $A\cap B\subseteq X$。从 $A$ 中的顶点到 $B$ 中的顶点的任何一条路都含有一条 $(A,B)$-路（见下面的取法），所以 $X$ 分离 $A$ 与 $B$ 当且仅当 $G-X$ 中没有从 $A$ 到 $B$ 的路。
+
+记 $k$ 为分离 $A$ 与 $B$ 的最小顶点数（$A$ 本身分离 $A$ 与 $B$，所以 $k\leqslant\abs A$）。
+
+\emph{路数 $\leqslant k$。}设 $X$ 分离 $A$ 与 $B$，$\abs X=k$。每条 $(A,B)$-路含有 $X$ 的顶点，点不交的路含有不同的顶点，所以至多有 $k$ 条。
+
+\emph{路数 $\geqslant k$。}$k=0$ 时无需证明，设 $k\geqslant1$。在 $G$ 上加两个新顶点 $s,t$，$s$ 与 $A$ 中的每个顶点相邻，$t$ 与 $B$ 中的每个顶点相邻，得到 $G^+$。$s,t$ 不相邻。
+
+\emph{$G^+$ 满足问题 3 的条件。}设 $Y\subseteq V$，$\abs Y\leqslant k-1$。$Y$ 不分离 $A$ 与 $B$，所以有一条 $(A,B)$-路 $P=x_0\cdots x_m$ 与 $Y$ 不交，$s\,x_0\cdots x_m\,t$ 是 $G^+-Y$ 中的一条 $(s,t)$-路。
+
+由问题 3，$G^+$ 中有 $k$ 条内点不交的 $(s,t)$-路 $Q_1,\dots,Q_k$。$Q_i$ 去掉两端得到 $G$ 中的一条路 $R_i$，它从 $A$ 中的顶点 $x$ 开始，到 $B$ 中的顶点 $y$ 结束。在 $R_i$ 上取最后一个属于 $A$ 的顶点 $a$，再取 $a$ 及其后第一个属于 $B$ 的顶点 $b$（$y\in B$ 在 $a$ 之后或就是 $a$，所以 $b$ 存在）。$R_i$ 从 $a$ 到 $b$ 的一段 $P_i$ 是 $(A,B)$-路：$a$ 之后的顶点不在 $A$ 中；$b$ 之前（从 $a$ 算起）的顶点不在 $B$ 中，特别地，若 $a\in B$，则 $b=a$。$R_1,\dots,R_k$ 两两不交，所以 $P_1,\dots,P_k$ 是 $k$ 条点不交的 $(A,B)$-路。
+
+下图：$A=\{a_1,a_2,a_3\}$，$B=\{b_1,b_2,b_3\}$，黄色的 $\{x_1,x_2\}$ 分离 $A$ 与 $B$，$k=2$；蓝色是两条点不交的 $(A,B)$-路 $a_1x_1y_1b_1$ 与 $a_3x_2y_2b_3$。虚线是加上的顶点 $s,t$ 与它们的边。
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+  \draw[black!40, rounded corners=12pt] (-0.55,-1.75) rectangle (0.55,1.75); \node at (0,2.1) {$A$};
+  \draw[black!40, rounded corners=12pt] (5.45,-1.75) rectangle (6.55,1.75); \node at (6,2.1) {$B$};
+  \node[gv] (a1) at (0,1.2) {$a_1$}; \node[gv] (a2) at (0,0) {$a_2$}; \node[gv] (a3) at (0,-1.2) {$a_3$};
+  \node[gvh] (x1) at (2,0.8) {$x_1$}; \node[gvh] (x2) at (2,-0.8) {$x_2$};
+  \node[gv] (y1) at (4,0.8) {$y_1$}; \node[gv] (y2) at (4,-0.8) {$y_2$};
+  \node[gv] (b1) at (6,1.2) {$b_1$}; \node[gv] (b2) at (6,0) {$b_2$}; \node[gv] (b3) at (6,-1.2) {$b_3$};
+  \node[gv] (s) at (-1.8,0) {$s$}; \node[gv] (t) at (7.8,0) {$t$};
+  \draw[ge] (a2)--(x1) (a2)--(x2) (x1)--(y2) (y1)--(b2) (y2)--(b2) (y1)--(y2);
+  \draw[geh] (a1)--(x1)--(y1)--(b1); \draw[geh] (a3)--(x2)--(y2)--(b3);
+  \draw[black!45, dashed] (s)--(a1) (s)--(a2) (s)--(a3) (t)--(b1) (t)--(b2) (t)--(b3);
+\end{tikzpicture}
+\end{center}
+\end{solution}
+\begin{remark}
+(1) 同样的证明对有向图成立（加弧 $s\to a$，$b\to t$，用问题 3 的有向情形）。(2) 反过来，问题 3 的无向情形也是问题 5 的特例：在 $G-\{s,t\}$ 中取 $A=N(s)$，$B=N(t)$。所以问题 3 与问题 5 是同一个定理的两种说法；有的教科书先直接证明问题 5，再推出其余的形式。
+\end{remark}

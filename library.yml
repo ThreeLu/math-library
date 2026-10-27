@@ -51,7 +51,7 @@ books:
 
   - slug: graph-theory
     title: 图论、概率组合与组合优化
-    subtitle: 研究生课程讲义 · 已有：图论第 1–2 章，组合优化第 2–3 章
+    subtitle: 研究生课程讲义 · 已有：图论第 1–2 章与第 3 章问题解答，组合优化第 2–3 章
     category: courses
     lang: zh
     status: active
