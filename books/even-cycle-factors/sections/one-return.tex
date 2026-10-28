@@ -1,0 +1,1476 @@
+\section{Imbalance two: one return of span three}\label{height390:three-section}
+In this section, we prove that every orientation in~\ref{ov:family1} has a perfect fractional homomorphic tiling (Theorem~\ref{height390:three-width-factor}). By Theorem~\ref{height390:two-width-factor}, it suffices to consider $++W$, where $W$ is a closed height walk of span three, which we may take to lie on $\{0,1,2,3\}$. The argument depends on the initial height of $W$, which we call its \emph{root}. We call the root a \emph{boundary root} if it is $0$ or $3$, and an \emph{internal root} if it is $1$ or $2$. Reversing the word and the edges of $F$ exchanges heights $0$ and $3$, and heights $1$ and $2$, so it suffices to consider roots $0$ and $1$.
+
+We describe $W$ by its \emph{crossing counts} $a,b,c\ge1$, which are the numbers of steps of $W$ from $0$ to $1$, from $1$ to $2$ and from $2$ to $3$, respectively. As $W$ is closed, these are also the numbers of steps down from $1$ to $0$, from $2$ to $1$ and from $3$ to $2$. Then $|H|=2S$, where $S=a+b+c+1$.
+In both cases we follow the approach of Section~\ref{sec:sketch-spanthree}. We map the heights of the height walk of $H$ to a few vertices around a vertex of weight zero (for boundary roots) or around an edge of minimum weight (for internal roots). The crossing counts determine how many positions of $H$ are mapped to each of these vertices, and so give lower bounds on the weights of vertices in their neighbourhoods. We then show that these bounds force the total weight of the cover to be at least $|F|/|H|$.
+We treat boundary roots in Section~\ref{boundary391:section}, and internal roots in Section~\ref{sec:internalroots}.
+
+\begin{theorem}
+\label{height390:three-width-factor}
+Let $W$ be a nonempty closed height walk of span at most three, starting at any height in its range. Then every digraph
+$F$ with $\delta^0(F)>|F|/2$ has a perfect fractional homomorphic
+$H$-tiling, where $H=++W$.
+\end{theorem}
+
+
+\subsection{Boundary roots}
+\label{boundary391:section}
+Let $W$ be a closed walk on $\{0,1,2,3\}$ which starts at zero and visits
+three, with crossing counts $a,b,c$, and let $H=++W$.
+Throughout this section, the multiplicity vector of a homomorphism, or of a partial homomorphism, into a small digraph lists the numbers of positions mapped to its vertices, in a stated order. For a partial homomorphism, the deleted position is not counted.
+Let $t\ge0$ be the number of times $W$ goes from $0$ to $1$ and back before it first reaches height two, so that $W$ starts with $(+-)^t++$. Then
+\begin{equation}\label{tworoots:parameters}
+ S=a+b+c+1,\qquad |H|=2S,\qquad 0\le t<a,
+\end{equation}
+and we write $A=a-t$ and $C=c+t$, so that $S=A+b+C+1$.
+If $|H|=8$, then $H=D_{5,3}$, which is covered by Theorem~\ref{repair:d53-factor}, so we suppose that $|H|\ge10$. As $W$ stays in $\{0,1,2,3\}$, visits three and returns to zero, the maximum drop of $H$ is three, and so Theorem~\ref{norm391:normalized-cover} applies.
+
+Suppose that a digraph $F$ of order $N$, with $d=\delta^0(F)>N/2$,
+has no perfect fractional homomorphic $H$-tiling. By Lemma~\ref{general:LP} and Theorem~\ref{norm391:normalized-cover}, there is a deficient optimal cover $w$, with $\sum w<N/(2S)$, and a vertex $o$ of weight zero. We fix $o$ and write
+\begin{equation}\label{shiftroot:boundary-setting}
+\begin{gathered}
+ \tau=(\sum w)/d<1/S,\quad M=\max w\le1/2,\quad
+ \kappa=\min_{uv\in E(F)}(w(u)+w(v)),\quad
+ 2M+(S-2)\kappa\le1,\\
+ \alpha=\min_{N^-(o)}w,\quad\beta=\min_{N^+(o)}w,
+ \quad s=\min(\alpha,\beta),\quad
+ \chi=\max_{v,\sigma}\min_{N^\sigma(v)}w,\\
+ \zeta=\min_{N^-(o)\cap N^+(o)}w,\quad K_0=1-\zeta,
+ \quad 1/S\le\zeta\le M,\quad\kappa\le s,\\
+ \alpha+\beta<\tau,\quad\chi+s<\tau.
+\end{gathered}
+\end{equation}
+Here, the bounds on $M$, $\kappa$ and $\zeta$ come from Theorem~\ref{norm391:normalized-cover}, and the last two inequalities from Lemma~\ref{norm391:savings}. Thus $\alpha$ and $\beta$ are the minimum weights of an inneighbour and an outneighbour of $o$, and $\zeta$ is the minimum weight of a vertex forming a $2$-cycle with $o$.
+
+\subsubsection{Homomorphisms into small digraphs}
+We use homomorphisms from $H$ into the following small digraphs: the path of length five with one shortcut
+\[
+ T=(p\to a_0\to o\to b_0\to c_0\to t_0,\ o\to t_0),
+\]
+the two paths of length three with a $2$-cycle attached at their second vertex,
+\[
+ P^-=(x_0\to u\to o\to v,\ o\leftrightarrow z_0),\qquad
+ P^+=(u\to o\to v\to y_0,\ o\leftrightarrow z_0),
+\]
+the directed triangle with a $2$-cycle attached, $R=(u\to o\to v\to u,\ o\leftrightarrow z_0)$, and the path of length three with a $2$-cycle attached at its first vertex, $P_3=(q_0\to q_1\to q_2\to q_3,\ q_0\leftrightarrow z_0)$.
+In each case, the vertex $o$ (or $q_0$) will be the vertex of weight zero, and $z_0$ a vertex forming a $2$-cycle with it.
+
+\begin{lemma}
+\label{boundary391:maps}\label{firstascent:maps}
+\label{tworoots:maps}\label{rottriangle:profiles}
+There are homomorphisms from $H$ to $T^{\rm op}$, and partial homomorphisms from $H$ to $P^-$, $P^+$, $R$ and $P_3$ whose deleted position can be completed at $z_0$, with the following multiplicity vectors. For $T^{\rm op}$, in the order $(p,a_0,o,b_0,c_0,t_0)$, the vector is
+\begin{equation}\label{firstascent:T-profiles}
+ (c,b+c,a+b,a,1,1).
+\end{equation}
+For $P^-$ and $P^+$, in the order $(o,z_0,u,v,x_0)$ and $(o,z_0,u,v,y_0)$, respectively, the vectors are
+\begin{equation}\label{tworoots:punctures}
+ (b+C+1,1,A+b,C,A),\qquad(a+b+1,1,a,b+c,c).
+\end{equation}
+For $R$, in the order $(o,z_0,u,v)$, the vector is $(a+c+1,1,b+c,a+b)$. For $P_3$, in the order $(q_0,z_0,q_1,q_2,q_3)$, it is
+$(a+1,1,a+b,b+c,c)$. We call these the \emph{initial} maps to $R$ and $P_3$.
+When $b=1$, there are also a homomorphism to $T$ with vector
+\[
+ (A,A+1,C+1,C,1,1)
+\]
+in the order $(p,a_0,o,b_0,c_0,t_0)$, and a partial homomorphism to
+$L=(p_0\to v\to u\to o,\ o\leftrightarrow z_0)$ with vector
+\[
+ (C+1,1,C+1,A+1,A)
+\]
+in the order $(o,z_0,u,v,p_0)$. Identifying $p_0$ with $o$ turns $L$ into $R$, and gives a partial homomorphism to $R$ with vector
+\begin{equation}\label{rottriangle:two-profiles}
+ (S-1,1,C+1,A+1).
+\end{equation}
+\end{lemma}
+\begin{proof}
+Counting each position of $W$ by the step leaving it, $W$ has $a$, $a+b$, $b+c$ and $c$ positions at heights $0,1,2,3$, not counting its final position. Each construction below is described by where it sends the heights.
+For $T^{\rm op}$, send the two initial positions of $H$ to $t_0$ and $c_0$, and the positions of $W$ at height $h$ to $b_0,o,a_0,p$ for $h=0,1,2,3$, respectively. The final position of $W$ is the first initial position, at $t_0$, and the last step of $W$, from height one down to it, uses the shortcut $t_0\to o$. This gives the vector~\eqref{firstascent:T-profiles}.
+
+Now delete the position immediately before the first visit of $W$ to height two.
+Reading the remaining path cyclically from the next position, its heights
+$-2,-1,0,1$ have counts $(A,A+b,b+C+1,C)$, since the $t$ initial
+bottom returns are translated upward by two on wrapping.
+Send these heights to $x_0,u,o,v$. Both endpoints are at height zero, and so mapped to $o$, and the deleted position can be completed at $z_0$, using the $2$-cycle $o\leftrightarrow z_0$. This proves the claim for $P^-$.
+Deleting instead the first position of $W$ gives heights $-1,0,1,2$
+with counts $(a,a+b+1,b+c,c)$ and both endpoints at height zero, which
+gives $P^+$ in the same way.
+Finally, deleting the middle position of the initial pair $++$ gives heights $0,1,2,3$
+with counts $(a+1,a+b,b+c,c)$ and both endpoints at height zero. Sending these heights along $q_0\to q_1\to q_2\to q_3$ gives the initial map to $P_3$, and reducing
+the heights modulo three, with residues $0,1,2$ sent to $o,v,u$, gives the initial map to $R$.
+
+Suppose now that $b=1$, so that $W$ has a single step from $1$ to $2$. The part of $W$ up to its first visit to height three has
+$(t+1,t+1,1,1)$ positions at heights $0,1,2,3$. To construct the homomorphism to $T$, send the
+two initial positions of $H$ to $p$ and $a_0$, and, up to the first visit to height three, send the positions at height
+$h$ to the $(h+3)$rd vertex of the path $p,a_0,o,b_0,c_0,t_0$. The next step of $W$ goes down from three to two, and uses the shortcut $o\to t_0$ backwards; after it, send the positions at height $h$ to the $(h+1)$st vertex of the path. Counting
+the positions in these two parts gives $(A,A+1,C+1,C,1,1)$.
+Now delete the position immediately before this first visit to height three. The remaining heights
+$-3,-2,-1,0$ have counts $(A,A+1,C+1,C+1)$, and both endpoints
+are at height zero. Sending them to $p_0,v,u,o$ and completing the deleted position at $z_0$
+gives the partial homomorphism to $L$, and identifying $p_0$ with $o$ gives the vector~\eqref{rottriangle:two-profiles}.
+\end{proof}
+
+\subsubsection{Counting weights in neighbourhoods}
+We will turn the lower bounds from these homomorphisms into contradictions by counting weights in neighbourhoods. This rests on the following simple observation. Suppose that a nonnegative
+combination of indicator functions of sets of at least $d$ vertices is at most $w$ pointwise, and that its coefficients have sum $B$. Suppose also that this combination remains at most $w$ after adding $\delta\ge0$ on a set of at least $N/4$ vertices. Then summing over all vertices gives
+\begin{equation}\label{boundary:observation}
+W\ge dB+N\delta/4\ge N(2B+\delta)/4,\qquad\text{so, if }W<N/(2S)\text{, then }2B+\delta<2/S.
+\end{equation}
+
+In the next three lemmas, $w\ge0$ is a weighting of a set of $N$ vertices with total weight $W$, and $d>N/2$ and $S>0$. As in Section~\ref{sec:prelim-weights}, a \emph{lower bound} on a set is a number $c$ such that $w(v)\ge c$ for every vertex $v$ of the set.
+In our applications of the next lemma, $I$ and $O$ are the inneighbourhood and outneighbourhood of the vertex $o$ of weight zero, and $X$ is a neighbourhood of one of its cheapest neighbours.
+
+\begin{lemma}
+\label{boundary391:counts}\label{boundary391:counts:1}
+\label{shiftroot:three-set}\label{jointtail:count}
+\label{middlelift:capped-count}\label{pairedtails:disjunction}
+Let $I,O,X$ be sets of at least $d$ vertices, with lower bounds
+$s$, $\ell$ and $\zeta$ on $I$, $O$ and $I\cap O$, respectively, where
+$0\le s\le\ell$, $s+\ell<\tau$,
+$W=d\tau<N/(2S)$ and $\zeta\ge1/S$. Let $p$ and $q$ be lower bounds on $X$ and $X\cap O$. Then the following hold.
+\begin{props}
+\item\label{counts:basic} We have $\min(p+\ell,q+s)\le\tau$.
+\item\label{counts:tail} Suppose that the set $\{w\ge Q\}$ has at least $N/4$ vertices, where $Q>0$ and $\zeta\ge Q+s$. If
+\[
+ s+\ell\le B\le\min(p+\ell,q+s,\zeta,Q+s),
+\]
+then $Q+s+B<2/S$. In particular, if $q+s\ge1/S$, then
+$Q+s+p+\ell<2/S$.
+\item\label{counts:lists} Suppose that there are finitely many such thresholds $Q_h$
+and lower bounds $p_i$ on $X$ and $q_j$ on $X\cap O$, with $Q_h+2s+\ell<2/S$ for each $h$, and let
+$Q=\max_h Q_h$, $P=\max_i(p_i+\ell)$ and $R=\max_j(q_j+s)$.
+Then
+\begin{equation}\label{pairedtails:three-branches}
+ Q+s<1/S\quad\hbox{or}\quad Q+s+P<2/S
+ \quad\hbox{or}\quad Q+s+R<2/S.
+\end{equation}
+\end{props}
+\end{lemma}
+\begin{proof}
+Let $s+\ell\le B\le\min(p+\ell,q+s,\zeta)$, and consider the function
+\[
+ s\ind_I+\ell\ind_O+(B-s-\ell)\ind_X.
+\]
+It is at most $w$ pointwise: its values on
+$I\cap O$, on $X\setminus O$ and on
+$(X\cap O)\setminus I$ are at most $B$, $B-\ell$ and $B-s$, respectively, and these are at most $\zeta$, $p$ and $q$.
+For~\ref{counts:basic}, let $B_0=\min(p+\ell,q+s,\zeta)$. If $B_0<s+\ell$, then
+$B_0<\tau<\zeta$, and~\ref{counts:basic} follows. Otherwise, taking $B=B_0$ and summing over all vertices gives
+$dB_0\le W$, that is, $B_0\le\tau<\zeta$, so again $\min(p+\ell,q+s)\le\tau$.
+
+For~\ref{counts:tail}, let $\delta=Q+s-B\ge0$, and add $\delta$ on $\{w\ge Q\}$.
+On $I\cap O$, the new value is at most
+$B+\delta=Q+s\le\zeta$, while elsewhere in $\{w\ge Q\}$ it is at most
+$B-s+\delta=Q$. Hence~\eqref{boundary:observation} gives $2B+\delta<2/S$, that is, $Q+s+B<2/S$.
+If $q+s\ge1/S$, take $B=\max(s+\ell,p+\ell)$, which is at most $\tau$ by~\ref{counts:basic}, as $q+s>\tau$.
+If $B>Q+s$, then $Q+s+p+\ell<2B<2/S$. Otherwise we may use the bound just proved
+(if $p<s$, the coefficient of $\ind_X$ is zero, so no lower bound on $X$ is
+needed).
+
+For~\ref{counts:lists}, take
+$B=\min(P,R,1/S,Q+s)$.
+If $B<s+\ell$, then directly $Q+s+B<Q+2s+\ell<2/S$, and otherwise~\ref{counts:tail} applies, for the relevant $Q_h$, $p_i$ and $q_j$. The term attaining the
+minimum in the definition of $B$ gives one of the three alternatives.
+\end{proof}
+
+If, moreover, many vertices have large weight, we can do better, as follows.
+
+\begin{lemma}
+\label{boundary391:counts:2}\label{prefixlayer:count}
+Let $w$ be a weighting of a digraph $F$ of order $N$ and minimum semidegree
+at least $d$, and let $o$ be a vertex with $w(o)=0$. Let $g=2d-N$,
+$I=N^-(o)$, $O=N^+(o)$, $R=I\cap O$,
+$s=\min_{I\cup O}w$ and
+$\chi=\max_{v,\sigma}\min_{N^\sigma(v)}w$.
+If
+\begin{equation}\label{prefixlayer:count-hyp}
+ t>\chi\ge s\ge0,\quad A\ge t+s,\quad w\ge A\text{ on }R,
+ \quad |\{w\ge t\}|\ge(N+3g)/4,
+\end{equation}
+then
+\begin{equation}\label{prefixlayer:count-bound}
+ 4W\ge N(2s+\chi+t)+g(4A-t-\chi-2s)>N(2s+\chi+t).
+\end{equation}
+\end{lemma}
+\begin{proof}
+Let $C=V(F)\setminus(I\cup O)$ and $j=|R|$, so that
+$j\ge g>0$ and $|C|\le j-g$. Also $|\{w\ge\chi\}|\ge d$, as some neighbourhood of every vertex has minimum weight $\chi$.
+Both sets $\{w\ge\chi\}$ and $\{w\ge t\}$ contain $R$, as $w\ge A\ge t>\chi$ on $R$, and we have the pointwise inequality
+\[
+ w\ge s\boldsymbol1-s\ind_C
+ +(\chi-s)\ind_{\{w\ge\chi\}}
+ +(t-\chi)\ind_{\{w\ge t\}}+(A-t)\ind_R.
+\]
+Indeed, on $R$ the right-hand side equals $A$, while elsewhere it does not exceed
+the relevant threshold. Summing, and using $A-t-s\ge0$ and $j\ge g$, gives $W\ge sN+(\chi-s)d+(t-\chi)(N+3g)/4+(A-t)g$. Substituting $d=(N+g)/2$, the extra coefficient satisfies
+$4A-t-\chi-2s\ge3t-\chi+2s>0$, which proves the strict bound.
+\end{proof}
+
+A similar argument works with only two neighbourhoods.
+
+\begin{lemma}
+\label{boundary391:counts:3}
+\label{intersectiontail:count}\label{intersectiontail:disjunction}
+Let $X$ and $O$ be sets of at least $d$ vertices, with lower bounds
+$p$, $\ell$ and $q$ on $X$, $O$ and $X\cap O$, where $p$ and $q$ may be negative,
+$\ell\ge0$ and $W<N/(2S)$.
+If $|\{w\ge Q\}|\ge N/4$, $Q\ge\max(p,\ell)$ and
+$Q+\ell<2/S$, then, with $P=p+\ell$, at least one of
+\begin{equation}\label{intersectiontail:four-branches}
+ q<1/S,\quad P+q<2/S,\quad Q+P+\ell<2/S,
+ \quad Q+2P-\ell<2/S
+\end{equation}
+holds.
+\end{lemma}
+\begin{proof}
+If $p<0$, the last alternative holds, as $Q+2P-\ell=Q+\ell+2p<2/S$.
+So suppose that $p\ge0$, and that $q\ge1/S$, as otherwise the first alternative holds. Then $P<1/S$:
+otherwise, we could choose $0\le u\le p$ and $0\le v\le\ell$ with
+$u+v=1/S$, and summing $w\ge u\ind_X+v\ind_O$ would give $W\ge d/S>N/(2S)$.
+Thus $q>P$, and the function $p\ind_X+\ell\ind_O$, which is at most $w$, can be increased by $\delta=\min(Q-\max(p,\ell),q-P)\ge0$ on $\{w\ge Q\}$: its value there is at most $Q$ outside
+$X\cap O$, and at most $q$ on $X\cap O$.
+Thus~\eqref{boundary:observation} gives $2P+\delta =\min(Q+P+p,Q+P+\ell,P+q)<2/S$. Since $p=P-\ell$, these are exactly the remaining alternatives.
+\end{proof}
+
+To find many vertices of large weight, we use the following lemma. If the vertices of weight less than some $q$ formed a large set, then they would span a copy of $D_{3,1}$ through a prescribed vertex, and this would complete a cheap homomorphism of $H$.
+
+\begin{lemma}
+\label{rootthird:return}
+Let $D$ be a digraph with positive vertex weights $\mu$, of
+total $P$, in which every vertex has outneighbourhood and inneighbourhood of weight at least $d>0$.
+If a nonempty set $S$ of vertices contains the two
+ends of no directed walk with two edges, then
+\begin{equation}\label{rootthird:set-bound}
+ \mu(S)+2d\le P.
+\end{equation}
+In particular, if $d>P/3$, then every vertex $o$ is the image of the
+source of $D_{3,1}$ under some homomorphism, and also the image of
+the sink under some homomorphism.
+\end{lemma}
+\begin{proof}
+Let $A=N^+(S)$ and $B=N^-(S)$ be the unions of the outneighbourhoods and of the inneighbourhoods of the vertices of $S$.
+Our assumption says exactly that $A\cap B$
+is empty. We claim that $\mu(A\setminus S)\ge d$.
+If $A\cap S=\varnothing$, use the outdegree bound at any vertex
+of $S$. Otherwise choose $a\in A\cap S$; then $N^+(a)\subseteq A$,
+and $a\notin B$ gives $N^+(a)\cap S=\varnothing$, so that
+$N^+(a)\subseteq A\setminus S$. Reversing edges gives
+$\mu(B\setminus S)\ge d$. The three sets
+$A\setminus S,B\setminus S,S$ are disjoint, which proves
+\eqref{rootthird:set-bound}.
+
+For the second assertion, take $S=N^+(o)$. Since $\mu(S)\ge d$ and $3d>P$, the bound~\eqref{rootthird:set-bound} fails,
+so there is a walk $a\to b\to c$ with $a,c\in S$, and then
+\[
+ o\to a\to b\to c,
+ \qquad o\to c
+\]
+is a homomorphism from $D_{3,1}$ with source $o$. Reversing all edges gives the second homomorphism.
+\end{proof}
+
+
+\subsubsection{Thresholds from homomorphisms to $T$}
+We now apply these lemmas with the homomorphisms of Lemma~\ref{boundary391:maps}. We use the rescaled quantities $x=S\chi$ and $y=Ss$, and let
+\begin{align}
+ L_-&=1-C\tau-(A+b-C)s-A\chi,\label{tworoots:Lminus}\\
+ L_+&=1-a\tau-(b+c-a)s-c\chi.\label{tworoots:Lplus}
+\end{align}
+
+We now show that there are many vertices of large weight. To see this, map part of $H$ to $T$ so that $o$ is the vertex of weight zero, $a_0$ is a cheapest inneighbour of $o$ and $p$ is a cheap inneighbour of $a_0$. The remaining positions go to $b_0,c_0,t_0$, which together with $o$ form a copy of $D_{3,1}$ with source $o$. If all vertices of weight less than some threshold $q_1$ could be used for $b_0,c_0,t_0$, this homomorphism would cost less than one. So these vertices cannot contain a copy of $D_{3,1}$ with source $o$, and Lemma~\ref{rootthird:return} shows that there are few of them. The other two thresholds come from $T^{\rm op}$ in the same way. Precisely, let
+\begin{equation}\label{tworoots:tail-table}
+ q_1=\frac{1-A\chi-(A+1)s}{C+2},\qquad
+ q_2=\frac{1-c\chi-(a+b)s}{a+2},\qquad
+ q_3=\frac{1-c\chi-(b+c)s}{a+2},
+\end{equation}
+and write $q_i=(1-\lambda_i\chi-\mu_is)/m_i$, so that $(\lambda_1,\mu_1,m_1)=(A,A+1,C+2)$, $(\lambda_2,\mu_2,m_2)=(c,a+b,a+2)$ and $(\lambda_3,\mu_3,m_3)=(c,b+c,a+2)$. We use $q_1$ when $b=1$ and $\alpha\le\beta$, $q_2$ when $\alpha\le\beta$, and $q_3$ when $\beta\le\alpha$.
+
+\begin{lemma}
+\label{tworoots:four-tails}\label{ascentbudget:unrestricted-tails}
+\label{singlemiddle:retained-price}
+Assume~\eqref{shiftroot:boundary-setting}. Then $x\ge y\ge0$ and $x+y<1$, and
+\begin{equation}\label{tworoots:maximum-constraint}
+ (a+c)x+(a+b-t)y\ge S/2\ \text{ if }\alpha\le\beta,\qquad
+ (a+c)x+(b+c)y\ge S/2\ \text{ if }\beta\le\alpha.
+\end{equation}
+Moreover, let $i\in\{1,2,3\}$ be such that $q_i$ is defined as above, and if $i=2$ suppose also that
+\begin{equation}\label{tworoots:comparison-two}
+ (a+2)(a+b+1-t)\ge S.
+\end{equation}
+Then $q_i>s$, $\zeta>q_i+s$,
+\begin{equation}\label{ascentbudget:unrestricted-tail-bound}
+ |\{w\ge q_i\}|\ge\frac{N+3(2d-N)}4\qquad\text{and}\qquad 2s+\chi+q_i<2/S.
+\end{equation}
+In particular,
+\begin{equation}\label{tworoots:affine}
+ S-2m_i+(m_i-\lambda_i)x+(2m_i-\mu_i)y<0.
+\end{equation}
+\end{lemma}
+
+The left-hand side of~\eqref{tworoots:affine} is affine, and we shall evaluate it at the vertices $(0,0)$, $(1,0)$ and $(1/2,1/2)$ of the triangle $x\ge y\ge0$, $x+y\le1$. For $i=1$ its values there are $A-C-2$, $0$ and $(C+1)/2$, and for $i=2,3$ they are $b+c-a-3$, $b-1$ and a positive number \chk{8.H}.
+When $i=2$ we sometimes need a slightly stronger form, which keeps the exact value $z=S\beta$: if also $c\le b(a+1)+1$, then the threshold
+$\widetilde q=[1-c\beta-(a+b)\alpha]/(a+2)$ satisfies the same bounds as $q_2$, and so
+\begin{equation}\label{singlemiddle:refined-affine}
+ b+c-a-3+(a+2)x+(a+4-b)y-cz<0.
+\end{equation}
+
+\begin{proof}[Proof of Lemma~\ref{tworoots:four-tails} and of~\eqref{singlemiddle:refined-affine}]
+The bounds on $x$ and $y$ follow from~\eqref{shiftroot:boundary-setting}.
+The partial homomorphisms to $P^-$ and $P^+$ of Lemma~\ref{boundary391:maps}, with $o$ at the vertex of weight zero, $z_0$ at a vertex of weight $\zeta$ forming a $2$-cycle with $o$, $u$ and $v$ at cheapest neighbours of $o$, and the remaining vertex at weight at most $\chi$, give
+\[
+ K_0\le(A+b)\alpha+C\beta+A\chi
+ \qquad\text{and}\qquad K_0\le a\alpha+(b+c)\beta+c\chi.
+\]
+As $\alpha+\beta<\tau$, the larger of $\alpha$ and $\beta$ is less than $\tau-s$, and substituting this gives
+$\zeta>L_-$ if $\alpha\le\beta$, and $\zeta>L_+$ if $\beta\le\alpha$. If instead we bound the larger of $\alpha$ and $\beta$ by $\chi$, and use $\zeta\le M\le1/2$, we obtain~\eqref{tworoots:maximum-constraint}.
+
+For $q_1$ we use the homomorphism to $T$ described before the lemma. For $q_3$ we use the homomorphism to $T^{\rm op}$ in the same way, with outneighbours of $o$ in place of inneighbours.
+For $q_2$, we choose $u_0\to o\to v_0$ with weights
+$\alpha$, $0$ and $\beta$, and put the vertices $p,a_0,o$ of $T^{\rm op}$
+at $v_0,o,u_0$. In each case, the positions mapped so far cost at most $\lambda_i\chi+\mu_is$, and the three remaining vertices, together with $o$ (or with $u_0$, for $q_2$), form a copy of $D_{3,1}$ whose source or sink is fixed and has weight zero (or $s$, for $q_2$).
+For $i=2,3$ we have $(\lambda_i+m_i)\chi+\mu_is\le S(\chi+s)<1$,
+so $q_i>\chi\ge s$. For $i=1$, we have $Ax+(A+C+3)y<S$ at the three
+vertices of the triangle \chk{8.H}, so again $q_1>s$.
+In particular, the fixed vertex of the copy of $D_{3,1}$ has weight less than $q_i$. Suppose that $\{w<q_i\}$ had more than
+$3(N-d)/2$ vertices. Then every vertex of this set would have more than a third of the set in its inneighbourhood and in its outneighbourhood, and Lemma~\ref{rootthird:return} would give a copy of $D_{3,1}$ in it through the fixed vertex. This would complete a homomorphism from $H$
+of cost less than one, which is impossible. This proves the first bound in~\eqref{ascentbudget:unrestricted-tail-bound}.
+
+To compare $q_i$ with $\zeta$, write $L_-$ (for $i=1,2$) or $L_+$ (for $i=3$) as $1-\mathsf c\tau-
+\mathsf d s-\mathsf a\chi$. Clearing the positive denominators gives
+\begin{equation}\label{tworoots:comparison-identity}
+ Sm_i(L-q_i-s)=\Psi(x,y)+\mathsf cm_i(1-S\tau),
+\end{equation}
+where $\Psi=S(m_i-1)-\mathsf cm_i+(\lambda_i-\mathsf am_i)x +[\mu_i-m_i(\mathsf d+1)]y$.
+At the three vertices of the triangle, $\Psi$ takes the values
+$(a+2)(a+b+1-t)-S$, $b(a+1)+1$ and a positive number when $i=2$, and three positive numbers when $i=1,3$ \chk{8.H}.
+So $\Psi\ge0$ on the triangle, and, as $\mathsf c>0$ and $S\tau<1$, we get
+$\zeta>L>q_i+s$.
+If $q_i>\chi$, then Lemma~\ref{prefixlayer:count}, with $t=q_i$ and $A=\zeta$, gives $2s+\chi+q_i<4W/N<2/S$; otherwise $2s+\chi+q_i\le2(s+\chi)<2/S$.
+Multiplying by $Sm_i$ gives~\eqref{tworoots:affine}.
+
+Finally, $\widetilde q\ge q_2>\chi$. In the identity~\eqref{tworoots:comparison-identity} for $\widetilde q$, the function $\Psi$ is replaced by $\Psi-c(x-z)$, which is at least
+$\Psi-cx+cy$. The values of this at the three vertices
+are those above, except that the middle one is reduced
+by $c$ \chk{8.H}, and the extra hypothesis keeps them nonnegative. The same argument as before
+gives $\zeta>\widetilde q+\alpha$ and~\eqref{singlemiddle:refined-affine}.
+\end{proof}
+
+Using the cheapest edge instead of the vertex $o$, we can exclude the crossing counts in which one of $a$ and $c$ is much larger than the other.
+
+\begin{lemma}
+\label{ascentbudget:leaf}
+Assume~\eqref{shiftroot:boundary-setting}. Then
+\begin{equation}\label{ascentbudget:initial-edge}
+ (a+b)\kappa+(2c+b)\chi\ge1-M,\qquad
+ (b+c)\kappa+(2a+b+1)\chi\ge1-M.
+\end{equation}
+Moreover, \eqref{shiftroot:boundary-setting} is impossible if
+\begin{equation}\label{ascentbudget:ratios}
+ a\ge3c+b-1\quad\hbox{or}\quad c\ge3a+b+1.
+\end{equation}
+If $b=1$, then \eqref{shiftroot:boundary-setting} is also impossible if $C\ge3A$.
+If $b\ge2$ and $c\le 3a+b$, then
+\begin{equation}\label{ascentbudget:automatic-comparisons}
+ (a+2)(a+b+1-t)>S.
+\end{equation}
+\end{lemma}
+\begin{proof}
+In the initial map to $P_3$ of Lemma~\ref{boundary391:maps},
+map $q_0,q_1$, or $q_2,q_3$, to the two ends of an edge of weight $\kappa$.
+The larger endpoint multiplicities are $a+b$ and $b+c$, and the
+remaining multiplicities sum to $2c+b$ and $2a+b+1$.
+Mapping the remaining vertices of the path to neighbours of weight at most $\chi$, and completing at a vertex of weight at most $M$, gives the two inequalities~\eqref{ascentbudget:initial-edge}.
+Eliminating $M$ using $2M+(S-2)\kappa\le1$ gives $1\le(a-c+b+1)\kappa+(4c+2b)\chi$, or $1\le(c-a+b+1)\kappa+(4a+2b+2)\chi$. Under its corresponding ratio, both positive coefficients are
+at most $S$, and since $\kappa\le s$ and $\chi+s<1/S$, each
+inequality is impossible.
+
+If $b=1$, map the edge $v\to u$ of the partial homomorphism to $L$ to an edge of weight $\kappa$: both its ends have multiplicity $C+1$, and the other positions have total multiplicity $2A+1$.
+Thus $1\le(C-A+2)\kappa+(4A+2)\chi$, which is impossible when
+$C\ge3A$, since $S=A+C+2$.
+Finally, if $b\ge2$ and $c\le3a+b$, then $S\le4a+2b+1$,
+and because $t\le a-1$, $(a+2)(a+b+1-t)-S\ge(a+2)(b+2)-(4a+2b+1) =a(b-2)+3>0$ \chk{8.I}. \end{proof}
+
+
+\subsubsection{One middle crossing}
+We first treat the case $b=1$, in which $W$ has a single step from height one to height two. Then $W$ consists of $t$ excursions $+-$ at the bottom, a step up to height two, $c$ excursions $+-$ between heights two and three, and a step down followed by the remaining $a-t-1$ bottom excursions. Thus the word and its converse are
+\begin{equation}\label{singlemiddle:word}
+ H(a,c,t)=++(+-)^t++(+-)^c--(+-)^{a-t-1},\qquad
+ H(a,c,t)^{\rm op}\cong H(c+t,a-t,t).
+\end{equation}
+To see the second assertion, let $P=+-$, $Q=-+$ and $u=a-t-1$. The converse of $H(a,c,t)$, read backwards, has sign word
+$Q^u--Q^c++Q^t++$, and starting at the last positive sign of $Q^c$
+and using $+Q^j=P^j+$, $Q^j-=-P^j$ gives
+$++P^t++P^{u+1}--P^{c-1}$.
+As before, let $A=a-t$ and $C=c+t$, and let $D=a-c$ and $E=C-A$. Then
+\begin{equation}\label{centralband:relations}
+ C=A+E,\quad 2A+E=2c+D,\quad S=2A+E+2.
+\end{equation}
+For $E\ge0$, we also define
+\begin{equation}\label{jointtail:Q}
+ Q_1=\frac{S-Ax-(A+1)y}{C+2},\quad
+ P_1=\frac{S/2-(A+1)y-Ez}{A},\quad
+ P_2=\frac{S/2-Ax-(C+1)y+(A+1)z}{A+1}.
+\end{equation}
+
+
+\begin{theorem}
+\label{rottriangle:all-single-middle}
+For all $a,c\ge1$ and $0\le t<a$, every digraph $F$ with $\delta^0(F)>|F|/2$ has a perfect
+fractional homomorphic $H(a,c,t)$-tiling.
+\end{theorem}
+\begin{proof}
+If $|H|=8$, we apply Theorem~\ref{repair:d53-factor}. So suppose that $|H|\ge10$ and that $F$ has no perfect fractional homomorphic $H$-tiling, and let $w$ be a deficient optimal cover, as in~\eqref{shiftroot:boundary-setting}. By Lemma~\ref{ascentbudget:leaf}, we have $a<3c+b-1=3c$
+and $C<3A$. Replacing $H$ and $F$ by their converses, which replaces $(a,c,t)$ by $(C,A,t)$, exchanges $D$ and $E$, and exchanges the roles of $\alpha$ and $\beta$; it also preserves these two bounds.
+
+If $D\le-2$, then $S<4A+2<(A+2)^2\le(a+2)(A+2)$, so
+Lemma~\ref{tworoots:four-tails} applies with $q_2$ and with $q_3$. The values of the left-hand side of~\eqref{tworoots:affine} at the vertices of the triangle are
+$-D-2$, $0$ and a positive value, so it is nonnegative on the triangle, and~\eqref{tworoots:affine} fails in either order of $\alpha$ and $\beta$. Applying this to the converse excludes $E\le-2$ as well.
+Since $D+E=2t\ge0$ and $D,E$ are integers, after replacing $H$ by its converse if necessary, we have either $\alpha\le\beta$, $D\ge-1$ and $E\ge0$, or $D=-1$ and $\beta<\alpha$.
+
+\emph{The case $\alpha\le\beta$, $D\ge-1$ and $E\ge0$.}
+Let $x=S\chi$, $y=S\alpha$ and $z=S\beta$. Let $u_0$ be an inneighbour of $o$ of weight $\alpha$, and let
+$X=N^-(u_0)$ and $O=N^+(o)$. The partial homomorphisms to $P^-$ and to $L$ in Lemma~\ref{boundary391:maps}, with $u$ at $u_0$, give the lower bounds
+\[
+ p_1=[K_0-(A+1)\alpha-C\beta]/A,\qquad
+ p_2=[K_0-A\chi-(C+1)\alpha]/(A+1).
+\]
+on $X$, and the partial homomorphism to $R$ with vector~\eqref{rottriangle:two-profiles} gives the lower bound
+$q=[K_0-(C+1)\alpha]/(A+1)$ on $X\cap O$.
+Here $q+\alpha\ge1/S$, since $E\ge0$, $K_0\ge1/2$,
+$\alpha<1/(2S)$ and $S-E=2(A+1)$.
+Lemma~\ref{tworoots:four-tails}, with $q_1=Q_1/S$, shows that at least $N/4$ vertices have weight at least $Q_1/S$, and $\zeta>(Q_1+y)/S$. Applying Lemma~\ref{boundary391:counts}\ref{counts:tail} with $I=N^-(o)$, separately with $p_1$ and with $p_2$, and weakening $K_0$ to $1/2$, gives
+\[
+ Q_1+P_1+y<2,\qquad Q_1+P_2+y<2.
+\]
+For $q_1$, the inequality~\eqref{tworoots:affine} reads $(E+2)x+(A+2E+3)y<E+2$.
+Because $C<3A$, we have $(a+2)(A+2)>S$, and because $D\ge-1$,
+we have $c\le a+1<a+2$. Thus we may use $q_2$, and~\eqref{singlemiddle:refined-affine} gives
+$(a+2)x+(a+3)y-cz<D+2$.
+We claim that, for $E\ge0$ and $a<3c$, the four inequalities just obtained
+have no solution with $x\ge z\ge y\ge0$ and $x+y<1$, under
+\eqref{centralband:relations}, where $D$ may be negative.\label{centralband:elimination}
+For $0\le E\le2$, replacing $z$ by $x$ in $P_1$ gives
+\[
+ Q_1+P_1+y\ge L(x,y)=
+ \frac{S-Ax-(A+1)y}{C+2}+\frac{S/2-y-Ex}{A}.
+\]
+The first constraint bounds $(x,y)$ by the triangle with vertices
+$(0,0),(1,0),(r,r)$, where $r=(E+2)/(A+3E+5)$.
+Both coefficients of $L$ are negative, so it suffices to check
+the latter two vertices, where $L-2$ equals $(2-E)/(2A)\ge0$ and a
+positive value \chk{8.J}.
+As $L$ is affine, this gives $L\ge2$ on the triangle, contradicting $Q_1+P_1+y<2$.
+
+For $E>2$, put $h=1-x>0$, $\rho=y/h$, $v=(x-z)/h$ and
+$R=(E+2)/(A+2E+3)\le1/2$. The first two constraints give
+\[
+ 0\le\rho<R,\qquad v\ge0,\qquad cv+(a+3)\rho<D+2.
+\]
+Set $q=[A-(A+1)\rho]/(A+E+2)$ and
+\[
+ F=E(1+v)+Aq-\rho,\qquad
+ G=1+(A+1)v+E\rho-(A+1)q.
+\]
+The two bounds $Q_1+P_1+y<2$ and $Q_1+P_2+y<2$ become
+$hF<(E-2)/2$ and $hG>(E+2)/2$ \chk{8.J}, so $K=(E+2)F-(E-2)G=B(\rho)+Lv<0$, where
+\[
+\begin{split}
+ L&=E^2+E+2-A(E-2),\\
+ B(\rho)&=E^2+E+2+[E(2A+1)-2]q-(E^2-E+2)\rho.
+\end{split}
+\]
+On $[0,R]$ we have $B(\rho)\ge(E+1)(E+2)/2>0$ \chk{8.J}. The assumptions
+$a<3c$ and $2A+E=2c+D$ give $c>A/2$ and
+\[
+ v<(2-3\rho)(1+1/c),\qquad L/c>-2(E-2).
+\]
+For $L\ge0$ we have $K\ge B$, while for $L<0$ these bounds give
+$K>\widetilde B(\rho)=B(\rho)+(2-3\rho)[L-2(E-2)]$. This affine function
+is positive at $\rho=0$ and $\rho=R$ \chk{8.J}.
+Thus $K>0$ for either sign of $L$, a contradiction.
+
+\emph{The case $D=-1$ and $\beta<\alpha$.}
+Then $c=a+1$, and the second ratio bound gives
+$t<a/2$. Put $x=S\chi,y=S\beta,z=S\alpha$.
+Lemma~\ref{tworoots:four-tails} with $q_3$, and~\eqref{tworoots:maximum-constraint}, give
+\[
+ x+(a+2)y<1,\qquad (2a+1)x+(a+2)y\ge S/2,
+ \qquad y<\frac{2a-1}{4a(a+2)}<\frac1{2(a+1)}.
+\]
+Let $v_0$ be an outneighbour of $o$ of weight $\beta$, and let $Y=N^+(v_0)$.
+The partial homomorphism to $P^+$, with $v$ at $v_0$, gives $p=[K_0-a\alpha-(a+2)\beta]/(a+1)$
+on $Y$. In the partial homomorphism to $P^-$, identify $x_0$ with $v$. This gives a partial homomorphism to $R$ with vector $(C+2,1,A+1,A+C)$ in the order $(o,z_0,u,v)$, and, with $u$ at a vertex of $Y\cap N^-(o)$ and $v$ at $v_0$, it gives the lower bound $q=[K_0-(2a+1)\beta]/(A+1)$ on $Y\cap N^-(o)$.
+Using $z\ge y$, $K_0\ge1/2$ and the displayed bound on $y$,
+\[
+\begin{split}
+ S(p+\alpha)&\ge\frac{S/2-(a+1)y}{a+1}>1,\\
+ S(q+\beta)-1&\ge
+ \frac{t+1/2-(a+t)y}{A+1}>0.
+\end{split}
+\]
+The last numerator exceeds $[t(2a+1)+1]/[2(a+1)]$. Thus both $p+\alpha$ and $q+\beta$ exceed
+$1/S>\tau$, contradicting Lemma~\ref{boundary391:counts}\ref{counts:basic}, applied with $I=N^+(o)$, $O=N^-(o)$ and $X=Y$.
+\end{proof}
+
+
+\subsubsection{Several middle crossings}
+We now let $b\ge2$, and, as before, write $D=a-c$. The main case is $D\ge b-1$, in which $a$ is somewhat larger than $c$; we treat the two orders of $\alpha$ and $\beta$ separately. In terms of the rescaled weights $x,y,z$, the lemmas above give the following. We will then show that these inequalities have no common solution.
+In this subsection, $B$ and $T$ denote the numbers $B=b+c$ and $T=a+2$, so that $S=a+B+1$ (the digraph $T$ is not used here).
+
+
+\begin{proposition}
+\label{normalizedout:initial}\label{initialin:constraints}
+Assume~\eqref{shiftroot:boundary-setting}, and suppose that $b\ge2$ and $D=a-c\ge b-1$. Let $B=b+c$, $T=a+2$ and $x=S\chi$.
+
+If $\beta\le\alpha$, put $y=S\beta$, $z=S\alpha$ and define
+\begin{align}
+ Q&=(S-cx-By)/T,\notag\\
+ P_1&=(S/2-By-Dz)/c,\qquad
+ P_2=(S/2-cx-(a+b)y)/B+z,\label{normalizedout:quantities}\\
+ q&=(S/2-(a+b)y)/B,\qquad P=\max(P_1,P_2).\notag
+\end{align}
+Then
+\begin{equation}\label{normalizedout:old}
+ x\ge z\ge y\ge0,\quad x+y<1,\quad
+ Q+2y+x<2,\quad Q+y+P<2,
+\end{equation}
+and at least one of
+\begin{equation}\label{normalizedout:new}
+ q<1,\quad P+q<2,\quad Q+P+z<2,\quad Q+2P-z<2
+\end{equation}
+holds.
+
+If $\alpha\le\beta$, put $y=S\alpha$, $z=S\beta$ and define
+\begin{equation}\label{initialin:prices}
+ Q=(S-cz-(a+b)y)/T,\quad
+ P=(S/2-(a+b+1)y+Dz)/a,\quad
+ q=(S/2-(a+c+1)y)/B.
+\end{equation}
+Then
+\begin{gather}
+ x\ge z\ge y\ge0,\quad x+y<1,\quad Q+2y+x<2,
+ \label{initialin:domain}\\
+ (4c+2b)x+(D+b+1)y\ge S,\label{initialin:edge}
+\end{gather}
+and at least one of
+\begin{equation}\label{initialin:disjunction}
+ Q+y<1,\quad Q+y+P<2,\quad Q+2y+q<2
+\end{equation}
+holds.
+\end{proposition}
+\begin{proof}
+Lemma~\ref{norm391:savings} gives $x\ge z\ge y\ge0$ and $x+y<1$. The thresholds $q_3$ and $q_2$ of Lemma~\ref{tworoots:four-tails}
+give the thresholds $Q/S$ in the two orders, respectively; for $q_2$ we keep both $\alpha$ and $\beta$, using~\eqref{singlemiddle:refined-affine}. The conditions needed for $q_2$ hold, since
+$a\ge c$ and
+\[
+ (a+2)(a+b+1-t)-S\ge(a+2)(b+2)-(2a+b+1)>0,
+ \qquad c\le b(a+1)+1.
+\]
+In either order, $Q/S>\chi$, the set $\{w\ge Q/S\}$ has at least
+$N/4$ vertices, and $\zeta>(Q+y)/S$, which gives $Q+2y+x<2$ by~\eqref{ascentbudget:unrestricted-tail-bound}.
+
+Choose $u_0\to o\to v_0$ with weights $\alpha$, $0$ and $\beta$.
+Suppose first that $\beta\le\alpha$, and let $X=N^+(v_0)$ and $O=N^-(o)$.
+We obtain the two lower bounds $(P_1-z)/S$ and $(P_2-z)/S$ on $X$ as follows.
+In the map to $P^+$, put $u,o,v,y_0$ at
+$u_0,o,v_0,x'$, where $x'\in X$. In the initial map to $P_3$, put $q_0,q_1,q_2$ at
+$o,v_0,x'$ and $q_3$ at an outneighbour of $x'$ of weight at most
+$\chi$. The initial map to $R$, with $o,u,v$ at $o,x',v_0$, gives the lower bound $q/S$ on $X\cap O$.
+In all of these, the deleted position is completed at a vertex forming a $2$-cycle with $o$, of weight $\zeta\le1/2$.
+
+Suppose next that $\alpha\le\beta$, and let $X=N^-(u_0)$ and $O=N^+(o)$.
+In the map to $P^+$, put $u,o,v,y_0$ at
+$x',u_0,o,v_0$, where $x'\in X$; this gives the lower bound $(P-z)/S$ on $X$.
+For $X\cap O$, put $o,u,v$ of the initial map to $R$ at $u_0,x',o$, which gives the lower bound $q/S$.
+Here the deleted position is completed at a vertex forming a $2$-cycle with $u_0$, of weight
+at most $M\le1/2$. In each case, the required edges exist by the definitions of the neighbourhoods.
+
+In both orders, Lemma~\ref{boundary391:counts}\ref{counts:lists} applies, since
+$Q+2y+z\le Q+2y+x<2$. It gives
+$Q+y<1$, or $Q+y+P<2$, or $Q+2y+q<2$,
+which is~\eqref{initialin:disjunction} in the order $\alpha\le\beta$. If $\beta\le\alpha$, the first
+and third alternatives are impossible, as the corresponding differences are
+positive at the three vertices of the triangle $x\ge y\ge0$, $x+y\le1$ \chk{8.K}.
+Hence $Q+y+P<2$. Moreover, both $(P-z)/S$ and $z/S$ are at most $\chi<Q/S$, so $Q+z<2$,
+and Lemma~\ref{intersectiontail:disjunction} gives~\eqref{normalizedout:new}.
+
+Finally, eliminating $M$ between the first inequality in~\eqref{ascentbudget:initial-edge} and $2M+(S-2)\kappa\le1$ gives $1\le(D+b+1)\kappa+(4c+2b)\chi$. If $\alpha\le\beta$, then $\kappa\le\alpha$, and multiplying by
+$S$ gives~\eqref{initialin:edge}.
+\end{proof}
+
+ In both proofs, we regard the crossing counts as real parameters.
+
+\begin{lemma}
+\label{normalizedout:scalar}
+Let $b\ge2$, $c>0$ and $D\ge b-1$ be real, and let $a=c+D$, $B=b+c$, $T=a+2$ and $S=a+B+1$.
+Then the system~\eqref{normalizedout:old}--\eqref{normalizedout:new},
+with the quantities in~\eqref{normalizedout:quantities}, has no solution $(x,y,z)$.
+\end{lemma}
+\begin{proof}
+We first normalise the variables. Let $h=1-2y>0$, $\rho=y/h$,
+$X=(x-y)/h$ and $Z=(z-y)/h$, so that $0\le Z\le X<1$, and put $v=1-X>0$.
+Put
+\[
+ Q_0=(S-cX)/T,\quad P_{10}=(S/2-DZ)/c,\quad
+ P_{20}=(S/2-cX)/B+Z,\quad q_0=S/(2B).
+\]
+A direct computation shows that the normalised quantities
+\[
+ \widehat Q=\frac{Q-y}h,\quad \widehat P_1=\frac{P_1-2y}h,\quad \widehat P_2=\frac{P_2-2y}h,\quad \widehat q=\frac{q-2y}h
+\]
+are equal to
+\[
+ Q_0+\frac{(a+b)\rho}T,\quad P_{10}-\frac{(c-1)\rho}c,\quad P_{20}-\frac{(B-1)\rho}B,\quad q_0-\frac{(c+2b-1)\rho}B,
+\]
+respectively, and with $\widehat P=\max(\widehat P_1,\widehat P_2)$
+the two inequalities in~\eqref{normalizedout:old} and the four alternatives in~\eqref{normalizedout:new} become
+\[
+\begin{gathered}
+ \widehat Q+X<2,\quad\widehat Q+\widehat P<2,\\
+ \widehat q<1\quad\hbox{or}\quad\widehat P+\widehat q<2
+ \quad\hbox{or}\quad\widehat Q+\widehat P+Z<2
+ \quad\hbox{or}\quad\widehat Q+2\widehat P-Z<2.
+\end{gathered}
+\]
+The coefficients of $\rho$ in $\widehat Q+\widehat P_1$ and $\widehat Q+\widehat P_2$ are positive \chk{8.L}, so it suffices to consider $\rho=0$ in the first two inequalities.
+Averaging $\widehat P_1$ and $\widehat P_2$ with weights $c/a$ and $D/a$ eliminates $Z$:
+\[
+ \frac{cP_{10}+DP_{20}}a=1+\frac{F_0+2Dcv}{2aB},\qquad
+ F_0=D(D-c)+c(b+1)+D+b^2+b,
+\]
+and $Q_0=1+(b-1+cv)/T$. If $D\ge c$, then $F_0>0$ contradicts
+$\widehat Q+\widehat P<2$. So $D<c$; put $g=D+2$.
+
+The first constraint is $gv>b-1+(a+b)\rho$. Multiplying the averaged
+second constraint by $2aBT$ gives $2Kv+2L\rho+F<0$, where
+\[
+ K=c(aB+DT),\quad L=(b-2)aB+(a+b)T,\quad F=2aB(b-1)+TF_0,
+\]
+and eliminating $v$ gives $\mathcal H+2\mathcal I\rho<0$, with
+$\mathcal H=2K(b-1)+gF$ and $\mathcal I=K(a+b)+gL>0$.
+The first two alternatives, averaged in the same way and combined
+with the first constraint, give $2R_0\rho>J_0$, where
+\[
+ (R_0,J_0)=(c+2b-1,\ D-b+1)\quad\text{or}\quad
+ \bigl(gH_B-Dc(a+b),\ gF_1+2Dc(b-1)\bigr),
+\]
+with $H_B=a(2c+3b-2)-b$ and $F_1=D(2D-b+2)+b^2+b+2c$. In both cases
+$R_0>0$ and $R_0\mathcal H+J_0\mathcal I>0$ \chk{8.L}, so
+$\mathcal H+2\mathcal I\rho>0$, a contradiction.
+For the third alternative,
+$P_{10}+Z=S/(2c)+(c-D)Z/c>1$ and $Q_0>1$, so the positive $\rho$
+correction gives $\widehat Q+\widehat P+Z>2$.
+For the last alternative, the weights $c/(2a)$ and $(c+2D)/(2a)$ give
+$G+2K_2v+2L_2\rho<0$, where
+\[
+ K_2=c[aB+T(c+2D)],\quad
+ L_2=aB(a+b)-2aBT+(2a+b)T,\quad G=2aB(b-1)+TF_2,
+\]
+and $F_2=2bc+2D^2+bD+b^2+2c+2D+b$. Combined with the first constraint
+this gives $gG+2K_2(b-1)+2[K_2(a+b)+gL_2]\rho<0$, whose
+coefficients are positive \chk{8.L}. So the last alternative is excluded as well.
+\end{proof}
+
+
+\begin{lemma}
+\label{initialin:scalar}
+Let $b,c,D$ be real numbers with
+\begin{equation}\label{initialin:range}
+ b\ge2,\qquad b-1\le D\le2c+b-2,
+\end{equation}
+and let $a=c+D$, $B=b+c$, $T=a+2$ and $S=a+B+1$. Then the system
+\eqref{initialin:prices}--\eqref{initialin:disjunction} has no solution $(x,y,z)$.
+\end{lemma}
+\begin{proof}
+Let $g=D+2$, $f=a-b+4$, $h=D-b+3$, $L=4c+2b$ and
+$E=D+b+1$, which are all positive. The inequalities $Q+2y+x<2$ and~\eqref{initialin:edge} are
+\[
+ Tx+fy-cz<h,\qquad Lx+Ey\ge S.
+\]
+Since $x\ge z$, the pair $(z,y)$ lies in the triangle
+$z\ge y\ge0$, $gz+fy<h$.
+Since $z\le x<1-y$ and $0\le y<1/2$, we have
+$T(Q+y-1)>b-1+(c-b+2)y>0$, so the first alternative fails.
+The third margin $Q+2y+q-2$ decreases with $z$, so its minimum lies on
+$gz+fy=h$; it is positive at both ends $(h/g,0)$ and $(s,s)$,
+$s=h/(g+f)$, of that segment. Throughout we use the real parameters
+\[
+ p=b-2\ge0,\quad e=D-b+1\ge0,\quad
+ \omega=c-(e+1)/2\ge0,
+\]
+and all signs are checked over $p,e,\omega\ge0$ \chk{8.M}.
+
+Only $Q+y+P<2$ remains. Its numerator $\Psi=2aT(Q+y+P-2)$ is affine in
+$(z,y)$. The inequality~\eqref{initialin:edge} and the inequality $Tx+fy-cz<h$ imply the additional
+linear inequality
+\[
+ r+Lcz-k_0y>0,\qquad r=Lh-TS,\quad k_0=fL-TE,
+\]
+whose left-hand side is negative at the origin and at the diagonal
+vertex $(s,s)$ \chk{8.M}. If it is nonpositive at $(h/g,0)$, the entire
+triangle is removed. Otherwise the surviving closure is a triangle
+with two vertices on $y=0$ and one vertex $(z_*,y_*)$ on $gz+fy=h$; along
+that edge the left-hand side has slope $-Tk_*/g$ in $y$, where
+$k_*=fL-gE$, so $k_*>0$.
+Now $\Psi>0$ on the whole axis segment $0\le z\le h/g$, and
+$\Psi(z_*,y_*)=\mathcal R/k_*$ with $\mathcal R>0$ \chk{8.M}.
+Hence $\Psi>0$ throughout the remaining triangle, a contradiction.
+\end{proof}
+
+We can now complete the proof for boundary roots.
+
+\begin{theorem}
+\label{initialin:all-height-three}
+Let $W$ be a nonempty closed height walk of span at
+most three which starts at the top or the bottom of its range.
+Then every digraph $F$ with $\delta^0(F)>|F|/2$ has a perfect fractional homomorphic $++W$-tiling.
+\end{theorem}
+\begin{proof}
+If $W$ has span at most two, we apply Theorem~\ref{height390:two-width-factor}.
+Otherwise, replacing $H$ and $F$ by their converses exchanges the two
+boundary roots, so we may assume that $W$ starts at height zero. If $|H|=8$, we apply Theorem~\ref{repair:d53-factor}. Otherwise, we suppose that $F$ has no perfect fractional homomorphic $H$-tiling, and use the cover of~\eqref{shiftroot:boundary-setting}.
+The case $b=1$ is Theorem~\ref{rottriangle:all-single-middle}, so let $b\ge2$.
+
+By Lemma~\ref{ascentbudget:leaf}, we have $a<3c+b-1$ and $c<3a+b+1$, and~\eqref{ascentbudget:automatic-comparisons} holds, so Lemma~\ref{tworoots:four-tails} applies with $q_2$. The first bound gives $D\le2c+b-2$.
+
+If $D\le b-3$, then the values of the left-hand side of~\eqref{tworoots:affine} for $q_2$ and $q_3$ at the three vertices
+of the triangle $x\ge y\ge0$, $x+y\le1$ are
+$b-D-3$, $b-1$ and a positive value. These are nonnegative, so~\eqref{tworoots:affine} fails in either order of $\alpha$ and $\beta$.
+If $D=b-2$, then both $q_2$ and $q_3$ give $bx+(c+2)y<1$. The constraints~\eqref{tworoots:maximum-constraint} imply, using $a\ge c$,
+\[
+ F:=(2c+b-2)x+(c+2b-2)y\ge S/2,
+ \qquad S=2c+2b-1.
+\]
+The triangle $x\ge y\ge0$, $bx+(c+2)y\le1$ has nonzero
+vertices $(1/b,0)$ and $(1/(b+c+2),1/(b+c+2))$, and $F<S/2$ at all
+three vertices \chk{8.N}.
+Thus $F<S/2$ throughout this triangle, a contradiction.
+
+The remaining crossing counts satisfy $b-1\le D\le2c+b-2$, and
+Proposition~\ref{normalizedout:initial} together with
+Lemmas~\ref{normalizedout:scalar} and~\ref{initialin:scalar} excludes
+both orders of $\alpha$ and $\beta$. Thus there is no deficient cover, and Lemma~\ref{general:LP} proves the theorem.
+\end{proof}
+
+\subsection{Internal roots}\label{sec:internalroots}
+Let $W$ be a closed walk on $\{0,1,2,3\}$ which starts at height one and visits zero and three, with
+crossing counts $a,b,c$, and let $H=++W$. Here we work around an edge of minimum weight, rather than a vertex of weight zero, and follow Section~\ref{sec:sketch-spanthree} closely.
+In the final proof (in Section~\ref{sec:spanthree-proof}), we will see that we may assume that every directed run of $H$ has length at most
+three, and we assume this throughout this subsection.
+
+Suppose that a digraph $F$ of order $N$, with $d=\delta^0(F)>N/2$, has no perfect fractional homomorphic $H$-tiling, and let $w$ be a deficient optimal cover. We use the notation
+\[
+ S=a+b+c+1,\quad p=a+b+1,\quad q=b+c,\quad T=a+c,
+ \quad\nu=(S-2)/2,\quad\omega=Sw,
+\]
+so that every homomorphism from $H$ has $\omega$-cost at least $S$, and $\sum\omega<N/2$.
+Let $M=\max w$, $\kappa=\min_{xy\in E(F)}(w(x)+w(y))$
+and $\chi=\max_{v,\sigma}\min_{N^\sigma(v)}w$, and let $\tau=(\sum w)/d<1/S$. By Theorem~\ref{norm391:normalized-cover} and
+Lemma~\ref{norm391:savings}, we have
+\[
+ \min w=0,\quad
+ 2M+(S-2)\kappa\le1,
+ \quad\chi+\kappa<\tau,\quad2\kappa<\tau,
+\]
+and, at every vertex $o$ of weight zero, if $\alpha$ and $\alpha'$ are the minimum weights of an inneighbour and an outneighbour of $o$, and $m=\min(\alpha,\alpha')$, then $\alpha+\alpha'<\tau$, $\chi+m<\tau$ and $m\ge\kappa$.
+Now choose an edge $x\to y$ with $w(x)+w(y)=\kappa$, and let
+\[
+ u=\omega(x),\quad v=\omega(y),\quad k=u+v=S\kappa,\qquad
+ X=N^-(x),\ Y=N^+(y),\ O=N^+(x),\ I=N^-(y).
+\]
+Then $0\le k<1/2$, $SM\le S/2-\nu k$ and $S\chi<1-k$, while~\eqref{balanced:bound} gives
+$\omega\ge3/2-k$ on $XYOI$; here we use Lemma~\ref{compact390:balanced-template}, which applies as the directed runs of $H$ have length at most three.
+We write $X\ge c$ to mean that $\omega(z)\ge c$ for every $z\in X$, and similarly for other sets, and juxtaposition denotes intersection, as in Section~\ref{sec:prelim-weights}.
+Our aim, as explained in Section~\ref{sec:sketch-spanthree}, is a pointwise inequality between $\omega$ and a combination of the indicator functions of $X,Y,O,I$ which, after summing, gives $\sum\omega>N/2$. We first obtain lower bounds on $\omega$ in the intersections of these sets, and then choose the coefficients according to the crossing counts $a,b,c$.
+
+\subsubsection{Lower bounds in the neighbourhoods of the edge}
+Deleting the middle position of the initial pair $++$ leaves a path whose height classes at heights $0,1,2,3$ have multiplicities $(a,p,q,c)$, with both endpoints at height one. We use this partial homomorphism, and the homomorphisms obtained from it by reducing heights modulo three.
+
+\begin{lemma}
+\label{root391:internal-profiles}\label{root406:profile-part}
+Reducing the heights of the partial homomorphism above modulo three gives a partial homomorphism to a directed triangle, with multiplicities $p$, $q$ and $T$ at its three vertices, in the cyclic order of the triangle; the deleted position must be completed at a vertex forming a $2$-cycle with the first of these vertices.
+Consequently, if $z\in XYI$, then there are homomorphisms from $H$ to $\{x,y,z\}$ which send $(T,p,q+1)$ and $(q,T+1,p)$ positions to $(x,y,z)$, and if $z\in XYO$, then there are such homomorphisms sending $(p,q,T+1)$ and $(q+1,T,p)$ positions to $(x,y,z)$.
+\end{lemma}
+\begin{proof}
+The heights $1$, $2$ and $0\equiv3$ have multiplicities $p=a+b+1$, $q=b+c$ and $T=a+c$, and both endpoints are at height one, which gives the first assertion.
+If $z\in XYI$, then $x\to y\to z\to x$ is a directed triangle and $y\leftrightarrow z$. Sending the heights $1,2,0$ to $y,z,x$ and completing at $z$, or sending them to $z,x,y$ and completing at $y$, gives the two vectors in the first row.
+If $z\in XYO$, then $x\to y\to z\to x$ is a directed triangle and $x\leftrightarrow z$. Sending the heights $1,2,0$ to $x,y,z$ and completing at $z$, or sending them to $z,x,y$ and completing at $x$, gives the two vectors in the second row.
+\end{proof}
+
+Mapping some height classes to $x$ and $y$ and one to a vertex $z$ gives a lower bound on the weight of $z$, as follows.
+
+\begin{lemma}
+\label{root391:profile-floors}
+Suppose that a partial homomorphism of $H$ maps three height
+classes, of multiplicities $A,B,C>0$, to $x$, $y$ and $z$, respectively, and maps its other $R$ positions in turn to neighbours of these vertices, so that each edge goes from one height to the next. Then
+\begin{equation}\label{positivecredit:affine-floor}
+ \omega(z)\ge\widehat{\mathcal L}_k(A,B;C,R)
+ :=\frac{S/2-R+k\min(\nu+R-A,\nu+R-B)}{C}.
+\end{equation}
+The same holds, with $R=0$, for the partial homomorphisms to a triangle in Lemma~\ref{root391:internal-profiles}. Moreover, if a partial homomorphism maps a height class to a vertex of weight zero, the two adjacent classes, of multiplicities $A$ and $B$, to its neighbours, and its other $R$ positions to further neighbours, then
+\begin{equation}\label{root391:zero-profile-price}
+ 1<M+(\max(A,B)+R)\tau-(|A-B|+R)\kappa.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Map the remaining positions successively to neighbours
+of weight at most $\chi$, and complete the deleted position by a vertex of weight at most $M$, which exists as the completion sets intersect.
+Using $SM\le S/2-\nu k$ and $S\chi<1-k$, the cover inequality gives $C\omega(z)\ge S-SM-Au-Bv-RS\chi \ge S/2-R+(\nu+R-A)u+(\nu+R-B)v$. Minimising the right-hand side over $u,v\ge0$ with $u+v=k$ gives~\eqref{positivecredit:affine-floor}. At a vertex of weight zero, we
+instead map the two adjacent classes to neighbours of weights $\alpha$ and $\alpha'$. Mapping the other positions to vertices of weight at most $\chi$, we obtain $A\alpha+B\alpha'+R\chi <(\max(A,B)+R)\tau-(|A-B|+R)m$, and then $m\ge\kappa$ proves the final assertion.
+\end{proof}
+
+\begin{lemma}
+\label{root391:short-run}
+If every directed run of $H$ has length at most three, then each of
+$XYO$, $XYI$, $XOI$ and $YOI$ has lower bound
+\begin{equation}\label{completeheightthree:F}
+ F_0(k)=\frac{S(1-k)}{2b+1},
+\end{equation}
+and $XYOI$ has lower bound $F_0(k)+k/2$.
+\end{lemma}
+\begin{proof}
+Each directed run of length two or three in $W$ contains a step between heights one and two, and distinct runs contain distinct such steps. The only other run which may have length at least two is the run containing the initial pair $++$, which has length at most three. Hence
+\[
+ 0<A=\sum_h\lfloor j_h/2\rfloor\le2b+1.
+\]
+As every homomorphism from $H$ has $\omega$-cost at least $S$,
+Lemma~\ref{geom368:unrestricted-folds} gives the assertion, since its lower bounds decrease as $A$ increases.
+\end{proof}
+
+Finally, $H$ maps into every small tournament.
+
+\begin{lemma}
+\label{root391:tournaments}
+Let $H$ be an orientation of an even cycle which is not a directed cycle, and whose directed runs have
+length at most three. Then every tournament on four vertices receives a homomorphism from $H$.
+\end{lemma}
+\begin{proof}
+Consider first the transitive
+tournament on $\{0,1,2,3\}$, with edges from smaller to larger numbers. Map each vertex of $H$ to the
+length of a longest directed path of $H$ ending there.
+These lengths lie in $\{0,1,2,3\}$ and increase along every edge.
+Every other tournament on four vertices contains a directed
+triangle. If its fourth vertex is an inneighbour of all vertices of the triangle,
+delete a source of $H$, map the remaining path to the triangle by
+reducing heights modulo three, and put the deleted source at the
+fourth vertex. If the fourth vertex is an outneighbour of all vertices of the triangle, we do the same with a sink. The only remaining tournament is strongly connected, and we
+label its vertices $a,b,x,y$ so that its edges are
+$a\to b$, $b\to x$, $b\to y$, $x\to y$,
+$x\to a$ and $y\to a$. Delete a source of $H$, and map the remaining
+path to the triangle $a\to b\to y\to a$ by reducing heights modulo three, rotated so that its
+two endpoints are mapped into $\{a,y\}$. Then put the
+deleted source at $x$, which is an inneighbour of both $a$ and $y$.
+\end{proof}
+
+\subsubsection{Pointwise inequalities}
+There are several ways of combining lower bounds on the sixteen patterns of membership in $X,Y,O,I$ into a pointwise inequality, as in Section~\ref{sec:sketch-spanthree}, and we will need three of them. They hold for every orientation of an even cycle.
+Let $H$ be an orientation of an even cycle of order $2S$, let $w$
+be a fractional $H$-cover of a digraph $F$ of order $N$ and minimum semidegree
+$d>N/2$, and let $\omega=Sw$. Let $x\to y$ be an edge of minimum weight, and suppose that $\omega(x)+\omega(y)\le1/2$. We write
+\[
+ u=\omega(x),\quad v=\omega(y),\quad k=u+v\le\tfrac12,
+ \qquad X=N^-(x),\ Y=N^+(y),\ O=N^+(x),\ I=N^-(y).
+\]
+These sets have at least $d$ vertices each. As $x\to y$ has minimum weight, we have $X,O\ge v$
+and $Y,I\ge u$. A vertex of $XO$ forms a $2$-cycle with $x$, so, by Lemma~\ref{norm391:savings}, $XO\ge1-u$, and similarly $YI\ge1-v$.
+In each of the following lemmas, we define a function $P=\sum_Rc_R\ind_R-D$, where $R$ ranges over $X,Y,O,I$ and possibly some other sets, and we check that $P\le\omega$ by computing its value at each vertex according to which of $X,Y,O,I$ contain it. For example, the \emph{value of $P$ on $XI$} is its value at a vertex which lies in $X$ and $I$ but in neither $Y$ nor $O$. The \emph{cyclic} triple intersections are $XYO$ and $XYI$, as a vertex in one of them forms a directed triangle with $x$ and $y$.
+
+The first is for the case where the lower bounds on $X$ and $Y$ are large.
+
+\begin{lemma}
+\label{root391:large-sum-count}\label{root406:large-count-part}
+Suppose $X\ge l$, $Y\ge r$, $OI\ge\beta$,
+$XY\ge1-\beta$, and $XYOI\ge3/2-k$, where
+\[
+ l+r\ge1,\qquad l,r\ge\max(k,\beta),\qquad
+ 0\le\beta\le\tfrac12.
+\]
+Let $\theta=\min(1,\beta/k)$ if $k>0$, and $\theta=0$
+if $k=0$, and suppose that
+\[
+ XYO\ge1-\theta u\qquad\text{and}\qquad XYI\ge1-\theta v.
+\]
+Then $\sum\omega>N/2$. In particular, this holds if both cyclic triple intersections have lower bound one, and, if $\beta\ge k$, it holds if they have lower bounds $1-u$ and $1-v$.
+\end{lemma}
+\begin{proof}
+Let $\epsilon=\beta-\theta k=(\beta-k)_+$. We first note that the intervals
+\[
+ [1-r,l],\qquad
+ [\beta+(1-\theta)v,1-\beta-(1-\theta)u]
+\]
+intersect. Indeed, the second has length
+$1-\beta-\max(k,\beta)\ge0$, and, as $l,r\ge\max(k,\beta)$ and $l+r\ge1$, each interval contains a point which is at most the right endpoint of the other. Choose $\lambda$ in both intervals, and let
+\[
+ (c_X,c_Y,c_O,c_I)=(\lambda-\theta u,1-\lambda-\theta v,
+ \theta v+\epsilon,\theta u+\epsilon).
+\]
+These are nonnegative and sum to $1+2\epsilon$.
+Let $P=\sum_Rc_R\ind_R-\epsilon$. Its values on $X$ and $XI$ are at
+most $\lambda\le l$, and its values on $Y$ and $YO$ are at most $1-\lambda\le r$.
+The $O,I$ values are $\theta v,\theta u$, bounded by $v,u$;
+the $XY,OI$ values are exactly $1-\beta,\beta$.
+The larger of the $XO,XOI$ values is
+$\lambda+\beta-\theta u\le1-u$ by the upper endpoint for $\lambda$.
+The lower endpoint similarly proves $YI,YOI$ by $1-v$.
+Its values on the cyclic triple intersections are exactly $1-\theta u$ and $1-\theta v$,
+and its value on $XYOI$ is $1+\epsilon\le3/2-k$.
+Outside the four sets, $P=-\epsilon$. Thus $P\le\omega$ pointwise, and
+consequently
+\[
+ \sum\omega\ge(1+2\epsilon)d-\epsilon N
+ =N/2+(1+2\epsilon)(d-N/2)>N/2.
+\]
+\end{proof}
+
+When these lower bounds are small, we use instead that adjacent vertices which are joined to both $x$ and $y$ have large total weight, as together with $x$ and $y$ they span a tournament on four vertices.
+
+\begin{lemma}
+\label{root391:tournament-counts}\label{root406:small-count-part}
+Suppose that every tournament on four vertices receives a homomorphism from $H$, and that
+$X\ge l$, $Y\ge r$, $OI\ge U$ and $XY\ge V$, where
+\[
+ 0\le l,r\le1,\quad s=l+r\le1,\quad
+ \beta=\max(0,1-V)\le\min(1/2,l,r,U).
+\]
+Let $m=\min(l,r)$. Suppose that the two cyclic triple intersections have
+lower bound $T$, the other two triple intersections have lower bound $R$, and $XYOI$ has lower bound $Q$, where
+\[
+ T\ge2-s,\qquad R\ge2-s-m+\beta,\qquad
+ Q\ge\max\{3-2s+\beta,3/2-m\}.
+\]
+Then $\sum\omega>N/2$. Moreover, if $l,r\le1/2$, the second entry
+in the maximum in the condition on $Q$ is implied by the first.
+\end{lemma}
+\begin{proof}
+Let $C=(X\cup O)\cap(Y\cup I)$ be the set of vertices adjacent to both $x$ and $y$. As $x\to y$ has minimum weight, each vertex of $C$ has
+weight at least $\max(u,v)$. If $z,z'\in C$ are adjacent, then the four distinct vertices
+$x,y,z,z'$ span a tournament, which receives a homomorphism from $H$. Each fibre of
+this homomorphism is an independent set of the underlying cycle of $H$, and so has size at most $S=|H|/2$. As $z$ and $z'$ have
+the two largest weights among $x,y,z,z'$, the cost of this homomorphism is at most
+$S(\omega(z)+\omega(z'))$, and so
+$\omega(z)+\omega(z')\ge1$.
+Put
+\[
+ a_0=\min\{1/2,\min_C\omega\},\quad g=1-a_0,
+ \quad L=\{z\in C:\omega(z)<g\}.
+\]
+The lower bounds give $a_0\ge\beta$ and $a_0\ge\max(u,v)$. If $a_0<1/2$, then a vertex of $C$
+of weight $a_0$ has no neighbour in $L$, so
+$|L|\le N-d$; if $a_0=1/2$, then $L$ is empty. Let
+\[
+\begin{gathered}
+ A=\min\{g,\max(l,a_0)\},\quad
+ B=\min\{g,\max(r,a_0)\},\quad \lambda=1-A-B,\\
+ q=\max\{\beta,a_0-l,a_0-r\},\quad D=\lambda+q,
+ \quad c_X=1-B,\quad c_Y=1-A.
+\end{gathered}
+\]
+Let $t=(a_0-m)_+$. By definition,
+\[
+ a_0\le A,B\le g,\quad \min(A,B)=m+t,\quad
+ s\le A+B\le1,\quad q=\max(\beta,t)\le a_0,\quad 0\le D\le g.
+\]
+If $m\ge a_0$, then $A+B=s$; otherwise the smaller of $A,B$
+is $a_0$, and $A+B\ge s+t$ unless the larger original bound exceeds
+$g$, when $A+B=1$.
+We show that
+\[
+ \omega\ge c_X\ind_X+c_Y\ind_Y+D(\ind_O+\ind_I)
+ -D-\lambda\ind_L.
+\]
+pointwise.
+The values on $X$ and $Y$ are $A-q\le l$ and $B-q\le r$,
+the values on $O$ and $I$ are zero, and the value outside the four sets is $-D$.
+For $XI$, the value on $L$ is $A\le\max(l,a_0)$, and
+off $L$ it is $c_X\le g$; $YO$ is symmetric. For $OI$
+the two values are $q\le a_0,D\le g$. For $XY$, its
+value is at most $1-q\le V$. The values on $XO$ and $YI$
+are $c_X,c_Y\le g\le1-u,1-v$.
+The values on the two cyclic triple intersections are $2-A-B\le2-s$.
+The larger of the values on the other two triple intersections is $2-A-B-\min(A,B)+q\le2-s-m-t+\max(\beta,t) \le2-s-m+\beta$. The value on $XYOI$ is $3-2(A+B)+q$. If the larger lower bound is at most $g$,
+we use $A+B\ge s+t$ and $q=\max(\beta,t)$ to bound it by $3-2s+\beta$;
+otherwise it is $1+q\le\max(1+\beta,3/2-m)$, since $a_0\le1/2$.
+Thus the pointwise inequality holds, and since $c_X+c_Y-\lambda=1$,
+summing and using $|L|\le N-d$ gives
+\[
+ \sum\omega\ge N/2+(d-N/2)(c_X+c_Y+2D+\lambda)>N/2.
+\]
+Finally, if $l,r\le1/2$, then $s\le m+1/2$, and
+$3-2s+\beta\ge2-2m\ge3/2-m$.
+\end{proof}
+
+Combining the two, we obtain a single condition, which is convenient when all bounds are affine in $k$.
+
+\begin{lemma}
+\label{root391:scalar-count}\label{root406:scalar-count-part}
+Suppose that every tournament on four vertices receives a homomorphism from $H$, and let $l,r,U,V$ be lower bounds on $X,Y,OI,XY$, respectively, with
+\[
+ k/2\le\beta=\max(0,1-V)\le\min(1/2,l,r,U),
+ \quad\min(l,r)\ge k,\quad\max(l,r)\le1-k/2.
+\]
+Suppose that all four triple intersections have lower bound $F$, that both cyclic triple intersections
+also have lower bound one, and that $XYOI$ has
+lower bounds $F+k/2$ and $3/2-k$. If $l+r\ge1$, or if
+$l+r\le1$ and $F+k/2-3+2l+2r-\beta\ge0$, then
+$\sum\omega>N/2$.
+\end{lemma}
+\begin{proof}
+If $l+r\ge1$, we use Lemma~\ref{root391:large-sum-count}. Otherwise,
+let $s=l+r$, $m=\min(l,r)$ and
+$E=F+k/2-3+2s-\beta$, and we check the conditions of Lemma~\ref{root391:tournament-counts}, with $T=\max(1,F)$, $R=F$ and $Q=\max(F+k/2,3/2-k)$. The conditions on $T$ and $R$ follow from $E\ge0$, since
+\[
+ E-(F-2+s)=k/2-1+s-\beta\le0,
+ \qquad E-(F-2+s+m-\beta)=k/2-1+\max(l,r)\le0.
+\]
+The first part of the condition on $Q$ is $E\ge0$, and
+the second follows from $3/2-k\ge3/2-m$. Thus Lemma~\ref{root391:tournament-counts} applies.
+\end{proof}
+
+\subsubsection{Three simple ranges of crossing counts}
+We now return to $H=++W$ and the cover $w$ fixed at the start of this subsection. Three ranges of crossing counts can be excluded fairly directly.
+In all the lemmas below, we assume that every directed run of $H$ has length at most three, and that $F$ and $w$ are as at the start of this subsection.
+
+\begin{lemma}
+\label{stripbalance:factor}
+\label{cheapedge:factor}
+\label{endpointpair:factor}
+The cover $w$ does not exist in each of the following ranges:
+\begin{props}
+\item\label{root406:equal-part}
+$a=c$ and $1\le b<a$.
+
+\item\label{root406:middle-heavy-part}
+$c\ge2$ and $b\ge\max(a,c-1)$.
+
+\item\label{root406:adjacent-part}
+$a\ge c+1$, $c\ge2$, and $b=a-1$.
+\end{props}
+\end{lemma}
+\begin{proof}
+\emph{The case $a=c$.} We work on the whole interval $0\le k\le1/2$.
+Lemma~\ref{root391:profile-floors}, applied to three consecutive height classes and to the partial homomorphism to a triangle, gives the lower bounds
+\[
+\begin{gathered}
+ z=\frac{b+1+(2a-b-3)k}{2a}\quad\text{on }X,Y,\qquad
+ U=\frac{b+1+(2a-b-3)k}{2(a+b)}\quad\text{on }OI,\\
+ \beta=\frac{b-1+(2a-b+1)k}{2(a+b)},\quad XY\ge1-\beta,
+ \quad T_0=\frac{2a+b+1-2ak}{a+b+1}
+ \quad\text{on both cyclic triples}.
+\end{gathered}
+\]
+For $T_0$ we use the homomorphisms of Lemma~\ref{root391:internal-profiles}, with vectors
+$(a+b+1,2a,a+b+1)$ and $(2a,a+b+1,a+b+1)$.
+All these bounds are affine in $k$, and at $k=0$ and $k=1/2$ they satisfy
+\[
+ 0\le\beta\le\min(1/2,z,U),\quad k\le z\le1-k/2,\quad
+ \beta\ge k/2,\quad T_0\ge1,
+\]
+and, unless $(a,b)=(2,1)$, also $E=F_0+k/2-3+4z-\beta>0$ \chk{8.A}.
+As all these functions are affine in $k$, these inequalities hold on the whole interval, and
+Lemma~\ref{root391:scalar-count} with $l=r=z$ gives a contradiction.
+If $(a,b)=(2,1)$, then $z=1/2$ throughout, so the same lemma applies
+with $l+r\ge1$.
+
+\emph{The case $c\ge2$ and $b\ge\max(a,c-1)$.} If $b\ge a+c-1$, then the two middle height classes, of multiplicities $p$ and $q$, satisfy $p,q\ge S/2$ and $p+q\ge3S/2-1$ \chk{8.B}, so
+Lemma~\ref{height390:heavy-pair} applies.
+Otherwise put $s=T-1-b$, $h=\min(a,c-1)$, and
+$K=s/(2h+s)$, so that $1\le s\le h$ and $K\le1/3$.
+Mapping the two middle classes to the edge $x\to y$, and the outer classes to neighbours of weight at most $\chi$, and eliminating
+$M$, gives $k<K$. Lemma~\ref{root391:profile-floors}, applied to three consecutive height classes, gives lower bounds
+$L_X$ and $L_Y$ on $X$ and $Y$ with $L_X(K)=L_Y(K)=1-K$, and both are at least
+$1/2$ on $[0,K]$ \chk{8.B}.
+A weighted average of the two lower bounds on $OI$ obtained in the same way is
+\[
+ A(k)=\frac{b+1+(s-1)k}{T+2b+1},
+ \qquad XY\ge V(k)=1-k+\frac{(2h+s)(k-K)}{2T}.
+\]
+Let $\beta=\max(0,1-V)$. The function $V$ is decreasing
+and $V(K)=1-K$, hence $0\le\beta\le K$. Moreover $A+V>1$ for every
+$k<K$ \chk{8.B}, so $OI\ge\beta$.
+For $XYO$ we use the homomorphism with vector $(p,q,T+1)$ from Lemma~\ref{root391:internal-profiles}, and for $XYI$ we use
+$(T,p,q+1)$ if $a\ge c-1$, and $(q,T+1,p)$ if $a<c-1$.
+Since $K\max(p,q)\le b$, and $Kp\le a$ or $Kq\le c$ in the respective
+cases \chk{8.B}, both cyclic triple intersections have lower bound one.
+Together with $XYOI\ge3/2-k$, Lemma~\ref{root391:large-sum-count} applies with $l=r=1/2$.
+
+\emph{The case $a\ge c+1$, $c\ge2$ and $b=a-1$.} Here $S=2a+c$, $p=2a$ and $q=T-1$, and mapping the two middle
+classes to the edge $x\to y$ gives
+\[
+ D_xu+D_yv<c,\qquad D_x=3c-2,\quad D_y=2a+c.
+\]
+Set $m=(c-D_xu-D_yv)/2$ and define the lower bounds
+\[
+\begin{gathered}
+ l=1-k-m/a\quad\text{on }X,\qquad
+ r=1-k-m/c\quad\text{on }Y,\qquad
+ \beta=k+m/T,\quad XY\ge1-\beta,\\
+ U=\frac{a-c/2+(3c/2-1)u+(c/2)v}{p}
+ \quad\text{on }OI.
+\end{gathered}
+\]
+These follow from Lemma~\ref{root391:profile-floors}, applied to the first three and the last three height classes and to the partial homomorphism to a triangle. Here we keep both $u$ and $v$, rather than minimising over them.
+All are affine in $(u,v)$ on the triangle with vertices
+$(0,0)$, $(c/D_x,0)$, $(0,c/D_y)$. At these vertices $m\ge0$,
+$G=2k+Tm/(ac)\le1$, $U\ge\beta$ and $l,r\ge\beta$ \chk{8.C}; since
+$l+r=2-G$ and $2\beta\le G$, we obtain $l+r\ge1$ and
+$k\le\beta\le1/2$. The homomorphisms with vectors $(T,p,q+1)$ and $(q+1,T,p)$ give
+the lower bounds $1-v$ on $XYI$ and $1-u$ on $XYO$, since, after clearing denominators, the differences are $a-Tu-(a-c)v$ and $c+(a-c)u-Tv$, which are nonnegative \chk{8.C}.
+Lemma~\ref{root391:large-sum-count}, with $\theta=1$, gives a contradiction.
+\end{proof}
+
+\subsubsection{Large outer counts with a vertex of weight zero}
+In the next lemma, we also use a vertex of weight zero, which we place in the second height class. This bounds $k$ from above, by~\eqref{root391:zero-profile-price}, and this upper bound is what makes the remaining inequalities true.
+We state the lemma for a general partial homomorphism with four height classes of multiplicities $(A,P,Q,C)$, as we apply it both to $H$ and to its converse. In the \emph{lower case}, $P=A+B+1$ and $Q=B+C$, and the two endpoints lie in the class of multiplicity $P$; in the \emph{upper case}, $P=A+B$ and $Q=B+C+1$, and the endpoints lie in the class of multiplicity $Q$. The lower case is the partial homomorphism above, with $(A,B,C)=(a,b,c)$; the upper case arises from the converse of $H$.
+
+\begin{lemma}
+\label{zeroregions:criterion}
+\label{topzero:criterion}
+\label{zeroregions:wedge-algebra}
+\label{topzero:wedge}
+\begin{props}
+\item\label{root406:zero-criterion-part}
+Let $A\ge C+1$, $B\ge C+1$, $S=A+B+C+1$, $T=A+C$,
+and suppose that $H$ has a partial homomorphism with height classes of multiplicities $(A,P,Q,C)$, in the lower case or in the upper case.
+Suppose that $Q\ge A$, and define
+\begin{equation}\label{zeroregions:K}
+ K=\frac{2Q+2C-S}{S-2+2(Q-A)+2C},\qquad0<K\le1/2.
+\end{equation}
+Let $\nu=(S-2)/2$ and, for $0\le k\le K$, let
+\begin{gather*}
+ N=S/2-C+(\nu+C-P)k,\quad l=N/A,\quad r=N/Q,\\
+ U=\frac{S/2-C+(\nu+C-Q)k}{P},\qquad
+ \beta=1-\frac{S/2+(\nu-P)k}{T}.
+\end{gather*}
+In both cases,
+\begin{equation}\label{zeroregions:N-identity}
+ N=A-T\beta+Ck.
+\end{equation}
+If $KP\le\min(A,B)$, and, for all $k\in[0,K]$,
+\[
+ k\le\beta\le1/2,\quad l+r\ge1,\quad
+ l,r,U\ge\beta,
+\]
+then the cover $w$ does not exist.
+
+\item\label{root406:zero-range-part}
+Let $\varepsilon\in\{0,1\}$, and consider the lower case if
+$\varepsilon=0$, and the upper case if $\varepsilon=1$.
+Suppose that
+\[
+ C\ge2-\varepsilon,\quad A\ge2C+1+\varepsilon,
+ \quad B=A-C-\varepsilon+t,\qquad0\le t\le C-1+\varepsilon.
+\]
+Then all the hypotheses of~\ref{root406:zero-criterion-part} hold.
+\end{props}
+\end{lemma}
+\begin{proof}
+\emph{Proof of~\ref{root406:zero-criterion-part}.} Map the class of multiplicity $P$ to a vertex of weight zero. Its two adjacent classes have multiplicities $A$ and $Q$, and the remaining class has multiplicity $C$, so~\eqref{root391:zero-profile-price}, together with $2M+(S-2)\kappa\le1$ and $S\tau<1$, gives $k<K$. In the upper case, the deleted position is completed at a vertex forming a $2$-cycle with the image of the class of multiplicity $Q$, which also exists.
+Lemma~\ref{root391:profile-floors}, applied to the first three classes, gives the lower bounds $l$, $r$ and $U$ on $X$, $Y$ and $OI$, as $P\ge Q\ge A$.
+Reducing heights modulo three gives a partial homomorphism to a triangle, with multiplicities $(P,Q,T)$ in the lower case and $(Q,T,P)$ in the upper case. In the lower case, we map these classes to $x,y,z$ and
+complete at $x$; in the upper case, we map them to $y,z,x$ and
+complete at $y$. Both give $\omega\ge1-\beta$ on $XY$.
+As in Lemma~\ref{root391:internal-profiles}, completing the deleted position at a vertex forming a $2$-cycle with a vertex of the triangle gives homomorphisms for the cyclic triple intersections. In the lower case they send $(T,P,Q+1)$ positions to $(x,y,z)$ when $z\in XYI$, and $(P,Q,T+1)$ when $z\in XYO$; in the upper case they send $(P,Q,T+1)$ and $(T+1,P,Q)$, respectively.
+These give lower bound one on both cyclic triple intersections. Indeed, the multiplicities of $z$ are $Q+1$ and $T+1$ in the lower case, and $T+1$ and $Q$ in the upper case. Thus $S$ minus these multiplicities
+is $A$ and $B$, and $B$ and $A$, respectively. As $P\ge Q,T+1$ and $k<K$, the condition $KP\le\min(A,B)$ gives both bounds. Finally,~\eqref{balanced:bound} gives
+$XYOI\ge3/2-k$, so
+Lemma~\ref{root391:large-sum-count} applies with $\theta=1$.
+
+\emph{Proof of~\ref{root406:zero-range-part}.} In the lower case, we have $(A,B,C)=(a,b,c)$ and
+$(P,Q)=(p,q)$. In the upper case, we put $(A,B,C)=(c,b,a)$ and apply~\ref{root406:zero-criterion-part}
+to $H^{\rm op}$ and $F^{\rm op}$: reflecting the heights of the partial homomorphism above gives classes of multiplicities
+$(c,b+c,a+b+1,a)$, with the endpoints in the third class. Reversing the edges of $H$ and $F$ preserves all the bounds on $w$ at the start of this subsection, and exchanges inneighbourhoods and outneighbourhoods.
+
+Let $h=A-2C-1-\varepsilon\ge0$. In either case,
+$Q=A+t$ and $P=2A-C+1-2\varepsilon+t$. All functions of the criterion
+are affine in $k$. Over the whole range we have $0<K<1/3$,
+$KP\le\min(A,B)$, $P\ge Q,T+1$ and $A\le Q<2A$, and at $k=0$ and $k=K$
+\[
+ k\le\beta\le1/2,\qquad l+r\ge1,\qquad l,r,U\ge\beta
+\]
+\chk{8.D}. As all these functions are affine in $k$, they hold on $[0,K]$.
+\end{proof}
+
+
+One special family does not need the assumption on the lengths of directed runs.
+
+\begin{lemma}
+\label{singleouter:balanced}
+Let $j\ge2$, and let $H$ be an orientation of an even cycle of order $2S$, where $S=2j+1$, which satisfies~\eqref{norm391:range}. Suppose that, for some position of $H$, the remaining path has height classes of multiplicities $(j,2j,j,1)$, with both endpoints in the second class. Then every digraph $F$ with $\delta^0(F)>|F|/2$ has a perfect fractional homomorphic $H$-tiling.
+\end{lemma}
+\begin{proof}
+Suppose not, and let $w$ be a deficient optimal cover; we use the bounds of Theorem~\ref{norm391:normalized-cover} and Lemma~\ref{norm391:savings}, with the notation of this subsection. By~\eqref{root391:zero-profile-price}, applied with the second class at a vertex of weight zero, we have $1<M+(j+1)\tau-\kappa$. Combining this with
+$2M+(2j-1)\kappa\le1$ yields
+\[
+ S\kappa<(S+1)\tau-1<\tau,
+ \qquad \Lambda=(1-S\kappa)/2>j\tau.
+\]
+In this proof, we write $u=w(x)$ and $v=w(y)$ for the edge $x\to y$ of minimum weight. For $z\in XY$, send the
+four height classes to $x,y,z,x$, and complete the deleted position
+at a vertex forming a $2$-cycle with $y$. Its cost gives $jw(z)\ge1-M-(j+1)u-2jv \ge\tfrac12-\tfrac32u-\tfrac S2v \ge\Lambda>j\tau$, since $S\ge3$. Thus every vertex of $XY$ has weight
+more than $\tau$. Let $A=\min_Xw$ and $B=\min_Yw$, and choose
+subsets of $X$ and $Y$ of size $d$, whose intersection has some size $h>0$.
+Counting the weights in the three parts of their union gives
+$W\ge h\min_{XY}w+(d-h)(A+B)$, where $W=d\tau$.
+If $h=d$, this is already impossible; otherwise $A+B<\tau$.
+Finally, map the four height classes to a directed walk
+$a\to x\to y\to b$, where $w(a)=A$ and $w(b)=B$, and complete
+at a vertex forming a $2$-cycle with $x$. Its cost gives $jA+B\ge1-M-2ju-jv \ge\tfrac12-\tfrac S2u-\tfrac12v \ge\Lambda>j\tau$. This contradicts $jA+B\le j(A+B)<j\tau$.
+\end{proof}
+\subsubsection{The remaining ranges}
+In the remaining ranges, $a\ne c$, and we use the same partial homomorphisms throughout. We record
+all their bounds once, in terms of $t=\min(a,c)$ and $d=|a-c|$, so that both orders of $a$ and $c$ are covered. We write
+\[
+ (a,c)=\begin{cases}(t,t+d),&\varepsilon=0,\\
+ (t+d,t),&\varepsilon=1,\end{cases}
+ \qquad t,b,d\ge1,
+\]
+and put
+\[
+ C=t+d,\quad P=t+b+1-\varepsilon,\quad Q=b+C+\varepsilon,
+ \quad S=2t+b+d+1,\quad J=2b+1.
+\]
+Let $(X_\varepsilon,Y_\varepsilon)=(X,Y)$ if $\varepsilon=0$,
+and $(X_\varepsilon,Y_\varepsilon)=(Y,X)$ if $\varepsilon=1$. We define
+\[
+\begin{split}
+ L(k)&=b+1-d+(2t+d-b-1-2\varepsilon)k,\\
+ R(k)&=b+1+d+(2t-d-b-1-2\varepsilon)k,\\
+ U(k)&=\frac{b+1+d+\{S-2+2t-2\max(P,C)\}k}{2Q},\\
+ B(k)&=\frac{b+1-d-2\varepsilon+
+ \{2\max(t,b+\varepsilon)+d-b+1\}k}{2P},\\
+ K&=\frac{2\max(P,C)+2t-S}{S-2+2|P-C|+2t},
+ \qquad F(k)=\frac{S(1-k)}J.
+\end{split}
+\]
+\begin{lemma}
+\label{internal:common-count-bounds}
+Suppose that $a\ne c$. Then $0\le k<K<1/2$, and
+\[
+ X_\varepsilon\ge\max\{L/(2t),R/(2P)\},\quad
+ Y_\varepsilon\ge R/(2C),\quad OI\ge U,\quad
+ XY\ge1-\max(0,B).
+\]
+Every triple intersection has lower bound $F$, and $XYOI$
+has lower bound $F+k/2$.
+\end{lemma}
+\begin{proof}
+If $\varepsilon=1$, we read the height classes in the reverse order, as in the upper case of Lemma~\ref{zeroregions:criterion}; this exchanges the roles of $X$ and $Y$. In both cases, the height classes have multiplicities
+$(t,P,Q,C)$, where $Q\ge P,C,t$. Applying
+Lemma~\ref{root391:profile-floors} to the classes $(t,P,Q)$ and $(P,Q,C)$
+gives the bounds on $X_\varepsilon$, $Y_\varepsilon$ and $OI$.
+In the partial homomorphism to a triangle, the vertex in $XY$ has multiplicity
+$P$ and the other multiplicities are $Q$ and $t+C$, which gives the bound on $XY$.
+Mapping the class of multiplicity $Q$ to a vertex of weight zero gives, by~\eqref{root391:zero-profile-price}, $1<M+\{\max(P,C)+t\}\tau-(|P-C|+t)\kappa$. Together with $S\tau<1$ and $2M+(S-2)\kappa\le1$, this gives
+$k<K$, and $0<K<1/2$ in both orders of
+$P$ and $C$. The final bounds are given by Lemma~\ref{root391:short-run}.
+\end{proof}
+
+\begin{lemma}
+\label{smallmiddle:moderate}
+If $b<\min(a,c)$ and $0<|a-c|\le b$, then the cover $w$ does not exist.
+\end{lemma}
+\begin{proof}
+We use Lemma~\ref{internal:common-count-bounds}, where now $1\le d\le b<t$,
+and let $\delta=b-d\ge0$. Let
+\begin{equation}\label{smallmiddle:upper-floors}
+ f=L/(2t),\qquad g=R/(2C),\qquad\beta=\max(0,B).
+\end{equation}
+Here $\max(P,C)=P$ and $\max(t,b+\varepsilon)=t$, so
+\begin{equation}\label{smallmiddle:upper-K}
+ K=K_\varepsilon=N_\varepsilon/D_\varepsilon,
+ \quad N_\varepsilon=2t+b+1-d-2\varepsilon,
+ \quad D_\varepsilon=4t+3b+1-d-2\varepsilon.
+\end{equation}
+The homomorphisms with vectors $(T,p,q+1)$ for $XYI$ and $(q+1,T,p)$ for $XYO$,
+where $T=a+c$, give the common lower bound
+$T_0=\{S-(2t+d)k\}/(t+b+d+1)$ on both cyclic triple intersections.
+All these bounds are affine in $k$, and
+\begin{equation}\label{smallmiddle:E}
+ E_\varepsilon=F+k/2-3+2f+2g-\beta
+\end{equation}
+is the minimum of two affine functions. At $k=0$ and $k=K_\varepsilon$,
+and hence on $[0,K_\varepsilon]$, we have
+\[
+ \beta\le\min(1/2,f,g,U),\quad f,g\le1-k/2,\quad
+ \max(T_0,F)\ge1,\quad E_\varepsilon>0
+\]
+\chk{8.E}; here $T_0\ge1$ if $\varepsilon=1$ or $b\ge3d$, and $F\ge1$ if $b\le3d$.
+Except when $\varepsilon=1$ and $\delta=0$, also $f,g\ge k$ and
+$\beta\ge k/2$ \chk{8.E}, and Lemma~\ref{root391:scalar-count} gives the
+contradiction.
+If $\varepsilon=1$ and $\delta=0$, then $f,g\le1/2$ and
+$G=F-2+f+g>0$ on $[0,K_1]$ \chk{8.E}, which is the condition on the cyclic triple intersections in Lemma~\ref{root391:tournament-counts}.
+The condition on the other triple intersections follows from $E_1>0$, as the difference is $k/2-1+\max(f,g)<0$; the condition on $XYOI$ is $E_1>0$,
+as its second part is implied by the first when $f,g\le1/2$.
+Thus Lemma~\ref{root391:tournament-counts} gives a contradiction.
+\end{proof}
+
+\begin{lemma}
+\label{smallmiddle:large}\label{completeheightthree:separated}
+If $|a-c|\ge b+1$, then the cover $w$ does not exist.
+\end{lemma}
+\begin{proof}
+We use Lemma~\ref{internal:common-count-bounds}, and write $d=b+1+e$,
+where $e\ge0$. Thus $C=t+b+1+e\ge P$ and
+\[
+ f=R/(2P),\quad g=R/(2C),\quad
+ U=\frac{2b+2+e+(2t-2-e)k}{2Q},\quad
+ K=\frac{2t+e}{4t+2b+2\varepsilon+3e}.
+\]
+For comparison with $B$, put
+\[
+ B_j=-e-2\varepsilon+(2j+2+e)k
+ \quad(j=t,b+\varepsilon),\qquad
+ \beta=\max\{0,B_t/(2P),B_{b+\varepsilon}/(2P)\}.
+\]
+All bounds are affine in $k$, and at $k=0$ and $k=K$, hence on $[0,K]$,
+\[
+ 0\le\beta\le k,\qquad \beta\le\min(1/2,f,g,U),\qquad F\ge1
+\]
+\chk{8.F}. In particular, every triple intersection has lower bound one.
+
+If $b\ge t$, then also $f+g\ge1$ and $f,g,U\ge k$ on $[0,K]$ \chk{8.F},
+and we apply Lemma~\ref{root391:large-sum-count} with these bounds.
+If $b<t$, replace $f$ by $\min(f,1/2)$; then $g\le1/2$ \chk{8.F}. Let
+\[
+ G=F-2+f+g,\qquad E=F+k/2-3+2f+2g-\beta.
+\]
+Both are minima of affine functions of $k$, each of which is positive
+at $k=0$ and $k=K$ \chk{8.F}. Hence $G,E>0$ throughout $[0,K]$.
+As in the proof of Lemma~\ref{smallmiddle:moderate}, this gives the conditions of Lemma~\ref{root391:tournament-counts}, which gives a contradiction.
+\end{proof}
+
+
+Finally, we treat the two ranges in which $b$ lies between $a$ and $c$ and the larger of $a,c$ is at most about twice the smaller.
+
+\begin{lemma}
+\label{completeheightthree:moderate}
+The cover $w$ does not exist if either of the following holds.
+\begin{props}
+\item $a\le b\le c-2$ and $c\le2a+1$.\label{completeheightthree:U}
+\item $c\le b\le a-2$ and $a\le2c$.\label{completeheightthree:L}
+\end{props}
+\end{lemma}
+\begin{proof}
+We use Lemma~\ref{internal:common-count-bounds}, with $\varepsilon=0$ in~\ref{completeheightthree:U} and $\varepsilon=1$ in~\ref{completeheightthree:L}. The two ranges become
+\[
+ d\ge2,\quad t\le b\le t+d-2,\quad d\le t+1-\varepsilon.
+\]
+Here $Q\ge P\ge C$ and $\max(t,b+\varepsilon)=b+\varepsilon$.
+Average the two bounds on $X_\varepsilon$ with weights $2/3,1/3$:
+\begin{equation}\label{completeheightthree:upper-floors}
+ f=\frac{L}{3t}+\frac{R}{6P},\quad g=\frac{R}{2C},\quad
+ \beta=\max\{k/2,B\},\quad V=1-\beta.
+\end{equation}
+Thus $OI\ge U$ and $XY\ge V$; the latter bound is weaker than that of Lemma~\ref{internal:common-count-bounds}
+only when $B<k/2$. The upper bound on $k$ is
+\begin{equation}\label{completeheightthree:upper-K}
+ K=N/D=\frac{2t+b+1-d-2\varepsilon}{4t+3b+1-d-2\varepsilon}.
+\end{equation}
+In~\ref{completeheightthree:U}, we use the homomorphisms with vectors
+$(Q+1,a+c,P)$ for $XYO$ and $(Q,a+c+1,P)$ for $XYI$, which give the
+common lower bound $\{S-(Q+1)k\}/P$.
+In~\ref{completeheightthree:L}, we use the vectors $(Q,P,a+c+1)$ for $XYO$ and $(a+c,Q,P+1)$
+for $XYI$; since $Q\ge a+c+1\ge P+1$, both give the lower bound
+$\{S-Qk\}/(a+c+1)$.
+
+Let
+\begin{equation}\label{completeheightthree:upper-vars}
+ x=b-t,\quad y=d-x-2,\quad z=t-d+1-\varepsilon.
+\end{equation}
+In both ranges, these are nonnegative integers, and every triple of nonnegative integers arises.
+All the bounds above are affine in $k$, and at the endpoints of $[0,1/2]$
+in~\ref{completeheightthree:U} and of $[0,K]$ in~\ref{completeheightthree:L},
+\begin{equation}\label{completeheightthree:base}
+ k/2\le\beta\le\min(1/2,f,g,U),\qquad
+ \min(f,g)\ge k,\qquad\max(f,g)\le1-k/2,
+\end{equation}
+and both lower bounds on the cyclic triple intersections are at least one \chk{8.G}.
+Finally
+\begin{equation}\label{completeheightthree:E}
+ E=F_0+k/2-3+2f+2g-\beta,\qquad F_0=S(1-k)/J,
+\end{equation}
+is the minimum of two affine functions, each positive at $k=0$ and
+$k=K$ \chk{8.G}. Thus $E>0$ throughout $[0,K]$, and
+Lemma~\ref{root391:scalar-count} gives the contradiction.
+\end{proof}
+
+
+\subsection{Proof of Theorem~\ref{height390:three-width-factor}}\label{sec:spanthree-proof}
+Internal roots with a single step from height two to height three do not satisfy the assumptions of the lemmas above, and we treat them first.
+
+\begin{lemma}
+\label{height390:one-top}
+Let $W$ be a closed walk on $\{0,1,2,3\}$ which starts at height one, with crossing counts $a,b$ and $c=1$. Then every digraph $F$ with $\delta^0(F)>|F|/2$ has a perfect fractional
+homomorphic $++W$-tiling.
+\end{lemma}
+\begin{proof}
+Deleting the middle position of the initial pair gives height classes of multiplicities
+$(a,a+b+1,b+1,1)$, and $S=a+b+2$. If $|H|=8$,
+then $a=b=1$, and $W$ consists of the excursion $-+$ and the excursion $++--$, in one of the two orders. Up to rotation, this gives
+$F_8=+++--++-$ or $D_{5,3}$. For $F_8$, the maximum drop is two, so Theorem~\ref{norm391:normalized-cover} applies, and the two middle classes have multiplicities three and two, which satisfy the conditions of
+Lemma~\ref{height390:heavy-pair}. For $D_{5,3}$, we apply Theorem~\ref{repair:d53-factor}.
+
+If $|H|\ge10$, the maximum drop is two or three, so
+Theorem~\ref{norm391:normalized-cover} applies. If $a\le b$, the two middle classes, of multiplicities $a+b+1$ and $b+1$, satisfy the conditions of Lemma~\ref{height390:heavy-pair}: the condition on their sum is $b\ge a$, and
+both are at least $S/2$. If $a\ge b+2$, the first two classes, of multiplicities $a$ and $a+b+1$, satisfy these conditions, as the conditions reduce to $a\ge b+2$.
+In the remaining case, $a=b+1=j\ge2$, and the multiplicities are
+$(j,2j,j,1)$, with the endpoints in the second class, so Lemma~\ref{singleouter:balanced} applies.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{height390:three-width-factor}]
+If $W$ has span at most two, we apply Theorem~\ref{height390:two-width-factor}.
+If $W$ has span three and starts at the top or the bottom of its range, we apply Theorem~\ref{initialin:all-height-three}. Replacing $H$ and $F$ by their converses exchanges the two internal roots, so it remains
+only to treat a walk $W$ on $\{0,1,2,3\}$ which starts at height one.
+
+Let $a,b,c$ be its crossing counts, so that $|H|=2S$, where
+\[
+ S=a+b+c+1,\quad p=a+b+1,\quad q=b+c,
+\]
+and deleting the middle position of the initial pair gives height classes of multiplicities $(a,p,q,c)$,
+with both endpoints at height one. If $c=1$, we apply
+Lemma~\ref{height390:one-top}. So suppose that $c\ge2$, so that $|H|\ge10$. The maximum drop of $H$ is two or three, so Theorem~\ref{norm391:normalized-cover} applies.
+
+If $W$ ends with $+$, we take the last edge of $W$ and the first edge of the initial pair as the new pair, and write $H$ in the form $++W'$. Then $W'$ is a closed walk
+which starts at height zero in $\{0,1,2,3\}$. If $W$ begins with $++$, we take these
+two edges as the new pair instead, and then $W'$ consists of the rest of $W$
+followed by the old pair, and starts at height three. In both cases, Theorem~\ref{initialin:all-height-three} applies.
+
+Otherwise, $W$ ends with $-$ and begins with $-$ or $+-$, so every
+directed run of $H$ has length at most three, and the lemmas of Section~\ref{sec:internalroots} apply.
+We consider the following ranges of crossing counts. If $b<\min(a,c)$, we use
+part~\ref{root406:equal-part} of Lemma~\ref{stripbalance:factor} when $a=c$;
+otherwise use Lemma~\ref{smallmiddle:moderate} when
+$|a-c|\le b$, and Lemma~\ref{smallmiddle:large} when
+$|a-c|\ge b+1$. If $b\ge\max(a,c-1)$, use
+part~\ref{root406:middle-heavy-part} of Lemma~\ref{stripbalance:factor}.
+Every remaining triple $(a,b,c)$ has one of the two forms
+\[
+ \mathrm U:\ c\ge a+2,\quad a\le b\le c-2;
+ \qquad
+ \mathrm L:\ a\ge c+1,\quad c\le b\le a-1.
+\]
+Indeed, if $c>a$, then the conditions above fail only if
+$a\le b<c-1$, and, if $a>c$, only if $c\le b<a$;
+the case $a=c$ has already been treated.
+
+If $b=a-1$ in form $\mathrm L$, we use
+part~\ref{root406:adjacent-part} of Lemma~\ref{stripbalance:factor}, as $c\ge2$.
+For the remaining triples, let
+\[
+ (t,C,\varepsilon)=
+ \begin{cases}(a,c,0),&\mathrm U,\\(c,a,1),&\mathrm L.\end{cases}
+\]
+so that $t\le b\le C-2$. If $C\le2t+1-\varepsilon$, we
+apply Lemma~\ref{completeheightthree:moderate}, part~\ref{completeheightthree:U} if $\varepsilon=0$ and part~\ref{completeheightthree:L} if $\varepsilon=1$. Otherwise $C\ge2t+2-\varepsilon$,
+and we let $j=b-C+t+1-\varepsilon$.
+If $j\ge0$, we use part~\ref{root406:zero-range-part} of Lemma~\ref{zeroregions:criterion} with
+\[
+ (A,B,C_{\rm wedge},\eta)=(C,b,t,1-\varepsilon),
+ \qquad 0\le j\le t-1-\varepsilon\le t-\varepsilon.
+\]
+where $\eta$ plays the role of the parameter $\varepsilon$ of that lemma, $C_{\rm wedge}$ the role of its $C$, and $j$ the role of its $t$. Thus we use its upper case if $\varepsilon=0$ and its lower case if $\varepsilon=1$. Its conditions hold, as $t\ge1+\varepsilon$.
+If $j<0$, then, as $j$ is an integer,
+$C\ge t+b+2-\varepsilon\ge t+b+1$, and we apply
+Lemma~\ref{smallmiddle:large}.
+These cases cover all crossing counts, so there is no deficient cover, and Lemma~\ref{general:LP} proves the theorem.
+\end{proof}
+

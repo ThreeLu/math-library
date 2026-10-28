@@ -1,0 +1,118 @@
+\section{Removing rainbow forests one at a time}\label{sec:extraction}
+In this section, we prove the lemma that removes rainbow $k$-forests one at a time, which we use for both Theorem~\ref{thm:bounded} and Theorem~\ref{thm:forests}.
+Throughout, $G$ is an edge-coloured graph with vertex set $V$, we put $N=\max\{3,|V|\}$, and $W=\mathrm{diag}(w_v)_{v\in V}$ is a diagonal matrix with $w_v\ge1$ for every $v$.
+For an edge set $A$, let
+\[
+H_A=W^{-1/2}L_AW^{-1/2}.
+\]
+In Theorem~\ref{thm:bounded} we take $W=I$; the weights are needed for general graphs, where the degrees may vary.
+Since $L_A\preceq2\,\mathrm{diag}(d_A)$, we have
+\begin{equation}\label{eq:Hnorm}
+\|H_A\|\le2\max_{v}d_A(v)/w_v .
+\end{equation}
+
+Suppose that $R\subseteq E(G)$ has $qk$ edges and at most $q$ edges of each colour.
+If $R$ is to be split into $q$ rainbow $k$-forests, then $e_R(X)\le q(|X|-1)$ for every nonempty $X$, and, by Lemma~\ref{lem:edmonds}, this condition is also sufficient for a fractional split.
+We will choose a random rainbow $k$-forest $T$ in which each edge of $R$ appears with probability close to $1/q$, so that $R\setminus T$ looks like $R$ scaled by $(q-1)/q$.
+To control the variance of this process, we need $T$ to have small maximum degree, so we first round $R$ to a sparse random subgraph $F$ with about $\ell k$ edges, and then choose $T$ from a fractional split of $F$.
+For this to work, the conditions $e_R(X)\le q(|X|-1)$ must hold with some room to spare.
+When the forests are spanning trees, that is, when $k=|V|-1$, there is no room for $X=V$, and, for large $X$, we instead ask for many edges meeting $V\setminus X$; a spanning tree has at least $|V\setminus X|$ such edges.
+
+\begin{lemma}[Sampling a sparse rainbow forest]\label{lem:sample}
+Let $0<\beta\le1/2$, let $q,k$ and $\ell$ be positive integers with $1000\beta^{-2}\log N\le\ell\le q$, and let $R\subseteq E(G)$ satisfy the following.
+\begin{props}
+\item $|R|=qk$, and every colour has at most $q$ edges in $R$.\label{S:count}
+\item $d_R(v)\le3qw_v$ for every $v\in V$.\label{S:deg}
+\item Every $X\subseteq V$ with $2\le|X|\le k$ satisfies $e_R(X)\le(1-\beta)q(|X|-1)$, or $k=|V|-1$ and $U=V\setminus X$ satisfies $|U|<|V|/2$ and $I_R(U)\ge(1+\beta)q|U|$.\label{S:rank}
+\end{props}
+Then there is a random rainbow $k$-forest $T\subseteq R$ such that the following hold.
+\begin{props}
+\item $d_T(v)<6\ell w_v$ for every $v$, and hence $\|H_T\|<12\ell$.\label{T:deg}
+\item $T$ contains an edge of every colour with $q$ edges in $R$.\label{T:sat}
+\item $|\Prb(e\in T)-1/q|\le 2N^{-50}/\ell$ for every $e\in R$.\label{T:marg}
+\end{props}
+\end{lemma}
+
+The two ingredients, randomized swap rounding and Edmonds' theorem, are standard; the point of the lemma is the combination of~\ref{T:deg} and~\ref{T:marg}, which is what the martingale argument below needs.
+The second alternative in~\ref{S:rank} is used only for Theorem~\ref{thm:bounded}.
+\begin{proof}
+Let $\mathcal M$ be the partition matroid on $R$ in which each colour class has capacity $\ell$, truncated to rank $\ell k$, and let $y=(\ell/q)\one_R$.
+Then $y\le\one$ as $\ell\le q$, $y(R)=\ell k$, and, for every $S\subseteq R$, $y(S)\le\min\{\ell k,\sum_\gamma\min\{|S\cap E_\gamma(R)|,\ell\}\}$ by~\ref{S:count}.
+Thus $y$ lies in the base polytope of $\mathcal M$.
+Let $F$ be the random base given by Lemma~\ref{lem:cvz}, so that $|F|=\ell k$, each colour has at most $\ell$ edges in $F$, and $\Prb(e\in F)=\ell/q$ for each $e\in R$.
+
+Let $\mathcal G$ be the event that $d_F(v)<6\ell w_v$ for every $v$, that $e_F(X)<\ell(|X|-1)$ for every $X$ satisfying the first inequality in~\ref{S:rank}, and that $I_F(U)>\ell|U|$ for every $U=V\setminus X$ such that $X$ satisfies the second alternative.
+We bound $\Prb(\mathcal G^c)$ using Lemma~\ref{lem:cvz}.
+If $|X|=s$ and the first inequality of~\ref{S:rank} holds, then $\E e_F(X)\le(1-\beta)\ell(s-1)$, and~\ref{cvz:upper} with $1+\delta=1/(1-\beta)$ gives
+\[
+\Prb\bigl(e_F(X)\ge\ell(s-1)\bigr)\le\exp\bigl(-\ell(s-1)(-\log(1-\beta)-\beta)\bigr)\le e^{-\beta^2\ell(s-1)/2}\le N^{-500(s-1)}.
+\]
+If $|U|=u$ and $I_R(U)\ge(1+\beta)q u$, then $\E I_F(U)\ge(1+\beta)\ell u$, and~\ref{cvz:lower} with $\delta=\beta/(1+\beta)$ gives $\Prb(I_F(U)\le\ell u)\le e^{-\beta^2\ell u/3}\le N^{-300u}$.
+By~\ref{S:deg}, $\E d_F(v)\le3\ell w_v$, and~\ref{cvz:upper} with $\delta=1$ gives $\Prb(d_F(v)\ge6\ell w_v)\le(e/4)^{3\ell}\le N^{-1000}$.
+There are at most $N^s$ sets of size $s$, so
+\[
+\Prb(\mathcal G^c)\le\sum_{s\ge2}N^{s-500(s-1)}+\sum_{u\ge1}N^{u-300u}+N^{1-1000}\le N^{-50}.
+\]
+
+Suppose that $\mathcal G$ holds, and let $x=\one_F/\ell$.
+Then $x(E(G))=k$ and each colour has weight at most $1$.
+Let $X\subseteq V$ be nonempty.
+If $|X|=1$, then $x(E(G[X]))=0$; if $|X|\ge k+1$, then $x(E(G[X]))\le k\le|X|-1$; and if $2\le|X|\le k$, then either $e_F(X)<\ell(|X|-1)$, or $k=|V|-1$ and $e_F(X)=\ell k-I_F(V\setminus X)<\ell(|V|-1-|V\setminus X|)=\ell(|X|-1)$.
+By Lemma~\ref{lem:edmonds}, $x$ is a convex combination $\sum_T\lambda_T\one_T$ of rainbow $k$-forests $T\subseteq F$.
+We choose $F$ conditionally on $\mathcal G$, and then choose $T$ with probability $\lambda_T$.
+
+Then~\ref{T:deg} holds as $T\subseteq F$, using~\eqref{eq:Hnorm}.
+For~\ref{T:sat}, let $\gamma$ have $q$ edges in $R$. Then $\E|E_\gamma(F)|=\ell$ and $|E_\gamma(F)|\le\ell$, so $|E_\gamma(F)|=\ell$ almost surely, and $\gamma$ has weight $1$ in $x$. As each $T$ contains at most one edge of colour $\gamma$, every $T$ with $\lambda_T>0$ contains exactly one.
+For~\ref{T:marg}, let $a=\Prb(\mathcal G^c)$ and $p=\ell/q$. Then
+\[
+\Prb(e\in F\mid\mathcal G)-p=\frac{pa-\Prb(e\in F\text{ and }\mathcal G^c)}{1-a},
+\]
+whose absolute value is at most $a/(1-a)\le2N^{-50}$. As $\Prb(e\in T)=\Prb(e\in F\mid\mathcal G)/\ell$, this proves~\ref{T:marg}.
+\end{proof}
+
+We now remove forests chosen by Lemma~\ref{lem:sample} one at a time.
+We track the matrix $H_R/q$, where $R$ is the remaining edge set and $q$ is the number of forests still to be found.
+If the forest $T$ removed at the next step contains each edge with probability exactly $1/q$, then $\E H_{R\setminus T}/(q-1)=H_R/q$, so that $H_R/q$ is a martingale, and the only further information about $T$ that we need is a bound on $\|H_T\|$.
+The application of Lemma~\ref{lem:sample} at each step will be justified by showing that its conditions follow from $H_R/q$ being close to a fixed matrix $B$, so we keep track of the following property.
+
+\begin{definition}\label{def:good}
+Let $B$ be a symmetric matrix, let $k,m$ and $q_0$ be positive integers, and let $\alpha>0$. A pair $(R,q)$ is \emph{good} if $R\subseteq E(G)$, $q_0\le q\le m$, $|R|=qk$, every colour has at most $q$ edges in $R$, and $\|H_R/q-B\|\le\alpha$.
+\end{definition}
+
+\begin{lemma}[Removing forests one at a time]\label{lem:extract}
+Let $B$ be a symmetric matrix with $\|B\|\le2$, let $k,m,\ell$ and $q_0$ be positive integers with $\ell\le q_0<m$, and let $N^{-10}\le\alpha\le1$ with $\alpha^2q_0\ge10^5\ell\log N$.
+Suppose that, for every good pair $(R,q)$ with $q>q_0$, there is a random rainbow $k$-forest $T\subseteq R$ satisfying~\ref{T:deg}--\ref{T:marg}.
+Let $R_m\subseteq E(G)$ be such that $(R_m,m)$ is good and $\|H_{R_m}/m-B\|\le\alpha/4$.
+Then $R_m$ contains $m-q_0$ edge-disjoint rainbow $k$-forests, whose removal leaves a set $R$ such that $(R,q_0)$ is good.
+\end{lemma}
+
+The stopping point $q_0$ is determined by the condition $\alpha^2q_0\ge10^5\ell\log N$: the increments of the martingale have norm $O(\ell/q)$, and they must stay small compared with $\alpha$ for the matrix Freedman inequality to apply.
+For Theorem~\ref{thm:bounded}, $\alpha$ is a constant and $\ell=\Theta(\log n)$, which gives $q_0=\Theta(\log^2n)$.
+\begin{proof}
+Note that $m\le mk=|R_m|\le N^2$.
+For $q=m,m-1,\dots$, while $q>q_0$ and $(R_q,q)$ is good, choose $T_q$ as in the hypothesis, independently of the previous choices given $R_q$, and let $R_{q-1}=R_q\setminus T_q$.
+If $(R_q,q)$ is good, then $|R_{q-1}|=(q-1)k$, and, by~\ref{T:sat}, every colour has at most $q-1$ edges in $R_{q-1}$.
+So the process can stop before $q=q_0$ only if $\|H_{R_{q-1}}/(q-1)-B\|>\alpha$ for some $q$, and it suffices to show that, with positive probability, this does not happen.
+
+Let $E_q=H_{R_q}/q-B$, let $Y_q=H_{T_q}$, and let $\E_q$ denote the expectation conditional on the choices made before $T_q$. A direct computation gives
+\begin{equation}\label{eq:onestep}
+E_{q-1}=E_q-\frac{D_q}{q-1}+Z_q,\qquad\text{where }D_q=\E_q[Y_q]-\frac{H_{R_q}}q\text{ and }Z_q=\frac{\E_q[Y_q]-Y_q}{q-1}.
+\end{equation}
+After the process stops, set $D_q=Z_q=0$. Then the partial sums of the $Z_q$ form a matrix martingale.
+
+\emph{Drift.} We have $D_q=W^{-1/2}\bigl(\sum_{e\in R_q}(\Prb(e\in T_q)-1/q)L_e\bigr)W^{-1/2}$.
+By~\ref{T:marg} and the row-sum bound, $\|D_q\|\le4N^{-49}$, so $\sum_q\|D_q\|/(q-1)\le4N^{-49}(1+2\log N)\le\alpha/4$.
+
+\emph{Variance.} While the process runs, $\|\E_q[Y_q]\|\le\|B\|+\alpha+\|D_q\|<4$ and $0\preceq Y_q$ with $\|Y_q\|<12\ell$, by~\ref{T:deg}.
+Hence $\|Z_q\|\le(12\ell+4)/(q-1)\le16\ell/q_0$.
+As $Y_q\succeq0$, we have $Y_q^2\preceq\|Y_q\|Y_q$, and so
+\[
+\E_q[Z_q^2]\preceq\frac{\E_q[Y_q^2]}{(q-1)^2}\preceq\frac{12\ell\,\E_q[Y_q]}{(q-1)^2}\preceq\frac{48\ell}{(q-1)^2}I .
+\]
+Summing over $q>q_0$, the quadratic variation of the martingale has norm at most $96\ell/q_0$.
+By Lemma~\ref{lem:freedman} with $u=\alpha/2$, $R=16\ell/q_0$ and $\sigma^2=96\ell/q_0$, the probability that some partial sum of the $Z_q$ has norm at least $\alpha/2$ is at most
+\[
+2N\exp\Bigl(-\frac{\alpha^2q_0}{8(96+3\alpha)\ell}\Bigr)\le2N\exp\Bigl(-\frac{\alpha^2q_0}{800\ell}\Bigr)\le2N^{-100}<1 .
+\]
+Otherwise, iterating~\eqref{eq:onestep} gives $\|E_q\|<\alpha/4+\alpha/4+\alpha/2=\alpha$ for every $q$ reached, so the process runs until $q=q_0$, as required.
+\end{proof}

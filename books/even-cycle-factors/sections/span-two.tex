@@ -1,0 +1,304 @@
+\section{Imbalance two: returns of span at most two}\label{sec:spantwo}
+In this section, we prove that every orientation $++W$ in the family~\ref{ov:family1}, where $W$ has span at most two, has a perfect fractional homomorphic tiling in every digraph $F$ with $\delta^0(F)>|F|/2$ (Theorem~\ref{height390:two-width-factor}).
+For the four short orientations $Q=+++-$, $++-++-$, $D_{4,2}$ and $D_{5,3}$ we argue as for directed cycles, and the longer orientations then follow either by Lemma~\ref{transfer:fibres} or from the bounds of Theorem~\ref{norm391:normalized-cover}.
+
+\subsection{The four-cycle \texorpdfstring{$Q$}{Q}}\label{q:section}
+Recall that $Q$ has edges $ab,bc,cd,ad$. Deleting a position from $Q$ leaves a path with two edges, whose middle vertex is a source, a sink, or internal. So a partial homomorphism of $Q$ is a triple $xyz$ of vertices in which $x,y$ and $y,z$ are adjacent in a suitable direction, where $x=z$ is permitted; we call such a triple a \emph{three-position walk}.
+If $x\to y\to z$, there are two partial homomorphisms with this image, with deleted position $a$ or $d$, and their completion pairs are $(N^-(x),N^-(z))$ and $(N^+(x),N^+(z))$.
+If $x\to y\leftarrow z$ or $x\leftarrow y\to z$, the completion pairs are $(N^+(x),N^-(z))$ and $(N^-(x),N^+(z))$.
+
+\begin{lemma}\label{q:endpoint}
+Let $D$ be a digraph with nonnegative costs $c$. Suppose that every three-position walk
+costs at least $s$, every $2$-cycle costs more than $s$, and every
+homomorphism from $Q$ costs more than $2s$. Let $\rho$ be a nonzero
+measure of mass $h$ on three-position walks of cost $s$, with multiplicity function $p$. Then some three-position walk of cost $s$ has a completion pair $(X,Y)$ with
+$p(X)+p(Y)\le2h$.
+\end{lemma}
+
+\begin{proof}
+Restrict $D$ to the support of $p$, so that $0\le c(v)\le s$ for every $v$ and $p(V(D))=3h$.
+Every completion pair of a three-position walk of cost $s$ is disjoint, as a common
+vertex would give a homomorphism from $Q$ of cost at most $2s$.
+Suppose that every such pair has total multiplicity greater than $2h$.
+
+Apply Lemma~\ref{norm391:cutoff} in case~\ref{norm391:cutoff:1}, where each three-position walk is regarded as a partial homomorphism with any of its deleted positions. Its proof subtracts some $\alpha\ge0$ from all costs, and so $3\alpha$ from $s$, and the strict lower bound on the costs of $2$-cycles is preserved. Let $g>0$ be the mass of the new measure and $s'$ the new minimum cost.
+Every three-position walk in the support of the new measure meets the set $Z$ of vertices of cost zero.
+
+Suppose first that $s'>0$. If $z\in Z$ and $u$ is a neighbour of $z$, then the walk $zuz$ shows that $c(u)\ge s'$. Thus every walk in the new support has costs $(0,s',0)$ in order: a walk of cost $s'$ with its middle vertex in $Z$ would cost at least $2s'$.
+So the new support consists of a set $Z$ of multiplicity $2g$ and a set of vertices of cost $s'$ of multiplicity $g$. There are no edges inside $Z$, as a walk $zz'z$ would cost zero, and no $2$-cycles between the two sets, as $2$-cycles cost more than $s'$.
+For adjacent $z\in Z$ and $u$, the walk $zuz$ has completion pair $(N^+(z),N^-(z))$, which is disjoint from $Z$, and so has total multiplicity at most $g$, a contradiction.
+
+Suppose now that $s'=0$, so that all costs are zero. Then the new support is an oriented graph and receives no homomorphism from $Q$.
+By Lemma~\ref{general:tournament-paths} with $q=1$, its underlying graph is $K_4$-free.
+Lemma~\ref{general:weighted-turan}, with total multiplicity $3g$, gives
+a vertex $z$ of positive multiplicity with
+$p(N^+(z))+p(N^-(z))\le2g$.
+As $z$ lies on a walk in the support, it has a neighbour $u$, and the walk $zuz$ contradicts our assumption.
+\end{proof}
+
+\begin{theorem}\label{q:fractional}
+Every digraph $F$ of order $k$ with $\delta^0(F)>k/2$ has a perfect
+fractional homomorphic $Q$-tiling.
+\end{theorem}
+
+\begin{proof}
+Suppose not. By Lemma~\ref{general:LP}, there is a deficient optimal cover $w$, with $0\le w\le1$, total weight
+$W<k/4$ and $\min w=0$.
+Let $M=\max w$ and $s=1-M$. Every three-position walk can be completed
+to a homomorphism from $Q$, because each of its completion sets has more than $k/2$ vertices, so its cost is at least $s$.
+Moreover, $M>1/2$. Indeed, for a vertex $o$ of weight zero, every
+$u\in N^+(o)$ has $w(u)\ge s$, by the walk $ouo$, so, if $M\le1/2$, then
+$W\ge |N^+(o)|/2>k/4$.
+
+Let $C$ be the set of vertices of weight $M$ and $h=|C|$. As $2M>1$, every tight homomorphism from $Q$
+has at most one position in $C$. Let $\rho$ be the measure of
+Lemma~\ref{general:max-deletion}, which has mass $h$ and is supported on three-position walks of cost $s$ in $F-C$.
+We check the hypotheses of Lemma~\ref{q:endpoint} in $F-C$. A $2$-cycle
+$uv$ receives the homomorphism $(a,b,c,d)\mapsto(u,v,u,v)$ from $Q$, so
+$w(u)+w(v)\ge1/2>s$, and every homomorphism from $Q$ costs at least
+$1>2s$. Thus Lemma~\ref{q:endpoint} gives a three-position walk of cost $s$ with a completion pair of total multiplicity at most $2h$, contradicting
+Lemma~\ref{general:max-deletion}.
+\end{proof}
+
+
+\subsection{Three short orientations}\label{sec:threemixed}
+Let
+\[
+ B=++-++-,\qquad A=D_{4,2}=++++--,\qquad D=D_{5,3}=+++++---.
+\]
+We use the partial homomorphisms and completion sets of
+Section~\ref{norm391:section}, and treat these three orientations together.
+We use the following partial homomorphisms. Delete the first vertex of $B$. Reading the remaining path from the next vertex, and translating heights by two after we wrap around, its heights are $1,0,1,2,1$. For $A$, delete the $j$th vertex, where $j\in\{1,2,3\}$; the remaining path climbs from height $j-1$ to $2$, comes down to $0$ and climbs back to $j-1$ (for example, its heights are $1,2,1,0,1$ when $j=2$). For $D$, we do the same with $j\in\{1,2,3,4\}$, and the heights now range over $0,1,2,3$.
+In each case both ends of the path are at the same height, and every edge of $H$ goes from a vertex at some height to a vertex at the next height. So, sending each height to the corresponding vertex of a directed walk with two edges (for $B$ and $A$) or three edges (for $D$), we obtain a partial homomorphism into this walk whose two endpoints have the same image, $z$ say, and whose completion sets are $N^-(z)$ and $N^+(z)$. Every vertex of the walk other than its two ends can play the role of $z$.
+In particular, for each of these orientations, the span of $H-j$ is at most three for some $j$.
+
+\begin{lemma}\label{base392:zero}
+Let $H\in\{B,A,D\}$ have order $r$, and let $D_0$ be a digraph which receives no homomorphism from
+$H$. Then, for every nonzero measure of mass $m$ on partial homomorphisms into $D_0$, some partial homomorphism $Q$ has $\Phi_p(Q)\le(r-2)m$.
+\end{lemma}
+\begin{proof}
+Restrict $D_0$ to the support of $p$, and suppose that every partial homomorphism has $\Phi_p$-value greater than $(r-2)m$. The digraph $D_0$ is oriented, since every even cycle maps to a $2$-cycle. For $z\in V(D_0)$, write $d_p(z)=p(N^-(z))+p(N^+(z))$.
+The underlying graph of $D_0$ is $K_4$-free if $H=B$, $K_5$-free if $H=A$, and $K_6$-free if $H=D$. Indeed, $B$ maps to a transitive triangle by $(a,b,c,a,b,c)$, and every tournament on four vertices contains a transitive triangle, as some vertex has two inneighbours or two outneighbours. Moreover, Lemma~\ref{general:tournament-paths}
+supplies homomorphisms from $D_{4,2}$ and $D_{5,3}$ to tournaments on five and six vertices.
+
+\emph{The case $H=B$.} Here $P=5m$. Let $E$ be the set of vertices
+with an inneighbour and an outneighbour. For $z\in E$, the partial homomorphism of the table with both endpoints at $z$ gives $d_p(z)>4m$.
+By Lemma~\ref{base392:extremes}, the vertices outside $E$ have multiplicity less than $2m$, so $p(E)>3m$. For $z\in E$, the multiplicity of the neighbourhood of $z$ inside $E$ is greater than $4m-(P-p(E))=p(E)-m$. However, Lemma~\ref{general:weighted-turan} gives a vertex $z\in E$ whose neighbourhood inside $E$ has multiplicity at most $2p(E)/3$. Thus $p(E)<3m$, a contradiction.
+
+\emph{The case $H=A$.} Suppose first that every vertex lies on a directed walk with two edges. Then, by the table, every vertex $z$ has $d_p(z)>4m$. However, Lemma~\ref{general:weighted-turan} gives a vertex with $d_p(z)\le 3P/4=15m/4$, a contradiction.
+So some vertex $f$ lies on no directed walk with two edges, and $f$ is the image of a position of some partial homomorphism in the support. The sign words of the partial homomorphisms of $A$ are $++++$, $+++-$, $++--$, $+--+$, $--++$ and $-+++$. In the words $++++$, $++--$ and $--++$, every position lies on a directed path with two edges. So the position mapped to $f$ is an end position of a partial homomorphism with word $+++-$, $+--+$ or $-+++$, and it is an endpoint adjacent to the deleted position. The completion set at this endpoint is the inneighbourhood or the outneighbourhood of $f$ which is empty, as $f$ lies on no directed walk with two edges.
+On the other hand, for any edge $v\to u$, no partial homomorphism in the support lies entirely in $N^-(v)$. Indeed, every partial homomorphism contains a directed path $x\to y\to z$, and then the two paths $x\to y\to z\to v\to u$ and $x\to v\to u$ would give a homomorphism from $A=D_{4,2}$. Thus $p(N^-(v))\le4m$, and, similarly, $p(N^+(u))\le 4m$. In the partial homomorphism above, the other completion set is of this form, so its $\Phi_p$-value is at most $4m$, a contradiction.
+
+\emph{The case $H=D$.} Here $P=7m$. Let $E$ be the set of vertices
+lying on a directed walk with three edges, and $F_0=V(D_0)\setminus E$.
+Every partial homomorphism of $D$ contains a directed path with three edges, so $E\ne\varnothing$.
+By the table, every $z\in E$ has $d_p(z)>6m$, that is, $P-d_p(z)<m$. Fix a walk $z_0\to z_1\to z_2\to z_3$.
+For $f\in F_0$, let $a(f)$ and $c(f)$ be the maximum lengths of directed walks
+ending and starting at $f$, respectively. These are finite and satisfy
+$a(f)+c(f)\le2$, as otherwise concatenating two such walks would put $f$ in $E$.
+An edge $z_i\to f$ requires $i+1\le a(f)$, and an edge
+$f\to z_i$ requires $4-i\le c(f)$. Hence $f$ is not adjacent
+to at least two of $z_0,z_1,z_2,z_3$, even if some of them coincide. As $D_0$ is oriented, double counting gives
+\[
+ 2p(F_0)\le\sum_{i=0}^3(P-d_p(z_i))<4m,
+ \qquad\text{so}\qquad p(E)>5m.
+\]
+Every $z\in E$ thus has more than $p(E)-m$ multiplicity in its neighbourhood inside $E$, whereas
+Lemma~\ref{general:weighted-turan} gives a vertex $z\in E$ with at most $4p(E)/5$. Hence
+$p(E)<5m$, a contradiction.
+\end{proof}
+
+\begin{lemma}
+\label{base392:endpoint}
+\label{b:endpoint}\label{a:endpoint}\label{repair:d53-endpoint}
+Let $H\in\{B,A,D\}$ have order $r$, and let $D$ be a digraph with nonnegative costs such that every partial homomorphism costs at least $L\ge0$ and every
+homomorphism from $H$ costs more than $2L$.
+Then, for every nonzero measure of mass $m$ on partial homomorphisms of cost $L$, some
+minimum partial homomorphism $Q$ has $\Phi_p(Q)\le(r-2)m$.
+\end{lemma}
+\begin{proof}
+Suppose not, and apply Lemma~\ref{norm391:cutoff} in case~\ref{norm391:cutoff:1}. We obtain a measure of positive mass, supported on minimum partial homomorphisms which meet the set $Z$ of vertices of cost zero, with new minimum cost $L'\ge0$, such that every homomorphism from $H$ costs more than $2L'$ and~\eqref{norm391:counter} holds.
+If $L'>0$, then, as the span of $H-j$ is at most three for some $j$, Lemma~\ref{norm391:positive-endpoint} in case~\ref{norm391:positive-endpoint:1} gives a contradiction.
+If $L'=0$, then all costs in the support are zero, the support receives no homomorphism from $H$, and Lemma~\ref{base392:zero} gives a contradiction.
+\end{proof}
+
+\begin{lemma}
+\label{base392:maximum}\label{aux:d53maximum}
+Let $H\in\{B,A,D\}$, and let $F$ be a digraph with $\delta^0(F)>|F|/2$. Then every deficient optimal fractional $H$-cover of $F$
+has $M=\max w>1/2$. If $H\in\{B,A\}$, then $M>2/3$.
+\end{lemma}
+\begin{proof}
+By Lemma~\ref{general:LP}, we have $0\le w\le1$ and $\min w=0$. Every partial homomorphism costs at least $L=1-M$, since
+its two completion sets intersect. Let $d=\delta^0(F)$ and
+$\tau=(\sum w)/d<2/r$, and let $o$ be a vertex of weight zero, with minimum weights $\alpha$ and $\beta$ in $N^-(o)$ and $N^+(o)$. We use Lemma~\ref{norm391:savings}.
+
+For $B$ and $A$, the partial homomorphism of the table which maps the endpoints to $o$, and the other two heights to minimum-weight neighbours of $o$, costs
+$\alpha+\beta$. Hence $L\le\alpha+\beta<\tau<1/3$, so $M>2/3$.
+
+For $D$, reverse the edges of $F$ if necessary so that $\alpha\le\beta$;
+this is possible as $D_{5,3}$ is isomorphic to its converse. Let $z$ be
+a vertex of minimum weight $a$ in $N^-(o)\cap N^+(o)$.
+Choose $u\to o\to v$ with $w(u)=\alpha$ and $w(v)=\beta$. For each $x\in N^-(u)$, the two paths
+\[
+ x\to u\to o\to z\to o\to v\qquad\text{and}\qquad x\to u\to o\to v
+\]
+give a homomorphism from $D_{5,3}$, and so $w(x)\ge1-a-2\alpha-\beta$. Thus the minimum weight in $N^-(u)$, which is at most $\chi$, is at least $1-a-2\alpha-\beta$.
+By Lemma~\ref{norm391:savings}, $\chi+\alpha<\tau$ and $\alpha+\beta<\tau$. Therefore $a>1-2\tau>1/2$, and so $M>1/2$.
+\end{proof}
+
+\begin{theorem}
+\label{base392:fractional}
+\label{b:fractional}\label{a:fractional}\label{repair:d53-factor}
+Every digraph $F$ with $\delta^0(F)>|F|/2$ has perfect fractional homomorphic
+tilings by $B=++-++-$, by $D_{4,2}$ and by $D_{5,3}$.
+\end{theorem}
+\begin{proof}
+Let $H\in\{B,A,D\}$ have order $r$, and suppose that $F$ has no perfect fractional homomorphic $H$-tiling. By Lemma~\ref{general:LP}, there is a deficient optimal cover $w$, and Lemma~\ref{base392:maximum} gives $1/2<M\le1$.
+Let $C$ be the set of vertices of weight $M$ and $h=|C|$. Since $2M>1$, every tight homomorphism has at most one position in $C$, and so the measure of
+Lemma~\ref{general:max-deletion} has mass $h$ and is supported on
+partial homomorphisms of cost $L=1-M$ in $F-C$, which is the minimum cost there.
+Every homomorphism from $H$ costs at least $1>2L$, so
+Lemma~\ref{base392:endpoint} gives a minimum partial homomorphism with $\Phi_p$-value at most $(r-2)h$, which contradicts
+Lemma~\ref{general:max-deletion}.
+\end{proof}
+
+
+\subsection{Isolated backward edges}
+\label{transfers}
+
+\begin{theorem}\label{imbalance402:isolated}
+\label{transfer:Qfamily}\label{transfer:Bfamily}
+Let $H$ be an orientation of an even cycle with $k_H=2$, and suppose that, in a reading with sign sum two, no two backward edges are consecutive. Then every digraph $F$ with $\delta^0(F)>|F|/2$ has a
+perfect fractional homomorphic $H$-tiling.
+\end{theorem}
+\begin{proof}
+If $H$ has $t$ backward edges, then it has $t+2$ forward edges, which form $t$ directed runs of length at least one, separated by the isolated backward edges. Thus either one run has length three, or two runs have length two, and all
+other runs have length one. Up to rotation, $H$ is therefore one of
+\[
+ H_j=+++(-+)^j-\qquad\text{and}\qquad
+ T_{a,b}=++(-+)^a-++(-+)^b-,\qquad\text{where }j,a,b\ge0.
+\]
+We show that perfect fractional tilings by $Q$ and $B$ give perfect fractional tilings by $H_j$ and $T_{a,b}$, respectively, using Lemma~\ref{transfer:fibres}. As Theorems~\ref{q:fractional} and~\ref{b:fractional} provide these tilings, this proves the theorem.
+
+A long alternating path can be mapped onto a single edge, as follows. Suppose that $u\to v$ is an edge of a digraph $K$, and that we replace it by a path of length $2m+1$ whose edges alternate in direction, starting and ending with forward edges. If $u\to z$ is an edge of $K$, we can map this path to $u,(z,u)^m,v$, where $(z,u)^m$ denotes $m$ repetitions of $z,u$; and if $z\to v$ is an edge of $K$, we can map it to $u,v,(z,v)^m$. In both cases, the new path places $m$ further positions at each end of the edge between $u$ or $v$ and $z$.
+
+For $H_j$, replace the edge $a\to d$ of
+$Q=(a\to b\to c\to d,\ a\to d)$ by such a path of length $2j+1$.
+Map it using the edge $ab$ or the edge $cd$, each with probability one half.
+Each vertex of $Q$ then receives $j/2$ further positions in expectation, so its expected fibre size is $1+j/2=|H_j|/4$.
+
+For $T_{a,b}$, write
+$B=0\to1\to2\leftarrow3\to4\to5\leftarrow0$, and let $\sigma(i)=i+3\pmod6$, which is an automorphism of $B$.
+Replace the edges $3\to2$ and $0\to5$ by alternating paths of lengths $2a+1$ and $2b+1$, respectively.
+Choose $\gamma$ uniformly from $\{\mathrm{id},\sigma\}$ and an edge $f$
+uniformly from $\{12,32,34\}$, each of which meets $3\to2$.
+Map the old positions by $\gamma$, and map the two new paths using the edges
+$\gamma(f)$ and $\gamma\sigma(f)$, respectively.
+Each of these two edges is uniformly distributed over the six edges of $B$, so each vertex of $B$ is an end of each of them with probability
+$1/3$. Thus each vertex has expected fibre size
+$1+(a+b)/3=|T_{a,b}|/6$.
+
+Finally, if the reading of $H$ with sign sum two is its converse reading, we reverse the edges of both $H$ and $F$. Both $Q$ and $B$ are isomorphic to their converses, via $(a\ d)(b\ c)$ and
+$i\mapsto5-i\pmod6$, respectively, so the same argument applies.
+\end{proof}
+
+\subsection{Returns of span two}
+
+The remaining orientations in~\ref{ov:family1} with span at most two are handled using Theorem~\ref{norm391:normalized-cover}.
+Let $H$ be a cycle orientation with sign sum two, and let $j$ be a position of $H$. For each height $i$ of the height walk of $H-j$, the \emph{height class} of $i$ is the set of positions at height $i$, and its multiplicity is its size. If the height walk of $H-j$ crosses between heights $i$ and $i+1$ exactly $e_i$ times in each direction, then the class of $i$ has multiplicity $e_{i-1}+e_i$, plus one if $i$ is the height of the last position.
+
+\begin{lemma}
+\label{height390:heavy-pair}
+Let $H$ have order $2S$ and sign sum two, and satisfy
+\eqref{norm391:range}. Suppose that, for some position $j$, two adjacent height classes of $H-j$ have multiplicities $p$ and $q$ with
+\[
+ p,q\ge S/2\qquad\text{and}\qquad p+q\ge3S/2-1.
+\]
+Then every digraph $F$ with $\delta^0(F)>|F|/2$ has a perfect fractional homomorphic
+$H$-tiling. The same holds if, instead, a convex combination of the vectors of class multiplicities of several partial homomorphisms satisfies these inequalities.
+\end{lemma}
+\begin{proof}
+Suppose not. By Lemma~\ref{general:LP}, there is a deficient optimal cover $w$. Let
+$\tau=(\sum w)/\delta^0(F)<1/S$, $M=\max w$ and
+$\kappa=\min_{xy\in E(F)}(w(x)+w(y))$.
+Theorem~\ref{norm391:normalized-cover} and
+Lemma~\ref{norm391:savings} give
+\[
+ 2M+(S-2)\kappa\le1,\qquad
+ \chi+\kappa<\tau,\qquad 2\kappa<\tau.
+\]
+Map the two adjacent height classes to the two ends of an edge of weight $\kappa$. Then map the other heights in turn to neighbours of weight at most $\chi$, so that each edge of $H-j$ goes from one height to the next, and complete the deleted position by a vertex of weight
+at most $M$. With $A=\max(p,q)$ and $C=2S-1-p-q$, the cost of this homomorphism shows that $1\le M+A\kappa+C\chi$. This also holds for a convex combination of class multiplicity vectors, by averaging.
+The hypotheses give $0\le C\le S/2$ and
+$A+C=2S-1-\min(p,q)\le3S/2-1$. Therefore,
+\[
+\begin{split}
+ 1&\le(2A-S+2)\kappa+2C\chi\\
+  &\le2C(\chi+\kappa)+2(S-2C)\kappa
+   <S\tau<1,
+\end{split}
+\]
+where the strict inequality holds since at least one of the two coefficients $2C$ and $S-2C$ is positive. This contradiction proves the lemma.
+\end{proof}
+
+\begin{theorem}
+\label{height390:two-width-factor}
+\label{height390:positive-first}\label{height390:zero-first}
+Let $W$ be a nonempty closed height walk of span
+at most two, starting at any height in its range. Then $++W$ has a perfect fractional
+homomorphic tiling in every digraph $F$ with $\delta^0(F)>|F|/2$.
+\end{theorem}
+\begin{proof}
+If $W$ has span one and starts at its lower height, then $W=(+-)^s$ for some $s\ge1$, and Theorem~\ref{imbalance402:isolated} applies. If it starts at its upper height, we reverse the
+word and the edges of $F$. So we may assume that $W$ has span two. We write $E(j)=+(+-)^j-$, which is a closed walk from height zero to height zero visiting height two.
+
+\emph{Starting at a boundary height.} Reversing if necessary, we may assume that $W$ starts at the bottom of its range, at height zero. Then $W=E(a_1)\cdots E(a_s)$ for some $a_i\ge0$, where $T=\sum_ia_i\ge1$, as $W$ has span two, and $|H|=2S$ with $S=s+T+1$.
+If $|H|=6$, then $s=T=1$ and $++W=D_{4,2}$, which is covered by
+Theorem~\ref{a:fractional}. Otherwise $|H|\ge8$.
+The walk $W$ stays in $\{0,1,2\}$ and descends from two to zero, so the maximum drop of $H$ is two, and
+\eqref{norm391:range} holds.
+
+Delete the middle position of the initial pair $++$. The remaining path has height classes of multiplicities
+$(s+1,s+T,T)$, from the lowest height upwards.
+If $s\ge T-1$, the first two classes satisfy the conditions of Lemma~\ref{height390:heavy-pair}: their minimum
+is at least $S/2$, and their sum minus $3S/2-1$ is
+$(s-T+1)/2\ge0$.
+
+Otherwise $s\le T-2$. Let $\ell\in\{0,\ldots,s-1\}$ be the number of
+factors $E(0)=+-$ before the first factor $E(a_i)$ with $a_i\ge1$.
+The first two positive edges of this factor form a new pair $++$, and we delete their middle position. In the height walk of $H$, this pair goes from height two to height four. Read the remaining path from height four, and then, after wrapping around, from the start of $H$ with heights translated by two.
+The first part stays in $\{2,3,4\}$, and the second part consists of the old initial pair and $\ell$ factors $+-$, and stays in $\{2,\ldots,5\}$.
+Counting positions gives class multiplicities
+\[
+ (s-\ell,\ T+s-\ell,\ T+\ell+1,\ \ell)
+ \quad\text{at heights }2,3,4,5,
+\]
+where the last class is empty if $\ell=0$.
+The middle two classes both have multiplicity at least $T+1\ge S/2$, and the sum of their multiplicities minus $3S/2-1$ is $(T-s+1)/2>0$.
+Lemma~\ref{height390:heavy-pair} again applies.
+
+\emph{Starting at the middle height.} Translate $W$ so that it starts at height one and stays in $\{0,1,2\}$,
+and let $a,b\ge1$ be the numbers of steps from $0$ to $1$ and from $1$ to $2$, respectively, so that $S=a+b+1$. If $|H|=6$, then, depending on the order of the two excursions of $W$, the orientation $++W$ is, up to rotation,
+$B$ or $D_{4,2}$, and we use
+Theorem~\ref{base392:fractional}. So assume that $|H|\ge8$.
+If the maximum drop of $H$ is one, then no two backward edges are consecutive, and
+Theorem~\ref{imbalance402:isolated} applies. Thus we may assume that the maximum drop is two, so that \eqref{norm391:range} holds.
+
+Deleting the middle position of the initial pair gives class multiplicities $(a,a+b+1,b)$.
+If $a\ge b+1$, its first two classes satisfy the conditions of Lemma~\ref{height390:heavy-pair}. So suppose that $a\le b$. If $W$ starts with $+$,
+we take the second initial positive edge and the first edge of $W$ as the new initial pair. The rest of the word is then a closed walk which starts at height two in $\{0,1,2\}$, and we are in the boundary case.
+If $W$ ends with $+$, we take its last edge and the first initial positive edge; the rest is a closed walk starting at height zero, and again we are in the boundary case.
+
+Otherwise, $W$ starts and ends with $-$, so it is a sequence of
+lower excursions $-+$ and upper excursions $+-$.
+Let $\ell\ge1$ be the number of lower excursions before the first upper one. If $\ell=a$,
+then all lower excursions precede all upper ones, and then no two backward edges of $H$ are consecutive, contrary to the maximum drop being two. Thus $1\le\ell<a$.
+Take as the new pair the two positive edges at the first transition from a lower excursion to an upper one, and delete their middle position. The remaining path has class multiplicities
+\[
+ (a-\ell,\ b+a-\ell,\ b+\ell+1,\ \ell)
+ \quad\text{at heights }0,1,2,3,
+\]
+with both endpoints at height two. The middle two classes both have multiplicity
+at least $b+1\ge S/2$, and the sum of their multiplicities minus $3S/2-1$ is
+$(b-a+1)/2>0$. Lemma~\ref{height390:heavy-pair} applies once more.
+\end{proof}

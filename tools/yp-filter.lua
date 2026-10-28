@@ -19,6 +19,7 @@
 --    yp-numbering   global | section
 --    yp-thm-offset  numbered statements before this page (global mode)
 --    yp-sec-offset  sections before this page (section mode)
+--    yp-appendix-at sections before \appendix (-1: none); later sections are A, B, ...
 --    yp-pdf         URL of the book PDF
 --    yp-kicker, yp-pdf-page   banner contents
 --    yp-short-title  short page title; the long \lecture heading becomes the lede
@@ -30,6 +31,14 @@ local stringify = pandoc.utils.stringify
 local labels = {}
 local page, lang, numbering, pdf_url, index_path
 local thm_counter, sec_counter, sub_counter = 0, 0, 0
+local appendix_at = -1  -- sections before \appendix; later ones are A, B, ...
+
+local function sec_name(n)
+  if appendix_at >= 0 and n > appendix_at then
+    return string.char(64 + n - appendix_at)
+  end
+  return tostring(n)
+end
 
 local NAMES = {
   zh = {
@@ -77,6 +86,7 @@ local function read_meta(meta)
   index_path = stringify(meta['yp-index'] or '')
   thm_counter = tonumber(stringify(meta['yp-thm-offset'] or '0')) or 0
   sec_counter = tonumber(stringify(meta['yp-sec-offset'] or '0')) or 0
+  appendix_at = tonumber(stringify(meta['yp-appendix-at'] or '-1')) or -1
   local path = stringify(meta['yp-labels'] or '')
   if path ~= '' then
     local f = io.open(path, 'r')
@@ -327,14 +337,14 @@ end
 local qstate = {group = 'A', count = 0}
 local walk_blocks  -- forward declaration
 
-local function labelled_list(list, prefix)
+local function labelled_list(list, prefix, suffix)
   local items = pandoc.List()
   for i, item in ipairs(list.content) do
     local label = prefix(i)
     local blocks = pandoc.List(item)
     -- nested question lists inside this item get label-<j>
     blocks = walk_blocks(blocks, {qprefix = label})
-    prepend_inlines(blocks, {pandoc.Span({pandoc.Str(label .. ')')}, {class = 'yp-qlabel'})})
+    prepend_inlines(blocks, {pandoc.Span({pandoc.Str(label .. (suffix or ')'))}, {class = 'yp-qlabel'})})
     items:insert(pandoc.Div(blocks, {class = 'yp-qitem'}))
   end
   return pandoc.Div(items, {class = 'yp-qlist'})
@@ -469,7 +479,7 @@ local function theorem_div(div, env, starred, ctx)
   if (NUMBERED[env] or (lang == 'en' and NUMBERED_EN[env])) and not starred then
     thm_counter = thm_counter + 1
     local n = tostring(thm_counter)
-    if numbering == 'section' then n = sec_counter .. '.' .. thm_counter end
+    if numbering == 'section' then n = sec_name(sec_counter) .. '.' .. thm_counter end
     if info.label and labels[info.label] and labels[info.label].num ~= n then
       warn(('counter says %s, aux says %s for %s'):format(n, labels[info.label].num, info.label))
       n = labels[info.label].num
@@ -553,6 +563,23 @@ local function exercises_div(div, ctx)
   return pandoc.Div(out, {class = 'yp-exercises'})
 end
 
+-- {props}: a property list lettered through the whole book, items A1, A2, ...
+local function props_div(div, ctx)
+  local blocks = pandoc.List(div.content)
+  local info = take_head(blocks)
+  local group = stringify(info.group or 'A')
+  local out = pandoc.List()
+  local i = first_list(blocks)
+  for k, b in ipairs(blocks) do
+    if k == i then
+      out:insert(labelled_list(b, function(n) return group .. n end, ''))
+    else
+      out:extend(walk_blocks(pandoc.List({b}), ctx))
+    end
+  end
+  return pandoc.Div(out, {class = 'yp-props'})
+end
+
 local function probleme_div(div, ctx)
   local blocks = pandoc.List(div.content)
   local info = take_head(blocks)
@@ -602,6 +629,7 @@ local function handle_div(div, ctx)
   if cls == 'solution' then return solution_div(div, ctx) end
   if cls == 'ypexercises' then return exercises_div(div, ctx) end
   if cls == 'ypprobleme' then return probleme_div(div, ctx) end
+  if cls == 'ypprops' then return props_div(div, ctx) end
   if cls == 'ypquestions' then return questions_div(div, ctx) end
   if cls == 'ypbibentry' then
     local blocks = pandoc.List(div.content)
@@ -631,10 +659,10 @@ walk_blocks = function(blocks, ctx)
         local n
         if b.level == 1 then
           sec_counter, thm_counter, sub_counter = sec_counter + 1, 0, 0
-          n = tostring(sec_counter)
+          n = sec_name(sec_counter)
         elseif b.level == 2 then
           sub_counter = sub_counter + 1
-          n = sec_counter .. '.' .. sub_counter
+          n = sec_name(sec_counter) .. '.' .. sub_counter
         end
         if n then
           local c = pandoc.Inlines({pandoc.Span({pandoc.Str(n)}, {class = 'yp-secnum'}), pandoc.Space()})
@@ -744,7 +772,7 @@ function Pandoc(doc)
   end
   doc.blocks = {pandoc.Div(blocks, body_attr)}
   for _, k in ipairs({'yp-labels', 'yp-page', 'yp-lang', 'yp-numbering', 'yp-thm-offset',
-      'yp-sec-offset', 'yp-pdf', 'yp-kicker', 'yp-pdf-page', 'yp-index',
+      'yp-sec-offset', 'yp-appendix-at', 'yp-pdf', 'yp-kicker', 'yp-pdf-page', 'yp-index',
       'yp-book', 'yp-book-title', 'yp-crumb', 'yp-short-title'}) do
     doc.meta[k] = nil
   end

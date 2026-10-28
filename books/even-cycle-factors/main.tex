@@ -1,0 +1,33 @@
+% !TEX program = xelatex
+% Research paper (draft). Sources from 语言润色/work/1008/润色稿.
+%   TEXINPUTS=../../shared/latex//: latexmk -xelatex -outdir=build main.tex
+\documentclass[english]{yupin-notes}
+\input{notation}
+\numberwithin{equation}{section}
+
+\title{Even cycle factors above the half semidegree threshold}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+\input{sections/abstract}
+\end{abstract}
+\tableofcontents
+
+\input{sections/introduction}
+\input{sections/overview}
+\input{sections/preliminaries}
+\input{sections/reduction}
+\input{sections/completion-sets}
+\input{sections/directed-cycles}
+\input{sections/span-two}
+\input{sections/one-return}
+\input{sections/two-returns}
+\input{sections/factors}
+
+\nocite{HosseiniSopena}
+\bibliographystyle{abbrv}
+\bibliography{refs}
+\end{document}

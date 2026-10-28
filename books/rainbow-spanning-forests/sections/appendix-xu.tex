@@ -1,0 +1,67 @@
+\appendix
+\section{Xu's dense-core lemmas for arbitrary colourings}\label{app:xu}
+In this appendix, we prove Lemmas~\ref{lem:critical} and~\ref{lem:remaining}.
+Xu~\cite{Xu} proves them for proper colourings, and his proofs go through for arbitrary globally $m$-bounded colourings except at a few steps, where he uses that edges of the same colour do not share a vertex.
+We follow his notation and indicate only these steps, giving a replacement argument for each; every other step applies verbatim.
+In all of his sampling steps, each large colour class, or each part of it, is sampled by choosing a fixed number of its edges uniformly at random.
+The small colour classes are pooled and sampled independently, and different classes are sampled independently.
+Two facts about sampling without replacement replace properness.
+First, if $s$ elements of a set of size $a$ are chosen uniformly at random, then two given elements are both chosen with probability $s(s-1)/(a(a-1))\le(s/a)^2$.
+Second, by Hoeffding's comparison~\cite[Theorem~4]{Hoe}, for any weights on the elements, the total weight of the chosen elements has moment generating function at most that of the total weight of $s$ independent uniform choices.
+In particular, the Chernoff bounds used by Xu hold for sums over the chosen edges with arbitrary nonnegative weights, for example for the number of chosen edges at a vertex, even when several of them have the same colour.
+
+\subsection{A spanning tree of a dense core and one more edge}
+Lemma~\ref{lem:critical} is deduced from the following lemma, in which $G[C]$ is close to a complete graph and exactly $m$ edges lie outside $C$.
+
+\begin{lemma}[{Xu~\cite[Lemma~5.1]{Xu} for arbitrary colourings}]\label{lem:xu51}
+For every $\alpha\in(0,1/2)$ and $\eps>0$ there exist $\delta>0$ and $n_0$ such that the following holds.
+Let $G$ have a globally $m$-bounded edge-colouring, and let $C\subseteq V(G)$ have size $n\ge n_0$, where $m\ge\alpha n$.
+Suppose that $H=G[C]$ has $(n-1)m$ edges, that exactly $m$ edges of $G$ are not inside $C$, and that $|d_H(v)-2m|\le\delta n$ and $|\,|N_H(u)\cap N_H(v)|-4m^2/n|\le\delta n$ for all distinct $u,v\in C$.
+Then $G$ contains $(1-\eps)m$ edge-disjoint rainbow forests, each consisting of a spanning tree of $H$ and one edge not inside $C$.
+\end{lemma}
+\begin{proof}
+We use the notation of~\cite[Section~5]{Xu}: $s\ge\beta n$ is the current number of forests still to be found, $L=(\log n)^{20}$, $p=L/s$ and $D=2n/(\log n)^8$. A colour is large if it has at least $s/(\log n)^2$ edges. The edges of a large colour inside $C$ and those not inside $C$ form two separate parts, and from a part of size $a$ we choose $\lceil pa\rceil$ edges uniformly at random.
+Properness is used twice in the sampling step: to show that the support $J$ satisfies $\Delta(J[C])\le D$, and in the bound~\cite[(5.3)]{Xu} on $\sum_w\Prb(uw,vw\in T)$, which is needed for tracking codegrees.
+
+Say that a part inside $C$ of a large colour is \emph{tiny} if $pa<1$. Exactly one edge of a tiny part is chosen. Every other part chooses each of its edges with probability $\lceil pa\rceil/a\le2p$.
+A large colour with a tiny part inside $C$ has at least $s/(\log n)^2-s/L\ge s/(2(\log n)^2)$ edges not inside $C$, and only $s$ edges are not inside $C$. So there are at most $2(\log n)^2$ tiny parts, and they have at most $2(\log n)^2s/L=2s/(\log n)^{18}$ edges in total.
+
+For the maximum degree, fix $v\in C$. Tiny parts give at most $2(\log n)^2$ edges of $J$ at $v$. The other chosen edges at $v$ outside the pool kept in full each appear with probability at most $2p$, so their expected number is at most $2p\cdot2.1s=4.2L$. By the Chernoff bound discussed above, there are at most $20L$ of them at every vertex with probability $1-n^{-100}$. The pool kept in full has at most $s/(\log n)^8$ edges. Hence $\Delta(J[C])\le D$.
+
+For~\cite[(5.3)]{Xu}, fix distinct $u,v\in C$ and let $K$ be the pool kept in full. If $uw$ or $vw$ lies in $K$ or in a tiny part, we use $\Prb(uw,vw\in T)\le1/s+n^{-50}$. There are at most $2|K|+4s/(\log n)^{18}\le3s/(\log n)^8$ such $w$, contributing at most $4(\log n)^{-8}$ in total. For every other $w$, both edges are chosen at random. If they lie in different parts or pools, they are chosen independently, each with probability at most $2p$. If they lie in the same part, which can only happen if they have the same colour, then they are both chosen with probability at most $(\lceil pa\rceil/a)^2\le4p^2$, and the same holds in the sampled pool, which is sampled independently. In all cases $\Prb(uw,vw\in J)\le4p^2$, and so $\Prb(uw,vw\in T)\le8p^2$ after conditioning on the likely event in Xu's proof. Summing over at most $n$ vertices $w$ gives at most $8np^2\le8\beta^{-2}(\log n)^{40}/n$. This proves~\cite[(5.3)]{Xu} with $\theta_n=C_\beta((\log n)^{-8}+(\log n)^{40}/n)$, and the rest of Xu's proof applies.
+\end{proof}
+
+\begin{proof}[Proof of Lemma~\ref{lem:critical}]
+Xu's proof~\cite[Lemma~5.2]{Xu} uses dependent rounding~\cite{GKPS} to choose target numbers $X_\gamma$ and $Y_\gamma$ of edges of each colour $\gamma$ inside and not inside $C$. It then keeps $X_\gamma$ uniformly random edges of colour $\gamma$ inside $C$ and $Y_\gamma$ not inside $C$, independently for different colours.
+The resulting graph has $(2m-1)m'$ edges inside $C$ and $m'$ edges outside it, where $m'=m-2W$ and $W\le\eta m$ is the number of edges missing from $G[C]$, and it is globally $m'$-bounded.
+None of this uses properness.
+Properness is used only to show that every vertex of $C$ loses at most $8W+m^{2/3}$ edges inside $C$, after which Lemma~\ref{lem:xu51} applies as in~\cite{Xu}.
+We prove this bound for arbitrary colourings.
+
+Fix $v\in C$. For a colour $\gamma$, let $A_\gamma$ be its number of edges inside $C$, let $d_\gamma\le A_\gamma$ be its number of edges inside $C$ at $v$, and let $D_\gamma$ be the number of these $d_\gamma$ edges which are deleted. Let $D=\sum_\gamma D_\gamma$.
+Given the rounding, the $D_\gamma$ are independent, and $D_\gamma$ counts the edges at $v$ among $A_\gamma-X_\gamma$ uniformly random edges of colour $\gamma$ inside $C$.
+For $\lambda>0$ let $\varkappa=e^\lambda-1$ and $t_\gamma=1-X_\gamma/A_\gamma$. By Hoeffding's comparison,
+\[
+\E\bigl[e^{\lambda D_\gamma}\bigm|X_\gamma\bigr]\le(1+\varkappa d_\gamma/A_\gamma)^{A_\gamma-X_\gamma}\le\exp(\varkappa d_\gamma t_\gamma)=:\phi_\gamma(X_\gamma).
+\]
+In the rounding, $X_\gamma=\lfloor x_\gamma\rfloor+I_\gamma$, where $x_\gamma\ge\rho A_\gamma$ with $\rho=m'/m$, and the indicator variables $I_\gamma$ all lie on edges at a single vertex of the auxiliary bipartite graph. For such variables, dependent rounding gives $\E\prod_{\gamma\in S}(1-I_\gamma)\le\prod_{\gamma\in S}\E(1-I_\gamma)$ for every set $S$ of colours~\cite{GKPS} (see also~\cite[Section~1]{CVZ}).
+Since $\phi_\gamma$ is decreasing, $\phi_\gamma=c_\gamma+c'_\gamma(1-I_\gamma)$ for some $c_\gamma,c'_\gamma\ge0$, and expanding the product gives $\E e^{\lambda D}\le\E\prod_\gamma\phi_\gamma\le\prod_\gamma\E\phi_\gamma$.
+The variable $d_\gamma t_\gamma$ takes two values, which differ by $d_\gamma/A_\gamma\le1$, and its mean is $d_\gamma(1-x_\gamma/A_\gamma)\le(1-\rho)d_\gamma$. By Hoeffding's lemma, $\E\phi_\gamma\le\exp(\varkappa(1-\rho)d_\gamma+\varkappa^2d_\gamma/8)$.
+As $\sum_\gamma d_\gamma\le2m$ and $1-\rho=2W/m$,
+\[
+\Prb(D\ge8W+m^{2/3})\le\exp\bigl(4\varkappa W+\varkappa^2m/4-\lambda(8W+m^{2/3})\bigr).
+\]
+With $\lambda=m^{-1/3}$, so that $\varkappa\le\lambda+\lambda^2$, the exponent is at most $-m^{1/3}/2$ for large $m$. A union bound over the $2m$ vertices of $C$ completes the proof.
+\end{proof}
+
+\subsection{The remaining case}
+\begin{proof}[Proof of Lemma~\ref{lem:remaining}]
+In the sampling step of~\cite[Lemma~6.1]{Xu}, each colour with at least $m^b$ edges, where $b=1-\kappa/32$, chooses $\lceil pa_\gamma\rceil$ of its $a_\gamma$ edges uniformly at random, where $p=m^{-1+\kappa/8}$. The small colours form a pool $K$ kept in full if it has at most $m^{1-\kappa/16}$ edges, and otherwise sampled independently with probability $p$.
+The weights, the graphic constraints, the support bounds and the scalar tracking use only the edge probabilities and the Chernoff bounds discussed above.
+Properness is used only in the matrix tracking. There, Xu needs the bound~\cite[(6.11)]{Xu} that two edges of different colours not in $K$ are both chosen with probability at most $8p^2$, and notes that two edges with a common vertex have different colours.
+We show that this bound holds for all pairs of edges not in $K$.
+If the two edges are chosen independently, this is as in~\cite{Xu}.
+If they have the same colour $\gamma$ and $\gamma$ is large, then they are both chosen with probability at most $(\lceil pa_\gamma\rceil/a_\gamma)^2\le4p^2$, as $pa_\gamma\ge1$.
+If they are in the sampled pool, they are chosen independently.
+After conditioning on the likely event in Xu's proof, the bound $8p^2$ follows in each case, and the rest of the proof applies verbatim.
+\end{proof}

@@ -1,0 +1,226 @@
+\section{Partial-factorization absorption}
+\label{rpe:section}\label{ent:section}
+Let $\mathcal{H}$ be a simple properly $D$-coloured bipartite graph on $X\cup{}Y$, with $m=\max(|X|,|Y|)$ and $v=|X|+|Y|$. Each side is injectively labelled by physical vertices; equal-labelled
+opposite copies are nonadjacent. A configuration is \emph{admissible}
+when it uses each physical label at most once. All vertex avoidance
+below forbids both copies of a physical vertex. Assume \refstepcounter{equation}\label{rpe:model}$D\ge{}p_0m,(1-\delta)D\le{}d(x)\le{}D(x\in{}X\cup{}Y)$ \textup{(\ref{rpe:model})}. Counting edges gives \refstepcounter{equation}\label{rpe:rectangle}$\min(|X|,|Y|)\ge(1-\delta)m,p:=D/v\ge{}p_*:=p_0/2$ \textup{(\ref{rpe:rectangle})}.
+
+Put $L=\log{}v$ and $\beta=L^{-12000}$. A local absorber for $E$ consists of an admissible interior $W$ and a palette $C$, avoiding all root vertices and the root colour $c$ respectively, such that $|W\cap{}X|=|W\cap{}Y|=|C|-1$, $|C|\le{}L^{80}$, and $W\cup{}V(e)$ has an exactly-$C$ rainbow perfect matching for every $e\in{}E$. Its interior and palette may avoid any physical and colour forbidden sets of size at most $\beta{}v/100$ each; named roots are exempt from interior avoidance.
+
+For $g\to\infty$, $gL^{80}=o(b)$ and $b=o(\beta{}m)$, a $g$-absorber for $E_1$ instead has $|C|=O(gL^{80})$, $|W\cap{}X|=|W\cap{}Y|=|C|-g$, and matches $W\cup{}V(E')$ for every $g$-subset $E'\subseteq{}E_1$. Its forbidden budgets are $\beta{}m/100$ each. If every prescribed padding colour has $|M_a|\ge\kappa_0m$ for fixed $\kappa_0>0$ \refstepcounter{equation}\label{rpe:padding-colours}\textup{(\ref{rpe:padding-colours})}, any prescribed $o(b)$-palette avoiding the forbidden palette can be included, with final sizes $|C|=b$ and $|W\cap{}X|=|W\cap{}Y|=b-g$. Padding may include $c$.
+
+\begin{theorem}[Partial-factorization absorption]\label{rpe:theorem}\label{ent:local-absorber}
+For $0<\eta<1/100$, sufficiently small $\delta$ and large $m$, there are at least $(1-\eta)D$ candidate colours with designated pools $|E_c^0|\ge(1-\eta)m$. Every admissible $E\subseteq{}E_c^0$, $1\le|E|\le100$, has a local absorber. Under the stated scale assumptions, every admissible $E_1\subseteq{}E_c^0$, $g\le|E_1|\le3g$, has a $g$-absorber. Both satisfy the avoidance budgets above, and the latter admits the prescribed padding. The pools are fixed before all queries.
+\end{theorem}
+
+\subsection{Entropy, decorated witnesses, and loads}
+\label{ent:entropy-subsection}
+Write $C_a$ for the symmetric partial-matching matrix, $D_a=C_a^2$, and $A=\sum_aC_a$. On $\Omega=X^{(2)}\cup{}Y^{(2)}$, move $(x,y)$ simultaneously to $(I_ax,I_ay)$ if both edges exist; otherwise hold both coordinates. The resulting map $\tau_a$ is an involution. On $\widehat\Omega=\Omega\times\{0,1\}$ let $T_a$ also flip the last coordinate precisely when an actual move occurs.
+The symmetric stochastic chain $\mathsf{L}=I/2+\sum_aT_a/(2D)$ has uniform stationary measure, also when the sides are unequal.
+The invalid-colour fraction satisfies \refstepcounter{equation}\label{rpe:invalid}$b(z)\le2\delta$ \textup{(\ref{rpe:invalid})}. An arm is a sequence of $t$ independent records, taking $0$ with probability $1/2$ and each colour with probability $1/(2D)$. Invalid attempted colours remain decorations, not output edges.
+
+Write $\mu_z=\mathsf{L}^t((z,0),\cdot)$ and let $Q_z^i$ be twice its phase-$i$ endpoint matrix. Put $u_z=D^{-1}\sum_a\operatorname{TV}(\mu_z,(T_a)_*\mu_z)$, $q_{a,z}=\operatorname{TV}(\mu_z,\mathsf{L}^t(T_a(z,0),\cdot))$, and $\mathcal{K}(B,C)=\langle{}B,ACA\rangle$. The latter is four times the probability that independent arms from $z,I_az$ have even actual lengths and both closing edges. Expectations below use uniform roots and, for $q_{a,z}$, a uniform colour.
+
+\begin{lemma}[Entropy estimate]\label{rpe:analytic}
+For integer $t\ge{}C\log{}v$, each $Q_z^i$ has mass $1\pm2\delta$ and row and column sums at most $4/D$. Both $\mathbb{E}u_z^2$ and $\mathbb{E}q_{a,z}^2$ are at most $2\log(2)\Delta_t$, where $0\le\Delta_t\le4\log{}v/t$ \refstepcounter{equation}\label{rpe:entropy-bounds}\textup{(\ref{rpe:entropy-bounds})}. For every valid root colour $a$, $\mathcal{K}(Q_z^0,Q_{I_az}^0)\ge{}p^2-8u_z-14\delta-6q_{a,z}$ \refstepcounter{equation}\label{rpe:polarization}\textup{(\ref{rpe:polarization})}.
+\end{lemma}
+\begin{proof}
+For a stationary chain put $\mathsf{H}_t=H(Z_t\mid{}Z_0)$, in bits. The Markov property gives $\Delta_t=\mathsf{H}_{t+1}-\mathsf{H}_t=I(Z_1;Z_{t+1}\mid{}Z_0)$; conditional data processing makes these increments nonincreasing.
+Since $\mathsf{H}_t\le\log_2(2|\Omega|)$, the asserted bound follows. The last- and first-step mixtures are, respectively, $\mu_z^{t+1}=\mu_z^t/2+\sum_a(T_a)_*\mu_z^t/(2D)$ and $\mu_z^{t+1}=\mu_z^t/2+\sum_a\mu_{T_az}^t/(2D)$. Their average Jensen--Shannon divergences both equal $\Delta_t$. For either mixture $M=P_0/2+\sum_aP_a/(2D)$, triangle inequality and Pinsker give $D^{-1}\sum_a\operatorname{TV}(P_0,P_a)^2\le2\log(2)\operatorname{JS}$. Jensen and the commuting phase flip prove the two mean-square bounds.
+No commutation of different colour maps is required.
+
+If $M_s$ is a coordinate's largest point probability, properness gives $M_{s+1}\le(1/2+\delta)M_s+1/(2D)$, hence $M_t\le2/D$. For $\chi(z,i)=(-1)^i$, $\mathsf{L}\chi=b(z)\chi$ and $\|\mathsf{L}^t\chi\|_\infty\le2\delta$, proving the phase masses. The phase-zero slice after $T_a$ is $C_aQ_z^1C_a+Q_z^0\odot{}B_a$, where $B_a$ indicates invalid pairs. Consequently $\|Q_z^0-C_aQ_z^1C_a\|_1\le4\operatorname{TV}(\mu_z,(T_a)_*\mu_z)+\|Q_z^0\odot{}B_a\|_1$. Summing the invalid mass and using $AQ_z^1-Q_z^0A=\sum_a(C_aQ_z^1C_a-Q_z^0)C_a+\sum_aC_aQ_z^1(I-D_a)$ yields $\|AQ_z^1-Q_z^0A\|_1\le4Du_z+4\delta{}D$. Each entry is at most $4/D$, so the squared Frobenius difference is at most $16u_z+16\delta$. Both entry sums are at least $(1-3\delta)D$, hence their squared norms are at least $(1-3\delta)^2p^2$. Polarization gives $\mathcal{K}(Q_z^0,Q_z^1)\ge{}p^2-8u_z-14\delta$. For a valid root, phase commutation gives $\|Q_z^1-Q_{I_az}^0\|_1\le4q_{a,z}$; the zero--one closing kernel and mass at most $1+2\delta$ give the final $6q_{a,z}$ loss.
+\end{proof}
+
+Choose a small fixed $\epsilon=\epsilon(p_0,\eta)$, then $C\ge10^8p_*^{-4}\epsilon^{-1}$, $t=\lceil{}C\log{}v\rceil$, $H=2t+2$, and $\sigma>0$ such that \refstepcounter{equation}\label{rpe:mask-hierarchy}$4C\mathfrak{h}(\sigma)<1/4,\mathfrak{h}(x)=-x\log{}x-(1-x)\log(1-x)$ \textup{(\ref{rpe:mask-hierarchy})}. Finally take $\delta\ll{}p_*,\epsilon,\sigma$. A retained witness records the original directed roots $(c,z)$ and both complete attempted arms $\rho,\lambda$, starting at $I_cz,z$. Both actual lengths are positive even numbers at least two; its two even cycles are physically disjoint and admissible;
+all nonzero attempts and $c$ are distinct; the closing colours avoid all of these; and at most $2\sigma{}t$ attempts are invalid. The closing colours may equal one another.
+
+\begin{lemma}[Rich pairs]\label{rpe:rich}
+All but a $2\epsilon$ fraction of $(c,z)\in\mathcal{D}\times\Omega$ have valid admissible roots and retained-witness probability at least $\kappa=p_*^2/16$. Deficiency is invariant under $z\mapsto{}I_cz$ on valid roots.
+\end{lemma}
+\begin{proof}
+Markov applied to the entropy bounds excludes $O(p_*^{-4}/C)$ root pairs; outside them, the unfiltered even closing probability is at least $p_*^2/8$. Invalid roots cost $2\delta$, and physical root overlaps cost $O(1/m)$. Actual moves dominate $\operatorname{Bin}(t,(1-2\delta)/2)$, so lengths below two cost $o(1)$. Invalid attempts are dominated by $\operatorname{Bin}(2t,\delta)$; their tail above $2\sigma{}t$ is at most $(e\delta/\sigma)^{2\sigma{}t}=o(1)$. Attempt repetitions cost $O(t^2/D)$.
+
+For vertex collisions expose each deterministic time at which a later
+actual move hits a previous physical label: at most two colours work,
+with probability at most $1/D$. Sum over time pairs. Equal-time coordinates are distinct same-side copies. Between arms fix one
+complete arm first; the other remains independent. Zero-time positions
+are the prescribed root blocks. The resulting cost is $O(t^2/D)$. For a closing colour equal to a particular attempted letter, fix the
+whole arm containing that attempt, including held and future attempts.
+Its endpoint and the forbidden letter are now fixed. In the other
+independent arm enumerate deterministic times $j$ for its last actual move. On the bad event, that move must reach the fixed neighbour of
+the first endpoint in the forbidden colour. Given the prefix, at most
+one letter does this, costing $1/(2D)$. Drop the restriction that all later attempts hold and sum their probabilities to one. Summing
+over $j$, the two closing edges and all attempts costs $O(t^2/D)$. For $c$ fix either arm and use the same argument. Thus no conditioning on a random last move, or on its being valid, occurs. All losses are
+unconditional and eventually below $p_*^2/16$. Interchanging the arms proves the asserted symmetry, preserving record probabilities and masks.
+\end{proof}
+
+For a record with $k$ nonzero attempts write $\Pr(\rho)=2^{-t}D^{-k}$. Give each retained original witness weight \refstepcounter{equation}\label{rpe:weight}$\omega=\frac{D^2}{P(H)}\Pr(\rho)\Pr(\lambda),P(H)=10^{12}(H+1)^8$ \textup{(\ref{rpe:weight})}. A use at another common-edge pair retains this entire original label
+and weight; it is not resampled. Every weight is less than one.
+
+The five queries fix, in order: (1) an exchange colour and a different common colour; (2) an exchange colour and a physical vertex; (3) a corresponding common-edge pair and another colour; (4) such a pair and a physical vertex outside its root blocks; (5) one incidence edge. Queries (3)--(4) pool all common roles.
+
+\begin{lemma}[Five loads]\label{rpe:loads}\label{ent:loads}
+The five query loads are bounded respectively by $v^3,v^3,v,v,v^3$. Total mass, original-colour mass and original-root-edge mass are at most $v^2D^3/P$, $v^2D^2/P$ and $4vD^2/P$. Exchange-colour incident mass is at most $50v^4$. At a fixed original colour, another physical vertex or distinct colour has load at most $v^3$. Every rich original pair has mass at least $\kappa{}D^2/P$.
+\end{lemma}
+\begin{proof}
+Two counting rules handle holds. Every fixed attempted prefix is a
+permutation of the \emph{pair} space, also after the root involution.
+Hence at most $v$ original pairs reach a specified coordinate, and at most one reaches a specified ordered pair. By simplicity and
+properness, a fresh attempted step
+hits a specified physical label with probability at most $1/D$. Reaching a prescribed copy at a last actual move costs at most $t/(2D)$: sum deterministic last-move positions, dropping future-hold conditions. A uniform root-colour step has physical point bound $2/D$. These are pair-space statements; a held one-coordinate map need not
+be a permutation.
+
+(1) If the specified common colour is the original colour, fix it;
+otherwise pin its actual attempted position, costing $1/(2D)$, while summing the $D$ original colours. Fix that arm. The prescribed exchange forces the independent arm's endpoint at cost $O(t/D)$. Summing $v^2$ roots and multiplying by $D^2/P$ gives $O(H^2)v^2D/P$.
+(2) Place the specified vertex in one arm, possibly at time zero.
+For each fixed record that arm leaves at most $2v$ root pairs. The other arm's endpoint is forced as above, giving $O(H^2)vD^2/P$.
+
+(3) For original common roots, both roots and their colour are fixed;
+another common colour pins an attempted letter, and an exchange pins
+the other arm's endpoint. The bound is $O(H^2)D/P$. For a nonoriginal common pair, specify its position and orientations.
+Its letter is pinned, costing $1/(2D)$; pair invertibility uniquely recovers the original roots for fixed records and original colour.
+Another common colour pins a second attempt, or fixes the original
+colour and removes its factor $D$. For an exchange, anchor this arm and expose the other arm's last actual move. These give $O(H^3)D/P$.
+(4) For a nonoriginal common pair, pin its time position $j$, its letter $\gamma$, and its ordered endpoint pairs. The following change of variables explains why reanchoring does not bias the other
+attempts. For every fixed complete letter array, the prefix map $F$ on the pair space is a permutation, so $\sum_{z\in\Omega}\mathbf1_{\{Fz=z_*\}}=1$ for the prescribed anchor pair $z_*$. Thus summing the original roots with counting measure leaves exactly the product measure on all free letters;
+it does not condition a randomly chosen root on reaching $z_*$. Restrictions such as valid original roots and admissibility can
+then be discarded for an upper bound. The pinned step is actual
+because its two endpoint pairs are the prescribed matching edges.
+
+Delete the exchanges and the anchored common edge. The remaining
+paired common path splits into two arms from its known endpoints.
+Choose the arm and recorded position containing the prescribed
+physical vertex. Reversed attempted steps use the same pair
+involutions, in reverse order. Along this segment all letter indices
+are distinct and free; the pinned step is not traversed. Treat the
+original colour, if encountered, as an independent uniform letter,
+putting back the factor $D$ for its original counting measure. Starting from the fixed endpoint, reveal these letters in traversal
+order. At any deterministic time a first actual hit of the specified
+label costs at most $1/D$ (at most $2/D$ for the root-colour step). The label lies outside the anchor blocks, so every retained occurrence
+requires such a hit. Summing over times costs $O(H/D)$, regardless of which intervening attempts hold. The free root-colour factor $D$ cancels the pinned-attempt factor $1/(2D)$, giving $O(H^3)D/P$ after positions and orientations. For an original anchor the colour
+and roots are fixed from the outset and both cancelling factors are
+absent; the same first-hit bound applies. No conditional law of
+effective moving letters is invoked.
+(5) A common edge fixes a letter and one coordinate, giving $O(H)vD^2/P$. An exchange edge fixes one endpoint in each arm; pair invertibility handles the first and last-move exposure the second,
+giving $O(H^2)vD^2/P$.
+
+Additional role marks cost at most $H$; specifying a common pair already specifies its mark. Positions, orientations and physical copies thus
+cost at most a fixed multiple of $(H+1)^4$, absorbed by $P$ since $D\le{}v$. The same counts with the original colour fixed give the two extra coordinate loads; omitting its common-colour restriction
+gives exchange incident mass $O(Hv^2D^2/P)$. Complete record probabilities sum to one. There are at most $v^2D$ original roots and at most $4v$ at a specified root edge, proving the remaining mass bounds without
+an extra role factor. The rich-pair assertion is immediate.
+\end{proof}
+
+The hold-mask argument uses the surviving-mass condition $\sum_{z,\rho,\lambda}\Pr(\rho)\Pr(\lambda)\mathbf1_{\{(c,z,\rho,\lambda)\text{ retained}\}}\ge\kappa'v^2$ for fixed $\kappa'>0$ \refstepcounter{equation}\label{rpe:surviving-mass}\textup{(\ref{rpe:surviving-mass})}.
+
+\begin{lemma}[Hold-mask extraction]\label{rpe:fan}
+For fixed $c$, any preliminarily filtered family satisfying \eqref{rpe:surviving-mass} contains a fixed first cycle and actual common word with $\Omega_{\kappa'}(v^{3/4}/H^2)$ mutually physically disjoint second cycles avoiding the first.
+\end{lemma}
+\begin{proof}
+Averaging fixes records with $\kappa'v^2$ roots and then a first root with $\kappa'v$ partners. Their invalid-position masks have at most $\sum_{j\le2\sigma{}t}\binom{2t}{j}\le\exp(2t\mathfrak{h}(\sigma)+O(\log{}t))\le{}v^{1/4}$ possibilities. Fix one mask. The actual words and first cycle are now fixed; they
+were not determined by the attempted records alone. A fixed actual
+word is a partial bijection. A physical vertex occurs in at most $2H$ partner cycles, so greedy disjoint selection loses at most $2H^2$ partners per choice. All preliminary filters survive.
+\end{proof}
+
+\subsection{Colour classes and cleaning}
+\label{ent:classes-subsection}
+A colour-switcher consists of two rainbow matchings on the same
+admissible set, whose palettes differ only in their exchange colours.
+Its order is either matching size. A basic witness supplies one of
+order $h\le{}H$, by taking opposite alternating matchings on its two cycles. The common palette omits the exchanges. In the union of two matching states, retain edge multiplicities; a shared edge forms an even two-cycle. Chaining switches
+uses disjoint physical sets and common palettes, with joining colours
+excluded from every common palette; each joining colour then occurs
+once in each final alternative.
+
+Use parameters \refstepcounter{equation}\label{ent:class-parameters}$\xi=L^{-400},K=L^{600},\eta_c=L^{-1000},\varepsilon=L^{-10000},L_0=\lceil{}L^{80}\rceil,\ell=\lceil500HL^3\rceil$ \textup{(\ref{ent:class-parameters})}. For large $v$, $H\le{}L^{34}$, $P(H)\le{}L^{140}$ and $\ell\le{}L^{38}$. A class $Q$ is exchangeable if, for initial forbidden physical and common-colour sets of size $\varepsilon{}v$ with at most $\varepsilon|Q|$ forbidden colours in $Q$, an exceptional set $B_Q\supseteq{}Q\cap\bar{C}$, $|B_Q|\le\eta_c|Q|$, can be chosen
+\emph{before} the two exchange endpoints and later forbidden sets.
+Any two distinct colours outside $B_Q$ then have a switcher of order at most $\ell$ with initial avoidance and any later physical/common-colour avoidance of size $L_0$. If $Q\cap\bar{C}=\varnothing$, $B_Q$ is empty. Exchange endpoints may themselves be later forbidden common colours.
+
+\begin{lemma}[Weighted classes]\label{ent:classes}
+There are exchangeable classes such that each colour belongs to at
+most $L^2/\xi$ classes larger than two. Calling colours equivalent if equal or in a common class, nonequivalent witnesses have total
+original weight at most $\xi{}v^5$.
+\end{lemma}
+\begin{proof}
+We use two explicit external inputs \cite[Theorem 3.17, Lemma 3.22]{Montgomery}.
+An $(\alpha,\Delta)$-expander retains external expansion $\alpha$ for sets of size at most two thirds after any maximum-degree-$\Delta$ edge deletion. With $\alpha=(16L)^{-1}$ every graph contains such a subgraph $F$ with deletion budget $\alpha\bar{d}(F)$, $\bar{d}(F)\ge\bar{d}(R)/2$, and $\delta(F)\ge\bar{d}(F)/2$. In an $(\alpha,\Delta)$-expander with minimum degree $d_*\ge4\Delta$, after allowable edge deletion and vertex deletion $V_0$, all pairs outside a set $B\supseteq{}V_0$ of size at most $10^4|V_0|\Delta(F)/(\alpha{}d_*)$ have $r_*$ internally disjoint paths of length at most $400L^3$, provided $r_*\le\alpha{}d_*/(10^6L^3)$.
+
+Let $w_{ab}$ be exchange-pair mass. The five loads may be bounded by $20v^3$, $50v^3$, $1000v$, $600v$, and $100v^3$. If $w_{ab}\ge150\varepsilon{}v^4$, forbidden sets of size $2\varepsilon{}v$ remove at most $140\varepsilon{}v^4$, giving a two-colour class, including the later allowance.
+Put $\lambda=\xi/4$, $\xi'=\xi/(4K)$. Among pairs of mass at least $\lambda{}v^3$, at most $\xi'v^2$ fail robust order-$3H$ exchangeability. Otherwise choose an inclusion-maximal subgraph $R'$ of those failing pairs together with one positive-weight witness per edge,
+such that the assigned witnesses are disjoint in physical vertices
+and common colours at each star. Orient each omitted edge toward
+a star blocking half its mass. A degree-$a$ star uses at most $2Ha$ vertices and $Ha$ common colours; hence $d^+(c)\lambda{}v^3/2\le120Hv^3d_{R'}(c)$ and $e(R')\ge\lambda\xi'v^2/(1000H)\ge{}L^{-1436}v^2$. Cauchy--Schwarz counts at least $L^{-5745}v^4$ four-cycles
+(the $O(v^3)$ degenerate walks are negligible). Some edge $cd$ has $L^{-5746}v^2$ three-edge alternatives $cc'c''d$. Initial/later forbidden resources remove $O(\varepsilon{}v+L_0)$ choices at the $c$-star, so a surviving $c'$ has $L^{-5747}v$ choices of $c''$. At the $c'$- and $d$-stars each physical vertex or common colour occurs at most twice; all crossed conflicts,
+joining-colour conflicts, and conflicts with the first witness cost $O(\varepsilon{}v+H+L_0)$ further choices. Three surviving witnesses chain, contradicting failure. This proves the bound for light pairs.
+
+Very light pairs, below $\xi{}v^3/4$, cost $\xi{}v^5/4$; uncovered pairs up to $Kv^3$ cost another $\xi{}v^5/4$. Split $(Kv^3,150\varepsilon{}v^4]$ into $r\le4L$ dyadic intervals $(w_i,2w_i]$, and put $d_i=\xi{}v^4/(8rw_i)$, $\Delta_i=(400r/\xi)d_i$. The colour graph has maximum degree at most $\Delta_i$. Take maximal edge-disjoint $(\alpha,\alpha{}d_i)$-expanders with minimum degree $d_i$. Deletion budgets are rounded down to integers; the deleted-degree
+estimate below is at most $(140/320)\alpha{}d_i$, leaving the margin needed for this rounding. The other inequalities have greater slack.
+The parameter inequalities are \refstepcounter{equation}\label{ent:expander-inequalities}$d_iw_i\ge320\varepsilon{}v^4/\alpha,\Delta_i/d_i\le1/\eta_c,d_i\ge10^{10}L_0L^4,w_i\ge10^8HL_0L^3v^3$ \textup{(\ref{ent:expander-inequalities})}. Indeed their respective worst powers are $L^{-401}v^4$, $O(L^{401})$, $\Omega(L^{9599})$, and $L^{600}v^3$. Delete an expander edge when half its mass hits initial resources.
+Its deleted degree is at most $140\varepsilon{}v^4/w_i\le\alpha{}d_i$. The connection input with $r_*=2L_0$ gives an exceptional set of size $10^4\varepsilon|Q|/(\alpha\eta_c)\le\eta_c|Q|$. One path avoids later colours internally. Along it select witnesses
+avoiding all path colours as common colours, previous resources and
+later forbidden sets. Additional lost mass is $O(v^3[L_0+HL^3])<w_i/2$, so the chain has order at most $\ell$. The residual graph has average degree at most $4d_i$ by the first expander input, leaving mass at most $4d_ivw_i=\xi{}v^5/(2r)$. Each large-class membership spends $d_iw_i$ incident mass; the $50v^4$ incident bound gives at most $400r/\xi\le{}L^2/\xi$ memberships. All selections require positive weight, not integral weight.
+\end{proof}
+
+Set \refstepcounter{equation}\label{ent:cleaning-parameters}$\theta=L^{-500},q_0=L^{-250},\tau=L^{-170},\zeta=L^{-50},b_0=L^{-150}$ \textup{(\ref{ent:cleaning-parameters})}. For initial forbidden sets of size $10\beta{}v$, discard large classes whose forbidden-colour fraction exceeds $\varepsilon$. Their union has size at most $10\beta{}vL^2/(\varepsilon\xi)$; exceptions in the other classes total at most $\eta_cvL^2/\xi$. Adding the initial palette gives a collective set $B$ of size at most $\theta{}v$. Equivalent colours outside $B$ have the simultaneous initial/later avoidance above, including two-element classes.
+
+An edge-switcher of order $s$ for disjoint roots $e,f$ has an admissible interior of size $2s-2$ and an $s$-palette perfectly matching either root with that interior. It is \emph{separated}
+if its two terminal components are odd paths joining each root's
+own endpoints, with even cycles elsewhere. Let $\mathcal{R}$ contain same-colour pairs with such a switcher of order at most $H+\ell$, robust against $\beta{}v$ physical vertices and output colours. Root endpoints and root colour may be forbidden: avoidance concerns
+the interior and output palette.
+
+For a common pair put $\mu(e,f)$ equal to its mass over all roles. If $\mu\ge{}q_0v^2$ but the pair is not in $\mathcal{R}$, fix failing forbidden sets. The rooted loads remove at most $(\beta+\theta)v^2<q_0v^2/4$. A surviving equivalent-exchange witness yields a switcher: with equal exchanges delete the roots
+from opposite alternating matchings; otherwise add a fresh exchange
+colour-switcher, physically disjoint and with common palette avoiding
+the basic palette. Cross its alternatives with the two root-deleted
+matchings. The common output has order $h+s-1\le{}H+\ell$. Separate even cycles lose separate root edges, leaving the required
+odd terminal paths. Thus at least half of $\mu$ is nonequivalent. Delete witnesses with any common pair outside $\mathcal{R}$ or with nonequivalent exchanges. There are at most $v^3$ common pairs and at most $H$ roles per witness, so total deletion is at most \refstepcounter{equation}\label{ent:cleaning-loss}$[q_0+(2H+1)\xi]v^5\le{}L^{-249}v^5$ \textup{(\ref{ent:cleaning-loss})}. No host edge is deleted from other witness positions.
+
+Twice applying Markov to Lemma~\ref{rpe:rich} gives all but $o_{\epsilon\to0}(1)D$ colours with designated edge sets $E_c$ of size $(1-o_{\epsilon\to0}(1))m$, each oriented edge having at most $o_{\epsilon\to0}(1)m$ deficient partners. Root reversal gives both orientations; \eqref{rpe:rectangle} absorbs the side difference.
+Call an edge good if two thirds of $E_c$ are its $\mathcal{R}$-neighbours. Each nongood edge has at least $v/16$ rich nonneighbours; each such pair has original mass at least $b_0v^2$ and contributes half that much nonequivalent mass by the preceding argument. Double counting
+bounds nongood edges by $1000H\xi{}v^2/b_0$. Discard colours with more than $\zeta{}v$ of them, and remove the remaining nongood roots. Two retained roots have linearly many common $\mathcal{R}$-neighbours. Choose one avoiding forbidden physical vertices, then compose two
+switchers with disjoint interiors and palettes. The intermediate root
+enters the interior; its two odd paths close to an even cycle.
+External paths remain separate. The resulting order is at most $2(H+\ell)$ with forbidden allowance $\beta{}v/4$.
+
+Discard colours losing more than $\tau{}v^4$ in cleaning, at most $L^{-79}v$ colours. Taking $\epsilon$ small yields the promised candidate counts and $E_c^0$. Restrict only original roots to $E_c^0$. Choose the initial fixed entropy loss so that each retained colour
+loses at most $\chi{}m$ original root edges, where $\chi\le\min(\eta/4,\kappa/100)$, and its deficient-pair fraction is at most $1/8$. The uncleaned rich-root mass is at least $\kappa{}v^2D^2/(3P)$ for large $v$. Restricting both original roots to $E_c^0$ loses at most $4\chi{}mvD^2/P$, by the unmarked root-edge load; a fixed positive fraction remains. Cleaning costs
+at most $\tau{}v^4$. For any local query, filter its physical forbidden set and collective $B$ using the fixed-root-colour loads; this costs $O((\beta+\theta)v^4)$. Relative to $v^2D^2/P$ these last two losses are $O((\tau+\beta+\theta)P/p_*^2)=o(1)$. Thus \eqref{rpe:surviving-mass} holds with fixed positive $\kappa'$ \emph{before} applying the hold-mask extraction.
+
+\subsection{Local buffers and the exact template ledger}
+\label{ent:local-subsection}
+\begin{proof}[Completion of Theorem~\ref{rpe:theorem}]
+First build a local absorber for 100 fresh roots. Include $c$ in the initial forbidden palette. The filtered fan has a fixed first cycle
+and common word, and polynomially many disjoint partner cycles, all
+original roots in $E_c^0$ and all common pairs in $\mathcal{R}$. Write $h=2k$. On each cycle remove its original root from the odd matching, leaving $T_*,T_i$ of size $k-1$ with the same palette. Even matching palettes are $A\cup\{a_*\},A\cup\{a_i\}$, $|A|=k-1$. Select 100 partners with one exchange colour, or 100 with distinct exchanges different from $a_*$. Otherwise at most
+100 colours, each appearing at most 99 times, exhaust the fan.
+
+In the distinct case choose a disjoint buffer switching $a_i,a_*$ for each $i$, of order $s_i\le\ell$. Its common palette avoids all cycle and earlier buffer colours; repeated $a_*$ is permitted only as an exchange endpoint. For each corresponding edge pair in $T_*,T_i$ choose a separated $\mathcal{R}$-switcher. All interiors avoid every cycle, buffer and earlier interior; their entire output
+palettes avoid all cycle colours (including their own root colour),
+all buffer colours and earlier output palettes. These successive
+queries use \refstepcounter{equation}\label{ent:local-budget}$O(H(H+\ell))\le{}L^{76}<L_0=o(\beta{}v)$ \textup{(\ref{ent:local-budget})} resources. Collective exceptions were chosen before these queries.
+
+Let $Q$ be the sum of the $100(k-1)$ terminal-switch orders and $S=\sum_is_i$, taking $S=0$ in the equal-exchange case. The interior contains all $V(T_*),V(T_i)$, terminal-switch interiors and buffers. For input $i$, bundle $i$ covers $T_*$, other bundles cover their $T_j$, and cycle $i$'s even matching covers its root and $T_i$. Buffer $i$ uses $a_*$, the others use $a_j$, so the exchange palette is always $\{a_*,a_1,\ldots,a_{100}\}$. Buffer common palettes total $S-100$. Thus \refstepcounter{equation}\label{ent:buffer-count}$|W|=2(k-1)+2Q+2S,|C|=k+Q+S,|W\cap{}X|=|W\cap{}Y|=|C|-1$ \textup{(\ref{ent:buffer-count})}. For equal exchanges no buffers are needed and the same identities
+hold with $S=0$. No root endpoint belongs to the common interior.
+
+Extend the prescribed admissible $E$ to an admissible set of
+100 roots in $E_c^0$; each excluded physical vertex rules out at most two matching edges,
+so the linear pool suffices. Build the fresh absorber outside them.
+Attach corresponding prescribed and fresh roots by the robust
+order-$2(H+\ell)$ separated switchers, choosing disjoint interiors and palettes outside all roots, the fresh absorber and initial
+resources. Include all fresh root endpoints in the new interior.
+For a selected prescribed root its attachment covers that root;
+all other attachments cover their fresh roots; the fresh absorber
+covers the remaining fresh root. If its palette size was $q$ and attachment orders sum to $q'$, the new interior size is $(2q-2)+200+\sum_i(2s_i-2)=2(q+q')-2$. Each side has $q+q'-1$ vertices. The order is at most $L^{80}$, proving the local assertion.
+
+For the larger absorber put $m_1=|E_1|$ and $s=3g$. Extend $E_1$ to an admissible $\widehat{E}$ of size $3s+m_1-g=8g+m_1\le11g$, choosing each added root outside the forbidden physical set and
+all labels of earlier roots. A forbidden label excludes at most
+two edges of this matching, so its linear pool permits the $O(g)$ greedy choices. Partition it as $E_Y\cup{}E_Z$ with $|E_Y|=2s=6g$, $E_1\subseteq{}E_Z$ and $|E_Z|=s+m_1-g\in[s,2s]$. The distributive template
+\cite[Lemma 2.1]{Montgomery} has left side $T$ of size $3s=9g$, right sides of size $2s,2s$, maximum degree 100, and matches $T$ to the first right side together with any $s$-subset of the second. Delete excess second-side vertices and identify the remainder with $E_Y,E_Z$; the required matching property persists.
+
+At each $x\in{}T$ build the local absorber for its nonempty neighbourhood, with disjoint interiors $W_x$ and palettes $C_x$, avoiding all $\widehat{E}$ vertices, initial resources and $c$. The physical budget is at most $\beta{}m/100+22g+18gL^{80}<\beta{}v/100$; the palette budget is smaller. Put $W=V(\widehat{E}\setminus{}E_1)\cup\bigcup_xW_x$ and $C=\bigcup_xC_x$. Exactly $8g$ auxiliary roots enter the interior, while there are $9g$ local absorbers. Therefore $|W\cap{}X|=|W\cap{}Y|=8g+\sum_x(|C_x|-1)=|C|-g$ and $|C|\le9gL^{80}=o(b)$. For $E'\subset{}E_1$, $|E'|=g$, the $9g$ roots $(\widehat{E}\setminus{}E_1)\cup{}E'$ consist of $E_Y$ and an $s$-subset of $E_Z$. A template matching assigns one to each local absorber; their disjoint-palette matchings cover exactly $W\cup{}V(E')$.
+
+Finally add disjoint edges in the prescribed missing colours, then
+fresh colours until the palette size is $b$. Prescribed matchings have size $\kappa_0m$. At least $(1-2\delta)D$ other colours have matching size at least $m/2$, since total missing incidences on the larger side are at most $\delta{}Dm$. All protected vertices total $o(m)$, each excluding at most two edges of a colour matching; thus every greedy choice is possible. Each padding edge adds one
+colour and one interior vertex per side. The final counts are
+exactly $b,b-g,b-g$, and all physical and palette avoidance persists.
+\end{proof}

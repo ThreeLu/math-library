@@ -1,0 +1,134 @@
+\section{Preliminaries}\label{sec:prelim}
+We first fix notation and record the tools for Theorems~\ref{thm:bounded} and~\ref{thm:forests}: Laplacians, Edmonds' matroid intersection theorem, randomized rounding in matroids, and a matrix martingale inequality. The remaining subsections contain the tools for Theorem~\ref{thm:gap}.
+
+\subsection{Notation}\label{sec:notation}
+All graphs are simple. For a graph $H$ and a set $X\subseteq V(H)$, $E_H(X)$ is the set of edges of $H$ with both vertices in $X$, $e_H(X)=|E_H(X)|$, and $I_H(U)$ is the number of edges with at least one vertex in $U$. We often identify a graph with its edge set. For an edge-colouring of $H$ and a colour $\gamma$, $E_\gamma(H)$ is the set of edges of $H$ with colour $\gamma$. A forest with $k$ edges is called a \emph{$k$-forest}. Logarithms are natural, and we do not try to optimise constants.
+
+We write $\one$ for the all-ones vector, $J$ for the all-ones matrix, $\|\cdot\|$ for the operator norm of a matrix, and $\preceq$ for the positive semidefinite order. For an edge $e=uv$, let $L_e=(\one_u-\one_v)(\one_u-\one_v)^{\!\top}$, and, for an edge set $A$, let $L_A=\sum_{e\in A}L_e$ be its Laplacian. We use three elementary facts. First, for every $X$,
+\begin{equation}\label{eq:edgecount}
+2e_A(X)=\sum_{v\in X}(L_A)_{vv}-\one_X^{\!\top}L_A\one_X,
+\end{equation}
+since $(L_A)_{vv}=d_A(v)$ and $\one_X^{\!\top}L_A\one_X$ is the number of edges of $A$ with exactly one vertex in $X$. Second, $L_e\preceq2(\one_u\one_u^{\!\top}+\one_v\one_v^{\!\top})$, so $L_A\preceq2\,\mathrm{diag}(d_A)$. Third, the norm of a symmetric matrix is at most its largest absolute row sum.
+
+\subsection{Rainbow forests and matroids}\label{sec:matroids}
+The rainbow forests in an edge-coloured graph are the common independent sets of two matroids: the graphic matroid, and the partition matroid whose parts are the colour classes, each of capacity one. Edmonds' matroid intersection theorem~\cite{Edm} says that the intersection of the independence polytopes of two matroids is the convex hull of their common independent sets, which gives the following.
+
+\begin{lemma}\label{lem:edmonds}
+Let $G$ be an edge-coloured graph and let $x\in[0,1]^{E(G)}$ satisfy $x(E(G))=k$, $x(E_\gamma(G))\le1$ for every colour $\gamma$, and $x(E(G[X]))\le|X|-1$ for every nonempty $X\subseteq V(G)$. Then $x$ is a convex combination of indicator vectors of rainbow $k$-forests in $G$.
+\end{lemma}
+\begin{proof}
+Summing the vertex-set inequalities over the vertex sets of the components of an edge set $S$ shows that $x(S)$ is at most the rank of $S$ in the graphic matroid, and $x(S)\le x(E(G))=k$. So $x$ lies in the independence polytope of the graphic matroid truncated to rank $k$, and also in that of the colour partition matroid. Hence $x$ is a convex combination of rainbow forests with at most $k$ edges, and, as $x(E(G))=k$, each of them has exactly $k$ edges.
+\end{proof}
+
+To sample sparse subgraphs whose indicator vectors satisfy these conditions, we use randomized swap rounding.
+
+\begin{lemma}[Chekuri, Vondr\'ak and Zenklusen~{\cite[Theorem~1.1 and Corollary~1.2]{CVZ}}]\label{lem:cvz}
+Let $\mathcal M$ be a matroid on a finite set $E$, and let $y$ be in its base polytope. There is a random base $F$ of $\mathcal M$ with $\Prb(e\in F)=y_e$ for every $e\in E$ such that, for every $a\in[0,1]^E$, the variable $Z=\sum_{e\in F}a_e$ satisfies the following.
+\begin{props}
+\item If $\mu\ge\E Z$ and $\delta>0$, then $\Prb(Z\ge(1+\delta)\mu)\le\bigl(e^\delta/(1+\delta)^{1+\delta}\bigr)^{\mu}$.\label{cvz:upper}
+\item If $\mu\le\E Z$ and $0\le\delta\le1$, then $\Prb(Z\le(1-\delta)\mu)\le e^{-\delta^2\mu/2}$.\label{cvz:lower}
+\end{props}
+\end{lemma}
+
+\begin{lemma}[Matrix Freedman inequality, Tropp~\cite{Tropp}]\label{lem:freedman}
+Let $(M_t)_{t\ge0}$ be a martingale of symmetric $d\times d$ matrices with $M_0=0$ and differences $\Delta_t$, such that $\|\Delta_t\|\le R$ and $\bigl\|\sum_{s\le t}\E[\Delta_s^2\mid\mathcal F_{s-1}]\bigr\|\le\sigma^2$ almost surely for every $t$. Then, for every $u\ge0$,
+\[
+\Prb\Bigl(\max_t\|M_t\|\ge u\Bigr)\le 2d\exp\Bigl(-\frac{u^2/2}{\sigma^2+Ru/3}\Bigr).
+\]
+\end{lemma}
+
+\subsection{The lopsided local lemma}\label{sec:LLL}
+We use the lopsided local lemma of Erd\H{o}s and Spencer~\cite{ES} twice: to choose which tree receives which edge in Section~\ref{sec:pendant}, and to place the vertices at random in Section~\ref{sec:recursion}.
+In the second application, we also need to bound the probability of other events conditioned on the outcome of the local lemma, for which we use Lemma~\ref{lem:cond}.
+
+\begin{definition}
+Let $A_1,\dots,A_m$ be events in a probability space and let $G$ be a graph with vertex set $[m]$. We call $G$ a \emph{negative dependency graph} for $A_1,\ldots,A_m$ if, for every $i\in [m]$ and every $J\subseteq[m]\setminus(\{i\}\cup N_G(i))$ with $\Prb(\bigcap_{j\in J}\overline{A_j})>0$,
+\[\Prb\Bigl(\bigcap_{j\in J}\overline{A_j}\;\Bigm|\;A_i\Bigr)\le\Prb\Bigl(\bigcap_{j\in J}\overline{A_j}\Bigr).\]
+Similarly, given an event $E$ and a set $\Gamma(E)\subseteq[m]$, we say that $E$ is \emph{negatively dependent on the events outside $\Gamma(E)$} if the same condition holds with $A_i$ replaced by $E$ and $N_G(i)$ replaced by $\Gamma(E)$.
+\end{definition}
+
+\begin{lemma}[Lopsided local lemma~\cite{ES}]\label{lem:LLL}
+Let $G$ be a negative dependency graph for the events $A_1,\dots,A_m$. Suppose there are $x_1,\dots,x_m\in[0,1)$ such that
+\[\Prb(A_i)\le x_i\prod_{j\in N_G(i)}(1-x_j)\qquad\text{for each }i\in[m].\]
+Then, $\Prb(\bigcap_i\overline{A_i})\ge\prod_i(1-x_i)>0$. Moreover, $\Prb(A_i\mid\bigcap_{j\in I}\overline{A_j})\le x_i$ for every $i\in [m]$ and every $I\subseteq[m]\setminus\{i\}$.
+\end{lemma}
+
+The second statement of Lemma~\ref{lem:LLL} is exactly the inductive claim in the standard proof of the local lemma (see~\cite[Lemma 5.1.1]{AS}), and this proof goes through verbatim under negative dependency~\cite{ES}.
+From it, we can deduce the following bound on the probability of an event conditioned on avoiding all the events $A_i$.
+
+\begin{lemma}[Conditional bound]\label{lem:cond}
+Under the hypotheses of Lemma~\ref{lem:LLL}, let $E$ be an event that is negatively dependent on the events outside a set $\Gamma(E)\subseteq [m]$. Then,
+\[\Prb\Bigl(E\;\Bigm|\;\bigcap_{i=1}^m\overline{A_i}\Bigr)\le\Prb(E)\prod_{j\in\Gamma(E)}(1-x_j)^{-1}.\]
+\end{lemma}
+\begin{proof}
+Let $\Omega_1=\bigcap_{j\notin\Gamma(E)}\overline{A_j}$ and $\Omega=\bigcap_j\overline{A_j}$. By negative dependency, $\Prb(E\cap\Omega_1)=\Prb(E)\Prb(\Omega_1\mid E)\le\Prb(E)\Prb(\Omega_1)$. Let $\Gamma(E)=\{j_1,\dots,j_s\}$. By the chain rule and the second statement of Lemma~\ref{lem:LLL},
+\[\Prb(\Omega)=\Prb(\Omega_1)\prod_{k=1}^{s}\Bigl(1-\Prb\bigl(A_{j_k}\bigm|\Omega_1\cap\overline{A_{j_1}}\cap\dots\cap\overline{A_{j_{k-1}}}\bigr)\Bigr)\ge\Prb(\Omega_1)\prod_{k=1}^s(1-x_{j_k}).\]
+Therefore, $\Prb(E\mid\Omega)\le\Prb(E\cap\Omega_1)/\Prb(\Omega)$, which is at most the claimed bound.
+\end{proof}
+
+\subsection{Events determined by random bijections}\label{sec:bijections}
+In both applications of the local lemma, the probability space is a product of independent uniformly random bijections, and every event we consider says that some of these bijections take prescribed values.
+The following lemma, which is a version of a result of Lu and Sz\'ekely~\cite{LS}, gives a negative dependency graph for such events.
+
+Let $I$ be a finite index set. For each $\rho\in I$, let $\sigma_\rho:X_\rho\to Y_\rho$ be a uniformly random bijection between finite sets with $|X_\rho|=|Y_\rho|$, where the bijections $\sigma_\rho$, $\rho\in I$, are independent.
+A \emph{term} is a triple $(\rho,x,y)$ with $\rho\in I$, $x\in X_\rho$ and $y\in Y_\rho$, and we call $\rho$ its \emph{coordinate}.
+For a finite set $F$ of terms which, for each $\rho\in I$, contains no two terms $(\rho,x,y)$, $(\rho,x',y')$ with $x=x'$ or $y=y'$, we call the event
+\[
+\{\sigma_\rho(x)=y\text{ for all }(\rho,x,y)\in F\}
+\]
+a \emph{canonical event}. We say that two canonical events are \emph{adjacent} if they have terms $(\rho,x,y)$ and $(\rho,x',y')$ with the same coordinate $\rho$ and with $x=x'$ or $y=y'$.
+
+\begin{lemma}\label{lem:negdep}
+Let $A$ be a canonical event with $\Prb(A)>0$, and let $\cJ$ be a family of canonical events none of which is adjacent to $A$. Then
+\[\Prb\Bigl(\bigcup_{B\in\cJ}B\;\Bigm|\;A\Bigr)\ge\Prb\Bigl(\bigcup_{B\in\cJ}B\Bigr).\]
+Consequently, for any family of canonical events, the graph of adjacencies between them is a negative dependency graph. Moreover, every canonical event $E$ is negatively dependent on the events not adjacent to it.
+\end{lemma}
+\begin{proof}
+Write the terms of $A$ as $(\rho_1,x_1,y_1),\dots,(\rho_s,x_s,y_s)$. Starting from $\sigma=(\sigma_\rho)_{\rho\in I}$, we perform $s$ operations. At step $k$, in coordinate $\rho_k$, we exchange the values $\sigma_{\rho_k}(x_k)$ and $y_k$; that is, the element previously mapped to $y_k$ is now mapped to $\sigma_{\rho_k}(x_k)$, and $x_k$ is mapped to $y_k$.
+This does not disturb the earlier terms with coordinate $\rho_k$. Indeed, for such a term $(\rho_k,x_j,y_j)$, we have $x_j\neq x_k$ and $y_j\ne y_k$, and $y_j=\sigma(x_j)\neq\sigma(x_k)$ because $\sigma_{\rho_k}$ is injective.
+
+Suppose that, before step $k$, the configuration is uniformly distributed among those satisfying the first $k-1$ terms. Under step $k$, every configuration satisfying the first $k$ terms has exactly $|X_{\rho_k}|-e_k$ preimages, where $e_k$ is the number of earlier terms with coordinate $\rho_k$. Hence, by induction, the final configuration $\sigma'$ is distributed as $\sigma$ conditioned on $A$.
+
+Now, suppose that some $B\in\cJ$ holds for the configuration before step $k$. Step $k$ changes only the values at $x_k$ and at $z=\sigma_{\rho_k}^{-1}(y_k)$ in coordinate $\rho_k$. Since $B$ is not adjacent to $A$, $B$ has no term $(\rho_k,x_k,w)$. If $B$ had a term $(\rho_k,z,w)$, then $w=\sigma(z)=y_k$, which would make $B$ adjacent to $A$. Thus, step $k$ does not destroy $B$. Consequently, if $\sigma\in\bigcup_{B\in\cJ}B$, then $\sigma'\in\bigcup_{B\in\cJ}B$, which proves the inequality.
+This inequality is the negative dependency condition written for complements, which gives the second statement, and the last statement follows in the same way with $A$ replaced by $E$.
+\end{proof}
+
+\subsection{List edge-colouring and rounding}\label{sec:listrounding}
+For Theorem~\ref{thm:gap}, we use the following two results: a theorem of Borodin, Kostochka and Woodall, to decide which tree receives each edge in Section~\ref{sec:list}, and the Beck--Fiala rounding theorem, to share out the edges between blocks in Section~\ref{sec:distribute}.
+
+\begin{lemma}[Borodin, Kostochka and Woodall~{\cite[Theorem 3]{BKW}}]\label{lem:BKW}
+Let $G$ be a bipartite multigraph, and suppose every edge $xy$ of $G$ has a list $\Lambda(xy)$ of colours with $|\Lambda(xy)|\ge\max\{d_G(x),d_G(y)\}$. Then, $G$ has a proper edge-colouring in which each edge receives a colour from its list.
+\end{lemma}
+
+\begin{lemma}[Beck and Fiala~\cite{BF}]\label{lem:BF}
+Let $A$ be a real matrix with rows indexed by $R$ and columns indexed by $[m]$, such that $\sum_{r\in R}|A_{r,c}|\le\Delta$ for every column $c$. Let $x\in[0,1]^m$. Then, there is some $z\in\{0,1\}^m$ with $|(A(z-x))_r|\le\Delta$ for every $r\in R$.
+\end{lemma}
+\begin{proof}
+We maintain a vector $y\in[0,1]^m$, starting with $y=x$. Let $F=\{c:0<y_c<1\}$ be the set of coordinates of $y$ which are not integers, and let $R_{\mathrm{act}}$ be the set of rows $r$ with $\sum_{c\in F}|A_{r,c}|>\Delta$.
+Summing the column bound over $c\in F$ gives $\Delta|R_{\mathrm{act}}|<\sum_{r\in R_{\mathrm{act}}}\sum_{c\in F}|A_{r,c}|\le\Delta|F|$, so that $|R_{\mathrm{act}}|<|F|$ whenever $F\ne\emptyset$. Hence, there is a nonzero vector $d$ supported on $F$ with $(Ad)_r=0$ for all $r\in R_{\mathrm{act}}$.
+Replace $y$ by $y+\lambda d$, where $\lambda$ is chosen so that all coordinates stay in $[0,1]$ and at least one more coordinate becomes $0$ or $1$. The set $F$ strictly shrinks, so after at most $m$ steps $y$ is integral, and we let $z=y$.
+Since $F$ only shrinks, a row which leaves $R_{\mathrm{act}}$ never returns. Until a row $r$ leaves $R_{\mathrm{act}}$, $(Ay)_r=(Ax)_r$. After that, only coordinates in the current set $F$ change, each by at most $1$, and $\sum_{c\in F}|A_{r,c}|\le\Delta$. Thus, $|(A(z-x))_r|\leq \Delta$, as required.
+\end{proof}
+
+\subsection{Random sets and random Hamilton paths}\label{sec:randomsets}
+Finally, we need two simple estimates. The first is used to analyse the random blocks in Section~\ref{sec:gap}, and the second shows that a random Hamilton path contains few edges from any fixed set, which we use at the leaves of the recursion in Section~\ref{sec:recursion}.
+
+\begin{lemma}\label{lem:hyp}
+Let $W$ be a uniformly random subset of size $w$ of an $n$-element set $V$.
+\begin{props}
+\item\label{hyp:a} For every $S\subseteq V$ with $|S|=s$, $\Prb(S\subseteq W)=\ff ws/\ff ns\le(w/n)^s$.
+\item\label{hyp:b} For every $D\subseteq V$, letting $\mu=w|D|/n$, we have $\Prb(|D\cap W|<\mu/2)\le e^{-\mu/8}$.
+\end{props}
+\end{lemma}
+\begin{proof}
+Part~\ref{hyp:a} is immediate. For~\ref{hyp:b}, let $p=|D|/n$. By Hoeffding's comparison~\cite[Theorem 4]{Hoe}, applied to the convex function $f(y)=e^{-\theta y}$, we have $\E f(|D\cap W|)\le(1-p+pe^{-\theta})^w\le\exp(-\mu(1-e^{-\theta}))$. Taking $\theta=\log 2$ and applying Markov's inequality gives $\Prb(|D\cap W|\le\mu/2)\le\exp(\mu(\tfrac{\log2}2-\tfrac12))\le e^{-\mu/8}$.
+\end{proof}
+
+\begin{lemma}\label{lem:ham}
+Let $P$ be a uniformly random Hamilton path of $K_b$. Let $F$ be a set of $m$ edges of $K_b$ and let $1\le t\le b/2$. Then, $\Prb(|E(P)\cap F|\ge t)\le\bigl(\tfrac{4em}{bt}\bigr)^t$.
+\end{lemma}
+\begin{proof}
+Fix a set of $t$ edges. If they do not form a linear forest, then no Hamilton path contains them. Otherwise, suppose they form $k\le t$ nontrivial paths, and contract each of these paths to a single vertex. The Hamilton paths containing the $t$ edges then correspond to the orderings of the resulting $b-t$ vertices together with an orientation of each of the $k$ paths, up to reversal. There are $(b-t)!\,2^k/2$ of them, out of $b!/2$ Hamilton paths in total. So the probability that $P$ contains the $t$ edges is $2^k/\ff bt\le 2^t/(b/2)^t$. Taking a union bound over the $\binom mt\le(em/t)^t$ choices of the $t$ edges completes the proof.
+\end{proof}
+
+In Walecki's decomposition of $K_b$ into $b/2$ Hamilton paths (see Section~\ref{sec:intro}), if the vertex set is relabelled by a uniformly random bijection, then each path of the decomposition is a uniformly random Hamilton path.

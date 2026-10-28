@@ -1,0 +1,33 @@
+% !TEX program = xelatex
+% Research paper (draft). Sources from 语言润色/work/kks_combined/润色稿.
+%   TEXINPUTS=../../shared/latex//: latexmk -xelatex -outdir=build main.tex
+\documentclass[english]{yupin-notes}
+\input{notation}
+\numberwithin{equation}{section}
+
+\title{Rainbow spanning trees and forests in bounded edge-colourings}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+\input{sections/abstract}
+\end{abstract}
+\tableofcontents
+
+\input{sections/introduction}
+\input{sections/overview}
+\input{sections/preliminaries}
+\input{sections/extraction}
+\input{sections/bounded-colourings}
+\input{sections/forests}
+\input{sections/pendant-edges}
+\input{sections/small-colour-classes}
+\input{sections/gap}
+\input{sections/concluding-remarks}
+\input{sections/appendix-xu}
+
+\bibliographystyle{abbrv}
+\bibliography{refs}
+\end{document}

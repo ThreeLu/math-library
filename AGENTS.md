@@ -31,6 +31,8 @@ make preview   # 本地预览 http://localhost:4200
 - 每个 `\input` 的文件是一页；中文讲义里 `\homework` 之后的部分单独成页。
 - 只认 `yupin-notes` 定义的环境与宏。新增环境或宏时，要同时改 `tools/build.py` 的 `preprocess`（或 `THEOREM_ENVS`）和 `tools/yp-filter.lua`，然后 `make fast`，确认没有警告、没有 MathJax 报错。
 - 记号宏写在 cls（中文）或 clo（英文）的“记号 / Notation”一节，构建时从那里读取，并由 pandoc 在公式里展开。
+- 只属于一本书的记号（例如论文里的 `\ind`、`\chk`）写在该书的 `notation.tex`，在 `main.tex` 导言区 `\input{notation}`；构建时也读取它。
+- 论文形式的书（Research Topics）：`sections/abstract.tex` 不单独成页，摘要显示在书的目录页上；`\appendix` 之后的节在网页上编号为 A、B…；`props` 环境（英文文档类）是全书依次编为 A、B…的性质列表，条目为 A1、A2…，网页与 PDF 一致。
 - 书的目录页每讲的标题取自 `进度.md` 的“主题”一栏（第一个逗号前是侧栏短标题和讲义页标题）。其中的公式写成 `$...$`（只能用标准 LaTeX，如 `$\mathbb{R}^d$`，不能用书里的记号宏），目录页由 MathJax 排版，侧栏里转成纯文字。
 - 概率与期望全站统一写 `\P`、`\E`（$\mathbb P$、$\mathbb E$），两种语言的文档类都已定义。
 - 定理索引（导航栏 Index，`site/results.qmd`）由过滤器在转换时收集：所有编号的定义、命题、引理、定理、推论、猜想，显示编号、名字（环境的可选参数）和陈述的开头。给定理起名字（`\begin{theorem}[Fatou 引理]`）能让它在索引里更好找。

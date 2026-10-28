@@ -1,0 +1,27 @@
+% !TEX program = xelatex
+% Research paper (draft). Split into sections from the single-file ~/Desktop/main.tex.
+%   TEXINPUTS=../../shared/latex//: latexmk -xelatex -outdir=build main.tex
+\documentclass[english]{yupin-notes}
+\numberwithin{equation}{section}
+
+\title{Rainbow paths in dense regular digraphs\\[.2em]\large Counting, absorption and exact assembly}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+\input{sections/abstract}
+\end{abstract}
+\tableofcontents
+
+\input{sections/introduction}
+\input{sections/absorption}
+\input{sections/local-interfaces}
+\input{sections/connectors}
+\input{sections/completion}
+\input{sections/spectral-decomposition}
+\input{sections/proof}
+\input{sections/dependency-order}
+\input{sections/references}
+\end{document}

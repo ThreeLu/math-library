@@ -1,0 +1,110 @@
+\section{Introduction}\label{sec:intro}
+A typical decomposition problem asks whether the edges of a graph can be partitioned into copies of some other graph.
+When the host graph is edge-coloured, it is natural to ask in addition for the copies to be \emph{rainbow}, that is, to have no two edges of the same colour.
+A spanning tree of $K_n$ has $n-1$ edges, so $K_n$ contains at most $\binom n2/(n-1)=n/2$ edge-disjoint spanning trees.
+Brualdi and Hollingsworth~\cite{BH} conjectured that, for even $n\ge 6$, every $1$-factorization of $K_n$ (that is, every edge-colouring in which each colour class is a perfect matching) can be decomposed into rainbow spanning trees.
+Kaneko, Kano and Suzuki~\cite{KKS} extended this to all \emph{proper} colourings, those in which each colour class is a matching.
+
+\begin{conjecture}[Kaneko, Kano and Suzuki~\cite{KKS}]\label{conj:KKS}
+For $n\ge 6$, every properly edge-coloured $K_n$ contains $\lfloor n/2\rfloor$ pairwise edge-disjoint rainbow spanning trees.
+\end{conjecture}
+
+For even $n$, the trees in Conjecture~\ref{conj:KKS} have $\binom n2$ edges in total, so they must decompose $E(K_n)$.
+In particular, a colour with $n/2$ edges must appear in every tree.
+The conjecture therefore leaves no room for error when $n$ is even, and very little when $n$ is odd.
+
+It is instructive to see why the conjecture holds when the colouring is rainbow, that is, when all edges have different colours.
+Then it suffices to decompose $K_n$, for even $n$, into $n/2$ spanning trees, and Walecki's classical construction (see~\cite{Als}) does this with Hamilton paths.
+Indeed, identify the vertex set with $\mathbb Z_n$ and give each edge $ab$ the label $a+b$.
+The edges with label $0$ are $\{j,-j\}$ for $1\le j<n/2$, and the edges with label $1$ are $\{j,1-j\}$ for $1\le j\le n/2$; together they form the Hamilton path
+\[
+P_0=(0,1,-1,2,-2,\dots,n/2-1,-(n/2-1),n/2).
+\]
+Translating by $i$ adds $2i$ to every label, so the translates $P_0+i$, $0\le i<n/2$, are Hamilton paths which use the labels $\{2i,2i+1\}$, and hence partition $E(K_n)$.
+For general proper colourings, of course, the difficulty is to make every tree rainbow while still using every edge.
+
+Kaneko, Kano and Suzuki~\cite{KKS} showed that three edge-disjoint rainbow spanning trees always exist.
+A linear number was found independently by Pokrovskiy and Sudakov~\cite{PS} and by Balogh, Liu and Montgomery~\cite{BLM}, and Montgomery, Pokrovskiy and Sudakov~\cite{MPS} found $(1-o(1))n/2$, proving Conjecture~\ref{conj:KKS} asymptotically.
+Exact results are known only when every colour class is as large as possible.
+Glock, K\"uhn, Montgomery and Osthus~\cite{GKMO} proved, for large even $n$, that every $1$-factorization of $K_n$ can be decomposed into isomorphic rainbow spanning trees, proving the Brualdi--Hollingsworth conjecture for large $n$.
+
+\subsection{Packing rainbow forests}\label{sec:mps}
+An edge-colouring is \emph{globally $m$-bounded} if each colour appears on at most $m$ edges.
+Montgomery, Pokrovskiy and Sudakov~\cite{MPS} showed that, when $k$ is much smaller than the number of vertices, a properly coloured, globally $m$-bounded graph with slightly more than $km$ edges contains $m$ edge-disjoint rainbow forests with $k$ edges.
+Noticing that their asymptotic result on Conjecture~\ref{conj:KKS} is of the same form, they conjectured a common generalisation.
+
+\begin{conjecture}[Montgomery, Pokrovskiy and Sudakov~{\cite[Conjecture~10.2]{MPS}}]\label{conj:MPS}
+For every $\eps>0$ and all large $m$, the following holds for every $k$.
+Every properly coloured, globally $m$-bounded graph with $km$ edges contains $(1-\eps)m$ pairwise edge-disjoint rainbow forests with $k$ edges each.
+\end{conjecture}
+
+For even $n$, a proper colouring of $K_n$ is globally $n/2$-bounded, and $K_n$ has $(n-1)\cdot n/2$ edges, so Conjecture~\ref{conj:MPS} with $m=n/2$ and $k=n-1$ is the asymptotic form of Conjecture~\ref{conj:KKS}.
+Xu~\cite{Xu} observed that Conjecture~\ref{conj:MPS} fails for $k>2m$, since a graph with $km$ edges may then have at most $k$ vertices, and so contain no forest with $k$ edges.
+He proved the conjecture for all $1\le k\le 2m$.
+
+\subsection{Removing properness}\label{sec:bounded}
+In a proper colouring of an $n$-vertex graph, every colour has at most $n/2$ edges.
+As Pokrovskiy notes in his survey~\cite{Pok}, for many problems about proper colourings one can ask whether this global boundedness alone suffices, and, somewhat surprisingly, many such weakenings appear plausible.
+Not all of them are true, however: Stein's conjecture on rainbow matchings in globally $n$-bounded colourings of $K_{n,n}$ and Hahn's conjecture on rainbow Hamilton cycles in globally $n/2$-bounded colourings of $K_n$ were both disproved by Pokrovskiy and Sudakov~\cite{PSHahn}.
+
+For Conjecture~\ref{conj:KKS}, global $\lfloor n/2\rfloor$-boundedness is still necessary when $n$ is even.
+For such colourings, Akbari and Alipour~\cite{AA} found two edge-disjoint rainbow spanning trees, and Carraher, Hartke and Horn~\cite{CHH} found $\Omega(n/\log n)$.
+Glock, K\"uhn, Montgomery and Osthus~\cite{GKMO} wrote that a decomposition seems unlikely in this setting, and asked whether $\Omega(n)$ trees can always be found.
+More generally, Montgomery, Pokrovskiy and Sudakov asked whether their results remain true ``with the proper colouring assumption removed entirely''~\cite[Section~10]{MPS}.
+For Conjecture~\ref{conj:MPS}, we show that they do.
+
+\begin{theorem}\label{thm:forests}
+For every $\eps>0$, the following holds for all large $m$ and all $1\le k\le 2m$.
+Every globally $m$-bounded edge-coloured graph with $km$ edges contains $(1-\eps)m$ pairwise edge-disjoint rainbow forests with $k$ edges each.
+\end{theorem}
+
+We can apply Theorem~\ref{thm:forests} to $K_n$ with $m=\lfloor n/2\rfloor$ and $k=n-1$, after deleting $(n-1)/2$ arbitrary edges if $n$ is odd.
+This shows that every globally $\lfloor n/2\rfloor$-bounded colouring of $K_n$ contains $(1-o(1))n/2$ edge-disjoint rainbow spanning trees.
+This answers the question of Glock, K\"uhn, Montgomery and Osthus.
+
+The reason properness is not needed is the following.
+We remove the forests one at a time, choosing each at random so that every remaining edge is equally likely to be taken, and we track the Laplacian of the remaining graph.
+The Laplacian is a linear function of the edge set, so its expected change depends only on the probability that each edge is taken, and, as we will see, its variance can be bounded in the same way.
+Properness is a condition on pairs of edges, and so plays no role.
+The counterexamples to the conjectures of Stein and Hahn show that this cannot work for every rainbow structure.
+What is special about forests is that the rainbow forests are exactly the common independent sets of two matroids, the graphic matroid and the partition matroid given by the colour classes.
+By Edmonds' matroid intersection theorem, a random rainbow forest with prescribed edge probabilities therefore exists as soon as these probabilities satisfy linear constraints, which we can check using the Laplacian.
+Rainbow matchings in $K_{n,n}$ and rainbow Hamilton cycles have no such description.
+
+For complete graphs, the same approach gives much more: we can find all but $O(\log^2n)$ of the trees.
+
+\begin{theorem}\label{thm:bounded}
+For all large $n$, every globally $\lfloor n/2\rfloor$-bounded edge-colouring of $K_n$ contains $\lfloor n/2\rfloor-O(\log^2n)$ pairwise edge-disjoint rainbow spanning trees.
+\end{theorem}
+
+The difference from Theorem~\ref{thm:forests} is that, in $K_n$, closeness of the Laplacian to that of a scaled complete graph implies every condition that the remaining graph must satisfy, and so the process can run until $O(\log^2 n)$ trees remain.
+In a general graph, dense pieces can make some of these conditions tight, and, to handle them, we follow Xu~\cite{Xu} and lose $\eps m$ forests.
+For even $n$, the edges left over by Theorem~\ref{thm:bounded} can be split into $O(\log^2 n)$ rainbow forests, so the edges of $K_n$ can be partitioned into $n/2+O(\log^2n)$ rainbow forests.
+
+\subsection{Exact decompositions}\label{sec:exact}
+By Theorem~\ref{thm:bounded}, what remains of Conjecture~\ref{conj:KKS} is to find the last $O(\log^2 n)$ trees.
+This step must use properness.
+The random process above uses only the probability that each edge is taken, so it cannot tell a proper colouring from a bounded one, and Glock, K\"uhn, Montgomery and Osthus expect that bounded colourings need not decompose.
+Our final result proves Conjecture~\ref{conj:KKS} for large $n$ when every colour class is a little smaller than $n/2$.
+For a colour $\gamma$, we write $E_\gamma$ for the set of edges with colour $\gamma$.
+
+\begin{theorem}\label{thm:gap}
+There is a constant $C$ such that the following holds for all large $n$.
+Let $\phi$ be a proper edge-colouring of $K_n$ with $|E_\gamma|\le n/2-Cn^{2/3}(\log n)^{2/3}$ for every colour $\gamma$.
+Then $K_n$ contains $\lfloor n/2\rfloor$ pairwise edge-disjoint rainbow spanning trees.
+They decompose $E(K_n)$ if $n$ is even, and the unused edges form a star if $n$ is odd.
+\end{theorem}
+
+In particular, for each fixed $\eps>0$, Conjecture~\ref{conj:KKS} holds for large $n$ whenever every colour class has at most $(1-\eps)n/2$ edges.
+Here we do not remove trees one at a time; instead, we build all of them together along a random hierarchy of vertex sets, starting from Walecki's decomposition on small sets on which the colouring is rainbow.
+At each step, every tree on one vertex set gains a pendant edge at each vertex of another, and properness is used to keep the trees rainbow.
+Theorem~\ref{thm:gap} is complementary to the result of~\cite{GKMO}, which concerns colourings in which every colour class has exactly $n/2$ edges.
+The colourings covered by neither result are those in which many colour classes have between $n/2-O(n^{2/3}(\log n)^{2/3})$ and $n/2-1$ edges; we discuss these in Section~\ref{sec:final}.
+
+\smallskip
+
+\noindent\textbf{Organisation of the paper.}
+We sketch the proofs in Section~\ref{sec:overview} and collect our tools in Section~\ref{sec:prelim}.
+In Section~\ref{sec:extraction}, we prove a lemma for removing rainbow trees and forests one at a time, which we use to prove Theorem~\ref{thm:bounded} in Section~\ref{sec:thmA} and Theorem~\ref{thm:forests} in Section~\ref{sec:thmC}.
+Some arguments in Section~\ref{sec:thmC} follow Xu~\cite{Xu} closely, with small changes; these are given in Appendix~\ref{app:xu}.
+Theorem~\ref{thm:gap} is proved in Sections~\ref{sec:pendant}--\ref{sec:gap}, and we discuss open problems in Section~\ref{sec:final}.

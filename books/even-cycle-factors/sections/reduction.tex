@@ -1,0 +1,122 @@
+\section{Reduction by the imbalance of \texorpdfstring{$H$}{H}}\label{compact390:structural-section}
+In this section, we reduce Theorem~\ref{compact390:finite} to directed four-cycles and six-cycles and the two families~\ref{ov:family1} and~\ref{ov:family2}, as sketched in Section~\ref{sec:sketch-reduction}.
+
+Choose a cyclic reading of an oriented cycle $H$, and let $p(H)$ and
+$q(H)$ be the numbers of its forward and backward edges, respectively, so that
+\[
+                 k_H=|p(H)-q(H)|.
+\]
+Reversing the reading changes the sign of $p(H)-q(H)$, so we may choose the reading so that the sign sum of its word is $k_H$. Since $H$ has even order, $k_H$ is even.
+For a word with nonnegative sign sum, let $\Delta$ be the maximum \emph{drop} of the word. That is, $\Delta$ is the largest value of $-s$ over the sign sums $s$ of the proper cyclic intervals of the word, or zero if no such interval has negative sign sum.
+
+A random homomorphism from a digraph $J$ to $F$ has \emph{uniform marginals} if
+each fixed position of $J$ has a uniformly random image in $V(F)$.
+If $\psi$ is such a random homomorphism, then giving each homomorphism $f$ the weight $(|F|/|J|)\mathbb P(\psi=f)$ gives a perfect fractional homomorphic $J$-tiling of $F$, as the expected number of positions of $J$ mapped to each vertex is $|J|/|F|$.
+Conversely, suppose that $J$ is a directed cycle and $F$ has a perfect fractional homomorphic $J$-tiling. Then choosing a homomorphism of the tiling with probability proportional to its weight, and then rotating $J$ uniformly at random, gives a random homomorphism from $J$ to $F$ with uniform marginals.
+
+Random homomorphisms of several cyclic words can be glued at a common vertex, as follows. Here a \emph{rooted} cyclic word is a cyclic word with a specified initial position, its \emph{root}. The \emph{concatenation} of rooted words $Q_1,\ldots,Q_t$ is the cyclic word obtained by writing them one after another, so that its positions are the positions of the words $Q_j$ with their roots.
+
+\begin{lemma}
+\label{height400:root-quotient}
+Let $F$ be a digraph, and let $Q_1,\ldots,Q_t$ be nonempty rooted
+cyclic words. Suppose that, for each $j$, there is a random homomorphism $\Phi_j$ from $Q_j$ to $F$, such that the root images of $\Phi_1,\ldots,\Phi_t$ all have the same distribution $\pi$.
+Then there is a random homomorphism from the concatenation of $Q_1,\ldots,Q_t$ to $F$ in which each position has the same distribution as in the corresponding $\Phi_j$.
+In particular, if each $\Phi_j$ has uniform marginals, then so does this random homomorphism.
+\end{lemma}
+\begin{proof}
+Choose a vertex $Z$ with distribution $\pi$ and, conditional on $Z$, sample $\Phi_1,\ldots,\Phi_t$ independently, each conditioned on having root image $Z$. All of these homomorphisms close at $Z$, so together they form a homomorphism of the concatenation. For each position
+$i$ of $Q_j$ and each vertex $v$, we have
+\[
+ \sum_{z:\pi(z)>0}\pi(z)
+ \Pr(\Phi_j(i)=v\mid\Phi_j(\text{root})=z)=\Pr(\Phi_j(i)=v),
+\]
+so every position keeps its distribution.
+\end{proof}
+
+Combining this with homomorphisms obtained by reducing heights modulo the length of a directed cycle gives the following.
+
+\begin{lemma}\label{height400:quotient}
+Let $F$ be a digraph and $q\ge3$. If the directed $q$-cycle has a random homomorphism to $F$ with uniform
+marginals, then so does every cyclic word whose sign
+sum is divisible by $q$, including sign sum zero. More generally, if a cyclic word can be cut into pieces whose sign sums are divisible by
+$q_1,\ldots,q_t$, respectively, and each directed $q_i$-cycle has a random homomorphism to $F$ with uniform marginals, then so does the word.
+\end{lemma}
+\begin{proof}
+Let the word have signs $\varepsilon_0,\ldots,\varepsilon_{r-1}$, and let $h_0=0$ and
+$h_{i+1}=h_i+\varepsilon_i$ be its heights. The map $i\mapsto h_i\bmod q$ sends a positive step to an edge
+$h_i\to h_i+1$ of the directed $q$-cycle, and a negative step to an edge $h_i-1\to h_i$. If $q\mid h_r$, the map closes, and so it is a homomorphism from the word to the directed $q$-cycle. Composing it with the given random homomorphism gives a random homomorphism of the word in which each position has a uniform image.
+For several pieces, apply this to each piece, with heights starting at zero at its first position, and glue the results with Lemma~\ref{height400:root-quotient}; all root images are uniform.
+\end{proof}
+
+To describe the remaining orientations, let a cyclic word have positive sign sum $m$. Extend its heights periodically, by $h_{i+r}=h_i+m$, where $r$ is the length of the word. As the heights tend to infinity, each height $\ell$ has a last visit, at index $t_\ell$ say, and the step after $t_\ell$ is positive. The segment from $t_\ell+1$ to $t_{\ell+1}$ then starts and ends at height $\ell+1$ and never goes below it.
+
+\begin{lemma}
+\label{height400:last-exits}
+Let a cyclic word have positive sign sum $m$ and maximum drop $\Delta$.
+Then some rotation of the word has the form
+\[
+                 +U_0+U_1\cdots+U_{m-1},
+\]
+where each $U_j$ is a possibly empty closed height walk which starts and ends at height zero and stays in $\{0,1,\ldots,\Delta\}$. Moreover, $\Delta$ is the maximum span of the walks $U_j$.
+\end{lemma}
+
+We call the $m$ positive edges displayed in this form the \emph{separating edges}, and the walks $U_j$ the \emph{returns} of the word.
+
+\begin{proof}
+With the notation above, positive drift and unit steps give
+\[
+             t_\ell<t_{\ell+1}\qquad\text{and}\qquad t_{\ell+m}=t_\ell+r.
+\]
+The step after $t_\ell$ is positive, as otherwise the walk would have to come back to height $\ell$ later. Subtracting $\ell+1$ from the heights of the segment from $t_\ell+1$ to $t_{\ell+1}$ gives a closed walk $U_\ell$ which starts and ends at height zero and never goes below it. The $m$ consecutive blocks $+U_\ell$ with $t_0\le t_\ell<t_m$ form one period of the word, in their original order.
+
+Let $a_\ell$ be the span of $U_\ell$. If $U_\ell$ is nonempty, an interval of the word running from a highest point of $U_\ell$ down to its end has drop $a_\ell$. It is a proper interval, as it does not contain the separating edge before $U_\ell$ (this holds also when $m=1$). Hence $a_\ell\le\Delta$.
+Conversely, every index $i$ satisfies $t_\ell\le i<t_{\ell+1}$ for some $\ell$, and all heights after $t_\ell$ are at least $\ell+1$. If $i=t_\ell$, then every interval starting at $i$ has positive sign sum. Otherwise, $h_i\le\ell+1+a_\ell$, and so every interval starting at $i$ has drop at most $a_\ell$. Thus $\Delta=\max_\ell a_\ell$, also when some returns are empty or $\Delta=0$.
+\end{proof}
+
+When the sign sum is two, there are two returns, and in most cases we can merge them into one, as follows.
+
+\begin{lemma}\label{height400:coalescence}
+Let $U$ and $V$ be two returns, of spans $a$ and $b$, of a word $+U+V$ of sign sum two.
+If $V$ is nonempty, then $+U+V$ is a rotation of $++W$, where $W$ is a closed height walk which starts at height one, stays nonnegative, and has span $\max(b,a+1)$.
+If $V$ is empty, then $+U+V$ is a rotation of $++U$.
+\end{lemma}
+\begin{proof}
+If $V$ is empty, rotating the word makes the two separating edges consecutive. Otherwise, $V$ starts with a positive step, and we write $V=+R$. Rotating $+U+V$ gives $++R+U$, so we take $W=R+U$. Starting at height one, the walk $R$ stays in $\{0,\ldots,b\}$ and ends at zero, and then the separating edge leads to $U$, which stays in $\{1,\ldots,a+1\}$. Both extreme heights are attained, so $W$ has span $\max(b,a+1)$.
+\end{proof}
+
+Let $\mathcal H_1$ be the set of cycle orientations whose word, after rotation, is $++W$, where $W$ is a nonempty closed
+height walk of span at most three, starting at any height in its range. Let $\mathcal H_2$ be the set of cycle orientations whose word, after rotation, is $+U+V$, where $U$ and $V$ are closed walks on $\{0,1,2,3\}$ which start and end at height zero and both visit height three.
+These are the families~\ref{ov:family1} and~\ref{ov:family2} of Section~\ref{sec:sketch-reduction}.
+
+\begin{lemma}[Reduction by edge imbalance]
+\label{compact390:structural-reduction}
+Suppose that every finite digraph of minimum semidegree greater
+than half its order has perfect fractional homomorphic tilings by
+the directed four-cycle, by the directed six-cycle, and by every orientation in $\mathcal H_1\cup\mathcal H_2$.
+Then every orientation of an even cycle of order at least four
+has a perfect fractional homomorphic tiling in every such digraph.
+More precisely, the tilings by directed four-cycles and six-cycles suffice unless $k_H=2$ and
+$\Delta\le3$, and in this case $H\in\mathcal H_1\cup\mathcal H_2$.
+\end{lemma}
+\begin{proof}
+Let $F$ be a digraph of minimum semidegree greater than half its order. By the discussion before Lemma~\ref{height400:root-quotient}, there are random homomorphisms from the directed four-cycle and six-cycle to $F$ with uniform marginals. So it suffices to find such a random homomorphism of $H$. We use the reading of $H$ with sign sum $k_H$.
+
+\emph{Case $k_H=0$ or $k_H=4j$ for some $j\ge1$.}
+The whole word has sign sum divisible by four, so Lemma~\ref{height400:quotient} applies with $q=4$.
+
+\emph{Case $k_H=4j+6$ for some $j\ge0$.}
+Cut the word at the first position at height six. The prefix and the rest have sign sums six and $4j$, so Lemma~\ref{height400:quotient} applies with $q_1=6$ and $q_2=4$ (if the rest is empty, we use only the first piece).
+
+\emph{Case $k_H=2$ and $\Delta\ge4$.}
+Take a proper interval with negative sign sum and drop $\Delta$, and stop it at the first position at which its drop is four. This gives an interval of sign sum $-4$, whose complement has sign sum six, and Lemma~\ref{height400:quotient} applies again.
+
+\emph{Case $k_H=2$ and $\Delta\le3$.} By Lemma~\ref{height400:last-exits}, a rotation of the word has the form $+U+V$, where both returns start and end at height zero and have
+span at most three. They are not both empty, since $H$ has at least four positions. If both have span three, then $H\in\mathcal H_2$. If one of them is empty, then $H\in\mathcal H_1$ by Lemma~\ref{height400:coalescence}. Otherwise, we may assume that $U$ has span at most two, and Lemma~\ref{height400:coalescence} shows that a rotation of the word is $++W$, where $W$ is nonempty and has span
+\[
+ \max\{\operatorname{span}(V),\operatorname{span}(U)+1\}\le3.
+\]
+Thus $H\in\mathcal H_1$.
+\end{proof}
+
+We remark that, for $k_H=2$, the word can be cut into pieces with sign sums divisible by four or six exactly when $\Delta\ge4$. Indeed, we showed above that such a cutting exists when $\Delta\ge4$. Conversely, pieces with nonnegative sign sums divisible by four or six cannot have total sign sum two, so in such a cutting some piece is a proper interval with sign sum at most $-4$.
+Thus, the orientations in $\mathcal H_1\cup\mathcal H_2$ are exactly those which cannot be handled by reducing heights in this way.

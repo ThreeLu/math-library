@@ -1,0 +1,364 @@
+\section{Directed four-cycles and six-cycles}\label{sec:directed}
+In this section, we prove that every digraph $F$ with $\delta^0(F)>|F|/2$ has perfect fractional homomorphic tilings by the directed four-cycle and by the directed six-cycle. A homomorphism from a directed $\ell$-cycle to $F$ is a closed $\ell$-walk in $F$, and a partial homomorphism is a walk with $\ell-1$ positions, that is, with $\ell-2$ edges. Its completion sets are the inneighbourhood of its first vertex and the outneighbourhood of its last vertex.
+In both cases, the maximum weight of a deficient optimal cover is large, as follows, and so a closed walk of cost one has at most one position of maximum weight.
+
+\begin{lemma}
+\label{c4:lem:boundary}\label{c6:lem:maxthird}
+Let $r\ge4$ be even, and let $F$ be a digraph of order $N$ and minimum
+semidegree $d>N/2$. Let $w$ be a fractional homomorphic cover of $F$ for the directed
+$r$-cycle with $\min w=0$ and total weight less than $N/r$. Then
+$M:=\max w>2/r$.
+\end{lemma}
+\begin{proof}
+Let $z$ be a vertex of weight zero, and let $\alpha$ and $\beta$ be the minimum weights in $N^-(z)$ and $N^+(z)$. By Lemma~\ref{norm391:savings}, applied with $S=r/2$, we have $\alpha+\beta<2/r$.
+Choose $u\to z\to v$ with $w(u)=\alpha$ and $w(v)=\beta$, and
+$x\in N^+(v)\cap N^-(u)$, which exists as $2d>N$. This gives a closed four-walk $uzvx$ of cost
+at most $\alpha+\beta+M$.
+Choose also $y\in N^-(z)\cap N^+(z)$, and insert $(r-4)/2$ traversals of the $2$-cycle
+$z\to y\to z$ into this walk at $z$. The resulting closed
+$r$-walk has cost at most $\alpha+\beta+(r/2-1)M$, so
+\[
+ 1\le\alpha+\beta+(r/2-1)M<2/r+(r/2-1)M,
+\]
+which gives $M>2/r$.
+\end{proof}
+
+\subsection{Directed four-cycles}
+\label{c4:section}\label{compact390:directed-four}
+
+\begin{theorem}\label{c4:thm:fractional}
+Every digraph $F$ with $\delta^0(F)>|F|/2$ has a perfect fractional homomorphic tiling by the directed four-cycle.
+\end{theorem}
+
+Here, a partial homomorphism is a directed walk $abc$, and it is a path if $a\ne c$. For a function $p\ge0$ on the vertices, we write $I_p(v)=p(N^-(v))$ and $O_p(v)=p(N^+(v))$, so that $\Phi_p(abc)=I_p(a)+O_p(c)$.
+The minimum partial homomorphisms that we encounter are paths, and so, in this subsection, we consider measures $\rho$ of mass $h$ on paths $abc$; their multiplicity functions have total $3h$.
+The paths we find in the following two lemmas need not lie in the support of $\rho$.
+When all weights are zero, we argue as follows; in general, this will be applied to the subdigraph induced by the vertices of weight zero.
+
+\begin{lemma}\label{c4:lem:constant}
+Let $D$ be an oriented graph with no directed four-cycle, and let $\rho$ be a nonzero measure of mass $h$ on paths $abc$ in $D$, with multiplicity function $p$. Then some path $abc$ in the subdigraph induced by the support of $p$ satisfies
+$\Phi_p(abc)\le2h$.
+\end{lemma}
+\begin{proof}
+Restrict $D$ to the support of $p$, and suppose that $\Phi_p(abc)>2h$ for
+every path $abc$. Write $I=I_p$ and $O=O_p$. The sets $N^-(a)$ and $N^+(c)$ are disjoint, since a common vertex would close a directed four-cycle with distinct vertices, as $D$ is oriented.
+We prove three claims in turn.
+
+\emph{Every independent set has multiplicity less than $h$.}
+Suppose that an independent set $Z$ has $p(Z)\ge h$. If a path had both ends in $Z$, then its completion sets would be disjoint from $Z$ and from each other, so their total multiplicity would be at most $3h-p(Z)\le2h$. Thus no path has both ends in $Z$, and, as $Z$ is independent, each path in the support of $\rho$ meets $Z$ at most once. Therefore $p(Z)=h$, and every path in the support meets $Z$ exactly once.
+No path $azc$ has $z\in Z$. Indeed, if $N^-(a)$ or $N^+(c)$ contained a vertex of $Z$, this would give a path with both ends in $Z$; so both sets would be disjoint from $Z$, and their total multiplicity would be at most $2h$.
+Hence every vertex of $Z$ is a source or a sink of $D$. Reversing all edges if necessary, take a path $zab$ in the support of $\rho$ which starts at a source $z\in Z$. Then $I(z)=0$, so $O(b)>2h$, and so $b$ has an outneighbour $z'\in Z$. As $z'$ has an inneighbour, it is a sink, and so the path $abz'$ gives $I(a)>2h$.
+Let $R(v)=\ind_{b\to v}+\ind_{v\to a}$, so that $I(a)+O(b)=\sum_vp(v)R(v)$. On $Z$, we have $R\le1$, as every vertex of $Z$ is a source or a sink.
+In a path in the support of $\rho$, the two vertices outside $Z$ are consecutive, $u\to v$ say, and $R(u)+R(v)\le3$, since $R(u)=R(v)=2$ would give a directed four-cycle $a\to b\to u\to v\to a$; its vertices are distinct, as $R(a)=R(b)=0$. Thus every path in the support contributes at most four to $\sum_vp(v)R(v)$, so $I(a)+O(b)\le4h$, a contradiction.
+
+\emph{No vertex $x$ has both $I(x)>h$ and $O(x)>h$.}
+Suppose that $x$ does. Let $X=N^+(x)$, $Y=N^-(x)$ and
+$U=V(D)\setminus(X\cup Y\cup\{x\})$, and let $t=p(X)>h$ and $s=p(Y)>h$.
+By the first claim, both $X$ and $Y$ contain an edge. Let $X'$ be the set of vertices of $X$
+with an inneighbour in $X$, and $Y'$ the set of vertices of $Y$
+with an outneighbour in $Y$; both are nonempty. Let $B=\min_XO$ and $A=\min_YI$. The paths $yxz$ with $y\in Y$ and $z\in X$ give $A+B>2h$.
+In an oriented graph, counting edges with weights gives, for every vertex set $Q$,
+\[
+ \sum_{v\in Q}p(v)p(N^+(v)\cap Q)
+ \le\frac12\Big\{p(Q)^2-\sum_{v\in Q}p(v)^2\Big\},
+\]
+so we can choose $u\in X'$ with $p(N^+(u)\cap X')\le p(X')/2$,
+and similarly $v\in Y'$ with $p(N^-(v)\cap Y')\le p(Y')/2$.
+There is no edge from $X'$ to $X\setminus X'$, by definition,
+and none from $X'$ to $Y$, as it would close a directed four-cycle
+through $x$ and an inneighbour in $X$. Similarly, there is no edge to $Y'$ from $Y\setminus Y'$ or from $X$.
+Therefore, the outneighbourhood of $u$ in $U$ has multiplicity
+at least $B-p(X')/2$, and the inneighbourhood of $v$ in $U$ has multiplicity at least $A-p(Y')/2$. These sets are disjoint, since
+a common vertex $w$ would give a directed four-cycle $x\to u\to w\to v\to x$.
+Consequently,
+\[
+ 3h-s-t\ge p(U)\ge A+B-\frac{p(X')+p(Y')}2>2h-\frac{s+t}2,
+\]
+so $s+t<2h$, a contradiction.
+
+\emph{Every vertex $v$ has $O(v)\le h$.}
+Let $L=\{v:O(v)>h\}$, so that $I\le h$ on $L$ by the second claim.
+If $v\in L$ and $v\to w\to v'$ is a path, then $I(v)+O(v')>2h$ gives $v'\in L$. Moreover, every vertex $v\in L$ is the start of such a path, as $N^+(v)$ has multiplicity greater than $h$, and so contains an edge by the first claim.
+Suppose that $L$ is nonempty. Consider the digraph on $L$ in which $v$ points to $v'$ whenever there is a path $v\to w\to v'$, and let $S$ be a strong component of it with no edge leaving it. Let $T=N^+(S)$ be the union of the outneighbourhoods of the vertices of $S$, so that $N^+(T)\subseteq S$.
+If $S\cap T=\varnothing$, then $T$ is independent, as an edge inside $T$ would end in $N^+(T)\subseteq S$, but $p(T)>h$, contradicting the first claim.
+Otherwise, take $u\in S\cap T$ and a path $u\to w\to v$ with $v\in S$. Then $w\in N^+(T)\subseteq S$, and so $v\in N^+(S)=T$. Thus, $S\cap T$ is closed under the edges of the auxiliary digraph inside $S$, and, as $S$ is strongly connected, $S\subseteq T$. Then $T=N^+(S)\subseteq N^+(T)\subseteq S$, so $S=T$, and $S$ is closed under taking outneighbours. Therefore,
+\[
+ hp(S)<\sum_{u\in S}p(u)O(u)
+ =\sum_{u\in S}p(u)p(N^-(u)\cap S)
+ \le\sum_{u\in S}p(u)I(u)\le hp(S),
+\]
+a contradiction. This proves the third claim.
+
+By the third claim and its reversal, $I,O\le h$ everywhere, and so every path $abc$ has $\Phi_p(abc)\le2h$, a contradiction.
+\end{proof}
+
+\begin{lemma}\label{c4:lem:minimum}
+Let $D$ be a digraph with nonnegative costs. Suppose that every directed walk with three positions costs at least $s\ge0$, every $2$-cycle costs
+more than $s$, and every directed four-cycle costs more than
+$2s$. Let $\rho$ be a nonzero measure of mass $h$ on paths of cost $s$, with multiplicity function
+$p$. Then some path $abc$ of cost $s$ satisfies $\Phi_p(abc)\le2h$.
+\end{lemma}
+\begin{proof}
+Restrict $D$ to the support of $p$, so that all costs are at most $s$, and suppose that every path of cost $s$ has $\Phi_p$-value greater than $2h$.
+Every closed four-walk costs more than $2s$: if it is not a directed four-cycle, it traverses one or two $2$-cycles twice. Every walk $abc$ with $a=c$ costs at least the cost of a $2$-cycle, which is more than $s$. Thus, the walks with three positions and cost $s$ are exactly the minimum partial homomorphisms of the directed four-cycle, and they are all paths.
+
+Apply Lemma~\ref{norm391:cutoff} in case~\ref{norm391:cutoff:1}, with $r=4$. This gives a measure of positive mass $g$ for which~\eqref{norm391:counter} holds. In the proof of that lemma, every cost is decreased by some $\alpha\ge0$, so the new minimum cost is $s'=s-3\alpha$, every $2$-cycle has new cost more than $s'+\alpha$, and every closed four-walk has new cost more than $2s'$.
+If $s'=0$, then every vertex has cost zero, and the digraph is oriented and has no directed four-cycle, contradicting Lemma~\ref{c4:lem:constant}.
+If $s'>0$, Lemma~\ref{norm394:zero-extremes} gives
+\[
+ p(Z)\ge2g\qquad\text{and}\qquad p(S),p(T)\le g-\varepsilon.
+\]
+The digraph $D[Z]$ has no directed walk with two edges, as this would be a partial homomorphism of cost zero. Hence $Z=S\cup T$, and
+$2g\le p(Z)\le p(S)+p(T)\le2g-2\varepsilon$, a contradiction.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{c4:thm:fractional}]
+Let $F$ have order $N$ and $\delta^0(F)>N/2$, and suppose that $F$ has no perfect fractional homomorphic tiling by the directed four-cycle. By Lemma~\ref{general:LP}, there is a deficient optimal cover $w$, that is, a weighting such that every closed four-walk has cost at least one and $\sum w<N/4$, with $0\le w\le1$ and $\min w=0$.
+Lemma~\ref{c4:lem:boundary} gives $M>1/2$. Let
+$C$ be the set of vertices of weight $M$, $h=|C|$ and $s=1-M<1/2$.
+Every tight closed four-walk has at most one position in $C$, since $2M>1$.
+Let $\rho$ be the measure of Lemma~\ref{general:max-deletion}, which has mass $h$ and is supported on walks with three positions of cost $s$ in $F-C$.
+In $F-C$, every walk with three positions costs
+at least $s$, as it can be closed by a vertex of weight at most $M$.
+Every $2$-cycle costs at least $1/2>s$, as traversing it twice gives a closed four-walk, and so the walks of cost $s$ are paths. Every directed four-cycle costs at least $1>2s$.
+Thus Lemma~\ref{c4:lem:minimum} gives a minimum partial homomorphism with $\Phi_p$-value at most $2h$, contradicting
+Lemma~\ref{general:max-deletion}.
+\end{proof}
+
+\subsection{Directed six-cycles}
+\label{c6:section}\label{compact390:directed-six}
+
+\begin{theorem}\label{c6:thm:fractional}
+Every digraph $F$ with $\delta^0(F)>|F|/2$ has a perfect fractional homomorphic tiling by the directed six-cycle.
+\end{theorem}
+
+Here a partial homomorphism is a walk $P=v_1\cdots v_5$ with five positions, and we write
+$\Phi_p(P)=I_p(v_1)+O_p(v_5)$, with $I_p$ and $O_p$ as before. All costs and multiplicities count positions with repetition. A measure $\rho$ of mass $h$ on such walks has a multiplicity function with total $5h$.
+For the directed six-cycle, the endpoint bound which we need is the following.
+
+\begin{theorem}\label{c6:thm:endpoint}
+Let $1/3<M\le1$ and $L=1-M$, and let $D$ be a digraph with costs $0\le c<M$. Suppose that every walk with five positions costs
+at least $L$ and every closed six-walk costs at least one.
+Then, for every nonzero measure of mass $h$ on walks of cost $L$, some walk $P$ of cost $L$ satisfies $\Phi_p(P)\le4h$.
+\end{theorem}
+
+
+\begin{lemma}\label{c6:lem:no6}
+Let $D$ be a digraph with no closed six-walk. Then, for every nonzero measure of mass $h$ on
+walks with five positions, some such walk $P$ in the subdigraph induced by the support of $p$ satisfies $\Phi_p(P)\le4h$.
+\end{lemma}
+\begin{proof}
+Restrict $D$ to the support of $p$, scale so that $h=1$, and suppose that
+$I(v_1)+O(v_5)>4$ for every walk $v_1\cdots v_5$, where $I=I_p$ and $O=O_p$. Then $p(V(D))=5$,
+and $D$ has no $2$-cycle and no directed triangle, as these would give closed six-walks.
+
+We first show that, if $O(x)>2$, then the outneighbourhood $X$ of $x$ contains no walk with four positions.
+Let $Y=N^-(x)$ and $Z=V(D)\setminus(X\cup Y)$. There are no edges from $X$ to $Y$, as there are no directed triangles. If $x_1\cdots x_4$ is a walk in $X$, then the walk $xx_1\cdots x_4$ gives
+\[
+ p(N^+(x_4)\cap X)>4-p(Y)-p(Z)=p(X)-1>p(X)/2.
+\]
+Let $R$ be the set of last vertices of walks with four positions in $X$. Then $R$ is closed under taking outneighbours in $X$, so, if $R$ is nonempty, each of its vertices has more than $p(R)/2$ multiplicity in its outneighbourhood inside $R$. This contradicts the weighted count
+$\sum_{v\in R}p(v)p(N^+(v)\cap R)<p(R)^2/2$ for oriented graphs. Reversing all edges, the same holds for inneighbourhoods.
+
+It follows that $I,O\le4$ everywhere. Indeed, if $O(x)>4$, then, averaging over the walks in the support of $\rho$, some walk in the support lies entirely in $N^+(x)$, and it contains a walk with four positions.
+In particular, a vertex with no inneighbour can only be the first vertex of walks in the support, and then the walk violates our assumption, as $O\le4$. So $D$ has no vertex without an inneighbour, and, similarly, no vertex without an outneighbour.
+
+Next, no vertex $x$ has both $I(x)>2$ and $O(x)>2$. Otherwise, with $X,Y,Z$ as above, we have $p(Z)<1$, so some walk in the support of $\rho$ avoids $Z$.
+As there is no edge from $X$ to $Y$ and neither of these sets contains a walk with four positions, this walk has the form $y_1y_2x_1x_2x_3$ or $y_1y_2y_3x_1x_2$, with $y_i\in Y$ and $x_i\in X$.
+In the first case, $x_3$ has no outneighbour in $X\cup Y$, and $y_1$ has no inneighbour in $X$, so
+$I(y_1)+O(x_3)\le p(Y)+2p(Z)=5-p(X)+p(Z)<4$, a contradiction. The second case is the reversal of the first.
+
+Let $B=\{v:O(v)>2\}$. If $B$ were empty, then every vertex would be the first vertex of a walk with five positions, as there are no vertices without an outneighbour, and so every vertex would have $I>2\ge O$. This contradicts $\sum_vp(v)I(v)=\sum_vp(v)O(v)$. So $B$ is nonempty.
+On $B$ we have $I\le2$, so, if $v\in B$ and $v'$ is the last vertex of a walk with five positions starting at $v$, then $O(v')>2$, that is, $v'\in B$. Consider the digraph on $B$ in which $v$ points to $v'$ whenever there is such a walk, and let $S$ be a strong component of it with no edge leaving it. As there are no vertices without an outneighbour, the set $N^{+4}(S)$ of vertices reached from $S$ by walks with four edges is $S$. For $0\le i\le3$, let $U_i=N^{+i}(S)$. Each $U_i$ is again such a component: a vertex of $U_i$ reaches $S$ in $4-i$ steps, moves within $S$ in multiples of four steps, and reaches any vertex of $U_i$ in $i$ further steps. Therefore, any two of these sets are equal or disjoint, and the distinct ones form a cyclic sequence of some period $\ell\in\{1,2,4\}$, in which each set is the union of the outneighbourhoods of the previous one.
+
+If $\ell=4$, then the set following $S$ has multiplicity greater than two, but a walk with five positions visits it at most twice, which is impossible.
+If $\ell=2$, let the two sets be $S$ and $T$, so that $p(T)>2$. If $p(S)\ge1$, then each $s\in S$ has
+$I(s)+O(s)\le5-p(S)\le4$, as its inneighbourhood and outneighbourhood are disjoint
+and do not meet $S$; summing the assumed inequalities along a cycle of the auxiliary digraph inside $S$ contradicts this.
+If $p(S)<1$, then a walk with five positions which starts in $T$ ends in $T$, and its $\Phi_p$-value is at most $5-p(T)+p(S)<4$.
+Finally, if $\ell=1$, then $S$ is closed under taking outneighbours and has $O>2\ge I$, contrary to
+\[
+ \sum_{s\in S}p(s)O(s)
+ =\sum_{s\in S}p(s)p(N^-(s)\cap S)
+ \le\sum_{s\in S}p(s)I(s).
+\]
+Every period gives a contradiction, which proves the lemma.
+\end{proof}
+
+
+\begin{lemma}
+\label{c6:lem:manyzeros}\label{c6:lem:onezero}\label{c6:cor:normalized}
+Assume the hypotheses of Theorem~\ref{c6:thm:endpoint}, with
+$1/3<M<1$, so that $L>0$. Let $\calP$ be the set of all walks with five positions of cost $L$, and let
+$Z$ be the set of vertices of cost zero. For a function $p\ge0$, let $z=p(Z)$ and $s=p(V(D)\setminus Z)$.
+\begin{props}
+\item\label{c6:lem:manyzeros:1} If some walk in $\calP$ has exactly two zero positions,
+then $\min_{P\in\calP}\Phi_p(P)\le s+z/2$.
+\item\label{c6:lem:manyzeros:2} Let $p$ be the multiplicity function of a nonzero measure of mass $h$ on
+$\calP$, such that every walk in its support meets $Z$. If some walk in $\calP$ has exactly one zero position, then $\min_{P\in\calP}\Phi_p(P)\le4h$.
+\item\label{c6:lem:manyzeros:3} For a measure as in~\ref{c6:lem:manyzeros:2}, if $M\le1/2$, then
+$\min_{P\in\calP}\Phi_p(P)\le4h$.
+\end{props}
+\end{lemma}
+\begin{proof}
+We first note some simple facts. The completion sets $N^-(v_1)$ and $N^+(v_5)$ of every walk in $\calP$ are disjoint, since
+a common vertex $v$ would give a closed six-walk of cost $L+c(v)<1$.
+If both ends of a walk in $\calP$ have positive cost, then both completion sets are disjoint from $Z$, as otherwise we could add a vertex of $Z$ at one end and delete the other end, obtaining a cheaper walk. Similarly, if one end of a walk in $\calP$ has cost zero and the other has positive cost, then the completion set at the zero end is disjoint from $Z$.
+The digraph $D[Z]$ is acyclic and has no walk with four edges, as it would contain a walk with five positions of cost zero, which costs less than $L$.
+We write $I_Z(v)=p(N^-(v)\cap Z)$ and $O_Z(v)=p(N^+(v)\cap Z)$.
+
+\emph{Two zero positions.}
+The assertion is immediate if $z=0$, so we may scale so that $z=2$, and suppose that every walk in $\calP$ has $\Phi_p$-value greater than $s+1$.
+In particular, no walk in $\calP$ has two ends of positive cost.
+Consider a walk $0abcd$ in $\calP$ with exactly two zero positions, where $a$ and $d$ have positive cost and the first vertex has cost zero. Its first vertex has no inneighbour in $Z$, so $O_Z(d)>1$.
+Adding an outneighbour of $d$ in $Z$ and deleting the first vertex gives a walk $abcd0$ in $\calP$, and so $I_Z(a)>1$.
+Hence the sets $N^-(a)\cap Z$ and $N^+(d)\cap Z$ intersect, which closes $abcd$ into a closed five-walk of cost $L$ with three positions of positive cost. Two of these positions are adjacent, and deleting their edge gives a walk in $\calP$ with two ends of positive cost, which is impossible.
+Thus, a walk in $\calP$ with exactly two zero positions has one of the patterns $00{+}{+}{+}$, $0{+}{+}{+}0$ or ${+}{+}{+}00$.
+A walk with the middle pattern has a zero inneighbour at its first vertex or a zero outneighbour at its last vertex, as otherwise its $\Phi_p$-value would be at most $s$. Adding this vertex gives a walk with one of the other patterns. So, reversing all edges if necessary, there is a walk $xyabc$ in $\calP$ with $x,y\in Z$ and $a,b,c$ of positive cost.
+
+Let $X=N^-(a)\cap Z$ and $Y=N^+(c)\cap Z$. There is no edge
+from $Y$ to $X$ in $D[Z]$, since it would give a closed five-walk of cost $L$ through $a,b,c$, and deleting the edge $ab$ would give a walk in $\calP$ with two positive ends.
+As $x$ has no inneighbour in $Z$ (otherwise adding it and deleting $c$ would give a cheaper walk), we have $p(Y)>1$.
+As $y\in X$ and there is no edge from $Y$ to $X$, this gives $I_Z(y)<1$. For every $q\in Y$, the walk $yabcq$ lies in $\calP$, which forces $O_Z(q)>0$. Choose an edge $q\to t$ in $D[Z]$. The walk $abcqt$ lies in $\calP$, and $O_Z(t)=0$, again since we could otherwise obtain a cheaper walk, so $p(X)>1$.
+Fix a topological ordering of the acyclic digraph $D[Z]$, and let $x^*$ be the earliest vertex of $X$ and $y^*$ the latest vertex of $Y$. As $p(X)+p(Y)>2=z$, the sets $X$ and $Y$ intersect, so $x^*$ is not later than $y^*$. The inneighbourhood of $x^*$ and the outneighbourhood of $y^*$ in $Z$ are disjoint and avoid $X\cup Y$, so their total multiplicity is less than $z-1=1$.
+Thus the walk $x^*abcy^*$ in $\calP$ has $\Phi_p$-value less than $s+1$, a contradiction.
+
+\emph{One zero position.}
+Suppose that every walk in $\calP$ has $\Phi_p$-value greater than $4h$. Then $p(Z)\ge h$, as every walk in the support meets $Z$, so $s\le4h$, and hence no walk in $\calP$ has two ends of positive cost.
+Thus every walk in $\calP$ with exactly one zero position has the form $zA$ or $Aw$, where $z,w\in Z$ and $A=a_1a_2a_3a_4$ consists of vertices of positive cost. For a walk $zA$, the completion set $N^-(z)$ is disjoint from $Z$, so $N^+(a_4)$ must meet $Z$, as otherwise the $\Phi_p$-value would be at most $s$. Thus there is a walk $Aw$ in $\calP$ with $w\in Z$, and, similarly, a walk $Aw$ in $\calP$ gives a walk $zA$ in $\calP$.
+Thus the walks $A$ of four positions of positive cost for which both $zA$ and $Aw$ are in $\calP$, for some $z,w\in Z$, form a nonempty family. Choose one which maximises
+$\ell(A)=\min\{c(a_1)+c(a_2),c(a_3)+c(a_4)\}$, and fix such walks $zA$ and $Aw$. Let
+\[
+ R(v)=\ind_{v\to z}+\ind_{a_4\to v}
+                     +\ind_{v\to a_1}+\ind_{w\to v},
+\]
+so that $\Phi_p(zA)+\Phi_p(Aw)=\sum_vp(v)R(v)$.
+The two completion pairs are disjoint, so $R\le2$.
+On $Z$, the first and last indicators vanish, and the middle two cannot both be one, as they would close $A$ into a closed five-walk of cost $L$, which contains a walk in $\calP$ with two positive ends. Hence $R\le1$ on $Z$.
+
+We claim that, for any other walk $B=b_1b_2b_3b_4$ in this family, $\sum_iR(b_i)\le7$. Otherwise each $R(b_i)$ equals two.
+Fix walks $xB$ and $By$ in $\calP$ with $x,y\in Z$.
+The edges $wb_2$ and $b_3z$ are absent, as $wb_2b_3b_4y$ and $xb_1b_2b_3z$ would be walks cheaper than $L$. Hence the edges $b_2a_1$ and $a_4b_3$ are present.
+Let $\alpha=c(a_1)+c(a_2)$, $\beta=c(a_3)+c(a_4)$,
+$p=c(b_1)+c(b_2)$ and $q=c(b_3)+c(b_4)$, so that $\alpha+\beta=p+q=L$.
+If the edge $b_1z$ is absent, then $a_4b_1$ is present, and the closed six-walk $Ab_1b_2$ gives $p\ge M$. If $b_1z$ is present, then the walk $xb_1za_1a_2$ gives $c(b_1)\ge\beta$, and so $p>\beta$. Similarly, if $wb_4$ is absent, then $q\ge M$, and otherwise $q>\alpha$.
+Now $p$ and $q$ cannot both be at least $M$, since $2M>L$, and they cannot both be less than $M$, as then $p+q>\alpha+\beta=L$. So exactly one of them is at least $M$, and the other is $\ell(B)$, which is greater than $\alpha$ or $\beta$, and so greater than $\ell(A)$. This contradicts the choice of $A$, and proves the claim.
+
+Every walk in the support with exactly one zero position consists of a walk in the family and a vertex of $Z$, so the images of its positions have total $R$ at most $7+1=8$. A walk with $j\ge2$ zero positions has total $R$ at most $2(5-j)+j\le8$. Averaging gives
+$\Phi_p(zA)+\Phi_p(Aw)\le8h$, a contradiction.
+
+\emph{The range $M\le1/2$.}
+Suppose that every walk in $\calP$ has $\Phi_p$-value greater than $4h$, and
+write $s=5h-z$; as every walk in the support meets $Z$, we have $z\ge h$.
+A walk in $\calP$ with two positive ends has $\Phi_p$-value at most $s\le4h$, so no walk in $\calP$ has no zero position. By~\ref{c6:lem:manyzeros:2}, no walk in $\calP$ has exactly one zero position. Thus every walk in $\calP$ has at least two zero positions, and so $z\ge2h$.
+If one has exactly two, then~\ref{c6:lem:manyzeros:1} gives
+$\min\Phi_p\le s+z/2=5h-z/2\le4h$, a contradiction.
+Therefore every walk in $\calP$ has at least three zero positions, and $z\ge3h$.
+The hypotheses of Lemma~\ref{norm394:zero-extremes} hold: costs are nonnegative, completion pairs are disjoint, and no walk in $\calP$ has two positive ends. It shows that every walk in $\calP$ lies in $\mathcal E\cup\mathcal A$, with the zero endpoints of maps in $\mathcal A$ internal and in $S\cup T$, and that $S$ and $T$ are avoided. The digraph $D[Z]$ has no walk with four edges, as $L>0$.
+So Lemma~\ref{norm394:zero-strip}\ref{zerostrip:three} applies, and shows that no walk in $\calP$ has exactly three zero positions. Hence every walk in $\calP$ has at least four zero positions, and its only possible position of positive cost costs less than $M\le L$, contradicting the fact that it costs $L>0$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{c6:thm:endpoint}]
+Suppose that every walk of cost $L$ has $\Phi_p$-value greater than $4h$.
+If $M=1$, then $L=0$, all vertices in the support of $p$ have cost zero, and the subdigraph they induce has no closed six-walk, so Lemma~\ref{c6:lem:no6} gives a contradiction. Assume that $M<1$.
+Apply Lemma~\ref{norm391:cutoff} in case~\ref{norm391:cutoff:2}, with $r=6$, without an edge bound. This gives a measure of positive mass for which~\eqref{norm391:counter} still holds, supported on walks of cost $L'$ which meet the set of vertices of cost zero, and new costs satisfying
+\[
+ 1/3<M'\le1,\qquad L'=1-M',\qquad 0\le c'<M',
+\]
+such that all walks with five positions cost at least $L'$ and all closed six-walks cost at least one.
+If $M'=1$, we use Lemma~\ref{c6:lem:no6} again, and if $M'\le1/2$, we use Lemma~\ref{c6:lem:manyzeros}\ref{c6:lem:manyzeros:3}.
+Otherwise, all costs are at most $L'$, as every vertex in the support lies on a walk of cost $L'$, and closed six-walks cost at least $1>2L'$. A walk with four edges in the set of vertices of cost zero would be a partial homomorphism of cost zero, contrary to $L'>0$. Thus Lemma~\ref{norm391:positive-endpoint}, in case~\ref{norm391:positive-endpoint:1}, gives a contradiction.
+\end{proof}
+
+Finally, even when $1/3<M\le1/2$, a tight closed six-walk cannot have two positions of weight $M$, as follows.
+
+\begin{lemma}\label{c6:lem:onehigh}
+Let $F$ be a digraph of order $N$ with $d=\delta^0(F)>N/2$, and let $w$ be an optimal fractional homomorphic cover of $F$ for the directed six-cycle, with total weight less than $N/6$, $\min w=0$ and $M=\max w>1/3$. Let $V_M$ be the set of vertices of weight $M$.
+Then every closed six-walk of cost one has at most one position in $V_M$.
+\end{lemma}
+\begin{proof}
+As $3M>1$, a closed six-walk of cost one has at most two positions in $V_M$, and if $M>1/2$ it has at most one. So we may assume that $1/3<M\le1/2$. Put $t=1/2-M$ and $L=1-M$, fix a vertex $o$ of weight zero, and note that $h=|V_M|<N/2<d$, as $hM\le\sum w<N/6$.
+
+We first record lower bounds for the costs of short walks. Directed walks with
+two, three, four and five positions cost, respectively, at least
+\begin{equation}\label{c6:eq:basiccosts}
+                 t,\quad2t,\quad\text{more than }2t,\quad L.
+\end{equation}
+For an edge $ab$, close a triangle $abx$, which is possible as $2d>N$, and traverse it twice; this gives $2(w(a)+w(b))+2M\ge1$.
+For a walk $abc$, choose $x\in N^+(c)\cap N^-(o)$ and
+$y\in N^+(o)\cap N^-(a)$, and use the closed six-walk $abcxoy$.
+For a walk $abcd$, choose $x\in N^+(d)\setminus V_M$, which exists as $h<d$, and
+$y\in N^+(x)\cap N^-(a)$, and use the closed six-walk $abcdxy$.
+The last bound holds since every walk with five positions can be closed by a vertex of weight at most $M$.
+
+Take an optimal fractional tiling, and let $A$, $B$ and $C$ be the total weights of its closed six-walks with one, two and no positions in $V_M$, respectively. By complementary slackness, all these walks have cost one, and
+$h=A+2B$. Delete the positions in $V_M$, and let $p$ be the resulting multiplicity function outside $V_M$, so that $0\le p\le1$ and $p(V(F))=5A+4B+6C$.
+We will reach a contradiction as follows. Let $j\in\{1,2\}$, and suppose that we have $j$ completion pairs, each consisting of two sets of at least $d$ vertices which intersect only in $V_M$, so that their indicators sum to at most $j$ outside $V_M$. Suppose that, against the sum of these indicators, every walk in the support with one position in $V_M$ contributes at most $4j$, and every walk with two positions in $V_M$ contributes at most two. Every walk with no position in $V_M$ contributes at most $6j$. Then summing~\eqref{general:capacity} over the $j$ pairs gives
+\begin{equation}\label{c6:eq:fcount}
+ 2jd\le j(N+h-p(V(F)))+4jA+2B+6jC=jN+2(1-j)B\le jN,
+\end{equation}
+a contradiction.
+
+Two positions in $V_M$ cannot be adjacent in a closed six-walk of cost one, by the strict bound for walks with four positions. The only other possible patterns are
+\[
+ V_M,z,V_M,a,b,c\quad\text{with }w(z)=0\text{ and }w(abc)=2t,\qquad
+ V_M,u,v,V_M,x,y\quad\text{with }w(uv)=w(xy)=t.
+\]
+
+\emph{Every edge costs more than $t$.}
+Suppose instead that $w(uv)=t$ for an edge $uv$, and let $X=N^-(u)$, $Y=N^+(v)$ and
+$q=\ind_X+\ind_Y$. The sets $X$ and $Y$ intersect only in $V_M$, since a common vertex closes a triangle with $uv$, and traversing it twice forces its weight to be at least $1/2-t=M$.
+Thus $q\le1$ outside $V_M$. Every edge $xy$ of cost $t$ has
+$q(x)+q(y)\le1$, since the edges $yu$, $vx$, or both $xu$ and $vy$,
+would give a walk with four positions of cost $2t$.
+A walk with five positions outside $V_M$ of cost $L$ contributes at most four to $q$. Indeed, suppose that all its positions were covered. Then the membership of its middle position in
+$X$ or $Y$ would allow us to append or prepend $uv$, forcing one of its outer pairs of positions to cost at most $t$, hence exactly $t$. This contradicts the bound on $q$ for edges of cost $t$.
+A walk of the second type above contributes at most two.
+For the first type, if $t>0$, its zero position has $q=0$, as otherwise it extends $uv$ to a walk with three positions of cost $t<2t$. Its walk $abc$ of cost $2t$ cannot have all three positions covered. Indeed, a last position in $X$ or a first position in $Y$ would concatenate it with $uv$. Otherwise its first position is in $X$ and its last is in $Y$, and the membership of its middle position gives a walk $abuvc$ or $auvbc$ of cost $3t<L$.
+If $t=0$, a walk $abc$ of cost zero contributes at most one, as a covered middle position, an end covered on the wrong side, or two covered ends would give a walk with four positions of cost zero. Its accompanying zero position also contributes at most one.
+Thus~\eqref{c6:eq:fcount} with $j=1$ gives a contradiction. Hence
+\begin{equation}\label{c6:eq:strictedge}
+                         w(xy)>t\quad\text{for every edge }xy\text{ of }F.
+\end{equation}
+This excludes the second type, and both types if $t=0$.
+
+\emph{The first type.}
+Suppose that $t>0$ and that some walk $abc$ costs $2t$.
+By~\eqref{c6:eq:strictedge}, we have $w(a),w(c)<t$. The pairs
+$(N^+(o),N^-(a))$ and $(N^+(c),N^-(o))$ each intersect
+only in $V_M$, since choosing a common vertex from each closes
+a six-walk of cost $2t$ plus their weights, which forces both
+weights to be $M$. Let
+$f=\ind_{N^+(o)}+\ind_{N^-(a)}+\ind_{N^+(c)}+\ind_{N^-(o)}$,
+which is the sum of the indicators of these two pairs, and which we use with $j=2$.
+Vertices of weight zero have $f=0$, by~\eqref{c6:eq:strictedge}. In a walk $xyz$ of cost $2t$, the edges $ya$, $za$, $cx$ or $cy$, or the two edges $xa$ and $cz$ together,
+would give a walk with five positions of cost at most $4t<L$. Thus the contribution of $N^-(a)$ and $N^+(c)$ to $f$ on $x,y,z$ is
+at most one. The ends of $xyz$ have weight less than $t$, so they are not adjacent to $o$. Only the middle position can be, and not in both
+directions, since a $2$-cycle with $o$ costs at least $1/3$,
+whereas its weight is at most $2t<1/3$. Thus a walk of the first type contributes at most two outside $V_M$.
+
+A walk with five positions outside $V_M$ of cost $L$ contributes at most eight. Indeed, a position of weight at most $t$ is not adjacent to $o$, and it cannot have both edges $va$ and $cv$, since the closed walk $vabcv$ would give a walk with five positions of cost
+at most $4t<L$. Hence such a position has $f\le1$, and two such positions
+give the bound eight. Otherwise, at least four positions have weight more than $t$.
+Then every pair of adjacent positions costs less than $M$, as a pair
+of cost at least $M$ together with two further positions of weight more than $t$
+would give total more than $M+2t=L$.
+Thus an edge $v_ia$ is possible only for $i=1$, and an edge $cv_i$ only
+for $i=5$. Indeed, any other occurrence would give a walk with five positions together with $abc$, which forces a pair of adjacent positions of weight at least $M$.
+These two directions contribute at most two. Adjacency
+to $o$ contributes at most six, because a double contribution
+requires a $2$-cycle with $o$, of weight at least $1/3$, and as $L<2/3$
+at most one position can have such weight. This proves the bound.
+Now~\eqref{c6:eq:fcount} with $j=2$ gives a contradiction, so the first type does not occur either.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{c6:thm:fractional}]
+Suppose that $F$ has no perfect fractional homomorphic tiling by the directed six-cycle. By Lemma~\ref{general:LP}, there is a deficient optimal
+cover $w$ with $0\le w\le1$ and $\min w=0$.
+Lemma~\ref{c6:lem:maxthird} gives $M>1/3$, and
+Lemma~\ref{c6:lem:onehigh} shows that every tight closed six-walk has at most one position of weight $M$.
+Let $\rho$ be the measure of Lemma~\ref{general:max-deletion}, with $r=6$, which has mass $h=|V_M|$ and is supported on walks with five positions of cost $L=1-M$ in $F-V_M$.
+In $F-V_M$ all weights are less than $M$, and every walk with five positions
+costs at least $L$, as its completion sets intersect. Theorem~\ref{c6:thm:endpoint} gives a walk of cost $L$ with $\Phi_p$-value
+at most $4h=(r-2)h$, which contradicts Lemma~\ref{general:max-deletion}.
+\end{proof}

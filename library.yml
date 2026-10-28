@@ -59,6 +59,33 @@ books:
     main: graph-theory.tex
     progress: books/graph-theory/进度.md
 
+  - slug: even-cycle-factors
+    title: Even Cycle Factors above the Half Semidegree Threshold
+    subtitle: Every orientation of an even cycle tiles digraphs with minimum semidegree (1/2+η)n
+    category: research
+    lang: en
+    status: active
+    source: books/even-cycle-factors
+    main: main.tex
+
+  - slug: rainbow-spanning-forests
+    title: Rainbow Spanning Trees and Forests in Bounded Edge-Colourings
+    subtitle: Packing rainbow forests without properness; the Kaneko–Kano–Suzuki conjecture for small colour classes
+    category: research
+    lang: en
+    status: active
+    source: books/rainbow-spanning-forests
+    main: main.tex
+
+  - slug: rainbow-paths-digraphs
+    title: Rainbow Paths in Dense Regular Digraphs
+    subtitle: Counting, absorption and exact assembly
+    category: research
+    lang: en
+    status: active
+    source: books/rainbow-paths-digraphs
+    main: main.tex
+
   - slug: locally-sparse-graphs
     title: Locally Sparse Graphs
     category: research

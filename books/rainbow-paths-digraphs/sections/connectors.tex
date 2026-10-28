@@ -1,0 +1,95 @@
+\section{Real connectors, reservoir routing, and integer quotas}
+\label{cyc:section}\label{period:router-section}
+We first prove the routing input independently of local absorption. Matrix
+norms are operator norms; rows index tails and columns index heads. A
+resource is a physical vertex or a colour. In a connector family the
+endpoints are anchored: disjointness concerns interiors and palettes.
+
+\begin{lemma}[Fixed-error walk count]\label{rt:lem:walks}
+Fix $p_0>0$ and $\rho<1$. There are an integer $L\ge4$ and $\varepsilon_*>0$ such that, if a simple digraph on $m$ vertices has row and column sums in $[D-\varepsilon{}m,D+\varepsilon{}m]$, $D\ge{}p_0m$, $\varepsilon\le\varepsilon_*$, and $\|A-(D/m)J\|\le\rho{}D$, then $(A^k)_{xy}\ge{}D^k/(2m)$ for every $x,y$ and $k=L,L+1$.
+\end{lemma}
+\begin{proof}
+Put $\mu=(1+\rho)/2$; choose $L$ with $\mu^{L-2}\le{}p_0/8$ and $\varepsilon_*\le\min(1/18,p_0(1-\rho)/20,p_0/(36(L+1)))$. For $\varepsilon>0$, set $D'=D+2\varepsilon{}m$, let $a_i,b_j$ be the row and column deficits to $D'$, and $s=\sum{}a_i=\sum{}b_j$. The matrix $B_{ij}=a_ib_j/s$ has these deficits, $0\le{}B_{ij}\le9\varepsilon$, and $\|B\|\le3\varepsilon{}m$. Thus $W=A+B$ is $D'$-regular, with entries at most $1+9\varepsilon$. For $E=W-D'J/m$ we have $EJ=JE=0$, $\|E\|\le\rho{}D+5\varepsilon{}m\le\mu{}D'$, and every row and column of $E$ has squared norm at most $2D'$. For $k=L,L+1$, $|(E^k)_{xy}|\le2(D')^{k-1}\mu^{k-2}\le(D')^k/(4m)$. The exact identity $W^k-A^k=\sum_{j<k}A^jBW^{k-1-j}$ bounds each entry of the difference by $9k\varepsilon(D')^{k-1}\le(D')^k/(4m)$. Subtract this from $W^k=(D')^kJ/m+E^k$. If $\varepsilon=0$ take $B=0,D'=D$. Artificial weights have been used only for counting.
+\end{proof}
+
+Here is the corresponding statement for approximate incidence blocks.
+Its density need not be at most one half.
+For the power-gap lemma, let $G$ be loopless, simple and properly coloured with $D=pn+o(n)$ colours, $p>0$. Suppose $V=\bigsqcup{}A_i=\bigsqcup{}B_i$, with finitely many parts of sizes $|A_i|,|B_i|=a_in+o(n)$, $a_i>0$. All real arcs go from $A_i$ to $B_i$; every vertex has in/outdegree $D-o(n)$, and each colour has $a_in-o(n)$ arcs in block $i$. Its zero-padded real matrix satisfies $\|Q_i-(D/m_i)J\|\le\rho{}D$, where $m_i=\max(|A_i|,|B_i|)$ and $\rho<1$. Let $|B_i\cap{}A_j|/n\to{}c_{ij}$, and assume the circulation $C=(c_{ij})$ has strongly connected support of period $r$.
+
+\begin{lemma}[Conditional power gap and real connectors]\label{rou:power}\label{pq:comparison}\label{pq:power-gap}\label{periodic:power-gap}\label{pq:connectors}\label{periodic:connectors}
+After deleting zero-limit cells and equalizing physical phases by $o(n)$ deletions, there is a fixed multiple $H\ge10r$ of $r$ such that every distinct compatible pair $x\in{}Z_a$, $y\in{}Z_{a+L\pmod{}r}$ has a positive linear family of real rainbow $L$-arc paths for each $H-1\le{}L\le{}H+r-1$. Interiors and palettes are pairwise disjoint. The families tolerate sufficiently small linear forbidden sets, uniformly over endpoints and lengths. For $r=1$ there is no phase restriction.
+\end{lemma}
+\begin{proof}
+The cyclic classes $I_0,\ldots,I_{r-1}$ of the quotient define $Z_a=\bigcup_{i\in{}I_a}A_i=\bigcup_{i\in{}I_{a-1}}B_i$ after the zero cells are deleted. Every real arc advances a phase. Conservation
+of $C$ gives phase masses $1/r$; hence equalization costs $o(n)$, retaining any specified root in a positive cell. Degree, colour, and
+norm errors remain $o(n)$. Rename the remaining order $n$; its limiting proportions are unchanged, and the phase sizes are now
+exactly $n/r$.
+
+Extend every partial colour matching to a permutation, phase by phase
+if $r>1$, and let $\widetilde{A}=A+B$ be their sum. Every row and column sum of $B$ is $o(n)$, so $\|B\|=o(n)$ and $T=\widetilde{A}/D$ is doubly stochastic. Fix one completed permutation $P_0$ and, only for this calculation, replace $B_i$ by $B'_i=P_0(A_i)$. Almost fullness gives $|B'_i\triangle{}B_i|=o(n)$ and $|B'_i|=|A_i|=:m_i'$. Let $V_A,V_B$ have normalized indicator columns of these equal-sized parts, put $P_A=V_AV_A^{\mathsf{T}}$, $P_B=V_BV_B^{\mathsf{T}}$, and $S=V_AV_B^{\mathsf{T}}$. Let $T_0$ retain only real entries $A_i\to{}B'_i$, divided by $D$. Moving $o(n)$ head labels affects $o(n^2)$ entries; their Frobenius cost after normalization is $o(1)$. Thus $\|T-T_0\|=o(1),\|T_0P_B-S\|+\|P_AT_0-S\|=o(1),\|(I-P_A)T_0(I-P_B)\|\le\rho+o(1)$ \textup{(RQ.1)}. For the two averaging estimates, row deficits are uniformly $o(1)$; column deficits are $o(1)$ except in $o(n)$ columns and are bounded everywhere, so their squared sum is $o(n)$. The last estimate follows from the given padded block bounds and the same Frobenius perturbation.
+Set $E=(I-P_A)T_0(I-P_B)$ and $T_*=S+E$. Then $\|T-T_*\|=o(1)$. The summands have orthogonal domains and ranges; hence $T_*$ is a contraction, fixes constants on both sides, and acts on phase-constant
+vectors by the cyclic shift. It need not be nonnegative.
+
+For completeness, the finite quotient gives a uniform power gap.
+Put $M=V_B^{\mathsf{T}}V_A$ and $w_i=\sqrt{m_i'/n}$. The stochastic matrix similar to $M$ has entries $|B'_i\cap{}A_j|/m_i'$. Entries on the limiting support are bounded below by a fixed $\theta>0$. Choose $q\equiv-1\pmod{}r$ so that every pair in the compatible cyclic classes has a length-$q$ walk. Such a fixed $q$ exists by primitivity within each cyclic class. Write $w^{(a)}$ for the unit vector equal to $\sqrt{r}w_i$ on $I_a$ and zero elsewhere. For $N_q=\sum_aw^{(a)}(w^{(a-1)})^{\mathsf{T}}$, a fixed $\delta>0$ satisfies $M^q\ge\delta{}N_q$ entrywise. Both matrices fix $w$ on both sides. The nonnegative remainder $(M^q-\delta{}N_q)/(1-\delta)$ has norm at most one: weighted Cauchy--Schwarz gives $|(Uz)_i|^2\le{}w_i\sum_jU_{ij}|z_j|^2/w_j$, and summation uses $U^{\mathsf{T}}w=w$. The case $\delta=1$ is immediate. Therefore, with $h=q+1$, $S^h$ contracts the orthogonal complement of the physical phase-constant space by $1-\delta$.
+
+Let $P$ be its projection, and replace $\rho$ by a slightly larger fixed number below one. Orthogonality gives $\|T_*f\|^2\le\|f\|^2-(1-\rho^2)\|(I-P_B)f\|^2$. For unit $f\perp\operatorname{im}P$, put $e=1-\|T_*^hf\|^2$. Telescoping this energy loss and then the recursion $T_*x=Sx+Ex$ gives $\|T_*^hf-S^hf\|\le\sqrt{he/(1-\rho^2)}$. Thus $\sqrt{1-e}\le1-\delta+\sqrt{he/(1-\rho^2)}$, implying $e\ge(1-\rho^2)\delta^2/(4h)$. The $o(1)$ perturbation transfers this to $T$: for a fixed $\sigma<1$, $\|T^h-P\|\le\sigma$ and $\|T^b(I-P)\|\le\sigma^{\lfloor{}b/h\rfloor}$.
+
+Use real end factors to count $A\widetilde{A}^{L-2}A$. For compatible $x,y$ its phase-constant term is $(1-o(1))rD^L/n$; its remainder is at most $D^{L-1}\sigma^{\lfloor(L-2)/h\rfloor}$ because real end rows and columns have norm at most $\sqrt{D}$. Choose the fixed $H$ so the error is smaller than $pD^{L-1}/4$ for the entire indicated length interval. Divide by $D^{L-1}$ and interpret the expression as a uniform $(L-1)$-colour word followed by a tested real last arc. At every state only $o(D)$ choices are artificial. Rejecting at the first artificial transition therefore loses $o(1)$ probability; the first and last arcs were already real. There remain $\Omega(n^{L-1})$ real walks.
+
+A specified repeated vertex determines one internal coordinate.
+For a specified repeated colour on nonadjacent arcs, expose all but
+an internal endpoint of one arc; incoming or outgoing properness
+determines it. For adjacent arcs expose an internal outer endpoint
+of their two-edge segment, which exists since $L\ge3$. Thus all repetitions cost $O_L(n^{L-2})$ walks. A specified internal vertex or colour also occurs in $O_L(n^{L-2})$ candidates. Greedily delete used or forbidden resources from the remaining $\Omega(n^{L-1})$ candidates, obtaining a fixed positive linear disjoint family.
+The same argument applied to Lemma~\ref{rt:lem:walks} proves the
+one-block fixed-error connector statement. No completed edge is
+ever selected as a connector resource.
+\end{proof}
+
+A Hamilton router from $A$ to $B$ has a spanning partition into directed $A$-to-$B$ paths that joins every external $B$-to-$A$ path system into one cycle; all partitions use the same full rainbow palette. Assume the preceding real connector families, proper colouring with $O(n)$ colours and positive linear minimum semidegree. Independently sample vertices and colours into reservoirs at fixed positive rates. Endpoint sets are disjoint host sets, and $a,M$ below are integers. In period $r>1$, require $r\mid{}a,M$ and $|A\cap{}Z_j|=|B\cap{}Z_j|=a/r$.
+
+\begin{lemma}[A simultaneous router, including mixed phases]\label{rt:thm:router}\label{sg:lem:router}\label{period:mixed-router}
+There are $q_0,w,c>0$ such that, with probability $1-\exp(-cn)$, every endpoint query $|A|=|B|=a$, $2\le{}a\le{}q_0n$, and $10Ha\le{}M\le20Ha$ admits a Hamilton router with exactly $M$ internal reservoir vertices and $M+a$ reservoir colours. It avoids any $wn$ forbidden resources except named endpoints and survives $o(n)$ role changes. In period $r>1$, each phase contains exactly $M/r$ internal vertices.
+\end{lemma}
+\begin{proof}
+We detail the comparator construction, so the router requires no
+unproved routing primitive. Use source pairs in $Z_0$ and heads in $Z_1$ when $r>1$; for $r=1$, a random balanced partition into source and head sets leaves linear indegree at every head. Make an auxiliary
+bipartite graph between ordered pairs of distinct sources and ordered
+pairs of distinct colours. Join $(x_1,x_2)$ to $(a,b)$ with auxiliary colour $y$ if $x_1y,x_2y$ have colours $a,b$. The graph is simple, properly coloured, has $O(n^2)$ vertices and $\Omega(n^3)$ edges, also after sufficiently small linear resource exclusions.
+Relate tuples sharing an original coordinate. For any tuple and
+another vertex, at most four neighbours of that vertex are related
+to the tuple: a shared coordinate fixes the auxiliary colour and
+the other coordinate. Equality of auxiliary colours has local bound
+one. The compatible-cycle theorem \cite[Theorem 3.4]{BMMP}, with $k=3,s=4$, applies since its threshold is $O(n^{8/3})$.
+
+The compatible six-cycle gives six distinct sources $u_1,u_2$, $v_1,v_2$ and $w_1,w_2$, and six distinct heads $u_3,u_4$, $v_3,v_4$ and $w_3,w_4$. Its six colours are distinct. The incoming colour pairs at $u_3,u_4$ are $(e_1,e_2)$ and $(c_1,c_2)$; at $v_3,v_4$ they are $(c_1,c_2)$ and $(d_1,d_2)$; at $w_3,w_4$ they are $(d_1,d_2)$ and $(e_1,e_2)$. Connect $u_3\to{}v_1$, $u_4\to{}v_2$, $v_3\to{}w_1$ and $v_4\to{}w_2$ by disjoint fresh $(H-1)$-arc connectors. Their residues are correct. Recording only the six-cycle vertices, the straight state uses $u_1u_3v_1v_3w_1w_3$ and $u_2u_4v_2v_4w_2w_4$; the crossed state uses $u_1u_4v_2v_3w_1w_4$ and $u_2u_3v_1v_4w_2w_3$. Each transition between a head and a source denotes its connector.
+Both states span the same $4H+4$ vertices and use the same $4H+2$ colours once each; each constituent path has length $2H+1$. Greedy repetition supplies linearly many vertex- and colour-disjoint
+comparators. Fix this family and all connector families before sampling.
+A comparator survives with probability $\lambda_V^{4H+4}\lambda_C^{4H+2}$, and an $L$-connector with $\lambda_V^{L-1}\lambda_C^L$. Events within a family are independent. Chernoff and a union bound over $O(n^2)$ families leave a linear supply in every family. One changed resource destroys at most one
+member per family; hence all $o(n)$ repairs preserve this event.
+
+Use four rows of $a$ column vertices, rows one and three in $Z_0$ and rows two and four in $Z_1$. Put comparator gates on odd adjacent column pairs between the first two rows and on even adjacent pairs
+between the last two. Join each middle column by an $(H-1)$-connector; fill the two unmatched gate positions with single arcs. There are $a-1$ comparators. The central vertex count is $4a+4H(a-1)+(H-2)a=(5H+2)a-4H$. Attach $x\in{}A\cap{}Z_j$ to row one by a connector of length $H+[-j]_r$, and row four to $y\in{}B\cap{}Z_j$ by one of length $H+[j-1]_r$, with residues chosen in $\{0,\ldots,r-1\}$. For $r=1$ these lengths are $H$. Uniform endpoint profiles give the internal count $M_0=H(7a-4)+(r-1)a$ \textup{(MP.1)}. It is divisible by $r$ and less than $10Ha$. Increase one middle connector by $z=M-M_0$ arcs: take $z$ fresh greedy steps, then an $(H-1)$-connector to its reserved endpoint. Since $r\mid{}z$, the final connector has the correct phase. Each greedy step uses a first
+edge from a surviving length-$H$ family; these first neighbours and colours are distinct, giving linear choice. Single gate arcs are
+obtained by the same first-edge rule. Choose every structure while
+avoiding all other external endpoints, previous resources, and the
+forbidden set. The total demand $O_H(a)+O(wn)$ is below the supply when $q_0,w$ are small. The construction therefore works for adaptively chosen endpoints, even those originally in the reservoir.
+
+To verify the Hamilton property, index the external bijection by a
+permutation $\tau$. With all gates straight its cycles are those of $\tau$. Contract these cycles in the path of adjacent column indices and choose a spanning tree. Turn on its gates. In the actual product
+order (one gate round followed by the other), each selected tree edge
+joins different unions of original cycles, so its transposition merges
+two current cycles. The final permutation is one cycle. Palette and
+vertex sets are independent of gate states. A spanning partition into $a$ paths on $M+2a$ vertices uses $M+a$ arcs. Finally, writing $I_j$ for its internal phase counts, arc balance gives $I_j+|A\cap{}Z_j|=I_{j+1}+|B\cap{}Z_{j+1}|$; hence $I_j=M/r$. Everything used one simultaneous supply event, without a union bound
+over adaptive choices.
+\end{proof}
+
+\begin{lemma}[Exact integer circulation quotas]\label{pq:quotas}
+For a fixed strongly connected support $Q$ of period $r$, a real circulation $x$ with integer total $v\in{}r\mathbb{Z}$ and all supported entries sufficiently large has an integer circulation $Z$ on the same support, of total $v$, with $Z=x+O_Q(1)$ entrywise.
+\end{lemma}
+\begin{proof}
+The circulation with lower bounds $\lfloor{}x_e\rfloor$ and upper bounds $\lceil{}x_e\rceil$ has an integral point $Z_0$: after subtracting lower bounds, integral augmenting paths route the integer
+vertex deficits through capacity-one edges, since the fractional
+residual is feasible. Thus $\|Z_0-x\|_\infty\le1$ and its total differs from $v$ by at most $|E(Q)|$. Simple directed cycle lengths have gcd $r$; Bezout supplies a signed integer circulation $W$ of total $r$. The total of $Z_0$ is divisible by $r$, by its cycle decomposition. Therefore $Z=Z_0+(v-\sum_e(Z_0)_e)W/r$ has the required total and bounded entrywise error. Taking all $x_e$ above this fixed error makes $Z\ge0$. Every circulation on this support has equal mass in the cyclic classes, so $Z$ has exactly $v/r$ vertices per physical phase.
+\end{proof}

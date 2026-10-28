@@ -1,0 +1,86 @@
+\section{Proof of Theorem~\ref{thm:forests}}\label{sec:thmC}
+Let $G$ be a graph with $km$ edges, $1\le k\le2m$, with a globally $m$-bounded edge-colouring, and assume that $G$ has no isolated vertices.
+We follow the strategy of Xu~\cite{Xu}, which splits into two cases according to whether $G$ has an orientation in which every outdegree is a little smaller than $m$.
+If it does, then every vertex set $X$ spans at most about $m|X|$ edges, and the condition $e(X)\le m(|X|-1)$ needed for a fractional split into rainbow $k$-forests holds with room to spare. In this case, we use Lemma~\ref{lem:extract}; this is where Xu uses properness, and where our argument differs.
+If it does not, then almost all edges of $G$ lie inside a set of about $k$ vertices, and Xu's arguments for this case work for arbitrary colourings after small changes, which we give in Appendix~\ref{app:xu}.
+
+\subsection{Graphs with an orientation gap}
+For $\beta>0$, we will use the condition
+\begin{equation}\label{eq:slack}
+e_G(X)\le(1-2\beta)m(|X|-1)\qquad\text{for every }X\subseteq V(G)\text{ with }|X|\ge2 .
+\end{equation}
+
+\begin{lemma}\label{lem:orient}
+Let $0<\kappa<1$, let $m$ be large, and let $h=m^{1-\kappa}$. If $G$ has an orientation in which every vertex has outdegree at most $m-h$, then $G$ satisfies~\eqref{eq:slack} with $\beta=m^{-\kappa}/4$.
+\end{lemma}
+\begin{proof}
+Let $|X|=s\ge2$; we need $e_G(X)\le(m-h/2)(s-1)$.
+If $s\ge2m/h$, then, as every edge inside $X$ has its tail in $X$, $e_G(X)\le(m-h)s=(m-h/2)(s-1)-(hs/2-m+h/2)\le(m-h/2)(s-1)$.
+If $s<2m/h=2m^\kappa$, then $e_G(X)\le s(s-1)/2<m^\kappa(s-1)\le(m-h/2)(s-1)$.
+\end{proof}
+
+To use Lemma~\ref{lem:extract}, we compare $H_R/q$ with $H_G/m$, with degree weights $w_v=1+d_G(v)/m$.
+These weights make $\|H_T\|$ small for every forest $T$ that we sample, even at vertices of very large degree.
+
+\begin{lemma}\label{lem:slackgood}
+Let $0<\beta\le1/4$, and let $G$ satisfy~\eqref{eq:slack}. Let $w_v=1+d_G(v)/m$ and $B=H_G/m$, let $q_0<m$, and let $\alpha=\beta q_0/(20m)$.
+If $q_0\le q\le m$ and $R\subseteq E(G)$ has $qk$ edges and satisfies $\|H_R/q-B\|\le\alpha$, then $d_R(v)\le2qw_v$ for every $v$, and $e_R(X)\le(1-\beta)q(|X|-1)$ for every $X$ with $|X|\ge2$.
+\end{lemma}
+\begin{proof}
+Note first that $\|B\|\le2$ by~\eqref{eq:Hnorm}, and that $\sum_{v\in X}w_v\le|X|+2k$ for every $X$.
+Let $A=L_R/q-L_G/m=W^{1/2}(H_R/q-B)W^{1/2}$. Then $|A_{vv}|\le\alpha w_v$, so $d_R(v)/q\le d_G(v)/m+\alpha w_v\le2w_v$.
+Next, by~\eqref{eq:edgecount}, for every $X$ with $|X|=s$,
+\[
+2\Bigl|\frac{e_R(X)}q-\frac{e_G(X)}m\Bigr|\le\Bigl|\sum_{v\in X}A_{vv}\Bigr|+\bigl|\one_X^{\!\top}A\one_X\bigr|\le2\alpha\sum_{v\in X}w_v\le2\alpha(s+2k).
+\]
+If $2\le s\le q$, then $e_R(X)/q\le s(s-1)/(2q)\le(s-1)/2\le(1-\beta)(s-1)$. If $s>q\ge q_0$, then $k\le2m<2ms/q_0$, so $\alpha(s+2k)\le\alpha s(1+4m/q_0)\le\beta s/4\le\beta(s-1)/2$, and~\eqref{eq:slack} gives $e_R(X)/q\le(1-2\beta)(s-1)+\beta(s-1)/2\le(1-\beta)(s-1)$.
+\end{proof}
+
+\begin{theorem}\label{thm:gapcase}
+Let $0<\kappa<1/4$ and let $m$ be large. If $G$ has an orientation in which every vertex has outdegree at most $m-m^{1-\kappa}$, then $G$ contains $m-o(m)$ edge-disjoint rainbow $k$-forests.
+\end{theorem}
+\begin{proof}
+Let $N=\max\{3,|V(G)|\}$, and note that $\sqrt{2m}\le N\le4m^2$, as $G$ has $km$ edges and no isolated vertices.
+Let $\beta=m^{-\kappa}/4$, so that $G$ satisfies~\eqref{eq:slack} by Lemma~\ref{lem:orient}, and let
+\[
+\ell=\lceil1000\beta^{-2}\log N\rceil,\qquad q_0=\lceil(10^{12}\beta^{-4}m^2\log^2N)^{1/3}\rceil,\qquad\alpha=\beta q_0/(20m).
+\]
+As $\kappa<1/4$, we have $\ell\le q_0=o(m)$, and $\alpha^2q_0=\beta^2q_0^3/(400m^2)\ge10^5\ell\log N$, while $N^{-10}\le\alpha\le1$.
+Let $w_v=1+d_G(v)/m$ and $B=H_G/m$.
+By Lemma~\ref{lem:slackgood}, every good pair $(R,q)$ with $q>q_0\ge\ell$ satisfies the conditions of Lemma~\ref{lem:sample}, using only the first alternative in~\ref{S:rank}.
+Applying Lemma~\ref{lem:extract} with $R_m=E(G)$ gives $m-q_0$ edge-disjoint rainbow $k$-forests.
+\end{proof}
+
+\subsection{Graphs without an orientation gap}
+Fix $\kappa\in(0,10^{-3})$ as in~\cite[Lemma~3.1]{Xu}, and let $h=m^{1-\kappa}$.
+If $G$ has no orientation in which every outdegree is at most $m-h$, then, by Hakimi's orientation theorem~\cite{Hak}, some vertex set spans more than $(m-h)$ times its size edges.
+Xu shows that almost all edges then lie in a set of size close to $k$; this part of his argument does not involve the colouring.
+
+\begin{lemma}[{Xu~\cite[Lemma~4.1]{Xu}}]\label{lem:xudense}
+Let $m$ be large, $1\le k\le2m$, and let $G$ have $km$ edges and no orientation in which every outdegree is at most $m-h$. Then $k\ge2m-6h$, and there is a set $R\subseteq V(G)$ with $k\le|R|\le k+500h$, such that at most $50hm$ edges of $G$ do not lie inside $R$, and every vertex outside $R$ has fewer than $m/10$ neighbours in $R$.
+\end{lemma}
+
+For $U\subseteq R$ with $|U|\le k$, a $k$-forest has at least $k+1-|U|$ edges outside $U$, so we need $G$ to have at least $m(k+1-|U|)$ edges not inside $U$.
+Xu distinguishes the case where this holds with some room for every large $U$ from the case $k=2m$, where it may be tight for $U=R$ of size $2m$.
+In the latter case, the forests consist of a spanning tree of $G[U]$ and one more edge.
+We state his two lemmas for arbitrary colourings; their proofs are in Appendix~\ref{app:xu}.
+
+\begin{lemma}[{Xu~\cite[Lemma~5.2]{Xu} for arbitrary colourings}]\label{lem:critical}
+For every $\eps>0$ there is $\eta>0$ such that the following holds for all large $m$. If $G$ has $2m^2$ edges with a globally $m$-bounded edge-colouring, and some set $C$ of $2m$ vertices has at most $(1+\eta)m$ edges of $G$ not inside it, then $G$ contains $(1-\eps)m$ edge-disjoint rainbow $2m$-forests.
+\end{lemma}
+
+\begin{lemma}[{Xu~\cite[Lemma~6.1]{Xu} for arbitrary colourings}]\label{lem:remaining}
+For every $\eps,\eta>0$, the following holds for all large $m$ and all $1.9m\le k\le2m$. Let $G$ have $km$ edges, no isolated vertices, and a globally $m$-bounded edge-colouring, and let $R$ be as in Lemma~\ref{lem:xudense}. Suppose that, for every $U\subseteq R$ with $1.9m\le|U|\le k$, at least $(1+\eta)m(k+1-|U|)$ edges of $G$ do not lie inside $U$. Then $G$ contains $(1-\eps)m$ edge-disjoint rainbow $k$-forests.
+\end{lemma}
+
+\begin{proof}[Proof of Theorem~\ref{thm:forests}]
+Let $\eps>0$, let $\eta\le1/10$ be such that Lemma~\ref{lem:critical} holds, and let $m$ be large. Delete the isolated vertices of $G$.
+If $G$ has an orientation in which every outdegree is at most $m-h$, we are done by Theorem~\ref{thm:gapcase}.
+Otherwise, let $R$ be given by Lemma~\ref{lem:xudense}, so that $k\ge1.9m$.
+If $k=2m$ and some set of $2m$ vertices has at most $(1+\eta)m$ edges not inside it, we are done by Lemma~\ref{lem:critical}.
+Otherwise, let $U\subseteq R$ with $1.9m\le u=|U|\le k$, and let $j=k+1-u$.
+The number of edges not inside $U$ is at least $km-\binom u2=m(j+u-1)-\binom u2=mj+(u-1)(2m-u)/2$.
+As $(u-1)/2\ge0.9m$, this is at least $1.9mj$ if $k\le2m-1$ (when $2m-u\ge j$), and at least $1.45mj$ if $k=2m$ and $u<k$ (when $2m-u=j-1\ge j/2$).
+If $k=u=2m$, then $j=1$ and there are more than $(1+\eta)m$ edges not inside $U$, by assumption.
+Thus Lemma~\ref{lem:remaining} applies, and completes the proof.
+\end{proof}

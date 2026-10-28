@@ -1,0 +1,130 @@
+\section{From fractional tilings to factors}\label{factor402:section}
+In this section, we deduce Theorem~\ref{compact390:main} from Theorem~\ref{compact390:finite}, and show that the two are equivalent (Theorem~\ref{general:equivalence}). The argument is standard. We first use the regularity lemma and a perfect fractional tiling of the reduced digraph to cover almost all vertices by copies of $H$ (Lemma~\ref{framework390:embed}), and then cover the remaining vertices using a small absorbing set chosen in advance (Lemma~\ref{general:absorb}).
+Throughout this section, $H$ is an orientation of a cycle of order $r\ge4$.
+
+We use the degree form of the regularity lemma for digraphs~\cite{AS}. For fixed $\varepsilon,d>0$ and sufficiently large $N$, it gives, for every digraph $G$ of order $N$, a partition of $V(G)$ into clusters $V_0,V_1,\ldots,V_k$ and a spanning subdigraph $G'$ of $G$ with the following properties. We have $|V_0|\le\varepsilon N$, $|V_i|=m$ for $i>0$, and $k$ is bounded independently of $N$. Every vertex has at most
+$(d+\varepsilon)N$ fewer inneighbours and fewer outneighbours in $G'$ than in $G$. Each cluster $V_i$ with $i>0$ is independent in $G'$, and, for every ordered pair of clusters $(V_i,V_j)$ with $i,j>0$, the bipartite digraph of the edges of $G'$ from $V_i$ to $V_j$ is
+$\varepsilon$-regular with density zero or at least $d$.
+Here, $\varepsilon$-regularity means that the density of edges from $X'\subseteq V_i$ to $Y'\subseteq V_j$ differs from that from $V_i$ to $V_j$ by less than $\varepsilon$ whenever $|X'|\ge\varepsilon m$ and $|Y'|\ge\varepsilon m$. In particular, for such a set $Y'$, all but at most $\varepsilon m$ vertices of $V_i$ have at least $(d(V_i,V_j)-\varepsilon)|Y'|$ outneighbours in $Y'$; we call the other vertices of $V_i$ \emph{atypical} to $Y'$. The same holds for inneighbours.
+
+\begin{lemma}
+\label{framework390:embed}\label{general:round}
+The following hold.
+\begin{props}
+\item\label{framework390:embed:1} Suppose that each position $i$ of $H$ is assigned a cluster, so that, for every edge from position $i$ to position $j$ of $H$, the ordered pair of the clusters assigned to $i$ and $j$ is $\varepsilon$-regular with density at least $d$. Clusters may be assigned to several nonadjacent positions. For each position $i$, let $U_i$ be a set of at least $\gamma m$ vertices in its cluster, where these sets are disjoint.
+If $d>2\varepsilon$, $4\varepsilon<d\gamma$ and $m$ is sufficiently
+large, then there is a copy of $H$ in which each position $i$ is mapped into $U_i$.
+\item\label{framework390:embed:2} Suppose that every digraph $F$ with $\delta^0(F)>|F|/2$ has
+a perfect fractional homomorphic $H$-tiling. Then, for all $\eta,\xi>0$,
+every sufficiently large digraph $G$ with $\delta^0(G)\ge(1/2+\eta)|G|$
+has a collection of vertex-disjoint copies of $H$ covering all but fewer than $\xi|G|$ vertices.
+\end{props}
+\end{lemma}
+\begin{proof}
+\emph{Part~\ref{framework390:embed:1}.}
+Number the positions of $H$ cyclically as $1,\ldots,r$. We choose the images $x_1,\ldots,x_r$ in turn. Choose $x_1\in U_1$ which is not atypical to $U_2$ or to $U_r$ (in the directions given by the edges of $H$), which excludes at most $2\varepsilon m$ vertices.
+Let $C_2\subseteq U_2$ and $C_r\subseteq U_r$ be the sets of vertices joined to $x_1$ in the required directions; each has size
+at least $(d-\varepsilon)\gamma m>\varepsilon m$.
+Then choose $x_2\in C_2$ which is not atypical to $U_3$, and continue in this way: at each step, the set of candidates has size at least
+$(d-\varepsilon)\gamma m$, while at most $\varepsilon m$ of
+them are atypical. When choosing $x_{r-1}$, we also require that it is not atypical to
+$C_r$, and finally we choose $x_r$ in $C_r$ among the vertices joined to $x_{r-1}$.
+This closes the cycle. Every edge is used in the direction prescribed by $H$,
+and, as the sets $U_i$ are disjoint, no vertex is chosen twice, even when clusters are repeated.
+
+\emph{Part~\ref{framework390:embed:2}.}
+Let $N=|G|$, choose $d<\eta/8$ and
+$\gamma<\min\{\xi/(4r),1/4\}$, and then
+$\varepsilon<\min\{\eta/16,\xi/4,d\gamma/16\}$.
+Apply the regularity lemma to $G$, and let $R$ be the \emph{reduced digraph}, whose vertices are the clusters $V_1,\ldots,V_k$, with an edge from $V_i$ to $V_j$ whenever the pair $(V_i,V_j)$ has positive density in $G'$. Since every vertex loses at most $(d+\varepsilon)N$ neighbours in each direction, and at most $\varepsilon N$ vertices lie in $V_0$, every cluster $V_i$ satisfies
+\[
+ d_R^\pm(V_i)m\ge(1/2+\eta-d-2\varepsilon)N>km/2.
+\]
+Thus, by our assumption and Lemma~\ref{general:LP}\ref{LP:support}, $R$ has a perfect fractional homomorphic $H$-tiling in which at most $k$ homomorphisms $f$ have positive weight $\lambda_f$.
+For each such $f$, let $t_f=\lfloor m\lambda_f\rfloor$, and, for each position $i$ of $H$, allocate a set of $t_f$ vertices of the cluster $f(i)$ to the pair $(f,i)$. By~\eqref{framework390:loads}, these sets can be chosen disjoint, also when $f$ maps several positions to the same cluster, and
+fewer than $rk$ vertices of each cluster remain unallocated.
+For each $f$, we repeatedly apply part~\ref{framework390:embed:1} to the sets allocated to $(f,1),\ldots,(f,r)$, after removing the vertices already used, until these sets have size less than $\gamma m$. There are at most $k$ homomorphisms $f$,
+so the number of vertices which are not covered is less than
+\[
+ \varepsilon N+rk^2+r\gamma km<\xi N,
+\]
+where the last inequality holds for sufficiently large $N$, as $k$ is bounded.
+\end{proof}
+
+We now construct the absorbing set, which can absorb any small set of $r$-divisible size.
+
+\begin{lemma}[An absorbing set]\label{general:absorb}
+For fixed $H$ and $0<\eta\le1/4$, there are $\beta>0$ and $n_0$ such
+that every digraph $G$ of order $n\ge n_0$ with minimum semidegree
+at least $(1/2+\eta)n$ contains a set $A$ with $|A|\le\eta n/2$ and $r^2\mid|A|$ such that $G[A\cup W]$ has an
+$H$-factor for every $W\subseteq V(G)\setminus A$ with
+$r\mid|W|$ and $|W|\le\beta n$.
+\end{lemma}
+\begin{proof}
+Any two outneighbourhoods or inneighbourhoods intersect in at least
+$2\eta n$ vertices, so, after excluding a bounded set of vertices, at least $\eta n$ choices remain.
+
+We first count \emph{absorbers}. Fix a set $S=\{s_1,\ldots,s_r\}$ of $r$ vertices.
+Choose vertices $t_1,\ldots,t_r$ outside $S$ which form a copy of $H$, in this order:
+each of the first $r-1$ positions has at least $n/2$ choices,
+and the last has at least $\eta n$.
+Fix a position $j_0$ of $H$. For each $i$, choose $r-1$ new vertices which complete a copy of $H$ with $s_i$ at position $j_0$, and also a copy of $H$ with $t_i$ at position $j_0$. To do this, choose the two neighbours of position $j_0$ in the common outneighbourhoods or inneighbourhoods of $s_i$ and $t_i$, as required. Then choose the remaining positions in turn along the path, leaving one
+internal position, which we choose in the intersection of the two required neighbourhoods; this is possible as $r\ge4$.
+Each choice has at least $\eta n$ possibilities.
+Let $B$ be the resulting set of $r^2$ vertices, consisting of the vertices $t_1,\ldots,t_r$ and the new vertices. Then $B$ has an $H$-factor, formed by the $r$ copies through the vertices $t_i$, and
+$B\cup S$ has an $H$-factor, formed by the copy on $t_1,\ldots,t_r$ and the $r$ copies through the vertices $s_i$. We call such a set $B$ an absorber for $S$.
+Each set $B$ arises from at most $(r^2)!$ such constructions, so $S$ has at least $\kappa n^{r^2}$ absorbers, where
+\[
+ \kappa=\frac{\eta^{r(r-1)+1}}{2^{r-1}(r^2)!}>0.
+\]
+
+Let $t=r^2$, choose
+$0<\alpha\le\min\{\kappa/16,\eta/(8t)\}$, and let
+$\beta=r\kappa\alpha/8$.
+Select each set of $t$ vertices independently with probability $\alpha n^{1-t}$.
+The expected number of selected sets is at most $\alpha n$.
+There are at most
+$\frac n2\binom{n-1}{t-1}^{2}\le n^{2t-1}/2$
+pairs of intersecting sets, so the expected number of selected
+intersecting pairs is at most $\alpha^2n/2$. For each $S$, Chernoff's inequality shows that, with probability
+at most $e^{-\kappa\alpha n/8}$, fewer than $\kappa\alpha n/2$ absorbers for $S$ are selected.
+By a union bound over the fewer than $n^r$ sets $S$, and Markov's
+inequality, with positive probability there are at most $4\alpha n$
+selected sets and at most $4\alpha^2n$ selected intersecting pairs, and at
+least $\kappa\alpha n/2$ selected absorbers for every $S$.
+Delete one set from each selected intersecting pair, and delete the selected sets which are not absorbers for any $S$. For each $S$, there remain at least
+\[
+ \kappa\alpha n/2-4\alpha^2n\ge\kappa\alpha n/4
+\]
+absorbers for $S$, which are pairwise disjoint. Let $A$ be their union, so that $|A|$ is divisible by $t$, and $|A|\le4t\alpha n\le\eta n/2$.
+Given $W$ as in the statement, partition $W$ into sets of size $r$. There are at most
+$\beta n/r=\kappa\alpha n/8$ of them, so we can assign distinct
+remaining absorbers to them greedily. Using the second $H$-factor for these absorbers and the first for the other absorbers gives an $H$-factor of $G[A\cup W]$.
+\end{proof}
+
+\begin{theorem}\label{general:equivalence}
+For a fixed cycle orientation $H$ of order $r\ge4$, the following
+are equivalent.
+\begin{props}
+\item\label{general:equivalence:1} Every digraph $F$ with $\delta^0(F)>|F|/2$ has a perfect
+fractional homomorphic $H$-tiling.
+\item\label{general:equivalence:2} For every $\eta>0$, there is some $n_0$ such that every digraph $G$ of
+order $n\ge n_0$ with $r\mid n$ and $\delta^0(G)\ge(1/2+\eta)n$ has an
+$H$-factor.
+\end{props}
+\end{theorem}
+\begin{proof}
+Suppose first that~\ref{general:equivalence:1} holds, and let $G$ be as in~\ref{general:equivalence:2}. Decreasing $\eta$ if necessary, we may assume that $\eta\le1/4$. Let $A$ and $\beta$ be given by Lemma~\ref{general:absorb}, and let $m=|A|$. Then
+$\delta^0(G-A)\ge(1/2+\eta)n-m\ge(1/2+\eta/2)(n-m)$.
+Applying Lemma~\ref{general:round}\ref{framework390:embed:2} to $G-A$, with $\eta/2$ in place of $\eta$ and $\beta$ in place of $\xi$, gives vertex-disjoint copies of $H$ in $G-A$ which cover all vertices except a set $W$ of at most $\beta n$ vertices. As $n$ and $|A|$ are divisible by $r$, so is $|W|$, and so $G[A\cup W]$ has an $H$-factor. Together with the copies already found, this gives an $H$-factor of $G$.
+
+Conversely, suppose that~\ref{general:equivalence:2} holds, and let $F$ be a digraph with $\delta^0(F)>|F|/2$. Fix $\eta$ with $0<\eta<\delta^0(F)/|F|-1/2$, and let $m$ be sufficiently large and divisible by $r$. Replace each
+vertex of $F$ by $m$ copies, forming an independent set, and each edge $uv$ by all edges from the copies of $u$ to the copies of $v$. The resulting digraph has order $m|F|$, divisible by $r$, and minimum semidegree $m\delta^0(F)\ge(1/2+\eta)m|F|$, so it has an $H$-factor. Projecting each copy of $H$ in this factor to $F$ gives a homomorphism from $H$ to $F$. Giving each of these homomorphisms weight $1/m$ gives a perfect fractional homomorphic $H$-tiling of $F$, as each vertex of $F$ has $m$ copies, each covered once.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{compact390:main}]
+By Theorem~\ref{compact390:finite}, statement~\ref{general:equivalence:1} of Theorem~\ref{general:equivalence} holds, and so statement~\ref{general:equivalence:2} holds, which is Theorem~\ref{compact390:main}.
+\end{proof}
+
+\section*{Declaration of generative AI assistance}
+Generative AI was used to assist the development and presentation of the mathematical arguments.

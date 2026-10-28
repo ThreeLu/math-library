@@ -1,0 +1,233 @@
+\section{Local interfaces and fractional completion}
+\label{rsg:section}\label{rpf:section}\label{sg:sec:inputs}
+
+Every selected configuration and stored resource set is physically
+admissible. Ambient source and target classes may contain both copies,
+with physical labels injective on each side. A selected configuration
+uses at most one copy of each label; avoiding a label excludes both.
+Write $L=\log(2m)$ and fix $\beta=L^{-12000},g=\lceil{}mL^{-12600}\rceil,b=\lceil{}mL^{-12500}\rceil$. Fixed positive multiples of $g,b$ are equally permissible.
+
+For the next proposition, fix $p_0>0$, $0\le\rho<1$ and $\eta>0$. Let $H[X,Y]$ be simple and properly $D$-coloured, with no edge joining equal physical labels, and put $m=\max(|X|,|Y|)$. Assume $D\ge{}p_0m$, $d_H(z)\in[D-\varepsilon_0m,D]$, and $|M_c|\ge(1-\varepsilon_0)m$ \refstepcounter{equation}\label{rsg:partial-hypotheses}\textup{(\ref{rsg:partial-hypotheses})}. Zero-pad the smaller class to obtain $A$ and require $\|A-(D/m)J_m\|\le\rho{}D$ \refstepcounter{equation}\label{rsg:gap-hypothesis}\textup{(\ref{rsg:gap-hypothesis})}.
+
+Addition queries have disjoint admissible external inputs of $a$ vertices per side and $c$ colours, $a,c\le{}m^{4/5}$. Stored and input palettes avoid their identity colour and its fixed finite exceptional set. An ordinary query may prescribe any missing head $y\in{}Y$; its identity colour has a real predecessor of $y$ outside the forbidden resources. This root edge may be impermissible and is never an output identity.
+
+For a small fixed core rate $\kappa>0$, put $v_0=\kappa{}m$ and sample source, target and colour roles at rates $v_0/|X|,v_0/|Y|,v_0/D$, with mutually exclusive physical-copy roles. The certificate refers to anchored degrees, six upper shadows and the incidence Gram gap. Its small-extension tolerance depends only on density and gap; the final error threshold and order bound may also depend on the chosen $\kappa$.
+
+\begin{proposition}[Robust local singular-gap interfaces]\label{rsg:proposition}\label{rpf:proposition}
+For sufficiently small $\varepsilon_0$ and large $m$, the following interfaces exist.
+\begin{enumerate}
+\item At least $(1-\eta)D$ identity colours have pools of at least $(1-\eta)m$ real edges satisfying Theorem~\ref{rpe:theorem}.
+\item For fixed sufficiently large $K=K(p_0,\rho)$, ordinary and spare addition modules have sizes $(2g+1,g+1)$ and $(2g,g+K)$, recording side and palette sizes. They output $g+a-c$ permitted identity edges and $g+c$ rainbow edges. The ordinary output misses one vertex per side, with prescribed head; the spare covers all vertices.
+\item Protected ordinary modules have side and palette size $B_0=b+g+1$; protected spares have side size $B_1=b+g$ and palette size $B_1+K$. Any fixed number obey the sequential reservation rule below.
+\item With probability tending to one, the balanced sampled core has the stated certificate, surviving $o(m)$ protected changes. Every balanced target within its extension tolerance has a fractional perfect matching and a matching missing $O(m^{2/3}\log^4m)$ vertices per part.
+\end{enumerate}
+Interiors avoid the inverse-logarithmic forbidden populations below. After further deletions, the interfaces apply whenever the same hypotheses hold for the residual graph and palette. Completed edges and dummy copies are never output resources.
+\end{proposition}
+
+We prove the local assertions first, then the fractional certificate. In this proof write $\varepsilon=\varepsilon_0$. Choose $\rho<\rho_1<1$, fixed lengths $r,K$ as below, and a small physical-alias threshold $\varepsilon_*$.  Next choose a candidate loss $\eta_1<\eta$ so small that $O_{p_0,r,K}(\eta_1)\ll1$ in every finite configuration family, and invoke Theorem~\ref{rpe:theorem}
+with loss $\eta_1$.  Finally choose $\varepsilon_0$ for that theorem, all finite-word rejection bounds, and the eventual fractional
+threshold.  Thus fixed gadget lengths precede both error parameters.
+
+\subsection{Real alternating supports}
+\label{sg:lem:C4}\label{sg:sec:C7}
+
+Every colour matching can be completed between two padded $m$-sets. Write their sum as $\widetilde{A}=A+B$.  If rows were padded, every real row of $B$ has sum at most $\varepsilon{}m$, every dummy row at most $D$, and every column at most $\varepsilon{}m$; hence \refstepcounter{equation}\label{rsg:completion-gap}$\|B\|\le\sqrt{D\varepsilon{}m},\|\widetilde{A}-(D/m)J_m\|\le\rho_1D$ \textup{(\ref{rsg:completion-gap})}. Transpose for padded columns.  In a completed random word, stop at
+the first artificial transition.  Until then the current copy is
+real, with at most $\varepsilon{}m$ bad colours, so a length-$h$ word fails this way with probability at most $h\varepsilon{}m/D$. No estimate after entry into a dummy copy is used.  After its first
+real uniform-colour step, a real-prefix subprobability law has atoms
+at most $1/D$.  Real averaged colour maps are doubly substochastic and prescribed real matching maps are partial injections, preserving
+this bound.  Missing identity endpoints and impermissible identity
+pairs therefore cost $O_{p_0,h}(\varepsilon+\eta_1)$ at fixed positions.
+
+Fix a candidate identity colour $c_0$, its real involution $J$, and a completed permutation matrix $S$.  The following three supports use only permitted real identity edges.  Roots in the first support
+are allowed to be arbitrary distinct physical labels.
+
+\paragraph{Endpoint support (C4).}
+There are linearly many configurations, disjoint in free physical
+vertices and free colours, with $r-1$ internal identity edges and an $r$-edge rainbow matching on their vertices and two prescribed opposite-side roots.  To count them, retain real end adjacency
+factors in $AS^{\mathsf{T}}\widetilde{A}S^{\mathsf{T}}\cdots{}S^{\mathsf{T}}\widetilde{A}S^{\mathsf{T}}A$. Its constant contribution is at least $D^{r-2}(D-\varepsilon{}m)^2/m$; the centred contribution has absolute value at most $\rho_1^{r-2}D^{r-1}$, since the real end row and column have norms at most $\sqrt{D}$.  Choose fixed $r\ge3$ so $\rho_1^{r-2}<p_0/4$.  Dividing by $D^{r-1}$ leaves a fixed positive closing probability after the preceding real-edge and
+permitted-pair rejections.
+
+Each fresh letter excludes $O_r(1)$ choices for old physical labels, roots, repeated colours and $c_0$.  A closing colour equal to an earlier nonfinal letter is a forced-final-letter event.  If it equals
+the final growth colour $t$, fixing $t$ forces the preceding endpoint; that endpoint has atom at most $1/D$, because at least one earlier random step occurred.  Averaging over $t$ gives the same $O(1/D)$ bound.  Thus collision rejection costs $O_r(1/D)$. A fixed free vertex or colour has load $O_r(D^{r-2})$: specify its position and all other letters, then solve the remaining injective
+real transition; a specified closing colour similarly pins the last
+letter.  Greedy packing from $\Omega(D^{r-1})$ configurations gives the claimed linear disjoint supply.
+
+\paragraph{One-colour support (C5).}
+For $c\ne{}c_0$ let $b_J(c)$ count real words $c_0,c,c_0$ starting in the head class whose endpoint physical labels coincide.
+Reversal bijects these bad words with the bad words starting in
+the source class, so the same exceptional set works for both. Put $E_J=\{c:b_J(c)>\varepsilon_*m\},\sum_cb_J(c)\le{}m,|E_J|\le\varepsilon_*^{-1}$. The sum bound holds because each start determines at most one bad
+colour.  This endpoint equality is the only physical collision in
+the four-copy word.  For $c\notin{}E_J\cup\{c_0\}$, undefined or impermissible steps remove $O(\varepsilon+\eta_1)m$ starts, and aliases remove at most $\varepsilon_*m$.  Close its endpoints using C4, avoiding its vertices and $c$.  The result has $r+1$ identity edges and a rainbow perfect matching of size $r+1$ containing $c$, with $r$ free colours.  Bounded loads and greedy packing again give a linear disjoint supply.
+
+\paragraph{Prescribed-palette support (C6).}
+For each fixed $j$ and palette $T$ of at least $5j$ colours avoiding $c_0$, there are linearly many disjoint sets with $j+1$ identity edges and a $T$-rainbow matching of size $j$.  Restrict to $5j$ colours.  Among all words of length at most $2j+1$ in $T\cup\{c_0\}$, at most $C_j(\varepsilon+\eta_1)m$ starts encounter a missing or impermissible transition, by partial injectivity.  At another start
+extend $c_0,t_1,c_0,\ldots,t_i,c_0$.  If its endpoint is $u$ and its old tail and head sets are $A_i,B_i$, exclude for the next tail $I_tu$ the sets $A_i\cup{}J(B_i)\cup\iota(B_i)\cup{}J\iota(A_i)$. Together with the $i$ used colours these exclude at most $5i+4<5j$ choices.  The new identity pair is internally admissible by looplessness.  A bounded-radius packing in the graph of these
+fixed colours and physical identifications gives the linear family.
+The case $j=0$ is just a permitted identity edge.
+
+These supports can be sampled into smaller roles.  In each packed
+family, free vertices and colours are disjoint, so survival trials
+are independent.  With source/head role rate $s$ and free-colour rate $q$, the respective probabilities are $s^{2r-2}q^r$, $s^{2(r+1)}q^r$ and $s^{2j+2}$, anchoring the roots and prescribed colours.  Chernoff and a union bound over
+the polynomially many fixed-size queries apply also when $s,q$ are fixed inverse powers of $L$: every supply is $m/L^{O(1)}$. Each changed resource damages at most one packed configuration.
+Delete forbidden and impermissible pairs at a fixed positive support
+rate first; only then take tiny samples.  Thus the fixed loss $\eta_1m$ is never charged against an inverse-logarithmic supply.
+
+\subsection{Basic addition and a prescribed missing head}
+\label{sg:lem:basic}\label{sg:lem:addition}
+\label{rphys:section}\label{rphys:module}
+\label{sec:rooted-ordinary-checkpoint}
+
+Set $S_0=r^2$, $H_0=S_0+r+2$, and take $K\ge5(S_0+1)$, enlarged for the rooted construction below. All stored and input palettes here avoid $E_J\cup\{c_0\}$.
+
+\paragraph{The basic module.}
+Take tiny disjoint supports $V_0,C_0$, with larger complementary supports $V_1,C_1$.  Store every supported permitted identity edge in $V_0$, forming $M_1$ of size $u$.  For every $c\in{}C_0$, use C5 to store a disjoint block in $V_1$ with identity matching $E_c$ and rainbow matching $F_c$, both of size $r+1$, whose other colours are fresh in $C_1$.  Put $M_2=\bigcup_cF_c$, $v=(r+1)|C_0|$, and pad its palette to $v+K$.  The entire permitted identity pool is $M_1\cup\bigcup_cE_c$.
+
+For an external input $(a,a,c)$ maximize $(S_0+1)a'+R$ over $a'\le{}a$, $-S_0a'\le{}R\le{}c$, and matchings on exactly the stored vertices and $a'$ external vertices per side, of identity and rainbow sizes $u+a'-R,v+R$, subject to original-edge damage $|M_i\setminus{}M_i'|\le{}H_0[(S_0+1)a'+R](i=1,2)$ \textup{(A.1)}. The original pair is feasible.  Call $c\in{}C_0$ good when its entire original $F_c$ remains.  If external roots $x,y$ remain, choose C4 with $r-1$ undamaged identity edges and $r$ good colours. Remove these identity edges and insert the corresponding $r$ blocks $E_c$; replace those $r$ blocks $F_c$ by the endpoint rainbow matching.  Then $(a',R)\mapsto(a'+1,R-S_0),\Delta|M_1'|=r(r+1)-(r-1)=S_0+1,\Delta|M_2'|=-S_0$. At most $r-1$ original identity and $S_0+r$ original rainbow edges are newly lost.  The objective increases by one, and its
+damage allowance increases by $H_0>S_0+r$, a contradiction.
+
+Thus $a'=a$.  If $R<c$, more than $K\ge5(S_0+1)$ colours are unused.  C6 with $j=S_0+1$ supplies $S_0+2$ undamaged identity edges and an $(S_0+1)$-edge rainbow matching missing two vertices. Join these by fresh C4 using good colours.  Replace all $S_0+2+r-1$ identity edges by the $r$ corresponding $E_c$ blocks, and replace their $F_c$ blocks by both new rainbow matchings. The identity size decreases by one and rainbow size increases by
+one: $(a,R)\mapsto(a,R+1)$.  Newly lost original edges number at most $S_0+r+1<H_0$ and $S_0+r<H_0$, respectively, again improving the objective.  Hence $R=c$.
+
+Choose the tiny supports so $u,v=o(g)$ and then their finite configuration coefficients.  The damage and forbidden populations
+in either improvement are $O_{r,K}(a+c)$, below these coefficients when $a,c\le{}m^{4/5}$.  This also makes all packing and padding choices available.  The basic outputs cover every vertex, use $v+c$ rainbow colours, and leave exactly $K$ colours unused.
+
+\paragraph{Real contracted states.}
+Let $Z$ be the matched heads of $c_0$, $m'=|Z|\ge(1-\varepsilon)m$, and put $q_c(z)=I_cJz$ whenever this is a real state in $Z$. The zero--one sum $Q_0$ has degrees at least $D-2\varepsilon{}m$ and each colour has at least $m-3\varepsilon{}m$ state edges. It is a row/column permutation of a restriction of $A$, so \refstepcounter{equation}\label{rsg:state-gap}$\|Q_0-(D/m')J_{m'}\|\le(\rho+\varepsilon)D$ \textup{(\ref{rsg:state-gap})}. Completing these partial state matchings changes the norm by at most $2\varepsilon{}m$, leaving a bound $\rho_1D$.  Parallel artificial entries are harmless even if $D>m'$.  Two real end factors and a completed middle of length $K-2$, with $K$ sufficiently large, give a fixed positive real closing probability for a $(K-1)$-letter growth word from every permitted state.  Artificial steps cost $O_K(\varepsilon)$, impermissible states cost $O_{p_0,K}(\eta_1)$, and physical/colour collisions cost $O_K(1/D)$ as in C4, including equality of the closing and final growth colours.
+
+\paragraph{Rooted backups and the joint atom.}
+Write $\Lambda(z)$ for the physical identity pair at state $z$. Each physical label occurs in at most two such pairs, and a pair
+intersects at most three pairs, including itself.  For each $K$-palette $B$ choose $b_1,b_2\in{}B$ so that $|\{z:\Lambda(q_{b_2}q_{b_1}z)\cap\Lambda(z)\ne\varnothing\}|\le3m/(K-1)$. Fix $b_1$ and average over $b_2$: each start permits at most three target states and properness at most one colour per target.
+Complete the order of $B$ and, from the prescribed head $y$, use $f_1,b_1,b_2,f_2,b_3,f_3,b_4,\ldots,f_{K-1},b_K$ \textup{(RP.2)}. For independent uniform fillers the $2K$ identity states are physically disjoint and the $2K-1$ letters distinct except with probability at most $\frac{3m}{D(K-1)}+\frac{K\varepsilon_*m}{D}+O_{p_0,K}(\varepsilon+\eta_1)+O_{K,\varepsilon_*}(1/D)$ \textup{(RP.3)}. Indeed every positive real position has subprobability atom $1/D$. This bounds undefined and impermissible steps and the two-step
+return set.  Adjacent prescribed pairs have at most $\varepsilon_*m$ aliasing starts by $B\cap{}E_J=\varnothing$. For other collisions, every new position in a filler block is a
+partial injection of the first new state, so each old physical
+label excludes at most two fillers.  Repeated or exceptional filler
+colours cost $O_{K,\varepsilon_*}(1/D)$.  The root pair itself is allowed even if impermissible; its future repeats are excluded.
+The resulting rainbow matching misses exactly $y$ and the final state's source.
+
+Sequentially build $L_0=\lfloor\zeta{}m\rfloor$ physically and palette-disjoint real base cycles of length $K$, avoiding the root, fixed forbidden resources and impermissible pairs.  Choose the
+initial state uniformly from those still available, then uniform
+growth letters conditioned on valid closure.  For small fixed $\zeta$, there are at least $m/2$ initial choices and the conditioning probability is at least a fixed $c_*>0$.  Thus, conditional on the previous cycles, $\Pr(F_i=F)\le{}CD^{-(K-1)},\Pr(a_i=a,F_i=F)\le{}C/(mD^{K-1})$ \textup{(RP.4)}. These constants can be chosen without circular dependence on $K$. First take $K$ beyond the mixing threshold, with $\rho_1^{K-2}\le{}p_0/8$ and $K-1>4800/p_0^2$. The real-end count gives closing probability at least $p_0/2$ before rejections, for sufficiently small $\varepsilon$. Then choose $\zeta,\eta_1,\varepsilon$ so that the total $O_{p_0,K}(\varepsilon+\eta_1+\zeta)+o(1)$ rejection loss leaves $c_*\ge{}p_0/8$. Thus (RP.4) holds with $C=16/p_0$, independently of $K$. Its multiple of the first term in (RP.3) is below $1/100$. Choose $\varepsilon_*$ small after $K$, and reduce $\eta_1,\varepsilon$ further, so $C$ times all of (RP.3) is below $1/20$. The atom estimates in (RP.3) concern the original unconditioned real-prefix subprobability; only afterwards do we
+use the density bound (RP.4).  For fixed $F$, each base position is a partial injective function of $a$, whereas its backup positions are determined by $F,B,y$.  A specified physical collision pins at most one $a$; the joint atom makes intersection with its own backup $O_K(1/m)$, without an independence assertion.
+
+For each $B$, conditional good-index probability is at least $9/10$. Martingale concentration and a union bound over $D^K$ palettes give linearly many good indices simultaneously; at most $K$ base palettes meet $B$.  A fixed nonroot physical label lies in a backup with conditional probability $O_K(1/m)$.  Its load $S$ obeys $\Pr(S\ge{}t)\le\binom{L_0}{t}(C'/m)^t$; take $t=C_K\log{}m$ and union bound over labels and $B$.  Fix a base family satisfying both conclusions.  Earlier basic-module colours are forbidden for
+stored and free supplementary colours, but may be prescribed inputs $B$; this distinction allows the basic module's unused colours.
+
+\paragraph{Joint support and sparse selection.}
+Assign each physical label independently a source/head/neither role
+with probabilities $s,s,1-2s$, force the two root labels, and sample free colours at rate $q$, where $s,q$ are inverse powers of $L$. A good base--backup union has $6K-2$ distinct nonroot labels and $K$ free base colours.  For each $B$, its logarithmic loads permit $cm/\log{}m$ disjoint unions.  Their independent survival probability is $\vartheta=s^{6K-2}q^K$, so every $B$ has at least $E_{\min}=c'\vartheta{}m/\log{}m$ eligible indices simultaneously. This is joint survival, not conditional independence after base survival.
+
+Fix such a sample and let $\mathcal{A}$ comprise all supported bases. For an eligible $i$ let $D_i(B)$ be the other supported bases meeting its backup.  Then $|D_i(B)|\le4K-2$ and every base lies in $O_K(\log{}m)$ such sets.  Pack pairwise disjoint selector-variable sets $\{i\}\cup{}D_i(B)$, obtaining $Q_{\min}=m/L^{O_K(1)}$ trials.  Select each index of $\mathcal{A}$ independently with probability $p=8\sqrt{m}/Q_{\min}$.  Each packed trial succeeds with probability $p(1-p)^{|D_i(B)|}\ge{}p/2$, independently.  Chernoff and the polynomial union bound leave a selected eligible backup avoiding
+\emph{all} selected bases for every $B$, while only $\sqrt{m}L^{O_K(1)}$ bases are selected.
+
+Store their rainbow matchings, of total size $v'$, and every supported permitted identity edge outside those bases, plus the root edge.
+Categorical roles make these edges physically disjoint.  Their number
+is $\Theta(s^2m)$: the physical conflict graph on identity edges has maximum degree two, so three physically disjoint families permit
+Chernoff bounds; removing selected bases is negligible.  Write this
+number $u'+K$.  The successful backup has all its $2K$ identity edges in this matching.  Replace them by its base's $K$ identity edges, and replace that base's $K$ rainbow edges by the backup's $2K-1$ rainbow edges.  Outputs have sizes $u'$ and $v'+K-1$, miss $y$ and one source, and use all input colours and every stored colour except the base's closing colour.  The root edge is always
+removed, so every output identity edge is permitted.
+
+Choose $s$ with $s^2m=o(g)$; then $u',v'=o(g)$ and $u'\ge0$. Combine with the disjoint basic module and pad by $g-u-u'\hbox{identity edges},g-v-v'-K+1\hbox{rainbow edges}$. The basic module's $K$ unused colours feed the supplementary query. Direct summation gives side size $2g+1$, palette size $g+1$ and outputs $g+a-c,g+c$.  For the spare module, pad the basic module by $g-u$ identity and $g-v$ rainbow edges; its sizes are $2g,g+K$. All padding counts are nonnegative, use remaining permitted pairs
+and real linear colour supplies, and avoid earlier resources.
+Discard all unselected provisional support labels.
+
+\subsection{The protected matching ledger}
+\label{sg:sec:protected}\label{sg:lem:entropyinput}
+\label{thm:matchinginterface}
+
+Build the ordinary module first, followed by any fixed number of
+spare modules.  At stage $i$, let $P_{<i}$ be the earlier stored palettes.  Choose candidate $c_i\notin{}P_{<i}$ and construct addition avoiding $P_{<i}\cup{}E_i\cup\{c_i\}$, where $E_i=E_{I_{c_i}}$. For the prescribed $y$, at least $D-\varepsilon{}m$ colours have real predecessors; candidate failures exclude at most $\eta_1D$, and forbidden predecessors or colours exclude only $o(m)$ more. Thus its identity choice exists without requiring the root edge
+to be permitted.
+
+Let $E_1^{(i)}$ contain all permitted identity edges with endpoints in the stored addition set, excluding an impermissible root edge.
+It is admissible, contains every possible identity output, and $g\le|E_1^{(i)}|\le2g+1\le3g$; the lower bound follows from zero input.  Apply Theorem~\ref{rpe:theorem} with terminal set $E_1^{(i)}$, forbidding all earlier resources, every addition vertex and colour, and temporarily $E_i\cup\{c_i\}$.  The forbidden population is $O(b)=o(\beta{}m)$ and the resulting palette has $O(gL^{80})=o(b)$ colours.  Root endpoints may be forbidden because only the absorber interior avoids them.  Pad to exactly $b$ colours, first adding disjoint real edges in each missing colour of $(E_i\setminus{}P_{<i})\cup\{c_i\}$ \textup{(P.1)}. Every colour has a linear physical supply; temporary exceptional
+exclusions are now released, while addition and earlier palettes
+remain forbidden.  The bank has $b-g$ vertices per side and uses its entire fixed $b$-palette when absorbing any $g$ terminal edges.
+Consequently, $B_0=b+g+1$ is the ordinary side and palette size; $B_1=b+g$ is the spare side size, with palette size $B_1+K$ \textup{(P.2)}.
+
+For an actual balanced target of side size $z$ and ordinary palette size $z$, deleting the stored addition and bank leaves three parts of size $t=z-b-g-1$.  A residual matching of size $t-c$ leaves input $(c,c,c)$; addition supplies $g$ identity and $g+c$ rainbow edges and the bank replaces the former by $b$ rainbow edges. The total is $(t-c)+(g+c)+b=z-1$, with prescribed missing head $y$. For a spare target with $z+K$ colours, all residual parts instead have size $t=z-b-g$ and the same calculation gives $z$ edges. Precisely $K$ colours are unused, possibly including external input colours.  All bank colours are used, and the three final rainbow
+pieces have disjoint palettes and disjoint vertices except for the
+identity endpoints intentionally covered by the bank.
+
+Finally $E_i\subseteq{}P_{<i}\cup{}C_{\mathrm{abs},i}$ and $c_i$ lies in its own bank.  Protected palettes remain assigned to their
+interfaces.  Only spare unused colours return to the ordinary
+interface; none lies in any bank.  The ordinary bank, built first,
+contains its whole exceptional set.  Hence every residual or returned
+input palette avoids its interface's exceptional and identity colours.
+This is a rule fixed before the actual inputs exist.
+
+\subsection{Positive capacities, adaptive extensions and the Gram gap}
+\label{sec:fractional}\label{sec:sample}\label{sg:sec:gram}
+\label{sg:lem:fractionalinput}
+
+For a balanced linear three-partite hypergraph of part size $h$, let $B$ be its vertex--edge incidence matrix and $\mathcal{K}=\{z:z|_{P_i}=a_i,\sum_ia_i=0\}$. Always $\mathcal{K}\subseteq\ker(BB^{\mathsf{T}})$.
+
+\begin{lemma}[Prescribed capacities]\label{lem:capacities}
+Suppose the average degree is $d\ge\sqrt{h}$, degrees are $(1\pm{}e)d$, all six distinct-root shadow common-neighbour counts are at most $K_{\rm{}sh}d^2/h$, and $BB^{\mathsf{T}}$ has gap $\theta{}d$ on $\mathcal{K}^\perp$, with $K_{\rm{}sh}\ge1$, $0<\theta\le1$.  Capacities with equal part sums and $|b_v-1|\le\lambda$ have realizing weights in $[1/(2d),3/(2d)]$ whenever $e+\lambda\le\theta/(120\sqrt{K_{\rm{}sh}})$.
+\end{lemma}
+\begin{proof}
+Put $\delta=e+\lambda$, $f_v=db_v-d_v$, and solve $BB^{\mathsf{T}}z=f$ in $\mathcal{K}^\perp$.  Equal part sums give $f\perp\mathcal{K}$, and $\|z\|_2\le\delta\sqrt{3h}/\theta$. For $T=\operatorname{diag}(d_v)$, $P=T^{-1}(BB^{\mathsf{T}}-T)$ and $a=T^{-1}f$, every row of $P$ sums to two and $z=a-Pa+P^2z$, with $\|a-Pa\|_\infty\le6\delta$. If $x$ is a row of a normalized shadow, then $\|x\|_1=1$ and $\|x\|_2^2\le1/d_{\min}$.  For a following normalized shadow $Q$, its distinct-row inner products are at most $K_{\rm{}sh}d^2/(hd_{\min}^2)$ and diagonal ones at most $1/d_{\min}$.  Therefore $\|xQ\|_2^2\le{}d_{\min}^{-2}+K_{\rm{}sh}d^2/(hd_{\min}^2)\le\frac{1+K_{\rm{}sh}}{(1-e)^2h}\le4K_{\rm{}sh}/h$. Here $d^2\ge{}h$, $K_{\rm{}sh}\ge1$, and the hypothesis gives $e\le1/120$, so the last inequality holds. Each of the four two-step contributions has norm at most $2\sqrt{K_{\rm{}sh}/h}$. Their sum gives each row of $P^2$ norm at most $8\sqrt{K_{\rm{}sh}/h}$.  Thus $\|z\|_\infty\le20\sqrt{K_{\rm{}sh}}\delta/\theta$. Set $w_e=(1+\sum_{v\in{}e}z_v)/d$.  Weighted degrees are exactly $(d_v+(BB^{\mathsf{T}}z)_v)/d=b_v$, and the three corrections sum in absolute value to at most $1/2$, proving the bounds.
+\end{proof}
+
+\begin{lemma}[Small arbitrary extensions]\label{lem:extension}
+Suppose the preceding core has $e\le\theta/(240\sqrt{K_{\rm{}sh}})$. Assume every possible ambient root has $(1\pm{}e)d$ link edges into the other two core parts, with the same anchored six upper-shadow
+bounds for every pair of ambient roots in each role.  For sufficiently
+small fixed $\beta_0=\beta_0(\theta,K_{\rm{}sh})>0$, every balanced extension by $t\le\beta_0h$ vertices per part has a fractional perfect matching with weights at most $2/d$.
+\end{lemma}
+\begin{proof}
+Put $u=\sqrt{\beta_0}$.  For each added type $i$, use edges with one added coordinate and two core coordinates.  Delete those meeting
+a core vertex incident to more than $ud$ edges of that type. An added root $x$ loses, in one overloaded part, at most $(ud)^{-1}\sum_{x'\text{ added in type }i}|N(x)\cap{}N(x')|\le(1+e)/u+K_{\rm{}sh}ud$. The term $x'=x$ is a degree; others use the anchored bound. For small $u$ and large $h$, at least $(1-e-2K_{\rm{}sh}u)d-2(1+e)/u\ge{}d/2$ edges remain at each root. Weight them equally to give it degree one.  A core vertex receives
+at most $2u$ from each other added type, hence at most $4u$ total. Each core part receives total load exactly $2t$, so the remaining capacities have common sum $h-2t$ and lie in $[1-4u,1]$. Choose $4u\le\theta/(240\sqrt{K_{\rm{}sh}})$ and $2K_{\rm{}sh}u\le1/8$; Lemma~\ref{lem:capacities} fills them. Edges with two or three added coordinates receive weight zero.
+This construction works for every target deterministically.
+\end{proof}
+
+\begin{corollary}[Rounding]\label{cor:rounding}
+If $d=\Theta(h)$, these cores and extensions have matchings missing $O(h^{2/3}\log^4h)$ vertices per part.
+\end{corollary}
+\begin{proof}
+Retain edge $e$ independently with probability $dw_e/3\le2/3$. Every expected degree is $d/3$; Chernoff gives an outcome with degrees $d/3\pm{}d^{2/3}$. Let $N$ be the part size of the actual target; here $N=\Theta(h)$ and $d=\Theta(h)$. The retained hypergraph is still linear and three-uniform. The edge-colouring
+theorem of Molloy--Reed~\cite{MolloyReed} gives $\chi'\le\Delta+C\Delta^{2/3}(\log\Delta)^4,\Delta\le{}d/3+d^{2/3}$, where $C$ is absolute for uniformity three. It has at least $N(d/3-d^{2/3})$ edges, so a largest colour class is a matching of size $\frac{N(d/3-d^{2/3})}{d/3+d^{2/3}+C(d/3+d^{2/3})^{2/3}(\log(d/3+d^{2/3}))^4}\ge{}N-O(h^{2/3}\log^4h)$. Equal part sizes make the three deficits equal. Each actual target
+uses its own thinning; simultaneous deterministic existence does not
+require one random thinning for all targets.
+\end{proof}
+
+\paragraph{The sampled certificate.}
+\label{lem:shadows}\label{lem:gram}\label{sg:lem:gram}
+In Proposition~\ref{rsg:proposition} put $s_X=v_0/|X|$, $s_Y=v_0/|Y|$, $q=v_0/D$ and $d_0=v_0^2/m$.  Choose $\kappa$ so $s_X+s_Y<1$. Anchored source, target and colour degrees have expectations $qs_Yd_H(x)$, $qs_Xd_H(y)$ and $s_Xs_Y|M_c|$, respectively, all $(1+O_{p_0}(\varepsilon))d_0$.  An anchored root is forced into its required role; incompatible internal appearances are removed,
+changing expectations only by $O(1)$.  Properness and injectivity make the effect of each trial on every anchored statistic bounded.
+Bounded differences with error $m^{4/5}$ and a polynomial union bound therefore give uniform degree and shadow estimates.
+
+Two distinct vertex roots have $D-O(\varepsilon{}m)$ common defined colours, and two colours have $m-O(\varepsilon{}m)$ common real domains.  Their relevant image labels are distinct by properness
+and looplessness.  The two vertex--colour shadows consequently
+have distinct-root codegrees $(1+O_{p_0}(\varepsilon))d_0^2/v_0+o(m)$ in both directions. For all six upper shadows, their expectation ratios to $d_0^2/v_0=\kappa^3m$ are bounded respectively by $\frac{m^2}{|Y|D},\frac{m^2}{|X|D},(m/|Y|)^2,(m/|Y|)^2,(m/|X|)^2,(m/|X|)^2$. The first two use at most $D$ common graph neighbours; the other four use the two vertex--colour shadows.  Thus $K_{\rm{}sh}=10p_0^{-2}$ suffices, independently of $\kappa$. Centre a vertex--colour shadow by $(d_0/v_0)J$.  Expanding its product with its transpose and using the degree and codegree bounds
+gives maximum absolute row sum $O_{p_0}(\varepsilon)d_0^2+o(m^2)$; its norm is $O_{p_0}(\sqrt\varepsilon)d_0+o(m)$.
+
+For the source--target shadow let $E=A-(D/m)J_m$.  Split off singular values at least $\delta{}m$.  There are $O_\delta(1)$ because $\|E\|_F^2=O(m^2)$, and their singular vectors have coordinates $O_\delta(m^{-1/2})$, using the row and column norm bounds.  The sampled left and right singular-vector Grams concentrate
+separately below $s_XI+o(1)$ and $s_YI+o(1)$; sampling only real copies gives these inequalities even when dummy coordinates exist.
+Their physical coupling does not prevent intersecting the two
+events.  Restriction of the remaining operator has norm at most $\delta{}m$.  Sending $\delta$ to zero gives $\|E[X_0,Y_0]\|\le\sqrt{s_Xs_Y}\rho{}D+o(m)$. Conditional on physical roles, independent colour sampling is a sum
+of partial permutation matrices of norm at most one, so matrix
+concentration yields \refstepcounter{equation}\label{rsg:shadow-gap}$\left\|T-\frac{d_0}{v_0}J\right\|\le{}q\sqrt{s_Xs_Y}\rho{}D+o(m)\le(\rho+O(\varepsilon))d_0+o(m)$ \textup{(\ref{rsg:shadow-gap})}. Here the mean coefficient is exactly $qD/m=d_0/v_0$.
+
+The incidence Gram model has diagonal blocks $d_0I$, off-diagonal blocks $(d_0/v_0)J$, eigenvalue zero on $\mathcal{K}$, $3d_0$ on global constants and $d_0$ on the remaining space.  Its only large centred shadow and its transpose together have norm at most $(\rho+O(\varepsilon))d_0+o(m)$.  Thus the true gap is at least $(1-\rho-O_{p_0}(\sqrt\varepsilon))d_0-o(m)$. Balancing or changing $z=o(m)$ resources changes padded shadow norms by $O(\sqrt{mz})=o(m)$ and anchored counts by $o(m)$. Against the actual average degree $d=(1+O_{p_0}(\varepsilon))d_0+o(m)$, the relative degree error is $O_{p_0}(\varepsilon)+o(1)$. Take $\varepsilon$ below the capacity threshold and $\theta=(1-\rho)/4$.  One may choose $\sqrt{\beta_0}\le\min\{\theta/(960\sqrt{K_{\rm{}sh}}),1/(16K_{\rm{}sh})\}$. This proves (iv), with tolerance independent of $\kappa$. For targets omitting a small part of their core, intersect and trim
+the three cores equally, then trim targets equally while retaining
+that core.  Provided these deletions are below the fixed shadow and
+gap margins, and the relative extension is below $\beta_0$, the same deterministic lemmas apply.  No union bound over adaptive
+targets is needed.  This completes Proposition~\ref{rsg:proposition}.
+
+\subsection{The above-half consequence}
+\label{pf:section}
+
+\begin{theorem}[Robust local path with prescribed start]
+\label{pf:theorem}
+For every $\gamma>0$ there is $\varepsilon_0>0$ such that, for large $m$, a loopless simple properly incoming/outgoing coloured digraph on $m$ vertices with exactly $D$ colours, where $(1/2+\gamma)m\le{}D\le{}m$, degrees in $[D-\varepsilon_0m,D]$ and colour sizes at least $(1-\varepsilon_0)m$, has a rainbow directed path of $D-1$ arcs from every prescribed vertex $y$.  It may also avoid $F\subseteq{}V\setminus\{y\}$ with $|F|\le\varepsilon_0m$, provided $D\le{}m-|F|$.
+\end{theorem}
+\begin{proof}
+Complete the colour matchings, writing $\widetilde{A}=A+B$. Here every row and column of $B$ has sum at most $\varepsilon{}m$, so $\|B\|\le\varepsilon{}m$.  For $f\perp\mathbf1$, $Af=-(J-A)f$, with $\|J-A\|\le{}m-D+\varepsilon{}m$. Regularity of $\widetilde{A}$ therefore gives $\|\widetilde{A}-(D/m)J\|\le{}m-D+2\varepsilon{}m,\|A-(D/m)J\|\le{}m-D+3\varepsilon{}m$. For small $\varepsilon$ this is a fixed ratio below $D$. Apply Proposition~\ref{rsg:proposition}, choosing its errors after
+the finitely many sampling rates in Lemma~\ref{rou:oneblock}.
+Its rooted ordinary module, spare modules and actual-core certificates
+meet that lemma's hypotheses with ambient size $m$ and path capacity $D$.  The lemma also allows the zero outside quota when $m=D$ and gives the required real path from $y$.  The artificial completions were only counting devices and supply none of its arcs.
+
+For the forbidden version first prove the assertion with error
+allowance $4\varepsilon_0$ and apply it to $H-F$, of order $m'=m-|F|$.  A remaining vertex loses at most $|F|$ neighbours in either direction; a colour loses at most $2|F|$ arcs.  Relative to $D$ and $m'$, deficits are at most $\varepsilon_0m+|F|\le4\varepsilon_0m'$ for small $\varepsilon_0$. The density lower bound persists, and $D\le{}m'$ is the stipulated physical capacity.  The resulting path avoids $F$.
+\end{proof}

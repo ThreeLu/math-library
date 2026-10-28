@@ -1,0 +1,107 @@
+\section{Protected sampling and exact completion}
+\label{sg:sec:outer}\label{gaq:section}
+We record the shared matching ledger once. Proposition~\ref{rsg:proposition}
+supplies the local modules and certificates used below; the fixed-error
+above-half version uses the same numerical interface. Put $B_0=b+g+1$ and $B_1=b+g$. An ordinary protected module has $B_0$ vertices per side and $B_0$ stored colours, and can prescribe its missing head. A spare has $B_1$ vertices per side and $B_1+K$ colours. Construct the ordinary module first, then the spares, avoiding all
+previous physical vertices and palettes. This also reserves exceptional
+and identity colours in their required order: any mandatory exceptional
+colour is padded into the absorber that owns it and is fully used.
+No returned spare colour is such a mandatory colour. Only permitted
+identity edges are ever presented to absorption; the possibly
+impermissible root identity is removed by every ordinary output.
+
+For the outer ledger, take $t\ge3$ disjoint full layers of order $\ell$, with $J=k(t-1)$ local interfaces $(j,i)$, $1\le{}j<t$, $1\le{}i\le{}k$. Each primed core has $v_i$ vertices in both roles and $v_i$ colours; its extended vertex roles have $v_i+e_i$ vertices. Put $\sum_iv_i=v$, $\sum_ie_i=\Delta$ and $\ell=2v+\Delta$. Require actual-core protected sampling and small-extension certificates, with $e_i<\beta_0v_i$. Give interface $(j,i)$ a combined palette of size $2v_i+e_i+\kappa_{j,i}$, taking $\kappa=K$ for spares and $\kappa=-K(J-1)$ for one ordinary interface. Store modules in unprimed roles, with prescribed head $y$ in the ordinary role.
+
+\begin{lemma}[The common outer ledger]\label{rou:ledger}
+Under this setup, a disjoint router from the last layer to the first with $M$ internal vertices and $M+\ell$ fresh colours yields a real rainbow path from $y$ with $M+t\ell-1$ arcs.
+\end{lemma}
+\begin{proof}
+In each primed interface trim the extended vertices and palette to
+the smallest common size, retaining its original core. The trimming
+cost is only $O_J(K)$; the palette extension at the ordinary interface is positive since $e_i$ is linear. Apply the certificate to these actual balanced targets, obtaining matchings missing at most $E_n=O_J(K+n^{2/3}\log^4n)$ objects. Their union is a directed linear forest, because every arc advances its layer index. Retain
+only full paths from the first to the last primed layer. At least $v+\Delta-(t-1)kE_n$ survive: each failed extension is charged to an unmatched source of an interface. Let their number be $R$, and let $R_{j,i}$ retained arcs use interface $(j,i)$.
+
+Move each unused primed vertex and colour to its corresponding
+unprimed role. This moves only $O_{k,t}(E_n)=o(n)$ objects. At each interface, both residual vertex roles now have exactly $s_{j,i}=2v_i+e_i-R_{j,i},|\mathcal{C}_{j,i}|=s_{j,i}+\kappa_{j,i}$ \textup{(OL.1)}. The equality uses the incidence type of each retained arc; it does
+not assume that retained paths use blocks in a fixed order. At every
+layer the total residual order is $\ell-R$. Every protected module is unchanged. Each actual residual target differs by $o(n)$ from its repaired sampled core, so its anchored degrees and positive
+Gram gap survive. This is why a certificate for the original sample
+alone would not suffice.
+
+Complete a spare with residual role size $s=s_{j,i}$ first. Removing its protected module leaves exactly $s-B_1$ vertices in both roles and $s-B_1$ colours. Positive fractional correction on this actual balanced residual and rounding leave equal deficits $c$ in the three parts, where $c=O(n^{2/3}\log^4n)<m_i^{4/5}$. The addition module, with external input $a=c$, returns $g$ permitted identity edges and $g+c$ rainbow edges. The absorber replaces the identities by $b$ rainbow edges. The exact resulting matching order is $(s-B_1-c)+(g+c)+b=s$ \textup{(OL.2)}. The absorber intersects the addition only at the identity endpoints
+it replaces; addition rainbow edges avoid those endpoints. Thus this
+is a matching on real physical resources, with disjoint palettes.
+It uses $s$ colours from $s+K$ and returns precisely $K$ colours. Send all $K(J-1)$ returns to the ordinary palette. Its three parts are now balanced at order $s$. Removing its protected module gives order $s-B_0$ in each residual part. The same certificate and addition calculation, now using $B_0=b+g+1$, gives $(s-B_0-c)+(g+c)+b=s-1$. The missed head is $y$; call the missed tail $x$. All colours transferred into this last input avoid its reserved forbidden palette by the sequential ownership rule.
+
+Insert a single artificial arc $x\to{}y$ in a new colour. Every interface is then perfect. Together with retained primed paths they
+form exactly $\ell$ full layer paths. Choose the router state joining these into one cycle and delete the artificial arc. The path starts
+at $y$ and has $M+t\ell$ distinct vertices. Its genuine colour count is $(M+\ell)+(t-1)R+(t-1)(\ell-R)-1=M+t\ell-1$ \textup{(OL.3)}. All genuine arcs and colours are real; the artificial arc was only
+used to select the router state.
+\end{proof}
+
+\begin{lemma}[One-block fixed-gap completion]\label{rou:oneblock}
+Fix $p_0>0$ and $\rho<1$. For sufficiently small fixed $\varepsilon>0$, suppose a loopless properly $D$-coloured digraph on $m$ vertices has $p_0m\le{}D\le{}m$, in/outdegrees in $[D-\varepsilon{}m,D]$, each colour has at least $m-\varepsilon{}m$ arcs, and $\|A-(D/m)J\|\le\rho{}D$. Then it has a real rainbow path of $D-1$ arcs starting at any prescribed vertex $y$.
+\end{lemma}
+\begin{proof}
+Lemma~\ref{rt:lem:walks} with $H=L+1$, and its repetition and load exclusions, gives the real router input at lengths $H-1,H$. Use Proposition~\ref{rsg:proposition} for the
+ordinary and spare modules and actual-target certificates, all at
+fixed rates chosen below. Its extension tolerance $\beta_0$ depends only on density and gap, not on the subsequently chosen core rate.
+Pick $\lambda>0$ small relative to $\beta_0$, then a large fixed $t$. Write $q=(1-\lambda)/t$, choose $v=\lfloor{}qD/2\rfloor$, and choose $M\equiv{}D\pmod{}t$ nearest to $15HqD$. Set $r_C=D-2tv$, $\ell=(D-M)/t$, $\Delta=\ell-2v$. Increasing $t$ gives $M+t\ell=D,t\Delta=r_C-M,10H\ell<M<20H\ell,0<\Delta<\beta_0v/2$ \textup{(OB.1)}. Require $q$ below all router tolerances and $Hq\ll\lambda$. Choose the local fixed error threshold only after these finitely
+many positive sampling rates; it may be reduced without changing
+the already fixed density and gap constants.
+
+Build one rooted ordinary and $t-2$ spare modules disjointly. A candidate identity colour giving a real predecessor of $y$ exists: at least $(1-\eta)D$ are candidates, while $y$ has at least $D-\varepsilon{}m$ incoming colours; earlier forbidden resources exclude only $o(m)$ further choices. Choose $\eta$ first small and $\varepsilon$ afterwards. Force $y$ into the ordinary head role.
+
+Independently label every physical vertex by $V_j,V'_j$ at rate $v/m$ each, by $R_V$ at rate $r_C/m$, or outside at rate $(m-D)/m$. Independently label colours by $C_j,C'_j$ at rate $v/D$ each for $j<t$, by $R_C$ at rate $r_C/D$, or by $C_\varnothing$ at rate $2v/D$. These probabilities sum exactly to one. Router rates are bounded below; the local source, head and colour rates are precisely
+those required by the certificates. Take the joint successful
+sampling event, then overwrite protected sources, heads, and colours
+with their designated unprimed roles. Repair unprotected labels to $|V_j|=|V'_j|=v,|R_V|=r_C,|\mathrm{outside}|=m-D,|C_j|=|C'_j|=v,|R_C|=r_C,|C_\varnothing|=2v$. Only $o(m)$ objects move: fluctuations and forced populations are $o(m)$, every positive role has linear residual capacity, and outside has no forced members. This argument includes the exact quota $m-D=0$; it does not condition on a rare sampled-host event. The fixed-error certificates retain their positive margin and the router
+families retain linear supply. These baseline changes are made before
+the final sublinear matching deficits are measured.
+
+Add $\Delta$ reservoir vertices to each endpoint primed layer and build a router with $M$ internal vertices and $M+\ell$ colours, avoiding those endpoints. Add $\Delta$ to every remaining primed layer from the unused reservoir. This is exact because $r_C-M=t\Delta$. The colours left in $R_C\cup{}C_\varnothing$ number $r_C-(M+\ell)+2v=(t-1)\Delta$ \textup{(OB.2)}. Allocate $\Delta+K$ to each spare primed palette and $\Delta-K(t-2)$ to the ordinary primed palette. The additions are nonnegative, have exactly this sum, and move no protected colours.
+The common ledger applies with $k=1,e_1=\Delta$ and gives $M+t\ell-1=D-1$ real arcs from $y$. This proves the lemma without using an above-half path theorem.
+\end{proof}
+
+\begin{theorem}[Rooted completion from approximate spectral blocks]
+\label{gaq:completion}\label{aq:completion}
+Under the approximate-block hypotheses of Lemma~\ref{rou:power},
+suppose $0<p\le1/2$. Then there is a rainbow directed path with $D-1$ arcs from every prescribed vertex in a positive limiting physical cell. There is no restriction on the quotient period or
+the residue of $D$. The conclusion survives deletion of $o(n)$ physical vertices other than the root and $o(n)$ colours, with the remaining colour count replacing $D$, whenever the uniform block hypotheses are retained.
+\end{theorem}
+\begin{proof}
+Delete zero-limit cells and equalize the physical phases, retaining
+the root. Lemma~\ref{rou:power} supplies real connectors and the
+router before any absorption is performed. First assume $r\mid{}D$
+(the case $r=1$ is included). Use a common spare constant $K$ and extension tolerance $\beta_0$, independent of the core rates, over the finitely many blocks. Choose $\lambda>0$ small relative to $\beta_0$ and then sufficiently large fixed $t\ge5$, with $q=(1-\lambda)/t$. Choose $v\in{}r\mathbb{Z}$ nearest to $qD/2$ and $M\equiv{}D\pmod{rt}$ nearest to $15HqD$. Put $r_C=D-2tv$, $\ell=(D-M)/t$, $\Delta=\ell-2v$. All four $v,M,\ell,\Delta$ are divisible by $r$, and (OB.1) holds. Also require $q\ll\lambda/H,\min_{c_{ab}>0}c_{ab}/H$ and all fixed router tolerances. The physical reservoir rate will exceed $1/3$; use this lower rate and colour rate $\lambda/2$ for the router.
+
+Round the fixed real circulations $vC$ and $\Delta{}C$ using Lemma~\ref{pq:quotas}, obtaining integer cell matrices $Z,E$ with totals $v,\Delta$ and entries $Z=vC+O(1)$, $E=\Delta{}C+O(1)$. Their common margins are $v_i=va_i+O(1)$ and $e_i=\Delta{}a_i+O(1)$; thus $e_i<\beta_0v_i$ for large $n$. Every layer core will have matrix $Z$, and each extension matrix $E$. Their phase populations are exactly $v/r$ and $\Delta/r$. This is an integer conservation condition, not merely an expected
+balance between successive roles.
+
+There are $J=k(t-1)$ interfaces. If $y\in{}B_{i_0}$, designate $(1,i_0)$ ordinary, force its missed head to be $y$, and make all others spare. Proposition~\ref{rsg:proposition} applies since $D/m_i\to{}p/a_i>0$. Its permitted-root loss $\eta$ is fixed small after the finite routing and addition constants. At least $(1-\eta)D$ identity colours are candidates and $D-o(n)$ have a real predecessor of $y$, so a suitable colour avoids earlier resources. Its one root edge may be impermissible, since it is
+never absorbed. Build the ordinary module first, then all spares
+with fresh physical resources and palettes. Common $n$-based values of $g,b$ are allowed because $m_i=\Theta(n)$ and the local interface permits fixed-factor changes in their scales.
+
+Independently assign every physical vertex to each of the $2t$ core roles $V_j,V'_j$ at rate $v/n$, and otherwise to the physical reservoir. Assign colours to $C_{j,i},C'_{j,i}$ at rate $v_i/D$, to $R_C$ at rate $r_C/D$, and to $C_\varnothing$ at rate $2v/D$. The colour probabilities sum to one. Expected local role sizes
+agree with the integer targets to $o(n)$, and the physical roles are mutually exclusive. All finitely many local anchored, shadow,
+Gram, and full-graph reservoir events hold jointly. The actual
+core rates converge to fixed positive values $\kappa_i=v_i/m_i$. Choose the local error threshold only after these rates, uniformly in small fixed neighbourhoods of their limits.
+All real block defects are $o(n)$ and eventually meet that threshold.
+
+Overwrite protected sources with $V_j$, heads with $V_{j+1}$, and stored colours with $C_{j,i}$. Globally disjoint physical resources make these assignments consistent. Repair unprotected vertex roles
+within each supported cell so that every core has exact matrix $Z$; repair all colour roles to their exact integer sizes. Protected
+populations, expectation errors and fluctuations are $o(n)$, while all positive residual quotas are linear, so only $o(n)$ objects move. Every supported cell retains at least $c_{ab}n/3$ reservoir vertices for large $n$, since $2tv/n\to(1-\lambda)p\le1/2$. All certificates and reservoir supplies survive; local sampling
+continues to use the real $B_i$, never the counting partition $B'_i$.
+
+Choose disjoint endpoint extensions with cell matrix $E$ and add them to $V'_1,V'_t$. The endpoint sets $B=V_1\cup{}V'_1$ and $A=V_t\cup{}V'_t$ have size $\ell$ and exactly $\ell/r$ vertices per phase. Build the real mixed-phase router with $M$ interior vertices and $M+\ell$ colours. Then select the other $t-2$ extensions, also with matrix $E$, avoiding its interior. Each cell has enough space: all extensions consume $tE_{ab}=O(\lambda{}c_{ab}n)+O(1)$ there, and the router uses at most $M=O(Hqn)$ there. Our hierarchy leaves positive linear surplus. Unused reservoir vertices are simply omitted from the final path;
+there is no equation assigning the router a prescribed cell matrix.
+At interface $(j,i)$ the primed source and head sizes both equal $v_i+e_i$, by conservation of the two quota matrices.
+
+The remaining colour count is exactly $(D-2tv)-(M+\ell)+2v=(t-1)\Delta$ \textup{(AQ.3)}. Add $e_i+K$ colours to every spare primed palette and $e_{i_0}-K(J-1)$ to the ordinary one. Their sum is (AQ.3), and every addition is nonnegative for large $n$. We have obtained all actual targets of Lemma~\ref{rou:ledger}. Its primed matchings,
+balanced residual completions and palette transfers therefore give
+a real path from $y$ of length $M+t\ell-1=D-1$.
+
+Finally let $s=D\bmod{}r$. If $s>0$, follow $s$ distinct available colours from the prescribed root, excluding earlier colours and
+already forbidden vertices. Every current vertex has $D-o(n)$ real outgoing arcs, so a choice exists. The prefix is simple because $s<r$ and its vertices have distinct phases. Delete its colours and all its vertices except its last vertex, which becomes the new
+root. Equalize phase sizes again with $o(n)$ further deletions, retaining that root. The uniform degree and colour errors remain $o(n)$; deleting $o(n)$ rows or columns has Frobenius cost $o(n)$, and deleting $o(n)$ colours changes the operator norm and mean by $o(n)$. Thus a slightly enlarged fixed gap still holds, with the same limiting circulation and period. Apply the divisible case to $D-s$ colours and prepend the prefix. Palettes and vertices meet only as prescribed, and the length is $s+(D-s-1)=D-1$. The same stability estimates prove the stated deletion version.
+\end{proof}
