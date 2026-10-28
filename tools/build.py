@@ -181,7 +181,7 @@ def preprocess(s, lang):
     s = strip_comments(s)
     s = texorpdf(s)
     for cmd in ["phantomsection", "clearpage", "newpage", "qedhere", "noindent",
-                "appendixstatements", "medskip", "bigskip", "smallskip", "appendix"]:
+                "appendixstatements", "medskip", "bigskip", "smallskip"]:
         s = re.sub(r"\\" + cmd + r"(?![A-Za-z])", "", s)
 
     # headings
@@ -266,17 +266,6 @@ def preprocess(s, lang):
                         + r"\begin{enumerate}")
     s = s.replace(r"\end{questions}", r"\end{enumerate}\end{ypquestions}")
     return s
-
-
-def props_lists(s, offset):
-    """{props} lists are lettered A, B, ..., Z through the whole book; their items
-    are A1, A2, ... The letter is fixed here, in document order."""
-    def sub(m):
-        nonlocal offset
-        offset += 1
-        return r"\begin{ypprops}" + href("group", chr(64 + offset)) + r"\begin{enumerate}"
-    s = re.sub(r"\\begin\{props\}", sub, strip_comments(s))
-    return s.replace(r"\end{props}", r"\end{enumerate}\end{ypprops}"), offset
 
 
 def bibliography_entries(s):
@@ -379,12 +368,11 @@ def split_homework(s):
     return s[:m.start()], rest.replace("\x00HW\x00", ""), title.get("t", "")
 
 
-def math_macros(cls_path, whole=False):
-    """Notation macros from the class file (everything after the notation banner),
-    or from a whole file (a book's notation.tex)."""
+def math_macros(cls_path):
+    """Notation macros from the class file (everything after the notation banner)."""
     text = cls_path.read_text(encoding="utf-8")
     m = re.search(r"^%.*(记号|[Nn]otation).*$", text, re.M)
-    section = text if whole else (text[m.end():] if m else "")
+    section = text[m.end():] if m else ""
     keep = []
     for line in section.splitlines():
         line = strip_comments(line).strip()
@@ -502,13 +490,10 @@ def build_book(book, no_latex):
     if not cls.exists():
         cls = SHARED_TEX / "yupin-notes.cls"
     macros = math_macros(cls if lang == "zh" else cls.with_name("yupin-notes-en.clo"))
-    if (src / "notation.tex").exists():  # the book's own notation, \input in its preamble
-        macros += math_macros(src / "notation.tex", whole=True)
     progress = parse_progress(ROOT / book["progress"]) if book.get("progress") else {}
 
     # ---- collect pages -------------------------------------------------
     pages = []  # dicts: file, kind, tex, unit
-    abstract = None
     hw_no = 0
     for unit, part in find_units(src, main):
         path = src / (unit if unit.endswith(".tex") else unit + ".tex")
@@ -521,9 +506,6 @@ def build_book(book, no_latex):
             pages.append({"file": "references", "kind": "back", "tex": raw, "unit": uname})
             continue
         uname = Path(unit).stem
-        if uname == "abstract":  # a paper's abstract goes on the book's contents page
-            abstract = raw
-            continue
         front = unit.startswith("front/")
         if front and "tableofcontents" in raw:
             continue
@@ -558,8 +540,7 @@ def build_book(book, no_latex):
     # ---- convert -------------------------------------------------------
     index_path = out / ".index.jsonl"
     index_path.write_text("", encoding="utf-8")
-    thm_offset = sec_offset = props_offset = 0
-    appendix_at = -1
+    thm_offset = sec_offset = 0
     lecture_no, cur_part = 0, None
     for p in pages:
         clean = strip_comments(p["tex"])
@@ -591,19 +572,14 @@ def build_book(book, no_latex):
                 meta["yp-pdf-page"] = hw["pdfpage"]
         if p["topic"]:
             meta["yp-crumb"] = short_label(p, lang == "zh") + ("（作业）" if p["kind"] == "homework" else "")
-        if appendix_at < 0 and re.search(r"\\appendix(?![A-Za-z])", clean):
-            appendix_at = sec_offset
-        meta["yp-appendix-at"] = appendix_at
         tex = render_tikz(p["tex"], src, out, lang, macros)
-        tex, props_offset = props_lists(tex, props_offset)
         md = run_pandoc(macros + brace_macros(preprocess(tex, lang), macros), meta)
         (out / f"{p['file']}.qmd").write_text(md, encoding="utf-8")
         p["title"] = page_title(md)
         thm_offset += len(re.findall(r"\\begin\{(" + "|".join(NUMBERED_ENVS) + r")\}", clean))
         sec_offset += len(re.findall(r"\\section\{", clean))
 
-    abstract_html = abstract_to_html(abstract, macros) if abstract else None
-    write_book_index(book, pages, out, pdf_name if pdf.exists() else None, progress, abstract_html)
+    write_book_index(book, pages, out, pdf_name if pdf.exists() else None, progress)
     write_dir_metadata(book, out)
     entries = [json.loads(l) for l in index_path.read_text(encoding="utf-8").splitlines() if l.strip()]
     index_path.unlink()
@@ -636,9 +612,7 @@ def page_title(md):
 
 
 def plain_title(t):
-    """Sidebar text: strip $...$ math to its letters, [x]{.class} spans and
-    [x](link){.class} cross-references to x."""
-    t = re.sub(r"\[([^\]]*)\]\([^)]*\)(\{[^}]*\})?", r"\1", t)
+    """Sidebar text: strip $...$ math to its letters and [x]{.class} spans to x."""
     t = re.sub(r"\[([^\]]*)\]\{[^}]*\}", r"\1", t)
     t = re.sub(r"\$([^$]*)\$", lambda m: tex_to_unicode(m.group(1)), t)
     return t.replace("\\", "")
@@ -686,18 +660,7 @@ CATEGORY_WORD = {"courses": "Course", "research": "Research notes", "surveys": "
 LANG_WORD = {"zh": "中文", "en": "English"}
 
 
-def abstract_to_html(tex, macros):
-    """The abstract as HTML, formulas left as \\(...\\) for MathJax."""
-    tex = macros + brace_macros(strip_comments(tex), macros)
-    r = subprocess.run(["pandoc", "-f", "latex", "-t", "html", "--mathjax", "--wrap=none"],
-                       input=tex, capture_output=True, text=True)
-    if r.returncode != 0:
-        sys.stderr.write(r.stderr)
-        raise SystemExit("pandoc failed on the abstract")
-    return r.stdout.strip()
-
-
-def write_book_index(book, pages, out, pdf_name, progress, abstract_html=None):
+def write_book_index(book, pages, out, pdf_name, progress):
     zh = book.get("lang") == "zh"
     lectures = [p for p in pages if p["kind"] == "lecture"]
     front = [p for p in pages if p["kind"] == "front"]
@@ -722,8 +685,6 @@ def write_book_index(book, pages, out, pdf_name, progress, abstract_html=None):
     h.append(f'<a class="yp-continue" id="yp-continue-book" data-book="{book["slug"]}" '
              f'data-word="{"继续阅读" if zh else "Continue reading"}" hidden></a>')
     h.append("</header>")
-    if abstract_html:
-        h.append(f'<section class="yp-abstract"><h2 class="yp-abstract-head">Abstract</h2>{abstract_html}</section>')
     extra = front + [p for p in pages if p["kind"] == "back"]
     if extra:
         links = " ".join(f'<a href="{p["file"]}.html">{esc(plain_title(p["title"]))}</a>' for p in extra)
@@ -736,7 +697,7 @@ def write_book_index(book, pages, out, pdf_name, progress, abstract_html=None):
             h.append(f'<li class="yp-toc-part">{esc(part)}</li>')
         hw = next((q for q in pages if q["kind"] == "homework" and q["unit"] == p["unit"]), None)
         name = p["topic"] or plain_title(p["title"])
-        num = p["no"] if zh else re.match(r"\[?([A-Z]|\d+)\b", plain_title(p["title"]) or "0").group(1)
+        num = p["no"] if zh else re.match(r"\[?(\d+)", plain_title(p["title"]) or "0").group(1)
         if not zh:
             name = re.sub(r"^\d+\s*", "", plain_title(p["title"]))
         aux = (f'<a class="yp-toc-aux" href="{hw["file"]}.html">{"作业" if zh else "Exercises"}</a>'

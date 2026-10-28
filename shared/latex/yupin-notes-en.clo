@@ -89,15 +89,6 @@
 \newtheorem*{historynote}{Historical note}
 \newtheorem*{workedexample}{Worked example}
 
-% Property lists: the n-th {props} list of the document is lettered by n
-% (A, B, ..., Z) and its items are A1, A2, ...; \ref{...} prints A1.
-\newcounter{yp@props}
-\newenvironment{props}{%
-  \stepcounter{yp@props}%
-  \edef\yp@propletter{\@Alph{\value{yp@props}}}%
-  \begin{enumerate}[label={\textbf{\yp@propletter\arabic*}},ref={\yp@propletter\arabic*},leftmargin=*]%
-}{\end{enumerate}}
-
 % Solutions: thin rule on the left, as in the Chinese books but uncoloured.
 \newif\ifshowsolutions \showsolutionstrue
 \newtcolorbox{yp@solutionbox}{
